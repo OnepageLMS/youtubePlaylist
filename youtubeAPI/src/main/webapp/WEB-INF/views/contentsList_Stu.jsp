@@ -5,8 +5,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <title>contentsList</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/fonts/brand/style.css">
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/aos.css">
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/style.css">
+    
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    
+    
 <style>
 	.contents{
 		padding: 10px;
@@ -68,7 +87,8 @@
 				
 				var result_date = convertTotalLength(date);
 				
-				var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+				
+				var startDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
 				var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+  "'";
 				
@@ -76,12 +96,11 @@
 				var content = $('.day:eq(' + day + ')');
 				//if(i>0){
 					if(i==0 || weekContents[i-1].playlistID != weekContents[i].playlistID){ //강의리스트에서는 플레이리스트의 첫번째 영상 썸네일만 보이도록
-					content.append("<div  class='content' seq='" + weekContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-							+ '<p class="title"> <b>' +  (weekContents[i].daySeq+1) + " " + weekContents[i].title + '</b>' + '</p>'
-							+ '<p class="startDate">' + "시작일: " + startDate + '</p>'
-						+ thumbnail + "youtubeID : " +weekContents[i].thumbnailID +  " week " +  weekContents[i].week 
-						+ " day " + weekContents[i].day +  " seq " + weekContents[i].seq 
-						+ " playlistID " + weekContents[i].playlistID +  " id " + weekContents[i].id + "<div id='myProgress'><div id='myBar'></div></div> </div>");
+					content.append("<div class='content' seq='" + weekContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'><ul class='list-unstyled tutorial-section-list'> <li>"
+							+ '<h3 class="title"><i class="fa fa-play-circle-o" aria-hidden="true"></i>'  + " " +weekContents[i].title + ' [' + weekContents[i].totalVideo +  '] ' +'</h3></i>'
+							+ '<p><span class = "mr-2 mb-2">'+ convertTotalLength(weekContents[i].totalVideoLength) +'</span></p>'
+							+ '<p class="startDate play">' + "시작일: " + startDate + '</p>'
+						 + "</li></ul></div>");
 					}
 				//}
 				
@@ -101,12 +120,12 @@
 	function convertTotalLength(seconds){
 		var seconds_hh = Math.floor(seconds / 3600);
 		var seconds_mm = Math.floor(seconds % 3600 / 60);
-		var seconds_ss = seconds % 3600 % 60;
+		var seconds_ss = Math.floor(seconds % 3600 % 60);
 		var result = "";
 		
 		if (seconds_hh > 0)
-			result = seconds_hh + ":";
-		result += seconds_mm + ":" + seconds_ss;
+			result = ("00"+seconds_hh .toString()).slice(-2)+ ":";
+		result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
 		
 		return result;
 	}
@@ -119,18 +138,21 @@
 		});
 	}
 	
+	
 </script>
 <body>	
-	<div class="contents" classID="${classInfo.id}">
-		
-			
+			<span class="glyphicon glyphicon-search"></span>
+			<div class="contents" classID="${classInfo.id}">
 				<c:forEach var="j" begin="1" end="${classInfo.days}">
 					<div class="day" day="${j}">${j} 차시
-						
+						<div class = "row">
+							<div class = "col-md-8"></div>
+							
+						</div>
 					</div>
 				</c:forEach>
+			</div>
+			
 		
-
-	</div>
 </body>
 </html>

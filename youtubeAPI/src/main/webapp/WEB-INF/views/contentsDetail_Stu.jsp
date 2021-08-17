@@ -7,6 +7,21 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>VideoCheck</title>
+    
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>Vizew - Blog &amp; Magazine HTML Template</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/contentsDetail_Stu/img/core-img/favicon.ico">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsDetail_Stu/style.css">
+    
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
@@ -40,7 +55,8 @@
 	
 </head>
 <body>
-		<div>
+
+	<!--<div>
 			<div class="first">
 				<p class="videoTitle"></p>
 	    		<div id="onepageLMS"></div>
@@ -50,15 +66,35 @@
 				<div id="myProgress">
   					<div id="myBar"></div>
 				</div>
-			</div>
+			</div> 
 			
 	        <div id="myPlaylist" class="second" >
 	        	<div id="total_runningtime"></div>
 	        	<div id="get_view" ></div>
 	        </div>
+        </div> -->
+        
+        <div class = "row no-gutters">
+        	
+        	 <div id = "onepageLMS" class="col-12 col-md-7 col-lg-8">
+        	 	<div class="tab-content">
+        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
+        	 			 <div class="single-feature-post video-post bg-img" style="background-image: url(img/bg-img/7.jpg);">
+                             
+        	 			 </div>
+        	 		</div>
+        	 	</div>
+        	 </div>
+        	
+        	<div id="get_view" class="col-12 col-md-5 col-lg-4">
+	        <!--<div id="myProgress">
+	  				<div id="myBar"></div>
+				</div> -->
+				<div id="total_runningtime"></div>
+	       	</div>
         </div>
        
-         <form action = "../../contentList/<%= request.getAttribute("classID") %>" method="get">
+         <form action = "../../../contentList/<%= request.getAttribute("classID") %>" method="get">
  			<button type = "submit"> 나가기 </button>
  		</form>
  		
@@ -166,17 +202,45 @@
 			    }
 	 			
 	 			console.log("title " + (playlist[i].newTitle) + " length " + (playlist[i].newTitle).length);
-	 			if ((playlist[i].newTitle).length > 45){
+	 			/*if ((playlist[i].newTitle).length > 45){
 	 				playlist[i].newTitle = (playlist[i].newTitle).substring(0, 45) + " ..."; 
-				}
+				}*/
 	 			
 	 			if(playlist[i].watched == 1){ //끝까지 다 본 영상임을 표시하는 코드
-	 				$("#get_view").append(thumbnail + playlist[i].newTitle + '<div style = "background-color: #287ebf; width = auto" onclick="viewVideo(\'' +playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-		 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' +show_th + ":" + show_tm + ":" + show_ts + " /seq : " + playlist[i].seq+'</div>' );
+	 				$("#get_view").append('<ul >' +
+	 						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">' +
+	 						'<div class="single-blog-post style-2 d-flex align-items-center">' +
+	 						'<div class="post-thumbnail"> ' + thumbnail + ' </div>' +
+	 						'<div class="post-content" onclick="viewVideo(\'' 
+		 						+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
+			 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' + 
+			 					'<h6 class="post-title">' + playlist[i].newTitle + '</h6>' 
+			 					+'<div class="post-meta d-flex justify-content-between">'
+			 						+ '<div>' + show_th + ":" + show_tm + ":" + show_ts + "  " + '<span class="badge badge-primary"> 완료 </span></div>'
+			 					+'</div>' +
+                            '</div>' 
+		 					+ '</div></li>');
 	 			}
 	 			else{ //끝까지 본 영상이 아닐 경우
-	 				$("#get_view").append(thumbnail + playlist[i].newTitle + '<div onclick="viewVideo(\'' +playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-		 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' +show_th + ":" + show_tm + ":" + show_ts + " /seq : " + playlist[i].seq+ '</div>' );
+	 				/*$("#get_view").append(thumbnail + playlist[i].newTitle 
+	 						+ '<div onclick="viewVideo(\'' 
+	 						+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
+		 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' 
+		 					+ show_th + ":" + show_tm + ":" + show_ts + " /seq : " + playlist[i].seq
+		 					+ '</div>' );*/
+	 				$("#get_view").append('<ul>' +
+	 						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">' +
+	 						'<div class="single-blog-post style-2 d-flex align-items-center">' +
+	 						'<div class="post-thumbnail"> ' + thumbnail + ' </div>' +
+	 						'<div class="post-content" onclick="viewVideo(\'' 
+		 						+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
+			 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' + 
+			 					'<h6 class="post-title">' + playlist[i].newTitle + '</h6>' 
+			 					+'<div class="post-meta d-flex justify-content-between">'
+			 						+ '<div>' + show_th + ":" + show_tm + ":" + show_ts + '</div>'
+			 					+'</div>' +
+                            '</div>' 
+		 					+ '</div></li>' );
 	 			}
 	 			
 	 			total_runningtime += parseInt(playlist[i].duration);
