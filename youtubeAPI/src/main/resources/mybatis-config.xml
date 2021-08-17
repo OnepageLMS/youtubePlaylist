@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="playlist"
+			type="com.mycom.myapp.playlist.PlaylistVO" />
+		<typeAlias alias="video" type="com.mycom.myapp.video.VideoVO" />
+		<typeAlias alias="classes" type="com.mycom.myapp.classes.ClassesVO" />
+		<typeAlias alias="classContents" type="com.mycom.myapp.classContent.ClassContentsVO" />
+	</typeAliases>
+	
+</configuration>
