@@ -176,7 +176,7 @@
 			url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
 			data : {email : email},
 			success : function(result){
-				playlists = result.allPlaylist;
+				playlists = result.allMyPlaylist;
 
 				$('.myPlaylist').empty();
 

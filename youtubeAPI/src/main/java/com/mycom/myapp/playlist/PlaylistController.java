@@ -63,27 +63,15 @@ public class PlaylistController {
 			System.out.println("playlist 추가 실패! ");
 	}
 	
-	@RequestMapping(value = "/getAllPlaylist", method = RequestMethod.POST)
-	@ResponseBody
-	public Object getAllPlaylist() {
-		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
-		playlists = playlistService.getAllPlaylist();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("allPlaylist", playlists);
-		map.put("code", "ok");
-		
-		return map;
-	}
-	
 	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
 	@ResponseBody
-	public Object getAllPlaylist(@RequestParam(value = "email") String creatorEmail) {
+	public Object getAllPlaylist(@RequestParam(value = "email", required = false) String creatorEmail) {
 		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
 		playlists = playlistService.getAllMyPlaylist(creatorEmail); //playlist의 모든 video 가져오기
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("allMyPlaylist", playlists);
+		map.put("code", "ok");
 		
 		return map;
 	}
