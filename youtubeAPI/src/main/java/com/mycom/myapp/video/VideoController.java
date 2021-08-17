@@ -1,4 +1,4 @@
-package com.mycom.myapp;
+package com.mycom.myapp.video;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,14 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.playlist.PlaylistService;
-import com.mycom.myapp.video.VideoService;
-import com.mycom.myapp.video.VideoVO;
+
+import com.mycom.myapp.playlist.PlaylistVO;
 
 import net.sf.json.JSONArray;
 
 @Controller
 @RequestMapping(value="/video")
 public class VideoController {
+
 	@Autowired
 	private VideoService videoService;
 	@Autowired
@@ -120,6 +121,52 @@ public class VideoController {
 			System.out.println("totalVideoLength 업데이트 실패! ");
 		
 	}
+	
+	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
+	public String addVideo(@ModelAttribute VideoVO vo) {
+		List<Integer> playlistArr = vo.getPlaylistArr();
+		System.out.println("controller: maxLength!!->" + vo.getmaxLength());
 
+		// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+		double length = vo.getDuration();
+		
+		for(int i=0; i<playlistArr.size(); i++) {
+			int playlistID = playlistArr.get(i);
+			
+			// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+			PlaylistVO Pvo = new PlaylistVO();
+			Pvo.setPlaylistID(playlistID);
+			Pvo.setThumbnailID(vo.getYoutubeID());
+			System.out.println("thumbnail id check" + Pvo.getThumbnailID());
+			
+			// (jw) 썸네일 추가를 위한 코드 (21/08/11) 
+			int count = videoService.getTotalCount(playlistID);
+			
+			if(count == 0) {
+				if(playlistService.addThumbnailID(Pvo) != 0) {
+					System.out.println("playlist 썸네일 추가 성공! ");
+				}
+				else {
+					System.out.println("playlist 썸네일 추가 실패! ");
+				}
+			}
+				
+			vo.setSeq(videoService.getTotalCount(playlistID)); //새로운 video의 seq 구하기
+			vo.setPlaylistID(playlistID);
+			
+			if(videoService.insertVideo(vo) != 0) {
+				System.out.println("title: " + vo.getTitle());
+				System.out.println(playlistID + "번 비디오 추가 성공!! ");
+				
+				updateTotalVideo(playlistID);
+				updateTotalLength(playlistID);
+				
+			}
+			else 
+				System.out.println("비디오 추가 실패 ");
+		}
+		
+		return "youtube";
+	}
 
 }

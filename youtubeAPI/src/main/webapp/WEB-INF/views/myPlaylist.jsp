@@ -193,8 +193,8 @@
 																						+ ')" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
 												+ '<input type="radio" name="check" value="' + index + '">'
 												+ '<p class="playlistSeq">' + (index+1) + '. </p> '
-												+ '<p class="selectPlaylistName">' + value.playlistName + '/ </p>'
-												+ '<p class="totalVideo">' + value.totalVideo + '개 영상' + '</p>'
+												+ '<p class="selectPlaylistName">' + value.playlistName + ' </p>'
+												+ '<p class="totalVideo">' + convertTotalLength(value.totalVideoLength) + '</p>'
 											+ '</div>';
 											
 						$('.myPlaylist').append(contentHtml);
@@ -542,7 +542,7 @@
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + thumbnailID + '/0.jpg" class="videoPic">';
 			var playlistInfo = thumbnail + '<p>총 ' + totalVideo + '개의 비디오 </p>';
-			$('#playlistThubmnail').empty();
+			$('#playlistThubmnail', opener.document).empty();
 			$('#playlistThubmnail', opener.document).append(playlistInfo);
 			
 			$('#playlistTitle', opener.document).text("playlist : " + name + " 선택됨");
@@ -564,9 +564,9 @@
 </script>
 <body>	
 	<div class="nav">
-		<button>내 컨텐츠</button>
-		<button>LMS내 컨텐츠</button>
-		<button>영상추가</button>
+		<button onclick="#">내 컨텐츠</button>
+		<button onclick="location.href='${pageContext.request.contextPath}/youtube'">영상추가</button>
+		<button onclick="location.href='${pageContext.request.contextPath}/playlist/searchLms'">LMS내 컨텐츠</button>
 	</div>
 	
 	<h2>MyPlaylist</h2>
