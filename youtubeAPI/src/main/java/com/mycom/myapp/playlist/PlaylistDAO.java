@@ -53,7 +53,6 @@ public class PlaylistDAO {
 	}
 	
 	public List<PlaylistVO> getAllMyPlaylist(String creatorEmail){ //내가 만든 playlist만 가져올 때
-		System.out.println("dao->" + creatorEmail);
 		List<PlaylistVO> result = sqlSession.selectList("Playlist.getAllMyPlaylist", creatorEmail);
 		return result;
 	}
