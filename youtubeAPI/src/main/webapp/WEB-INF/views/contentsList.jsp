@@ -28,17 +28,8 @@
 		padding: 10px;
 	}
 	
-	.week{
-		border: 2px solid lightslategrey;
-		padding: 5px;
-		margin: 5px;
-		width: 50%;
-	}
-	
 	.content{
-		border: 1px solid lightslategrey;
 		margin: 3px;
-		padding-left: 5px;
 	}
 	
 	.videoPic {
@@ -67,7 +58,8 @@ $(document).ready(function(){
 		console.log(allContents[i]);
 		var day = allContents[i].day - 1;
 		var date = new Date(allContents[i].startDate.time); //timestamp -> actural time
-		var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+		var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 
 		//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
 		var content = $('.day:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
@@ -75,21 +67,29 @@ $(document).ready(function(){
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 
 		var published;
+		
 		if (allContents[i].published == true)
 			published = '<p class="published badge badge-primary">' + "공개: " + allContents[i].published + '</p>';
 		else
 			published = '<p class="published badge badge-danger">' + "공개: " + allContents[i].published + '</p>';
 				
-		if(allContents[i].published == true){
-			content.append("<div class='content' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-					+ '<ul class="list-unstyled tutorial-section-list"><li>'
-					+ '<h3 class="title"><i class="fa fa-play-circle-o" aria-hidden="true"></i>'  
-					+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']</h3>'
-					+ '<p><span class="mr-2 mb-2">' +  convertTotalLength(allContents[i].totalVideoLength) + '</span></p>'
-					+ published
-					+ '<p class="startDate">' + "시작일: " + startDate + '</p>'
-				 	+ "</li></ul></div>");
-		}
+		content.append("<div class='content row card' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+							+ '<div class="index col-sm-1">' + (i+1) + '. </div>'
+							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true"></i>' + '</div>'
+							+ '<div class="col-sm-7 row">'
+								+ '<div class="col-sm-12">' 
+									+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']' 
+								+ '</div>'
+								+ '<div class="col-sm-12">'
+									+ '<p>' + 'Youtube' + '</p>'
+									+ '<p class="videoLength">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
+									+ '<p class="endDate">' + '마감일: ' + endDate + '</p>'
+								+ '</div>' 
+							+ '</div>'
+							+ '<div class="col-sm-2">' + published + '</div>'
+							+ '<div class="contentModBtn col-sm-1">' + '<button class="btn btn-sm">more</button>' 
+						 + "</div>");
+
 		
 	}
 });
@@ -116,19 +116,20 @@ $(document).ready(function(){
 
 </script>
 <body>
-	<div class="container">
-		<div class="hello">
-			<h2>test</h2>
+	<div class="container card col-sm-8">
+		<div class="row">
+			<div class="contents col-sm-12" classID="${classInfo.id}">
+				<button onclick="" class="btn btn-primary">강의추가</button>
+				
+				<c:forEach var="j" begin="1" end="${classInfo.days}">
+					<div class="day card" day="${j}">
+						<h3 class="card-header">${j} 일 강의</h3>
+						<a href="../addContent/${classInfo.id}/${j}">+페이지추가</a>
+					</div>
+				</c:forEach>
+			</div>
 		</div>
-		<div class="contents" classID="${classInfo.id}">
-			<button onclick="">강의추가</button>
-			<c:forEach var="j" begin="1" end="${classInfo.days}">
-				<div class="day" day="${j}">
-					<h3>${j} 일 강의</h3>
-					<a href="../addContent/${classInfo.id}/${j}">+페이지추가</a>
-				</div>
-			</c:forEach>
-		</div>
+		
 	</div>
 	
 </body>

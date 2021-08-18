@@ -182,12 +182,23 @@
 					$('.myPlaylist').append(searchHtml);
 							
 					$.each(playlists, function( index, value ){
+						/*
 						var contentHtml = '<div class="playlist" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
 																						+ ')" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
 												+ '<input type="radio" class="d-sm-inline-block" name="check" value="' + index + '"> '
 												//+ '<p class="playlistSeq">' + (index+1) + '. </p> '
 												+ '<p class="selectPlaylistName d-sm-inline-block"><b>' + value.playlistName + '</b></p>'
 												+ ' <p class="totalVideo d-sm-inline-block">' + convertTotalLength(value.totalVideoLength) + '</p>'
+											+ '</div>';
+						*/
+
+						var contentHtml = '<div class="playlist nav-item" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
+																			+ ')" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
+										
+													+ '<input type="radio" class="d-sm-inline-block" name="check" value="' + index + '"> '
+													+ '<p class="selectPlaylistName d-sm-inline-block"><b>' + value.playlistName + '</b></p>'
+													+ ' <p class="totalVideo d-sm-inline-block">' + convertTotalLength(value.totalVideoLength) + '</p>'
+												
 											+ '</div>';
 											
 						$('.myPlaylist').append(contentHtml);
@@ -587,7 +598,7 @@
 			<div class="row">
 				<div class="col-sm-2 card">
 					<h3 >My Playlist</h3>
-					<div class="myPlaylist card"></div>
+					<ul class="myPlaylist card nav nav-pills flex-column"></ul>
 				</div>
 				
 				<div class="selectedPlaylist col-sm-10 card">
