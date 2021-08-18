@@ -14,7 +14,7 @@
 	}	
 	.myPlaylist{
 		border: 2px solid lightgrey;
-		padding: 2px;
+		padding: 10px;
 	}
 	
 	.playlist {
@@ -33,6 +33,11 @@
 	.selectedPlaylist{
 		background-color: #F0F0F0;
 		min-height: 700px;
+		padding: 10px;
+	}
+	
+	#playlistInfo{
+		padding: 3px;	
 	}
 	
 	/*
@@ -60,31 +65,20 @@
 	
 	.playlistName {
 		margin: 0;
-		padding-bottom: 10px;
+		padding: 5px 0;
 		font-size: 25px;
 	}
 	
 	.description {
 		background-color: #DCDCDC;
 		padding: 5px;
+		border-radius: 5px;
 	}
 	
 	.totalInfo{
 		display: inline;
 		padding-right: 5%;
 	}
-
-/*
-	.video-placeholder {
-		border: 1px dashed grey;
-		margin: 0 1em 1em 0;
-		height: 50px;
-		margin-left:auto;
-		margin-right:auto;
-		background-color: #E8E8E8;
-	}
-	
-	*/
 	
 	.playlistPic {
 		width: -webkit-fill-available;
@@ -94,7 +88,7 @@
 	.video-placeholder {
 		border: 1px dashed grey;
 		margin: 0 1em 1em 0;
-		height: 15px;
+		height: 150px;
 		margin-left:auto;
 		margin-right:auto;
 		background-color: #E8E8E8;
@@ -105,35 +99,12 @@
 	}
 
 	.videoIndex {
-		background-color: lightgrey;
 		cursor: grab;
 	}
-	/*
-	videoIndex {
-		display: inline;
-		float: left;
-		width: 20px;
-		background-color: lightgrey;
-		height: 80px;
-		cursor: grab;
-	}
-	.videoIndex > p{
-		display: inline;
-	}
-	*/
-	
 	
 	.videoContent:hover{
 		cursor: pointer;
 	}
-	
-	/*
-	.thumbnailBox{
-		display: inline-grid;
-	}
-	*/
-	
-	
 	
 	.duration{
 		text-align: center;
@@ -145,14 +116,6 @@
 		height: 70px;
 		padding: 5px;
 	}
-	
-	/*
-	.titles {
-		display: inline;
-		float: right;
-		width: 75%;
-	}
-	*/
 	
 	.videoNewTitle{
 		font-size: 16px;
@@ -168,6 +131,7 @@
 	.tag {
 		font-size: 13px;
 		color: #0033CC;
+		margin: 3px 0;
 	}
 	
 	.videoLine{
@@ -253,15 +217,21 @@
 
 			    $('.selectedPlaylist').attr('playlistID', playlistID); //혹시 나중에 사용할 일 있지 않을까?
 			    
-			    var thumbnail = '<img src="https://img.youtube.com/vi/' + result.thumbnailID + '/0.jpg" class="playlistPic">'
-			    				+ '<button id="playAllVideo" onclick="" class="btn btn-primary btn-sm">playlist 전체재생</button>';
+			    var thumbnail = '<div class="row">'
+				    				+ '<div class="col-sm-12">'
+					    				+ '<img src="https://img.youtube.com/vi/' + result.thumbnailID + '/0.jpg" class="playlistPic">'
+					    			+ '</div>'
+					    			+ '<div class="col-sm-12 text-center">'
+					    				+ '<button id="playAllVideo" onclick="" class="btn btn-primary btn-sm">playlist 전체재생</button>'
+					    			+ '</div>'
+				    			+ '</div>';
 			    $('#playlistInfo').append(thumbnail);
 			    
 				var name = '<div class="playlistName">'
 								+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
 								+ '<input type="text" id="inputPlaylistName" style="display:none;">'
-								+ '<button onclick="showEditPlaylistName()" class="btn btn-primary btn-sm" style="display:inline;">수정</button>'
-								+ '<div class="editPlaylistNameButtons"></div>'
+								+ '<button onclick="showEditPlaylistName()" class="btn btn-info btn-sm float-right" style="display:inline;">수정</button>'
+								+ '<div class="editPlaylistNameButtons" style="padding:3px;"></div>'
 						+ '</div>';
 			    $('#playlistInfo').append(name); //중간영역
 			    
@@ -280,8 +250,8 @@
 								+ '<div class="description">'
 									+ '<p id="displayDescription">' + description + '</p>'
 									+ '<input type="text" id="inputDescription" style="display:none";>'
-									+ '<button onclick="showEditDescription()" class="btn btn-primary btn-sm">수정</button>'
-									+ '<div class="editDescriptionButtons"></div>'
+									+ '<button onclick="showEditDescription()" class="btn btn-info btn-sm">수정</button>'
+									+ '<div class="editDescriptionButtons" style="padding:3px;"></div>'
 								+ '</div>'
 							+ '</div>';
 							
@@ -316,7 +286,7 @@
 						title = '';
 				    }
 
-			    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic">';
+			    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic col-sm-12">';
 
 			    	if (value.tag != null && value.tag.length > 0){
 				    	var tags = value.tag.replace(', ', ' #');
@@ -334,20 +304,24 @@
 					
 					var html = '<div class="row">'
 									+ '<div class="video col-sm-12" videoID="' + value.id + '">'
-										+ '<div class="videoIndex col-sm-1 d-sm-inline-block">  <p>' + (value.seq+1) + '</p></div>'
+										+ '<div class="videoIndex col-sm-1 d-sm-inline-block align-middle">  <p class="h-100">' + (value.seq+1) + '</p></div>'
 										+ '<div class="videoContent col-sm-10 d-sm-inline-block" onclick="location.href=' + address + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
-											+ '<div class="thumbnailBox">' 
-												+ thumbnail 
-												+ '<p class="duration"> ' + convertTotalLength(value.duration) + '</p>'
+											+ '<div class="row">'
+												+ '<div class="thumbnailBox col-sm-3 row">' 
+													+ thumbnail 
+													+ '<p class="duration col-sm-12"> ' + convertTotalLength(value.duration) + '</p>'
+												+ '</div>'
+												+ '<div class="titles col-sm-9">'
+													+ '<div class="row">'
+														+ '<p class="tag col-sm-12">' + tags + '</p>'
+														+ '<p class="videoNewTitle col-sm-12">' + newTitle + '</p>'
+														+ '<p class="videoOriTitle col-sm-12">' + title + '</p>'
+													+ '</div>'
+												+ '</div>'
 											+ '</div>'
-											+ '<div class="titles col-sm-8">'
-												+ '<p class="tag" class="inline">' + tags + '</p>'
-												+ '<p class="videoNewTitle">' + newTitle + '</p>'
-												+ '<p class="videoOriTitle">' + title + '</p>'
-											+ '</div>'
-										+'</div>'
+										+ '</div>'
 										+ '<div class="videoEditBtn col-sm-1 d-sm-inline-block">'
-											+ '<button href="#" class="aDeleteVideo btn btn-primary btn-sm" onclick="deleteVideo(' + value.id + ')"> 삭제</button>'
+											+ '<button href="#" class="aDeleteVideo btn btn-primary btn-sm align-middle" onclick="deleteVideo(' + value.id + ')"> 삭제</button>'
 										+ '</div>'
 										+ '</div>'
 									+ '<div class="videoLine"></div>'
@@ -359,16 +333,16 @@
 		});
 	}
 
-	$(function() { // playlist drag&drop으로 순서변경
+	$(function() { // video 순서 drag&drop으로 순서변경
 		$("#allVideo").sortable({
 			connectWith: "#allVideo", // 드래그 앤 드롭 단위 css 선택자
-			handle: ".video", // 움직이는 css 선택자
+			handle: ".videoIndex", // 움직이는 css 선택자
 			cancel: ".no-move", // 움직이지 못하는 css 선택자
 			placeholder: "video-placeholder", // 이동하려는 location에 추가 되는 클래스
 			cursor: "grab",
 
-			stop : function(e, ui){ // 이동 완료 후, 새로운 순서로 db update
-				//changeAllList();
+			update : function(e, ui){ // 이동 완료 후, 새로운 순서로 db update
+				changeAllVideo();
 			}
 		});
 			$( "#allVideo" ).disableSelection(); //해당 클래스 하위의 텍스트는 변경x
@@ -378,17 +352,17 @@
 	function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 해당 playlist의 전체 video order 재정렬
 		var playlistID = $('.selectedPlaylist').attr('playlistID');
 		var idList = new Array();
-	
+
 		$('.video').each(function(){
 			var tmp = $(this)[0];
 			var tmp_videoID = tmp.getAttribute('videoID');
 
 			if (deletedID != null){ // 이 함수가 playlist 삭제 뒤에 실행됐을 땐 삭제된 playlistID	 제외하고 재정렬 (db에서 삭제하는것보다 list가 더 빨리 불러와져서 이렇게 해줘야함)
 				if (deletedID != tmp_videoID)
-					idList.push(tmp_videoID);
+					idList.unshift(tmp_videoID); //자꾸 마지막 video부터 가져와져서 배열앞에 push 
 			}
 			else
-				idList.push(tmp_videoID);
+				idList.unshift(tmp_videoID);
 		});
 		
 		$.ajax({
@@ -462,8 +436,8 @@
 		$("#inputPlaylistName").val(value);
 		$("#inputPlaylistName").css("display", "inline");
 		
-		var buttons = '<button onclick="hideEditPlaylistName()">취소</button>' 
-						+ '<button onclick="savePlaylistName();">확인</button>';
+		var buttons = '<button onclick="hideEditPlaylistName()" class="btn btn-info btn-sm">취소</button>' 
+						+ '<button onclick="savePlaylistName()" class="btn btn-info btn-sm">확인</button>';
 		$(".editPlaylistNameButtons").append(buttons);
 	}
 
@@ -512,8 +486,8 @@
 
 		$("#inputDescription").css("display", "block");
 		
-		var buttons = '<button onclick="hideEditDescription()">취소</button>' 
-						+ '<button onclick="saveDescription();">확인</button>';
+		var buttons = '<button onclick="hideEditDescription()" class="btn btn-info btn-sm">취소</button>' 
+						+ ' <button onclick="saveDescription()" class="btn btn-info btn-sm">확인</button>';
 		$(".editDescriptionButtons").append(buttons);
 		
 	}
@@ -616,7 +590,7 @@
 					<div class="myPlaylist card"></div>
 				</div>
 				
-				<div class="selectedPlaylist col-sm-10">
+				<div class="selectedPlaylist col-sm-10 card">
 					<div class="row">
 						<div class="col-sm-3">
 							<div id="playlistInfo"></div>
