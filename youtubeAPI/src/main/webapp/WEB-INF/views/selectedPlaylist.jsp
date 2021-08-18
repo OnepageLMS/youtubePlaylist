@@ -29,10 +29,14 @@
 	body {
 		padding: 5px;
 	}
-	.displayVideo{
-		display: inline;
-		float: left;
-		width: 70%;
+	
+	.container {
+  		
+  		padding-right: 15px;
+		padding-left: 15px;
+	    margin-right: auto;
+		margin-left: auto;
+  		
 	}
 	
 	.videoTitle{
@@ -96,6 +100,10 @@
 		cursor: pointer;
 	}
 	
+	.videoNewTitle :hover{
+		color: #db4437;
+	}
+	
 	.videoSeq{
 		display: inline;
 	}
@@ -107,15 +115,7 @@
 		display: inline;
 	}
 	
-	.videoNewTitle{
-		font-size: 16px;
-		display: inline;
-		font-weight: bold;
-	}
 	
-	.videoOriTitle {
-		font-size: 14px;
-	}
 	
 	.tag {
 		font-size: 13px;
@@ -173,13 +173,13 @@
 				$('#allVideo').attr('playlistID', playlistID);
 
 				$('.playlistInfo').empty();
-				var html = '<p class="playlistName">' + playlistName + '</p>'
+				var html = '<p class="playlistName"> "' + playlistName + '" </p>'
 							+ '<div class="numOfVideos">'
 								+ '<p class="numOfNow"></p>'
 								+ ' / '
 								+ '<p class="numOfTotal">' + totalVideo + '</p>'
 							+ '</div>'
-							+ '<p class="totalVideoLength"> 총 길이 ' + convertTotalLength(totalVideoLength) + '</p>';
+							+ '<p class="totalVideoLength"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>';
 				$('.playlistInfo').append(html);
 			}
 		});
@@ -232,27 +232,31 @@
 			    	else 
 			    		var addStyle = '';
 				    
-					var html = '<div class="video" onclick="playVideoFromPlaylist(this)"'
-							+ ' seq="' + index //이부분 seq로 바꿔야할듯?
-							+ '" videoID="' + value.id 
-							+ '" youtubeID="' + value.youtubeID 
-							+ '" start_s="' + value.start_s
-							+ '" end_s="' + value.end_s
-							+ '" maxLength="' + value.maxLength + '"'
-							+ addStyle
-							+ '>'
-							+ '<ul><li class="nav-item">'
-							+ '<a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">'
-							+ '<div class="single-blog-post style-2 d-flex align-items-center">' //아직 안닫음
-								+ '<p class="videoSeq">' + (index+1) + '</p>'
-								+ '<div class="post-thumbnail"> '  + thumbnail + '</div>'
-								+ '<p class="tag" tag="' + value.tag + '">' + tmp_tags + '</p>'
-								+ '<p class="videoNewTitle post-title">' + tmp_newTitle + '</p>'
-								+ '<p class="videoOriTitle post-title">' + tmp_title + '</p>' 
-								+ '<p class="duration"> 재생시간 ' + convertTotalLength(value.duration) + '</p>'
-								+ '<a href="#" class="aDeleteVideo" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-							+ '</li></ul></div>'
-							+ '<div class="videoLine"></div>';
+			    	var html = '<ul ><li class="nav-item"> '
+			    		+ '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
+			    		//+ '<div class="single-blog-post style-2 d-flex align-items-center">' //너를 없애니 되었구나..
+			    		+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
+						+ ' seq="' + index //이부분 seq로 바꿔야할듯?
+						+ '" videoID="' + value.id 
+						+ '" youtubeID="' + value.youtubeID 
+						+ '" start_s="' + value.start_s
+						+ '" end_s="' + value.end_s
+						+ '" maxLength="' + value.maxLength + '"'
+						+ addStyle
+						+ '>'
+							//+ '<div class="videoSeq ">' + (index+1) + '</div>'
+							+ '<div class="post-thumbnail col-xs-4 col-lg-4">'
+							+ 	'<div class="videoSeq ">' + (index+1) + thumbnail + '</div>'
+							+ 	'<div class="tag" tag="' + value.tag + '">' + tmp_tags + '</div>'
+							+'</div>'
+							+ '<div class="videoNewTitle col-xs-7 col-lg-7">' 
+							+ 	'<h6 class="post-title">' + tmp_newTitle + '</h6>'
+							+ 	'<div class="videoOriTitle" style = "color :#a6a6a6 ">' + tmp_title + '</div>'
+							+ 	'<div class="duration"> ' + convertTotalLength(value.duration) + '</div>'
+							+'</div>'
+							+ '<a href="#" class="aDeleteVideo col-xs-1 col-lg-1 badge badge-primary" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
+						+ '</div></li></ul>'
+						+ '<div class="videoLine"></div>';
 					$('.videos').append(html); 
 				});
 			}
@@ -260,6 +264,7 @@
 	}
 	
 	function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클릭했을 때 실행 (처음 이 페이지가 불러와질때 제외)
+	//console.log(item);
 		$('.displayVideo').attr('videoID', item.getAttribute('videoID'));
 		
 		$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동 
@@ -273,9 +278,9 @@
 
 		var childs = item.childNodes;
 		
-		newTitle = childs[3].innerText;
-		title = childs[4].innerText;
-		videoTag = childs[2].attributes[1].value;
+		newTitle = childs[1].childNodes[0].innerText;
+		title = childs[1].childNodes[1].innerText;
+		videoTag = childs[0].childNodes[1].attributes[1].value;
 
 		setDisplayVideoInfo(item.getAttribute('seq'));
 		
@@ -468,12 +473,12 @@
 	function convertTotalLength(seconds){
 		var seconds_hh = Math.floor(seconds / 3600);
 		var seconds_mm = Math.floor(seconds % 3600 / 60);
-		var seconds_ss = seconds % 3600 % 60;
+		var seconds_ss = Math.floor(seconds % 3600 % 60);
 		var result = "";
 		
 		if (seconds_hh > 0)
-			result = seconds_hh + ":";
-		result += seconds_mm + ":" + seconds_ss;
+			result = ("00"+seconds_hh .toString()).slice(-2)+ ":";
+		result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
 		
 		return result;
 	}
@@ -506,54 +511,62 @@
 
 </script>
 <body>
- <div class = "row no-gutters">
- 
-	<div class="displayVideo">
-		<div id="player" class="col-12 col-md-7 col-lg-8">
-			<div class="tab-content">
-        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
-        	 			 <div class="single-feature-post video-post bg-img" style="background-image: url(img/bg-img/7.jpg);">
-                             
-        	 			 </div>
-        	 		</div>
-        	 </div>
-		</div>
+
+<div class="container">
+	<div class = "row ">
+	 
+			<div class="displayVideo col-12 col-sm-8 col-md-8 col-lg-8" >
+			
+				<div id="player" class="col-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="tab-content ">
+	        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
+	        	 			 <div class="single-feature-post video-post bg-img" style="background-image: url(img/bg-img/7.jpg);">
+	                             
+	        	 			 </div>
+	        	 		</div>
+	        	 	</div>
+	        	 </div>
+				
+				<div id="timeSetting" class="col-12 col-md-12 col-lg-12">
+					<form id="videoForm" onsubmit="return validation(event)" style="display: none">
+						<input type="hidden" name="start_s" id="start_s">
+						<input type="hidden" name="end_s" id="end_s">
+					 	<input type="hidden" name="duration" id="duration">
+					 	<input type="hidden" name="id" id="inputVideoID">
+					 	<input type="hidden" name="playlistID" id="inputPlaylistID">
+					 	
+					 	
+						<div class="col-12 col-xs-12 col-md-12 col-lg-12">
+							<button onclick="getCurrentPlayTime1()" type="button" style="border: none; background: transparent;"> start time </button> : 
+							<input type="text" id="start_hh" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
+							<input type="text" id="start_mm" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
+							<input type="text" id="start_ss" maxlength="5" size="2" style=" border: none; background: transparent;"> 초 
+							<button onclick="seekTo1()" type="button" style="border: none; background: transparent;"> <i class="fa fa-share" aria-hidden="true"></i> </button>
+							<span id=warning1 style="color:red;"></span> <br>
+						</div>
+						
+						<div class="col-12 col-xs-12 col-md-12 col-lg-12">
+							<button onclick="getCurrentPlayTime2()" type="button" style="border: none; background: transparent;"> end time </button> : 
+							<input type="text" id="end_hh" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
+							<input type="text" id="end_mm" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
+							<input type="text" id="end_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초     
+							<button onclick="seekTo2()" type="button" style="border: none; background: transparent;"> <i class="fa fa-share" aria-hidden="true"></i> </button> 
+							<span id=warning2 style="color:red;"></span> <br>
+						</div>
+						
+						<div class="col-12 col-xs-12 col-md-12 col-lg-12">
+							태그추가: <input type="text" id="inputTag" name="tag">
+							<button form="videoForm" type="submit" style="color :#a6a6a6; border: none; background: transparent;">업데이트</button>
+						</div>
+					</form>
+				</div>
+			
+			</div>
 		
-		<form id="videoForm" onsubmit="return validation(event)" style="display: none">
-			<input type="hidden" name="start_s" id="start_s">
-			<input type="hidden" name="end_s" id="end_s">
-		 	<input type="hidden" name="duration" id="duration">
-		 	<input type="hidden" name="id" id="inputVideoID">
-		 	<input type="hidden" name="playlistID" id="inputPlaylistID">
-		 	
-		 	<div class="videoTitle">
-		 		<input type="text" name="newTitle" id="inputNewTitle">
-		 		
-		 	</div>
-			
-			<button onclick="getCurrentPlayTime1()" type="button"> start time </button> : 
-			<input type="text" id="start_hh" maxlength="2" size="2"> 시 
-			<input type="text" id="start_mm" maxlength="2" size="2"> 분 
-			<input type="text" id="start_ss" maxlength="5" size="5"> 초 
-			<button onclick="seekTo1()" type="button"> 위치이동 </button>
-			<span id=warning1 style="color:red;"></span> <br>
-			
-			<button onclick="getCurrentPlayTime2()" type="button"> end time </button> : 
-			<input type="text" id="end_hh" max="" maxlength="2" size="2"> 시 
-			<input type="text" id="end_mm" max="" maxlength="2" size="2"> 분 
-			<input type="text" id="end_ss" maxlength="5" size="5"> 초 
-			<button onclick="seekTo2()" type="button"> 위치이동 </button> 
-			<span id=warning2 style="color:red;"></span> <br>
-			
-			태그추가: <input type="text" id="inputTag" name="tag">
-			<button form="videoForm" type="submit">업데이트</button>
-		</form>
-		
-	</div>	
-	
-	<div id="allVideo" class="col-12 col-md-5 col-lg-4">
-		<div class="playlistInfo"></div>
-		<div class="videos"></div>
+			<div id="allVideo" class="col-12 col-sm-4 col-md-4 col-lg-4">
+				<div class="playlistInfo"></div>
+				<div class="videos"></div>
+			</div>
 	</div>
 </div>
 
