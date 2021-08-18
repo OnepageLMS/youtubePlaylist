@@ -8,27 +8,22 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-<!-- bootstrap -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/fonts/icomoon/style.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/fonts/brand/style.css">
-
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/jquery.fancybox.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/aos.css">
-
-    <!-- MAIN CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/style.css">
+	<!-- bootstrap template-->
     
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" 
+    					integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
 
 	<title>contentsList</title>
-<style>
+<style> 
 	.contents{
 		padding: 10px;
 	}
@@ -62,10 +57,7 @@
 	}
 </style>
 </head>
-<script 
-  src="http://code.jquery.com/jquery-3.5.1.js"
-  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-  crossorigin="anonymous"></script>
+
 <script>
 $(document).ready(function(){
 	var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
@@ -81,27 +73,24 @@ $(document).ready(function(){
 		var content = $('.day:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
 		var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "'";
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
-		
+
+		var published;
+		if (allContents[i].published == true)
+			published = '<p class="published badge badge-primary">' + "공개: " + allContents[i].published + '</p>';
+		else
+			published = '<p class="published badge badge-danger">' + "공개: " + allContents[i].published + '</p>';
+				
 		if(allContents[i].published == true){
 			content.append("<div class='content' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
 					+ '<ul class="list-unstyled tutorial-section-list"><li>'
 					+ '<h3 class="title"><i class="fa fa-play-circle-o" aria-hidden="true"></i>'  
 					+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']</h3>'
 					+ '<p><span class="mr-2 mb-2">' +  convertTotalLength(allContents[i].totalVideoLength) + '</span></p>'
-					+ '<p class="published badge badge-primary">' + "공개: " + allContents[i].published + '</p>'
+					+ published
 					+ '<p class="startDate">' + "시작일: " + startDate + '</p>'
 				 	+ "</li></ul></div>");
 		}
-		else{
-			content.append("<div class='content' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-					+ '<ul class="list-unstyled tutorial-section-list"><li>'
-					+ '<h3 class="title"><i class="fa fa-play-circle-o" aria-hidden="true"></i>'  
-					+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']</h3>'
-					+ '<p><span class="mr-2 mb-2">' +  convertTotalLength(allContents[i].totalVideoLength) + '</span></p>'
-				 	+ '<p class="published badge badge-danger">' + "공개: " + allContents[i].published + '</p>'
-				 	+ '<p class="startDate">' + "시작일: " + startDate + '</p>'
-				 	+ "</li></ul></div>");
-		}
+		
 	}
 });
 
@@ -127,16 +116,20 @@ $(document).ready(function(){
 
 </script>
 <body>
-	
-	<div class="contents" classID="${classInfo.id}">
-		<button onclick="">강의추가</button>
-		<c:forEach var="j" begin="1" end="${classInfo.days}">
-			<div class="day" day="${j}">
-				<h3>${j} 일 강의</h3>
-				<a href="../addContent/${classInfo.id}/${j}">+페이지추가</a>
-			</div>
-		</c:forEach>
-
+	<div class="container">
+		<div class="hello">
+			<h2>test</h2>
+		</div>
+		<div class="contents" classID="${classInfo.id}">
+			<button onclick="">강의추가</button>
+			<c:forEach var="j" begin="1" end="${classInfo.days}">
+				<div class="day" day="${j}">
+					<h3>${j} 일 강의</h3>
+					<a href="../addContent/${classInfo.id}/${j}">+페이지추가</a>
+				</div>
+			</c:forEach>
+		</div>
 	</div>
+	
 </body>
 </html>
