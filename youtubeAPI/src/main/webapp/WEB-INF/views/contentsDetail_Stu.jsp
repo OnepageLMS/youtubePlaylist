@@ -206,7 +206,7 @@
 	 				playlist[i].newTitle = (playlist[i].newTitle).substring(0, 45) + " ..."; 
 				}*/
 	 			
-	 			if(playlist[i].watched == 1){ //끝까지 다 본 영상임을 표시하는 코드
+	 			if(playlist[i].watched == 1){ //끝까지 다 본 영상임을 표시하는 코드//
 	 				$("#get_view").append('<ul >' +
 	 						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">' +
 	 						'<div class="single-blog-post style-2 d-flex align-items-center">' +
@@ -219,7 +219,7 @@
 			 						+ '<div>' + show_th + ":" + show_tm + ":" + show_ts + "  " + '<span class="badge badge-primary"> 완료 </span></div>'
 			 					+'</div>' +
                             '</div>' 
-		 					+ '</div></li>');
+		 					+ '</div></li></ul>');
 	 			}
 	 			else{ //끝까지 본 영상이 아닐 경우
 	 				/*$("#get_view").append(thumbnail + playlist[i].newTitle 
@@ -391,8 +391,8 @@
         
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('onepageLMS', {
-                height: '315',            // <iframe> 태그 지정시 필요없음
-                width: '560',             // <iframe> 태그 지정시 필요없음
+                height: '480',            // <iframe> 태그 지정시 필요없음
+                width: '854',             // <iframe> 태그 지정시 필요없음
                 videoId: playlist[0].youtubeID,
                 playerVars: {             // <iframe> 태그 지정시 필요없음
                     controls: '2'

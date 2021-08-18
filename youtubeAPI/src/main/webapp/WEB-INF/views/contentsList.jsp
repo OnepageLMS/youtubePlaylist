@@ -10,15 +10,22 @@
 	<meta charset="UTF-8">
 <!-- bootstrap -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/fonts/brand/style.css">
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/aos.css">
+
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsList/css/style.css">
-	
-
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 
 	<title>contentsList</title>
 <style>
@@ -75,27 +82,38 @@ $(document).ready(function(){
 		var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "'";
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 		
-		content.append("<div class='content' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-						+ '<ul class="list-unstyled tutorial-section-list">' + '<li>'
-						+ '<p class="title"> <b>'  + allContents[i].title  + '</b></p>'
-						+ '<p><span class="mr-2 mb-2">' +  convertTotalLength(allContents[i].totalVideoLength) + '</span></p>'
-							/*+ '</b><a href="../editContent/' + allContents[i].id + '"> 수정</a>'
-							+ '<a href="javascript:deleteCheck(' + allContents[i].classID +","+ allContents[i].id + ')"> 삭제</a>'*/
-						+ '<p class="startDate">' + "시작일: " + startDate + '</p>'
-					 	+ '<p class="published">' + "공개: " + allContents[i].published + '</p>'
-					 	+ "</li></ul></div>");
+		if(allContents[i].published == true){
+			content.append("<div class='content' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+					+ '<ul class="list-unstyled tutorial-section-list"><li>'
+					+ '<h3 class="title"><i class="fa fa-play-circle-o" aria-hidden="true"></i>'  
+					+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']</h3>'
+					+ '<p><span class="mr-2 mb-2">' +  convertTotalLength(allContents[i].totalVideoLength) + '</span></p>'
+					+ '<p class="published badge badge-primary">' + "공개: " + allContents[i].published + '</p>'
+					+ '<p class="startDate">' + "시작일: " + startDate + '</p>'
+				 	+ "</li></ul></div>");
+		}
+		else{
+			content.append("<div class='content' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+					+ '<ul class="list-unstyled tutorial-section-list"><li>'
+					+ '<h3 class="title"><i class="fa fa-play-circle-o" aria-hidden="true"></i>'  
+					+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']</h3>'
+					+ '<p><span class="mr-2 mb-2">' +  convertTotalLength(allContents[i].totalVideoLength) + '</span></p>'
+				 	+ '<p class="published badge badge-danger">' + "공개: " + allContents[i].published + '</p>'
+				 	+ '<p class="startDate">' + "시작일: " + startDate + '</p>'
+				 	+ "</li></ul></div>");
+		}
 	}
 });
 
 	function convertTotalLength(seconds){
 		var seconds_hh = Math.floor(seconds / 3600);
 		var seconds_mm = Math.floor(seconds % 3600 / 60);
-		var seconds_ss = seconds % 3600 % 60;
+		var seconds_ss = Math.floor(seconds % 3600 % 60);
 		var result = "";
 		
 		if (seconds_hh > 0)
-			result = seconds_hh + ":";
-		result += seconds_mm + ":" + seconds_ss;
+			result = ("00"+seconds_hh .toString()).slice(-2)+ ":";
+		result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
 		
 		return result;
 	}

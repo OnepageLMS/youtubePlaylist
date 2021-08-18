@@ -7,6 +7,24 @@
 <head>
 <meta charset="UTF-8">
 <title>SelectedPlaylist</title>
+<meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>Vizew - Blog &amp; Magazine HTML Template</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/contentsDetail_Stu/img/core-img/favicon.ico">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsDetail_Stu/style.css">
+    
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+	
 <style>
 	body {
 		padding: 5px;
@@ -223,14 +241,17 @@
 							+ '" maxLength="' + value.maxLength + '"'
 							+ addStyle
 							+ '>'
+							+ '<ul><li class="nav-item">'
+							+ '<a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">'
+							+ '<div class="single-blog-post style-2 d-flex align-items-center">' //아직 안닫음
 								+ '<p class="videoSeq">' + (index+1) + '</p>'
-								+ thumbnail
+								+ '<div class="post-thumbnail"> '  + thumbnail + '</div>'
 								+ '<p class="tag" tag="' + value.tag + '">' + tmp_tags + '</p>'
-								+ '<p class="videoNewTitle">' + tmp_newTitle + '</p>'
-								+ '<p class="videoOriTitle">' + tmp_title + '</p>'
+								+ '<p class="videoNewTitle post-title">' + tmp_newTitle + '</p>'
+								+ '<p class="videoOriTitle post-title">' + tmp_title + '</p>' 
 								+ '<p class="duration"> 재생시간 ' + convertTotalLength(value.duration) + '</p>'
 								+ '<a href="#" class="aDeleteVideo" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-							+ '</div>'
+							+ '</li></ul></div>'
 							+ '<div class="videoLine"></div>';
 					$('.videos').append(html); 
 				});
@@ -485,8 +506,18 @@
 
 </script>
 <body>
+ <div class = "row no-gutters">
+ 
 	<div class="displayVideo">
-		<div id="player"></div>
+		<div id="player" class="col-12 col-md-7 col-lg-8">
+			<div class="tab-content">
+        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
+        	 			 <div class="single-feature-post video-post bg-img" style="background-image: url(img/bg-img/7.jpg);">
+                             
+        	 			 </div>
+        	 		</div>
+        	 </div>
+		</div>
 		
 		<form id="videoForm" onsubmit="return validation(event)" style="display: none">
 			<input type="hidden" name="start_s" id="start_s">
@@ -519,10 +550,12 @@
 		</form>
 		
 	</div>	
-	<div id="allVideo">
+	
+	<div id="allVideo" class="col-12 col-md-5 col-lg-4">
 		<div class="playlistInfo"></div>
 		<div class="videos"></div>
 	</div>
+</div>
 
 </body>
 </html>
