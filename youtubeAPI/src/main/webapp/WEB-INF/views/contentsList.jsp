@@ -28,8 +28,16 @@
 		padding: 10px;
 	}
 	
-	.content{
-		margin: 3px;
+	.contentInfo{
+		font-size: 13px;
+		color: lightgrey;
+		display: inline;
+		margin: 0 3px;
+	}
+	
+	.contentInfoBorder{
+		border: 0.5px solid lightgrey;
+		display: inline;
 	}
 	
 	.videoPic {
@@ -53,10 +61,8 @@
 $(document).ready(function(){
 	var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
 	console.log(allContents);
-
 	for(var i=0; i<allContents.length; i++){
-		console.log(allContents[i]);
-		var day = allContents[i].day - 1;
+		var day = allContents[i].day;
 		var date = new Date(allContents[i].startDate.time); //timestamp -> actural time
 		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 		var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
@@ -68,31 +74,178 @@ $(document).ready(function(){
 
 		var published;
 		
-		if (allContents[i].published == true)
-			published = '<p class="published badge badge-primary">' + "공개: " + allContents[i].published + '</p>';
+		if (allContents[i].published == false)
+			published = '<button onclick="CancelPublished()" class="btn btn-sm btn-outline-primary">공개</i>';
 		else
-			published = '<p class="published badge badge-danger">' + "공개: " + allContents[i].published + '</p>';
+			published = '<button onclick="publish()" class="btn btn-sm btn-outline-danger">비공개</i>';
 				
-		content.append("<div class='content row card' seq='" + allContents[i].daySeq + "' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-							+ '<div class="index col-sm-1">' + (i+1) + '. </div>'
-							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true"></i>' + '</div>'
-							+ '<div class="col-sm-7 row">'
-								+ '<div class="col-sm-12">' 
-									+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']' 
+		content.append("<div class='content card col list-group-item' seq='" + allContents[i].daySeq + "'>"
+							+ '<div class="row">'
+								+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
+								+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
+								+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-12'>"
+										+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']' 
+									+ '</div>'
+									+ '<div class="col-sm-12">'
+											+ '<p class="contentInfo">' + 'Youtube' + '</p>'
+											+ '<div class="contentInfoBorder"></div>'
+											+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
+											+ '<div class="contentInfoBorder"></div>'
+											+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+									+ '</div>' 
 								+ '</div>'
-								+ '<div class="col-sm-12">'
-									+ '<p>' + 'Youtube' + '</p>'
-									+ '<p class="videoLength">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
-									+ '<p class="endDate">' + '마감일: ' + endDate + '</p>'
-								+ '</div>' 
+								+ '<div class="col-sm-2 text-center">' + published + '</div>'
+								+ '<div class="contentModBtn col-sm-1 text-center">' + '<button class="btn btn-sm btn-info">more</button>' 
 							+ '</div>'
-							+ '<div class="col-sm-2">' + published + '</div>'
-							+ '<div class="contentModBtn col-sm-1">' + '<button class="btn btn-sm">more</button>' 
 						 + "</div>");
 
 		
 	}
 });
+	function showAddContentForm(day){
+		day -= 1; //임의로 설정... 
+		
+		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
+		var htmlAddCancel = "'javascript:addCancel()'";
+		
+		var addFormHtml = '<div class="addContentForm">'
+							+ '<div>'
+								+ '<h5> 학습페이지 추가 </h5>'
+							+ '</div>'
+							+ '<form id="addContent" class="form-group" action="${pageContext.request.contextPath}/class/addContentOK" onsubmit="return checkForm(this);" method="post">' 
+								+ '<input type="hidden" name="classID" value="${classInfo.id}">'
+								+ '<input type="hidden" name="day" value="' + day + '"/>'
+								+ '<div class="selectContent">'
+									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택헤주세요 </p>'
+									+ '<button id="selectPlaylistBtn" type="button" class="d-sm-inline-block float-right btn btn-sm btn-primary" onclick="popupOpen();" style="border:none;">'
+										+ '선택</button>'
+									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
+								+ '</div>'
+								/*
+								+ '<div class="selectContent">'
+									+ '<div id="selectedContent">'
+										+ '<div id="playlistThumbnail"></div>'
+										+ '<p id="playlistTitle"> Playlist를 선택해주세요 <p>'
+									+ '</div>'
+									+ '<button type="button" id="selectPlaylistBtn" onclick="popupOpen();">playlist가져오기</button>'
+									+ '<input type="hidden" name="playlistID" id="inputPlaylistID">'
+									//+ '<input type="hidden" name="thumbnailID" id="inputThumbnailID" value="">'
+								+ '</div>'
+								*/
+								+ '<div class="inputTitle input-group mb-3">'
+									+ '<div class="input-group-prepend">'
+										+ '<label for="title" class="input-group-text">제목</label>'
+									+ '</div>'
+									+ '<input class="form-control d-sm-inline-block" type="text" name="title">'
+								+ '</div>'
+								+ '<div class="inputDescription">'
+									+ '<textarea name="description" class="form-control" rows="10" id="comment" placeholder="이곳에 내용을 작성해 주세요."></textarea>'
+								+ '</div>'
+								+ '<div class="">'
+									+ '<div class="setEndDate">'
+										+ '<label for="endDate"> 마감일: </label>'
+										+ '<input type="hidden" name="endDate">'
+										+ '<input type="date" id="endDate">'
+										+ '<input type="number" class="setTime end_h" value="0" min="0" max="23"> 시'
+										+ '<input type="number" class="setTime end_m" value="0" min="0" max="59"> 분'
+									+ '</div>'
+									+ '<div class="setStartDate">'
+										+ '<label for="startDate">공개일: </label>'
+										+ '<input type="hidden" name="startDate">'
+										+ '<input type="date" id="startDate">'
+										+ '<input type="number" class="setTime start_h" value="0" min="0" max="23"> 시'
+										+ '<input type="number" class="setTime start_m" value="0" min="0" max="59"> 분'
+										+ '<button type="button" onclick="location.href=' + htmlGetCurrentTime + '">지금</button>'
+									+ '</div>'
+								+ '</div>'
+								+ '<button class="btn btn-sm btn-warning" onclick="location.href=' + htmlAddCancel + '" >취소</button>'
+								+ '<button type="submit" class="btn btn-sm btn-primary">저장</button>'
+							+ '</form>'
+									
+
+		$('.day:eq(' + day + ')').append(addFormHtml);
+
+		//아래부분 마감일 설정때 나오도록...?
+		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
+		var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
+		endDate.min = date;
+		//endDate.value = date;
+		startDate.min = date;
+		startDate.value = date;
+
+		//"../addContent/${classInfo.id}/${j}"
+	}
+
+	function getCurrentTime(){
+		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
+		var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
+		startDate.value = date;
+		
+		var hour = new Date().getHours();
+		var min = new Date().getMinutes();
+		$('.start_h').val(hour);
+		$('.start_m').val(min);
+		console.log(hour, min);
+	}
+
+	function addCancel(daySeq) {
+		var a = confirm("등록을 취소하시겠습니까?");
+		//if (a)
+			
+	}
+
+	function popupOpen(){
+		if ($('#inputPlaylistID').val() >= 0){
+			console.log($('#inputPlaylistID').val());
+			if('이미 선택한 Playlist가 있습니다. 새로 바꾸시겠습니까?'){
+			}
+			else {
+				return false;
+			}
+		}
+		
+		var myEmail = "yewon.lee@onepage.edu"; //이부분 나중에 로그인 구현하면 로그인한 정보 가져오기
+		var url = "${pageContext.request.contextPath}/playlist/myPlaylist/" + myEmail;
+		var popOption = "width=500, height=600";
+		var p = window.open(url, "myPlaylist", popOption);
+		p.focus();
+	} 
+
+	function checkForm(item){
+		 console.log(item);
+	        var date = $('#startDate').val().split("-");
+	        var hour = $('.start_h').val();
+	        var min = $('.start_m').val();
+	        var startDate = new Date(date[0], date[1]-1, date[2], hour, min, 00);
+
+	        if ($('#endDate').val() == null){
+				alert("마감일을 설정해주세요!");
+				$('#endDate').focus();
+		    }
+
+	        var e_date = $('#endDate').val().split("-");
+	        var e_hour = $('.end_h').val();
+	        var e_min = $('.end_m').val();
+	        var endDate = new Date(e_date[0], e_date[1]-1, e_date[2], e_hour, e_min, 00);
+
+	        if(startDate.getTime() >= endDate.getTime()) {
+	            alert("컨텐츠 마감일보다 게시일이 빨라야 합니다.");
+		        $('#startDate').focus();
+	            return false;
+	        }
+
+	        if ($('input[name=title]').val() == null){
+				alert("제목을 입력해주세요!");
+				$('input[name=title]').focus();
+				return false;
+		    }
+		        
+	        else{
+				$('input[name=endDate]').val(endDate);
+				$('input[name=startDate]').val(startDate);
+		    }
+	}
 
 	function convertTotalLength(seconds){
 		var seconds_hh = Math.floor(seconds / 3600);
@@ -119,12 +272,14 @@ $(document).ready(function(){
 	<div class="container card col-sm-8">
 		<div class="row">
 			<div class="contents col-sm-12" classID="${classInfo.id}">
-				<button onclick="" class="btn btn-primary">강의추가</button>
+				<button onclick="#" class="btn btn-primary">강의추가</button>
 				
-				<c:forEach var="j" begin="1" end="${classInfo.days}">
-					<div class="day card" day="${j}">
-						<h3 class="card-header">${j} 일 강의</h3>
-						<a href="../addContent/${classInfo.id}/${j}">+페이지추가</a>
+				<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+					<div class="day card list-group list-group-flush" day="${status.index}">
+						<div class="card-header">
+							<h4 style="display: inline;">${j} 일 강의</h4>
+							<button onclick='showAddContentForm(${status.index})' class="btn btn-sm btn-success float-right">+페이지추가</button>
+						</div>
 					</div>
 				</c:forEach>
 			</div>

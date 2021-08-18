@@ -175,7 +175,7 @@
 				else{
 					var searchHtml = '<div class="searchPlaylist input-group mb-1">'
 										+ '<input type="text" class="d-sm-inline-block form-control" name="search" placeholder="playlist 검색" >'
-										+ '<div class="<div class="input-group-append">'
+										+ '<div class="input-group-append">'
 											+ '<button type="button" class="btn btn-primary d-sm-inline-block">검색</button>'
 										+ '</div>'
 									+ '</div>';
@@ -553,21 +553,25 @@
 		if(index){
 			var item = $('.playlist')[index].attributes;
 			var children = $('.playlist')[index].childNodes;
+			console.log(item);
+			console.log(children);
 			var playlistID = item[2].value;
 			var thumbnailID = item[3].value;	
-			var name = children[3].innerText.replace('/', '');
-			var totalVideo = children[4].innerText.replace('개 영상', '');
+			var name = children[2].innerText;
+			var totalVideo = children[4].innerText;
 			
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + thumbnailID + '/0.jpg" class="videoPic">';
-			var playlistInfo = thumbnail + '<p>총 ' + totalVideo + '개의 비디오 </p>';
+			var thumbnail = '<div class="image-area mt-4"><img id="imageResult" src="https://img.youtube.com/vi/' + thumbnailID + '/0.jpg" class="img-fluid rounded shadow-sm mx-auto d-block"></div>';
+			var playlistInfo = thumbnail + '<p>총 ' + totalVideo + ' </p>';
 			$('#playlistThubmnail', opener.document).empty();
-			$('#playlistThubmnail', opener.document).append(playlistInfo);
+			console.log(thumbnailID);
+			console.log(playlistInfo);
+			$('#playlistThumbnail', opener.document).append(playlistInfo);
 			
-			$('#playlistTitle', opener.document).text("playlist : " + name + " 선택됨");
+			$('#playlistTitle', opener.document).text('"' + name + '" 선택됨');
 			
 			$('#inputPlaylistID', opener.document).val(playlistID); //부모페이지에 선택한 playlistID 설정
 			$('#inputThumbnailID', opener.document).val(thumbnailID);
-			$('#selectPlaylistBtn').text('새로 가져오기');
+			$('#selectPlaylistBtn', opener.document).text('playlist 변경');
 			
 			if (confirm('playlist가 선택되었습니다. 현재 창을 닫으시겠습니까?')){
 				self.close();
