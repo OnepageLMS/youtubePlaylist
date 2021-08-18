@@ -55,6 +55,7 @@ public class PlaylistController {
 		PlaylistVO vo = new PlaylistVO();
 		vo.setCreatorEmail(request.getParameter("creator"));
 		vo.setPlaylistName(request.getParameter("name"));
+		vo.setDescription(request.getParameter("description"));
 		vo.setSeq(playlistService.getCount()); //새로운 playlist의 seq가 될 숫자 구하기
 
 		if(playlistService.addPlaylist(vo) != 0) 
