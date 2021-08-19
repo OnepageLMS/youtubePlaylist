@@ -78,7 +78,7 @@ public class Stu_ClassController{
 		model.addAttribute("playlistID", playlistID);
 		model.addAttribute("classPlaylistID", id);
 		model.addAttribute("classID", classInfo);
-		model.addAttribute("list", videoCheckService.getTime(175)); //studentID가 3으로 설정되어있음
+		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
 		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		
@@ -87,21 +87,32 @@ public class Stu_ClassController{
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/ajaxTest.do", method = RequestMethod.POST)
-	public List<Stu_VideoVO> ajaxTest(HttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
+	public List<Stu_VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-	    Stu_VideoVO pvo = new Stu_VideoVO();
-	    pvo.setPlaylistID(playlistID);
+		//int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+	    Stu_VideoVO vo = new Stu_VideoVO();
+	    vo.setPlaylistID(playlistID);
 	    
+	    //Stu_VideoCheckVO vco = new Stu_VideoCheckVO();
+	    //vco.setClassPlaylistID(classPlaylistID);
 	    //model.addAttribute("totalVideo", playlistcheckService.getTotalVideo(playlistID));
 	    //System.out.println("totalVideo 가 잘 나오니? " + playlistcheckService.getTotalVideo(playlistID));
 	    
-	    return videoService.getVideoList(pvo);
+	    return videoService.getVideoList(vo);
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/ajaxTest2.do", method = RequestMethod.POST)
-	public Stu_PlaylistCheckVO ajaxTest2(HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/forClassInformation", method = RequestMethod.POST)
+	public Stu_ClassContentsVO ajaxTest(HttpServletRequest request, Model model) throws Exception {
+		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+	   
+	    return classContentsService.getOneContent(classPlaylistID);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/progressbar", method = RequestMethod.POST)
+	public Stu_PlaylistCheckVO progressbar(HttpServletRequest request) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("id"));
 		//System.out.println()
@@ -119,8 +130,8 @@ public class Stu_ClassController{
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/ajaxTest3.do", method = RequestMethod.POST)
-	public String ajaxTest3(HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/isExisted", method = RequestMethod.POST)
+	public String isExisted(HttpServletRequest request) throws Exception {
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
@@ -210,6 +221,8 @@ public class Stu_ClassController{
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int watch = Integer.parseInt(request.getParameter("watch"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+		int classID = Integer.parseInt(request.getParameter("classID"));
 		
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
@@ -217,6 +230,8 @@ public class Stu_ClassController{
 		vo.setStudentEmail(studentID);
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
+		vo.setClassPlaylistID(classPlaylistID);
+		vo.setClassID(classID);
 		
 		Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
 		vo.setWatched(watch);
@@ -226,6 +241,7 @@ public class Stu_ClassController{
 		pcvo.setStudentID(Integer.parseInt(studentID));
 		pcvo.setPlaylistID(playlistID);
 		pcvo.setVideoID(videoID);
+		pcvo.setClassPlaylistID(classPlaylistID);
 		
 		//우선 현재 db테이블의 getWatched를 가져온다. 이때 가져온 값이 0이다
 		//vo.setWatched를 한다.
@@ -233,14 +249,15 @@ public class Stu_ClassController{
 		//이럴때 playlistcheck테이블의 totalWatched업데이트 시켜주기
 		
 		
-		if (videoCheckService.updateWatch(vo) == 0) {
+		if (videoCheckService.updateWatch(vo) == 0) { //하나도 안멈추고 처음부터 끝까지 보는 경우에!!! 업데이ㅡ가 안되자나!!
 			System.out.println("데이터 업데이트 실패 ======= ");
 			videoCheckService.insertTime(vo);
+			playlistcheckService.updateTotalWatched(pcvo);
 
 		}
 		else { //업데이트가 성공하면 
 			if(checkVO.getWatched() == 0) { //checkVO의정보가 playlistcheck에 업데이트가 되지 않았면 
-				if(vo.getWatched() == 1) {
+				if(vo.getWatched() == 1) { //원래 값은 0이었는데 1로 업뎃된것을 의미
 					System.out.println("값이 뭔데 ? " +vo.getWatchedUpdate());
 					System.out.println("값이 뭔데 ? " +vo.getWatched());
 					System.out.println("값이 뭔디 3 " +pcvo.getStudentID() + " / " + pcvo.getPlaylistID() + " / " + pcvo.getVideoID());

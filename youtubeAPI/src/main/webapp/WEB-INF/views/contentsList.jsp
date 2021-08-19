@@ -41,7 +41,7 @@
 	
 	.addContentForm{
 		padding: 10px;
-		background-color: 
+		border: 2px solid grey;
 	}
 	
 	.contentInfoBorder{
@@ -80,13 +80,14 @@ $(document).ready(function(){
 		var content = $('.day:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
 		var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "'";
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
-
 		var published;
-		
-		if (allContents[i].published == false)
-			published = '<button onclick="CancelPublished()" class="btn btn-sm btn-outline-primary">공개</i>';
+
+		if (allContents[i].published == true)
+			published = '<input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" class="custom-control-input" class="switch" name="published">'
+							+ '<label class="custom-control-label" for="switch">공개</label>';
 		else
-			published = '<button onclick="publish()" class="btn btn-sm btn-outline-danger">비공개</i>';
+			published = '<label class="custom-control-label" for="switch">비공개</label>'
+							+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
 				
 		content.append("<div class='content card col list-group-item' seq='" + allContents[i].daySeq + "'>"
 							+ '<div class="row">'
@@ -104,11 +105,12 @@ $(document).ready(function(){
 											+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
 									+ '</div>' 
 								+ '</div>'
-								+ '<div class="col-sm-2 text-center">' + published + '</div>'
+								+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
+									+ published
+								+ '</div>'
 								+ '<div class="contentModBtn col-sm-1 text-center">' + '<button class="btn btn-sm btn-info">more</button>' 
 							+ '</div>'
 						 + "</div>");
-
 		
 	}
 });
@@ -118,7 +120,7 @@ $(document).ready(function(){
 		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
 		var htmlAddCancel = "'javascript:addCancel()'";
 		
-		var addFormHtml = '<div class="addContentForm col">'
+		var addFormHtml = '<div class="addContentForm col p-3">'
 							+ '<div>'
 								+ '<h5> 학습페이지 추가 </h5>'
 							+ '</div>'
@@ -128,20 +130,9 @@ $(document).ready(function(){
 								+ '<div class="selectContent m-3">'
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
 									+ '<button id="selectPlaylistBtn" type="button" class="d-sm-inline-block float-right btn btn-sm btn-primary" onclick="popupOpen();" style="border:none;">'
-										+ '선택</button>'
+										+ 'Playlist 가져오기</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
 								+ '</div>'
-								/*
-								+ '<div class="selectContent">'
-									+ '<div id="selectedContent">'
-										+ '<div id="playlistThumbnail"></div>'
-										+ '<p id="playlistTitle"> Playlist를 선택해주세요 <p>'
-									+ '</div>'
-									+ '<button type="button" id="selectPlaylistBtn" onclick="popupOpen();">playlist가져오기</button>'
-									+ '<input type="hidden" name="playlistID" id="inputPlaylistID">'
-									//+ '<input type="hidden" name="thumbnailID" id="inputThumbnailID" value="">'
-								+ '</div>'
-								*/
 								+ '<div class="inputTitle input-group col">'
 									+ '<div class="input-group-prepend">'
 										+ '<label for="title" class="input-group-text">제목</label>'
