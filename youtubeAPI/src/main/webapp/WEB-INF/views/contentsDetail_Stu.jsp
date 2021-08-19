@@ -24,7 +24,7 @@
     
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+	<script src="http://code.jquery.com/jquery-3.1.1.js" type="text/javascript"></script>
 	
 	<style>
 		.container {
@@ -87,6 +87,7 @@
 	        	
 	        	<div class="displayVideo col-12 col-xs-8 col-sm-8 col-md-8 col-lg-8">
 	        	 <div class="videoTitle col-12 col-md-12 col-lg-12"></div>
+	        	 
 	        	 <div id = "onepageLMS" class="col-12 col-md-12 col-lg-12">
 	        	 	<div class="tab-content">
 	        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
@@ -102,6 +103,10 @@
 	  					<div id="myBar" class="progress-bar" ></div>
 					 </div>
 				 </div>
+				 
+				 <div class=" col-12 col-md-12 col-lg-12">
+		        	 <div id="classDescription"> </div>
+				 </div>
 	        	 	
 	        	</div>
 	        	
@@ -110,8 +115,8 @@
 		  				<div id="myBar"></div>
 					</div> -->
 					
+					<div id="classTitle"></div>
 					<div id="total_runningtime"></div>
-					<div id="playlistInfo"></div>
 					<div id="get_view"></div>
 					
 					<div id="timeSetting" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -146,8 +151,11 @@
         var player;
         var playlist;
 	 	var playlist_length;
+	 	
         var studentEmail = ${list.studentEmail};
         var classID = ${classID};
+		var playlistID = ${playlistID};
+		var classPlaylistID = ${classPlaylistID};
         
         var playerState;
         var time = 0;
@@ -164,11 +172,9 @@
 		var watchedFlag = 0;
 		
 		var lastVideo;
-		var playlistID = ${playlistID};
-		var classPlaylistID = ${classPlaylistID};
 		var ori_index =0;
- 		
 		var playlistcheck;
+		var classPlaylistInfo;
 		
 		var total_runningtime = 0;
 		
@@ -176,20 +182,38 @@
 	 		
 	 		playlistcheck = JSON.parse('${playlistCheck}');
 	 	
-	 		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax 
-	 			  url : "../../../ajaxTest.do",
+	 		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+	 			  url : "../../../forVideoInformation",
 	 			  type : "post",
 	 			  async : false,
 	 			  data : {	
 	 				 playlistID : playlistcheck[0].playlistID
 	 			  },
 	 			  success : function(data) {
-	 				 playlist = data;
+	 				 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다.
 	 				 playlist_length = Object.keys(playlist).length;
 	 			  },
 	 			  error : function() {
 	 			  	alert("error");
 	 			  }
+	 		})
+	 		
+	 		$.ajax({
+	 			url : "../../../forClassInformation",
+	 			type : "post",
+	 			async : false,
+	 			data : {
+	 				classPlaylistID : classPlaylistID
+	 			},
+	 			success : function(classPlaylistInfo){
+	 				//classPlaylistInfo = data;
+	 				$("#classTitle").append('<div style = " margin: 0; padding-top: 10px; padding-bottom: 10px; font-size: 25px;">"' + classPlaylistInfo.title + '"</div>');
+	 				$("#classDescription").append('<div>' + classPlaylistInfo.description + '</div>');
+	 				console.log("success forClassInformation!");
+	 			},
+	 			error : function() {
+	 				alert("error forClassInformation");
+	 			}
 	 		})
 	 		
 	 		lastVideo = playlist[0].id;
@@ -216,11 +240,10 @@
 				}*/
 				
 				var completed ='';
-				if(playlist[i].watched == 1){
+				if(playlist[i].watched == 1 && playlist[i].classPlaylistID == classPlaylistID){
 					completed = '<div class="col-xs-1 col-lg-1"><span class="badge badge-primary"> 완료 </span></div>';
 				}
 				
-				console.log("completed"  + completed);
 				$("#get_view").append('<ul >' +
  						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
  						'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
@@ -262,7 +285,7 @@
          	var percentage;
  			
  			$.ajax({
-	 			  url : "../../../ajaxTest2.do",
+	 			  url : "../../../progressbar",
 	 			  type : "post",
 	 			  async : false,
 	 			  data : {	//하나의 classID내에 같은 PlaylistID를 가진 것들이 여러개 있을 수 있다. 그러니 playlistID뿐만 아니라 
@@ -275,7 +298,7 @@
 	 				 	//이 때 playlistCheck테이블에 row 추가해주기
 	 				 	
 		 				 	$.ajax({ //null일 때 totalWatched에 insert해주기
-				 			  url : "../../../ajaxTest3.do",
+				 			  url : "../../../isExisted",
 				 			  type : "post",
 				 			  async : false,
 				 			  data : {	
@@ -327,7 +350,7 @@
         function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
  			start_s = startTime;
     		
- 			$('.videoTitle').text(playlist[ori_index].newTitle); //비디오 제목 정해두기\
+ 			$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
         	
  			if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
  				flag = 0;
@@ -512,7 +535,9 @@
 								videoID : playlist[ori_index].id, //videoID 그대로
 								timer : time + parseInt(playlist[ori_index].timer), //timer도 업데이트를 위해 필요
 								watch : 1, //영상을 다 보았으니 시청여부는 1로(출석) 업데이트!
-								playlistID : playlist[0].playlistID
+								playlistID : playlist[0].playlistID,
+								classPlaylistID : classPlaylistID,
+								classID : classID
 					},
 					
 					success : function(data){

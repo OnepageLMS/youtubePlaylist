@@ -12,6 +12,7 @@ public class Stu_VideoVO {
 		private double end_s;
 		private int playlistID;
 		private int seq;
+		private int classPlaylistID;
 		private double lastTime;
 		private double timer;
 		private int watched;
@@ -36,14 +37,12 @@ public class Stu_VideoVO {
 		public void setTitle(String title) {
 			this.title = title;
 		}
-		
 		public String getnewTitle() {
 			return newTitle;
 		}
 		public void setnewTitle(String newTitle) {
 			this.newTitle = newTitle;
 		}
-		
 		public double getStart_s() {
 			return start_s;
 		}
@@ -62,7 +61,6 @@ public class Stu_VideoVO {
 		public void setPlaylistID(int playlistID) {
 			this.playlistID = playlistID;
 		}
-		
 		public int getSeq() {
 			return seq;
 		}
@@ -70,27 +68,30 @@ public class Stu_VideoVO {
 			this.seq = seq;
 		}
 		
-		public int getWatched() {
-			return watched;
+		public int getClassPlaylistID() {
+			return classPlaylistID;
 		}
-		public void setWatched(int watched) {
-			this.watched = watched;
+		public void setClassPlaylistID(int classPlaylistID) {
+			this.classPlaylistID = classPlaylistID;
 		}
-		
 		public double getlastTime(){
 			return lastTime;
 		}
 		public void setlastTime(double lastTime) {
 			this.lastTime = lastTime;
 		}
-		
 		public double getTimer(){
 			return timer;
 		}
 		public void setTimer(double timer) {
 			this.timer = timer;
 		}
-		
+		public int getWatched() {
+			return watched;
+		}
+		public void setWatched(int watched) {
+			this.watched = watched;
+		}
 		public float getDuration(){
 			return duration;
 		}
