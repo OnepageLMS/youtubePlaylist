@@ -223,7 +223,7 @@
 			success : function(result){
 				var lastIdx = $('#playlistInfo').attr('displayIdx'); //새로운 결과 출력 위해 이전 저장된 정보 비우기
 			    $('.playlist:eq(' + lastIdx + ')').css("background-color", "unset");
-			    $(".playlist:eq(" + displayIdx + ")").css("background-color", "lightgrey"); //클릭한 playlist 표시
+			    $(".playlist:eq(" + displayIdx + ")").css("background-color", " #F0F0F0;"); //클릭한 playlist 표시
 			    $('#playlistInfo').empty(); 
 
 			    $('.selectedPlaylist').attr('playlistID', playlistID); //혹시 나중에 사용할 일 있지 않을까?
@@ -600,17 +600,17 @@
 	<div class="tab-content">
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-3 card">
+				<div class="col-lg-3 card">
 					<h3 >My Playlist</h3>
 					<ul class="myPlaylist card nav nav-pills flex-column"></ul>
 				</div>
 				
-				<div class="selectedPlaylist col-sm-9 card">
+				<div class="selectedPlaylist col-lg-9 card">
 					<div class="row">
-						<div class="col-sm-3">
+						<div class="col-lg-3">
 							<div id="playlistInfo"></div>
 						</div>
-						<div class="col-sm-9">
+						<div class="col-lg-9">
 							<div id="allVideo"></div>
 						</div>
 					</div>
