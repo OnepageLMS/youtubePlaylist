@@ -26,7 +26,7 @@
 	}
 	
 	.playlist:hover{
-		background-color: lightgrey;
+		background-color: #F0F0F0;
 		cursor: pointer;
 	}
 	
@@ -95,7 +95,7 @@
 	}
 	
 	.video:hover {
-		background-color: lightgrey;
+		background-color:  #F0F0F0;
 	}
 
 	.videoIndex {
@@ -598,14 +598,14 @@
 	</ul>
 	
 	<div class="tab-content">
-		<div class="container-fluid">
+		<div class="container">
 			<div class="row">
-				<div class="col-sm-2 card">
+				<div class="col-sm-3 card">
 					<h3 >My Playlist</h3>
 					<ul class="myPlaylist card nav nav-pills flex-column"></ul>
 				</div>
 				
-				<div class="selectedPlaylist col-sm-10 card">
+				<div class="selectedPlaylist col-sm-9 card">
 					<div class="row">
 						<div class="col-sm-3">
 							<div id="playlistInfo"></div>
