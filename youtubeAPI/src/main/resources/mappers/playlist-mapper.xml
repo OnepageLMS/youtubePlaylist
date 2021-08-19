@@ -2,13 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Playlist">
 	<insert id="addPlaylist">
-		insert into lms_playlist (playlistName, creatorEmail, seq, totalVideoLength)
-		values (#{playlistName}, #{creatorEmail}, #{seq}, #{totalVideoLength})
+		insert into lms_playlist (playlistName, creatorEmail, seq, totalVideoLength, description)
+		values (#{playlistName}, #{creatorEmail}, #{seq}, #{totalVideoLength}, #{description})
 	</insert>
 	
-	<insert id="addThumbnailID">
+	<insert id="updateThumbnailID">
 		update lms_playlist 
-		set thumbnailID=#{thumbnailID} where playlistID=#{playlistID}
+		set thumbnailID= (SELECT youtubeID FROM Video WHERE playlistID=#{playlistID} order by seq limit 0,1) 
+		where playlistID=#{playlistID}
 	</insert>
 	
 	<delete id="deletePlaylist">

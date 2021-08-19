@@ -8,6 +8,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+html {
+	font-size: 16px;
+}
 body {
 	padding: 10px;
 }
@@ -67,11 +70,6 @@ img {
 	padding-top: 0px;
 }
 
-.row{
-	margin-left: -150px;
-	margin-right: -190px;
-}
-
 .card-body {
 	font-size: 13.5px;
 }
@@ -121,7 +119,7 @@ img {
 	right: 5px;
 	top: 5px;
 }
-
+      
 /* playlist 구간 끝 */
 </style>
 
@@ -134,8 +132,8 @@ img {
 	rel="stylesheet" type="text/css" />
 <!-- jquery for drag&drop list order -->
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <!-- fontawesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -316,15 +314,19 @@ img {
 					});
 		}
 
-		// 진행중 (2021/08/16) 
+		// 진행중 : 미완 (2021/08/16) 
 		function createPlaylist() { //playlist 추가
 			/* var popup = window.open('addPlaylistPopup') */
 			//var playlistName = $("#playlistName").val();
-			//var creatorEmail = "yewon.lee@onepage.edu"; //나중에 사용자 로그인 정보 가져오기!
-			//var url = "${pageContext.request.contextPath}/playlist/addPlaylistPopup" + creatorEmail;
-			//var popOption = "width=500, height=600";
+			var creatorEmail = "yewon.lee@onepage.edu"; //나중에 사용자 로그인 정보 가져오기!
+			var url = "${pageContext.request.contextPath}/playlist/addPlaylistPopup/" + creatorEmail;
+			var popOption = "width=500, height=600";
 
-			//var popup = window.open(url, "addPlaylistPopup", popOption);
+			var popup = window.open(url, "addPlaylistPopup", popOption);
+			popup.focus();
+
+			var playlistName = session.getAttribute("playlistName");
+			var description = session.getAttribute("description");
 			
 			$.ajax({
 				'type' : "post",
@@ -332,6 +334,7 @@ img {
 				'data' : {
 					name : playlistName,
 					creator : creatorEmail,
+					description : description
 				},
 				success : function(data) {
 					getAllMyPlaylist(email);
@@ -560,16 +563,16 @@ img {
 		}
 	</script>
 	
-	<div class="container-fluid" style="padding: 30px 175px;">
+	<div class="container-fluid" style="padding: 30px 100px; ">
   		<div class="row">
 		
 
-		<div class="col-lg-5">
+		<div class="col-sm-5">
 			<!-- <div id="player_info"></div> -->
 			<br>
 			<div id="title"></div>
 			<div>
-				<textarea id="newName" name="newName" cols="78" rows="2"> </textarea>
+				<textarea id="newName" name="newName" cols="77" rows="2"> </textarea>
 			</div>
 			<div id="player"></div>
 		
@@ -848,17 +851,13 @@ img {
 				}
 			</script>
 		
-			<div id="get_view"></div>
-		
-			<div id="nav_view"></div>
-		
 		</div>	
 		
-		<div class="col-lg-2"> 
+		<div class="col-sm-2"> 
 		</div>
 		
-		<div class="col-lg-4" style="min-width: 600px"> 
-			<div class="playlist-fluid playlist">
+		<div class="col-sm-5 bg-light" style="min-width: 500px;"> 
+			<div class="ftco-animate">
 				<!-- Playlist CRUD -->
 				<h3>Playlist </h3>
 		
