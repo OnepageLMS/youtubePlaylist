@@ -164,7 +164,8 @@
 		var watchedFlag = 0;
 		
 		var lastVideo;
-		var playlistID;
+		var playlistID = ${playlistID};
+		var classPlaylistID = ${classPlaylistID};
 		var ori_index =0;
  		
 		var playlistcheck;
@@ -342,7 +343,9 @@
 								lastTime : player.getCurrentTime(),
 								studentID : studentEmail,
 								videoID : lastVideo,
+								classID : classID,
 								playlistID : playlist[ori_index].playlistID,
+								classPlaylistID : classPlaylistID,
 								timer : db_timer + parseInt(playlist[ori_index].timer)
 					},
 					success : function(data){

@@ -75,6 +75,8 @@ public class Stu_ClassController{
 		ccvo.setId(id);
 		System.out.println("id : " + ccvo.getId());
 		
+		model.addAttribute("playlistID", playlistID);
+		model.addAttribute("classPlaylistID", id);
 		model.addAttribute("classID", classInfo);
 		model.addAttribute("list", videoCheckService.getTime(175)); //studentID가 3으로 설정되어있음
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
@@ -175,6 +177,8 @@ public class Stu_ClassController{
 		String studentID = request.getParameter("studentID");
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
 		
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
@@ -183,7 +187,9 @@ public class Stu_ClassController{
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
 		vo.setPlaylistID(playlistID);
-		
+		vo.setClassID(classID);
+		vo.setClassPlaylistID(classPlaylistID);
+		System.out.println(vo.getClassID() + " " + vo.getClassPlaylistID());
 		if (videoCheckService.updateTime(vo) == 0) {
 			System.out.println("데이터 업데이트 실패 ");
 			videoCheckService.insertTime(vo);
