@@ -15,9 +15,7 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  font-size: 14px;
-  background-color: #222627;
-  color: #a6a6a6; }
+  font-size: 14px; }
 
 h1,
 h2,
@@ -26,13 +24,11 @@ h4,
 h5,
 h6 {
   font-family: "Roboto", sans-serif;
-  color: #ffffff;
   line-height: 1.3;
   font-weight: 500; }
 
 p {
   font-family: "Roboto", sans-serif;
-  color: #a6a6a6;
   font-size: 14px;
   line-height: 2;
   font-weight: 400; }
@@ -718,7 +714,6 @@ input:focus {
     z-index: 1;
     padding-left: 20px; }
     .single-blog-post .post-content .post-title {
-      color: #ffffff;
       margin-bottom: 5px;
       display: block;
       font-size: 16px;
@@ -771,7 +766,6 @@ input:focus {
       z-index: 1;
       padding-left: 20px; }
       .single-blog-post.style-2 .post-content .post-title {
-        color: #ffffff;
         margin-bottom: 10px;
         display: block;
         font-weight: 700;
@@ -808,7 +802,6 @@ input:focus {
           max-width: 100px;
           width: 100px; } }
     .single-blog-post.style-3 .post-content .post-title {
-      color: #ffffff;
       margin-bottom: 15px;
       display: block;
       font-weight: 700;
@@ -886,7 +879,6 @@ input:focus {
     .single-feature-post.video-post .post-content .post-title {
       font-size: 24px;
       display: block;
-      color: #ffffff;
       margin-bottom: 10px; }
       @media only screen and (min-width: 768px) and (max-width: 991px) {
         .single-feature-post.video-post .post-content .post-title {
@@ -975,7 +967,6 @@ input:focus {
     margin-top: 20px; }
     .single-post-area .post-content .post-title {
       display: block;
-      color: #ffffff;
       margin-bottom: 15px;
       font-size: 20px; }
       @media only screen and (min-width: 992px) and (max-width: 1199px) {
@@ -1242,7 +1233,6 @@ input:focus {
     margin-top: 20px; }
     .post-details-content .post-content .post-title {
       display: block;
-      color: #ffffff;
       margin-bottom: 15px;
       font-size: 24px; }
       @media only screen and (min-width: 768px) and (max-width: 991px) {

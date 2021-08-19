@@ -27,7 +27,15 @@
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	
 	<style>
-		
+		.container {
+  		
+	  		padding-right: 15px;
+			padding-left: 15px;
+		    margin-right: auto;
+			margin-left: auto;
+  		
+		}
+	
 		.first {
 			float: left;	   
 		    box-sizing: border-box;
@@ -40,17 +48,18 @@
 		    margin-left: 1%;
 		    box-sizing: border-box;
 		}
-
-		#myProgress {
-		  width: 100%;
-		  background-color: #ddd;
+		
+		.videoLine{
+			border: 1px solid grey;
+			width: 95%;
 		}
 		
-		#myBar {
-		  width: 1%;
-		  height: 30px;
-		  background-color: #287ebf;
+		.video:hover {
+		background-color: lightgrey;
+		cursor: pointer;
 		}
+
+		
 	</style>
 	
 </head>
@@ -73,30 +82,49 @@
 	        	<div id="get_view" ></div>
 	        </div>
         </div> -->
-        
-        <div class = "row no-gutters">
-        	
-        	 <div id = "onepageLMS" class="col-12 col-md-7 col-lg-8">
-        	 	<div class="tab-content">
-        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
-        	 			 <div class="single-feature-post video-post bg-img" style="background-image: url(img/bg-img/7.jpg);">
-                             
-        	 			 </div>
-        	 		</div>
-        	 	</div>
-        	 </div>
-        	
-        	<div id="get_view" class="col-12 col-md-5 col-lg-4">
-	        <!--<div id="myProgress">
-	  				<div id="myBar"></div>
-				</div> -->
-				<div id="total_runningtime"></div>
-	       	</div>
+        <div class="container">
+	        <div class = "row">
+	        	
+	        	<div class="displayVideo col-12 col-xs-8 col-sm-8 col-md-8 col-lg-8">
+	        	 <div class="videoTitle col-12 col-md-12 col-lg-12"></div>
+	        	 <div id = "onepageLMS" class="col-12 col-md-12 col-lg-12">
+	        	 	<div class="tab-content">
+	        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
+	        	 			 <div class="single-feature-post video-post bg-img">
+	                             
+	        	 			 </div>
+	        	 		</div>
+	        	 	</div>
+	        	 </div>
+	        	 
+	        	 <div class=" col-12 col-md-12 col-lg-12">
+		        	 <div id="myProgress" class="progress">
+	  					<div id="myBar" class="progress-bar" ></div>
+					 </div>
+				 </div>
+	        	 	
+	        	</div>
+	        	
+	        	<div id="allVideo" class="col-12 col-xs-4 col-sm-4 col-md-4 col-lg-4">
+		        <!--<div id="myProgress">
+		  				<div id="myBar"></div>
+					</div> -->
+					
+					<div id="total_runningtime"></div>
+					<div id="playlistInfo"></div>
+					<div id="get_view"></div>
+					
+					<div id="timeSetting" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		        	 	 <form action = "../../../contentList/<%= request.getAttribute("classID") %>" method="get">
+	 						<button type = "submit" class="btn btn-primary" style="float: right"> 나가기 </button>
+	 					</form>
+ 				 	</div>
+ 				 	
+		       	</div>
+
         </div>
+       </div>
        
-         <form action = "../../../contentList/<%= request.getAttribute("classID") %>" method="get">
- 			<button type = "submit"> 나가기 </button>
- 		</form>
  		
  		
  		
@@ -139,7 +167,10 @@
 		var playlistID;
 		var ori_index =0;
  		
-		var playlistcheck
+		var playlistcheck;
+		
+		var total_runningtime = 0;
+		
 	 	$(function(){ //db로부터 정보 불러오기!
 	 		
 	 		playlistcheck = JSON.parse('${playlistCheck}');
@@ -166,31 +197,9 @@
 	 		 
 	 	});
 	 	
-	 	var total_runningtime = 0;
-	 	
 	 	function myThumbnail(){
 	 		
 	 		for(var i=0; i<playlist_length; i++){
-	 			//영상 하나하나의 러닝타임을 구하는 코드
-	 			var show_min = Math.floor(parseInt(playlist[i].duration)/60);
-		        var show_hour = Math.floor(show_min/60);
-		        var show_sec = parseInt(playlist[i].duration)%60;
-		        show_min = show_min%60;
-		        
-		        var show_th = show_hour;
-		        var show_tm = show_min;
-		        var show_ts = show_sec;
-		        
-		        if(show_th<10){
-		        	show_th = "0" + show_hour;
-		        }
-		        if(show_tm < 10){
-		        	show_tm = "0" + show_min;
-		        }
-		        if(show_ts < 10){
-		        	show_ts = "0" + show_sec;
-		        }
-		        
 	 			var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg">';
 	 			
 	 			var newTitle = playlist[i].newTitle;
@@ -201,73 +210,52 @@
 	 				playlist[i].title = '';
 			    }
 	 			
-	 			console.log("title " + (playlist[i].newTitle) + " length " + (playlist[i].newTitle).length);
 	 			/*if ((playlist[i].newTitle).length > 45){
 	 				playlist[i].newTitle = (playlist[i].newTitle).substring(0, 45) + " ..."; 
 				}*/
-	 			
-	 			if(playlist[i].watched == 1){ //끝까지 다 본 영상임을 표시하는 코드//
-	 				$("#get_view").append('<ul >' +
-	 						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">' +
-	 						'<div class="single-blog-post style-2 d-flex align-items-center">' +
-	 						'<div class="post-thumbnail"> ' + thumbnail + ' </div>' +
-	 						'<div class="post-content" onclick="viewVideo(\'' 
+				
+				var completed ='';
+				if(playlist[i].watched == 1){
+					completed = '<div class="col-xs-1 col-lg-1"><span class="badge badge-primary"> 완료 </span></div>';
+				}
+				
+				console.log("completed"  + completed);
+				$("#get_view").append('<ul >' +
+ 						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
+ 						'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
+ 							'<div class="post-thumbnail col-xs-4 col-lg-4"> ' + thumbnail + ' </div>' +
+ 							'<div class="post-content col-xs-7 col-lg-7" onclick="viewVideo(\'' 
 		 						+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-			 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' + 
-			 					'<h6 class="post-title">' + playlist[i].newTitle + '</h6>' 
-			 					+'<div class="post-meta d-flex justify-content-between">'
-			 						+ '<div>' + show_th + ":" + show_tm + ":" + show_ts + "  " + '<span class="badge badge-primary"> 완료 </span></div>'
-			 					+'</div>' +
-                            '</div>' 
-		 					+ '</div></li></ul>');
-	 			}
-	 			else{ //끝까지 본 영상이 아닐 경우
-	 				/*$("#get_view").append(thumbnail + playlist[i].newTitle 
-	 						+ '<div onclick="viewVideo(\'' 
-	 						+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-		 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' 
-		 					+ show_th + ":" + show_tm + ":" + show_ts + " /seq : " + playlist[i].seq
-		 					+ '</div>' );*/
-	 				$("#get_view").append('<ul>' +
-	 						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">' +
-	 						'<div class="single-blog-post style-2 d-flex align-items-center">' +
-	 						'<div class="post-thumbnail"> ' + thumbnail + ' </div>' +
-	 						'<div class="post-content" onclick="viewVideo(\'' 
-		 						+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-			 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ')" >' + 
-			 					'<h6 class="post-title">' + playlist[i].newTitle + '</h6>' 
-			 					+'<div class="post-meta d-flex justify-content-between">'
-			 						+ '<div>' + show_th + ":" + show_tm + ":" + show_ts + '</div>'
-			 					+'</div>' +
-                            '</div>' 
-		 					+ '</div></li>' );
-	 			}
+			 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ', this)" >' 
+			 					+ 	'<h6 class="post-title">' + playlist[i].newTitle + '</h6>' 
+			 					+	'<div class="">'+  convertTotalLength(playlist[i].duration) +'</div>' +
+			 				'</div>' 
+		 					+ 	completed 
+	 					+ '</div></li></ul>'
+	 					+ '<div class="videoLine"></div>'
+	 			);
+				
 	 			
 	 			total_runningtime += parseInt(playlist[i].duration);
 	 		}
 	 		
-	 		//playlist 내의 영상 시간 총 길이
-	 		var total_min = Math.floor(total_runningtime/60);
-	        var total_hour = Math.floor(total_min/60);
-	        var total_sec = total_runningtime%60;
-	       	total_min = total_min%60;
 	        
-	        var total_th = total_hour;
-	        var total_tm = total_min;
-	        var total_ts = total_sec;
-	        
-	        if(total_th<10){
-	        	total_th = "0" + total_hour;
-	        }
-	        if(total_tm < 10){
-	        	total_tm = "0" + total_min;
-	        }
-	        if(total_ts < 10){
-	        	total_ts = "0" + total_sec;
-	        }
-	        
-	        $("#total_runningtime").append('<div> total runningTime ' +total_th + ":" + total_tm + ":" + total_ts + " / " +total_runningtime+ '</div>');
+	        $("#total_runningtime").append('<div> total runningTime ' + convertTotalLength(total_runningtime) + '</div>');
 	 	}
+	 	
+	 	
+	 	function convertTotalLength(seconds){
+			var seconds_hh = Math.floor(seconds / 3600);
+			var seconds_mm = Math.floor(seconds % 3600 / 60);
+			var seconds_ss = Math.floor(seconds % 3600 % 60);
+			var result = "";
+			
+			if (seconds_hh > 0)
+				result = ("00"+seconds_hh .toString()).slice(-2)+ ":";
+			result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
+			
+			return result;
+		}
 	 	
 	 	function move() { //progress bar 보여주기
          	var percentage;
@@ -335,10 +323,11 @@
          }
 	 	
 	 	
-        function viewVideo(videoID, id, startTime, endTime, index) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
+        function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
  			start_s = startTime;
-        
- 			$('.videoTitle').text(playlist[ori_index].newTitle); //비디오 제목 정해두기
+    		
+ 			$('.videoTitle').text(playlist[ori_index].newTitle); //비디오 제목 정해두기\
+        	
  			if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
  				flag = 0;
  	 			time = 0;
