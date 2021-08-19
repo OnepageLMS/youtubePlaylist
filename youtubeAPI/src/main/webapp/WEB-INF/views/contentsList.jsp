@@ -72,7 +72,7 @@ $(document).ready(function(){
 	console.log(allContents);
 	for(var i=0; i<allContents.length; i++){
 		var day = allContents[i].day;
-		var date = new Date(allContents[i].startDate.time); //timestamp -> actural time
+		var date = new Date(allContents[i].endDate.time); //timestamp -> actural time
 		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 		var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 
@@ -142,7 +142,7 @@ $(document).ready(function(){
 									//+ '<input type="hidden" name="thumbnailID" id="inputThumbnailID" value="">'
 								+ '</div>'
 								*/
-								+ '<div class="inputTitle input-group m-3">'
+								+ '<div class="inputTitle input-group col">'
 									+ '<div class="input-group-prepend">'
 										+ '<label for="title" class="input-group-text">제목</label>'
 									+ '</div>'
@@ -284,7 +284,7 @@ $(document).ready(function(){
 
 </script>
 <body>
-	<div class="container card col-sm-8">
+	<div class="container card">
 		<div class="row">
 			<div class="contents col-sm-12" classID="${classInfo.id}">
 				<button onclick="#" class="btn btn-primary">강의추가</button>
@@ -299,8 +299,6 @@ $(document).ready(function(){
 				</c:forEach>
 			</div>
 		</div>
-		
 	</div>
-	
 </body>
 </html>
