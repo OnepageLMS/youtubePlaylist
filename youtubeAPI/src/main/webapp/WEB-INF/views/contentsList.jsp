@@ -28,11 +28,20 @@
 		padding: 10px;
 	}
 	
+	.content:hover{
+		background-color: #F0F0F0;
+	}
+	
 	.contentInfo{
 		font-size: 13px;
 		color: lightgrey;
 		display: inline;
 		margin: 0 3px;
+	}
+	
+	.addContentForm{
+		padding: 10px;
+		background-color: 
 	}
 	
 	.contentInfoBorder{
@@ -109,15 +118,15 @@ $(document).ready(function(){
 		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
 		var htmlAddCancel = "'javascript:addCancel()'";
 		
-		var addFormHtml = '<div class="addContentForm">'
+		var addFormHtml = '<div class="addContentForm col">'
 							+ '<div>'
 								+ '<h5> 학습페이지 추가 </h5>'
 							+ '</div>'
 							+ '<form id="addContent" class="form-group" action="${pageContext.request.contextPath}/class/addContentOK" onsubmit="return checkForm(this);" method="post">' 
 								+ '<input type="hidden" name="classID" value="${classInfo.id}">'
 								+ '<input type="hidden" name="day" value="' + day + '"/>'
-								+ '<div class="selectContent">'
-									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택헤주세요 </p>'
+								+ '<div class="selectContent m-3">'
+									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
 									+ '<button id="selectPlaylistBtn" type="button" class="d-sm-inline-block float-right btn btn-sm btn-primary" onclick="popupOpen();" style="border:none;">'
 										+ '선택</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
@@ -133,34 +142,40 @@ $(document).ready(function(){
 									//+ '<input type="hidden" name="thumbnailID" id="inputThumbnailID" value="">'
 								+ '</div>'
 								*/
-								+ '<div class="inputTitle input-group mb-3">'
+								+ '<div class="inputTitle input-group m-3">'
 									+ '<div class="input-group-prepend">'
 										+ '<label for="title" class="input-group-text">제목</label>'
 									+ '</div>'
 									+ '<input class="form-control d-sm-inline-block" type="text" name="title">'
 								+ '</div>'
-								+ '<div class="inputDescription">'
+								+ '<div class="inputDescription m-3">'
 									+ '<textarea name="description" class="form-control" rows="10" id="comment" placeholder="이곳에 내용을 작성해 주세요."></textarea>'
 								+ '</div>'
-								+ '<div class="">'
-									+ '<div class="setEndDate">'
-										+ '<label for="endDate"> 마감일: </label>'
+								+ '<div class="m-3">'
+									+ '<div class="setEndDate input-group">'
+										+ '<div class="input-group-prepend">'
+											+ '<label for="endDate" class="input-group-text"> 마감일: </label>'
+										+ '</div>'
 										+ '<input type="hidden" name="endDate">'
-										+ '<input type="date" id="endDate">'
-										+ '<input type="number" class="setTime end_h" value="0" min="0" max="23"> 시'
-										+ '<input type="number" class="setTime end_m" value="0" min="0" max="59"> 분'
+										+ '<input type="date" class="form-control col-sm-8" id="endDate">'
+										+ '<input type="number" class="setTime end_h form-control col-sm-2" value="0" min="0" max="23"> 시'
+										+ '<input type="number" class="setTime end_m form-control col-sm-2" value="0" min="0" max="59"> 분'
 									+ '</div>'
-									+ '<div class="setStartDate">'
-										+ '<label for="startDate">공개일: </label>'
+									+ '<div class="setStartDate input-group">'
+										+ '<div class="input-group-prepend">'
+											+ '<label for="startDate" class="input-group-text">공개일: </label>'
+										+ '</div>'
 										+ '<input type="hidden" name="startDate">'
-										+ '<input type="date" id="startDate">'
-										+ '<input type="number" class="setTime start_h" value="0" min="0" max="23"> 시'
-										+ '<input type="number" class="setTime start_m" value="0" min="0" max="59"> 분'
-										+ '<button type="button" onclick="location.href=' + htmlGetCurrentTime + '">지금</button>'
+										+ '<input type="date" class="form-control col-sm-8" id="startDate">'
+										+ '<input type="number" class="setTime start_h form-control col-sm-2" value="0" min="0" max="23"> 시'
+										+ '<input type="number" class="setTime start_m form-control col-sm-2" value="0" min="0" max="59"> 분'
+										+ '<button type="button" class="btn btn-info btn-sm" onclick="location.href=' + htmlGetCurrentTime + '">지금</button>'
 									+ '</div>'
 								+ '</div>'
-								+ '<button class="btn btn-sm btn-warning" onclick="location.href=' + htmlAddCancel + '" >취소</button>'
-								+ '<button type="submit" class="btn btn-sm btn-primary">저장</button>'
+								+ '<div class="text-center m-3">'
+									+ '<button class="btn btn-sm btn-warning" onclick="location.href=' + htmlAddCancel + '" >취소</button>'
+									+ '<button type="submit" class="btn btn-sm btn-primary">저장</button>'
+								+ '</div>'
 							+ '</form>'
 									
 
