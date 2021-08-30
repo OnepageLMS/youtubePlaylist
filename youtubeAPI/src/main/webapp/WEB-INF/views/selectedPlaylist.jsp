@@ -10,20 +10,20 @@
 <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <!-- Title -->
-    <title>Vizew - Blog &amp; Magazine HTML Template</title>
-
-    <!-- Favicon -->
-    <link rel="icon" href="${pageContext.request.contextPath}/resources/contentsDetail_Stu/img/core-img/favicon.ico">
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/contentsDetail_Stu/style.css">
-    
+    <title>Playlist 수정</title>
+ 
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+	<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" /> <!-- jquery for drag&drop list order -->
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script 
+	  src="http://code.jquery.com/jquery-3.5.1.js"
+	  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+	  crossorigin="anonymous"></script>
+	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
 <style>
 	body {
@@ -232,31 +232,30 @@
 			    	else 
 			    		var addStyle = '';
 				    
-			    	var html = '<ul ><li class="nav-item"> '
-			    		+ '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
-			    		//+ '<div class="single-blog-post style-2 d-flex align-items-center">' //너를 없애니 되었구나..
-			    		+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
-						+ ' seq="' + index //이부분 seq로 바꿔야할듯?
-						+ '" videoID="' + value.id 
-						+ '" youtubeID="' + value.youtubeID 
-						+ '" start_s="' + value.start_s
-						+ '" end_s="' + value.end_s
-						+ '" maxLength="' + value.maxLength + '"'
-						+ addStyle
-						+ '>'
-							//+ '<div class="videoSeq ">' + (index+1) + '</div>'
-							+ '<div class="post-thumbnail col-xs-4 col-lg-4">'
-							+ 	'<div class="videoSeq ">' + (index+1) + thumbnail + '</div>'
-							+ 	'<div class="tag" tag="' + value.tag + '">' + tmp_tags + '</div>'
-							+'</div>'
-							+ '<div class="videoNewTitle col-xs-7 col-lg-7">' 
-							+ 	'<h6 class="post-title">' + tmp_newTitle + '</h6>'
-							+ 	'<div class="videoOriTitle" style = "color :#a6a6a6 ">' + tmp_title + '</div>'
-							+ 	'<div class="duration"> ' + convertTotalLength(value.duration) + '</div>'
-							+'</div>'
-							+ '<a href="#" class="aDeleteVideo col-xs-1 col-lg-1 badge badge-primary" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-						+ '</div></li></ul>'
-						+ '<div class="videoLine"></div>';
+			    	var html = '<ul><li class="nav-item"> '
+						    		//+ '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
+						    		+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
+									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
+									+ '" videoID="' + value.id 
+									+ '" youtubeID="' + value.youtubeID 
+									+ '" start_s="' + value.start_s
+									+ '" end_s="' + value.end_s
+									+ '" maxLength="' + value.maxLength + '"'
+									+ addStyle
+								+ '>'
+								//+ '<div class="videoSeq ">' + (index+1) + '</div>'
+								+ '<div class="post-thumbnail col-lg-4">'
+								+ 	'<div class="videoSeq ">' + (index+1) + thumbnail + '</div>'
+								+ 	'<div class="tag" tag="' + value.tag + '">' + tmp_tags + '</div>'
+								+'</div>'
+								+ '<div class="videoNewTitle col-lg-8">' 
+								+ 	'<h6 class="post-title">' + tmp_newTitle + '</h6>'
+								+ 	'<div class="videoOriTitle" style = "color :#a6a6a6 ">' + tmp_title + '</div>'
+								+ 	'<div class="duration"> ' + convertTotalLength(value.duration) + '</div>'
+								+'</div>'
+								+ '<a href="#" class="aDeleteVideo col-lg-1 badge badge-primary" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
+							+ '</div></li></ul>'
+							+ '<div class="videoLine"></div>';
 					$('.videos').append(html); 
 				});
 			}
@@ -511,17 +510,25 @@
 
 </script>
 <body>
-
-<div class="container">
-	<div class = "row ">
-	 
-			<div class="displayVideo col-12 col-sm-8 col-md-8 col-lg-8" >
-			
-				<div id="player" class="col-12 col-sm-12 col-md-12 col-lg-12">
-					<div class="tab-content ">
+	<ul class="nav nav-tabs" role="tablist">
+			<li class="nav-item">
+		      <a class="nav-link active" href="#">내 컨텐츠</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link"href='${pageContext.request.contextPath}/youtube'>Youtube영상추가</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href='${pageContext.request.contextPath}/playlist/searchLms'>LMS 내 컨텐츠</a>
+		    </li>
+		</ul>
+		
+	<div class="container">
+		<div class = "row ">
+			<div class="displayVideo col-lg-8">
+				<div id="player" class="embed-responsive embed-responsive-4by3">
+					<div class="tab-content">
 	        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
-	        	 			 <div class="single-feature-post video-post bg-img" style="background-image: url(img/bg-img/7.jpg);">
-	                             
+	        	 			 <div class="single-feature-post video-post bg-img">
 	        	 			 </div>
 	        	 		</div>
 	        	 	</div>
@@ -536,34 +543,34 @@
 					 	<input type="hidden" name="playlistID" id="inputPlaylistID">
 					 	
 					 	
-						<div class="col-12 col-xs-12 col-md-12 col-lg-12">
-							<button onclick="getCurrentPlayTime1()" type="button" style="border: none; background: transparent;"> start time </button> : 
+						<div class="col-12 col-md-12 col-lg-12 m-2">
+							<button onclick="getCurrentPlayTime1()" type="button" class="btn btn-sm btn-light"> start time </button> : 
 							<input type="text" id="start_hh" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
 							<input type="text" id="start_mm" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
-							<input type="text" id="start_ss" maxlength="5" size="2" style=" border: none; background: transparent;"> 초 
-							<button onclick="seekTo1()" type="button" style="border: none; background: transparent;"> <i class="fa fa-share" aria-hidden="true"></i> </button>
+							<input type="text" id="start_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초 
+							<button onclick="seekTo1()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button>
 							<span id=warning1 style="color:red;"></span> <br>
 						</div>
 						
-						<div class="col-12 col-xs-12 col-md-12 col-lg-12">
-							<button onclick="getCurrentPlayTime2()" type="button" style="border: none; background: transparent;"> end time </button> : 
+						<div class="col-12 col-md-12 col-lg-12 m-2">
+							<button onclick="getCurrentPlayTime2()" type="button" class="btn btn-sm btn-light"> end time </button> : 
 							<input type="text" id="end_hh" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
 							<input type="text" id="end_mm" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
 							<input type="text" id="end_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초     
-							<button onclick="seekTo2()" type="button" style="border: none; background: transparent;"> <i class="fa fa-share" aria-hidden="true"></i> </button> 
+							<button onclick="seekTo2()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button> 
 							<span id=warning2 style="color:red;"></span> <br>
 						</div>
 						
-						<div class="col-12 col-xs-12 col-md-12 col-lg-12">
+						<div class="col-12 col-md-12 col-lg-12">
 							태그추가: <input type="text" id="inputTag" name="tag">
-							<button form="videoForm" type="submit" style="color :#a6a6a6; border: none; background: transparent;">업데이트</button>
+							<button form="videoForm" type="submit" class="btn btn-sm btn-primary">업데이트</button>
 						</div>
 					</form>
 				</div>
 			
 			</div>
 		
-			<div id="allVideo" class="col-12 col-sm-4 col-md-4 col-lg-4">
+			<div id="allVideo" class="col-lg-4">
 				<div class="playlistInfo"></div>
 				<div class="videos"></div>
 			</div>
