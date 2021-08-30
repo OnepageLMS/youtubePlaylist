@@ -152,6 +152,7 @@
  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script>
 	var email;
 	$(document).ready(function(){
@@ -297,7 +298,7 @@
 						title = '';
 				    }
 
-			    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic col-sm-12">';
+			    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic img-fluid">';
 
 			    	if (value.tag != null && value.tag.length > 0){
 				    	var tags = value.tag.replace(', ', ' #');
@@ -316,7 +317,7 @@
 					var html = '<div class="row">'
 									+ '<div class="video col-sm-12" videoID="' + value.id + '">'
 										+ '<div class="videoIndex col-sm-1 d-sm-inline-block align-middle">  <p class="h-100">' + (value.seq+1) + '</p></div>'
-										+ '<div class="videoContent col-sm-10 d-sm-inline-block" onclick="location.href=' + address + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
+										+ '<div class="videoContent col-sm-10 p-0 d-sm-inline-block" onclick="location.href=' + address + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
 											+ '<div class="row">'
 												+ '<div class="thumbnailBox col-sm-3 row">' 
 													+ thumbnail 
