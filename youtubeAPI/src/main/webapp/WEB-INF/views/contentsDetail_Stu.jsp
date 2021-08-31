@@ -349,7 +349,9 @@
 	 	
         function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
  			start_s = startTime;
-    		
+      $(".video").css({'background-color' : 'unset'});
+      item.style.background = "lightgrey";
+
  			$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
         	
  			if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인

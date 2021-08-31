@@ -230,8 +230,8 @@ public class Stu_ClassController{
 		vo.setStudentEmail(studentID);
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
-		vo.setClassPlaylistID(classPlaylistID);
 		vo.setClassID(classID);
+		vo.setClassPlaylistID(classPlaylistID);
 		
 		Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
 		vo.setWatched(watch);
