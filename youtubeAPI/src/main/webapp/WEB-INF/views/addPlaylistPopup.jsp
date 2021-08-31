@@ -21,7 +21,7 @@
 		
 		
 		<button type="submit"> 생성 </button>
-		<button onclick="close_window();return false;"> 취소 </button>
+		<button onclick="close_window();"> 취소 </button>
 	</form>
 	
 	

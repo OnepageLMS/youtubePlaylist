@@ -8,12 +8,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-html {
+/* html {
 	font-size: 16px;
-}
-body {
-	padding: 10px;
-}
+} */
 
 .video {
 	padding: 7px;
@@ -31,12 +28,8 @@ img {
 
 .playlistSeq {
 	background-color: #cecece;
-	padding: 10px;
+	/* padding: 10px; */
 	margin: 5px;
-}
-
-.container {
-	margin: 0;
 }
 
 /* container-fluid 를 bootstrap 방식그대로 사용하기 위해서 이름을 바꿨음.  */
@@ -63,15 +56,19 @@ img {
 	border-radius: 5px;
 }
 
-.card-header {
+/* .card-header {
+	background-color: #ADD8E6;
 	border-bottom: 1px solid;
 	margin: 0px -10px;
 	padding: 5px 10px;
 	padding-top: 0px;
-}
+} */
 
 .card-body {
 	font-size: 13.5px;
+	background-color: white;
+	color: black;
+	opacity: 70%;
 }
 
 
@@ -120,6 +117,15 @@ img {
 	top: 5px;
 }
       
+      
+.bg-info{
+	background-color: #ADD8E6!important;
+}
+
+.container {
+	margin-left: 0px!important;
+	margin: 0px!important;
+}
 /* playlist 구간 끝 */
 </style>
 
@@ -138,10 +144,10 @@ img {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <body>
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
@@ -149,8 +155,8 @@ img {
 		
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	
+	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
+  
 	<script>
 		function stopDefaultAction(e) { e.stopPropagation(); }
 	</script>
@@ -216,10 +222,11 @@ img {
 											if(sec % 1 !=0){ 	// 소수점 있을시에는 2자리까지만 표기 하도록. 
 												sec = parseFloat(sec).toFixed(2);
 											}											
+											
 
-											var html = '<div class = "playlistSeq card text-white bg-info mb-10" >'
+											var html = '<div class = "playlistSeq card text-white bg-info mb-10" >' // custom-control-input 이거 지워야 checkbox뜸. 
 													+ '<div class="card-header" listID="' + playlistID + '"playlistName="' + value.playlistName + '"onclick="togglePlaylist(\'' + num + '\')" >'
-													+ '<input type="checkbox" value="' + playlistID + '" class="selectPlaylists custom-control-input" style="margin:2px 4px; display:none;" onclick="stopDefaultAction(event);">'
+													+ '<input type="checkbox" value="' + playlistID + '" class="selectPlaylists" style="margin:2px 4px; display:none;" onclick="stopDefaultAction(event);">'
 													+ '<i class="caret-icon fa fa-caret-right fa-lg" style="margin:5px;"></i>'
 													+ (index + 1)
 													+ ' : '
@@ -277,8 +284,7 @@ img {
 
 													var html = '<div class = "playlistSeq card text-white bg-info mb-10" >'
 															+ '<div class="card-header" listID="' + playlistID + '"playlistName="' + value.playlistName + '"onclick="togglePlaylist(\'' + num + '\')" >'
-															+ '<input type="checkbox" value="' + playlistID + '" class="selectPlaylists custom-control-input" style="margin:2px 4px; display:none;" onclick="stopDefaultAction(event);">'
-															
+															+ '<input type="checkbox" value="' + playlistID + '" class="selectPlaylists custom-control-input" style="margin:2px 4px; display:none;" onclick="stopDefaultAction(event);">'	
 															+ '<i class="fa fa-caret-right fa-lg" style="margin:5px;"></i>'
 															+ (index + 1)
 															+ ' : '
@@ -563,18 +569,33 @@ img {
 		}
 	</script>
 	
-	<div class="container-fluid" style="padding: 30px 100px; ">
-  		<div class="row">
+	<ul class="nav nav-tabs" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link" href="#">내 컨텐츠</a>
+			</li>
+			<li class="nav-item">
+		      <a class="nav-link active" href='${pageContext.request.contextPath}/youtube'>Youtube영상추가</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href='${pageContext.request.contextPath}/playlist/searchLms'>LMS 내 컨텐츠</a>
+		    </li>
+		</ul>
 		
+	<div class="container-fluid">
+  		<div class="row">
 
-		<div class="col-sm-5">
+		<div class="col-sm-7 col-md-7 col-lg-7 col-xl-7">
 			<!-- <div id="player_info"></div> -->
 			<br>
 			<div id="title"></div>
+			
+			
+			<br>
+			
 			<div>
-				<textarea id="newName" name="newName" cols="77" rows="2"> </textarea>
+				<textarea id="newName" name="newName" cols="62" rows="2"> </textarea>
 			</div>
-			<div id="player"></div>
+			<div id="player" style="min-width: 500px;"></div>
 		
 			<!-- (jw) 영상 구간 설정 부분  -->
 			<br>
@@ -588,26 +609,33 @@ img {
 				<input type="hidden" name="duration" id="duration">
 		
 				<br>
-				<button onclick="getCurrentPlayTime1()" type="button">start time</button>
-				: <input type="text" id="start_hh" maxlength="2" size="2"> 시 
-				<input type="text" id="start_mm" maxlength="2" size="2"> 분 
-				<input type="text" id="start_ss" maxlength="5" size="5"> 초
-				<button onclick="seekTo1()" type="button">위치이동</button>
-				<span id=warning1 style="color: red;"></span> <br>
-		
-				<button onclick="getCurrentPlayTime2()" type="button">end time</button>
+				<div>
+					<button onclick="getCurrentPlayTime1()" type="button">start time</button>
+					: <input type="text" id="start_hh" maxlength="2" size="2"> 시 
+					<input type="text" id="start_mm" maxlength="2" size="2"> 분 
+					<input type="text" id="start_ss" maxlength="5" size="5"> 초
+					<button onclick="seekTo1()" type="button">위치이동</button>
+					<span id=warning1 style="color: red;"></span> <br>
+				</div>
+				
+				<div>
+					<button onclick="getCurrentPlayTime2()" type="button">end time</button>
 				: <input type="text" id="end_hh" max="" maxlength="2" size="2">
 				시 <input type="text" id="end_mm" max="" maxlength="2" size="2">
 				분 <input type="text" id="end_ss" maxlength="5" size="5"> 초
 				<button onclick="seekTo2()" type="button">위치이동</button>
 				<span id=warning2 style="color: red;"></span> <br>
-		
-				tag: <input type="text" id="tag" name="tag">
+				</div>
+				
+				<div>
+					tag: <input type="text" id="tag" name="tag">
 				<!-- 아래는 기존 playlist에서 video를 수정할 때 사용 -->
 				<!--  <input type="hidden" name="playlistID" id="inputPlaylistID"> -->
 				<input type="hidden" name="videoID" id="inputVideoID">
 				<button type="submit" class="submitBtn">추가</button>
 				<!-- id="btn-submit" disabled="disabled" -->
+				</div>
+				
 			</form>
 		
 			<!-- Youtube video player -->
@@ -853,11 +881,9 @@ img {
 		
 		</div>	
 		
-		<div class="col-sm-2"> 
-		</div>
 		
-		<div class="col-sm-5 bg-light" style="min-width: 500px;"> 
-			<div class="ftco-animate">
+		<div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 bg-light" style="min-width: 500px;"> 
+			<div>
 				<!-- Playlist CRUD -->
 				<h3>Playlist </h3>
 		

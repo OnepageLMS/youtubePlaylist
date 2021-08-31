@@ -8,9 +8,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-body {
+/* body {
 	padding: 10px;
-}
+} */
 .video {
 	padding: 7px;
 }
@@ -26,6 +26,9 @@ img {
 	background-color: #cecece;
 	padding: 10px;
 	margin: 5px;
+}
+.container {
+	margin-left: 15px!important;
 }
 .container-fluid{
 	margin : 7px;
@@ -67,7 +70,8 @@ img {
 	
 <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" /> <!-- jquery for drag&drop list order -->
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 <%
     request.setCharacterEncoding("UTF-8");
@@ -253,18 +257,38 @@ img {
 		location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/' + myEmail;
 	}
 </script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>	
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
 <body>
 
-	<div class="nav">
+	<%-- <div class="nav">
 		<button onclick="moveToMyPlaylist();">내 컨텐츠</button>
 		<button onclick="#">영상추가</button>
 		<button onclick="location.href='${pageContext.request.contextPath}/playlist/searchLms'">LMS내 컨텐츠</button>
-	</div>
-
+	</div> --%>
+	
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="nav-item">
+	      <a class="nav-link" href="#" onclick="moveToMyPlaylist();">내 컨텐츠</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link active" href="#">Youtube영상추가</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link" href='${pageContext.request.contextPath}/playlist/searchLms'>LMS 내 컨텐츠</a>
+	    </li>
+	</ul>
+	
+	<div class="container">
+		<div class="row">
+		
+		
 	<form name="form1" method="post" onsubmit="return false;">
 		<select name="opt" id="opt">
 			<option value="relevance">관련순</option>
@@ -281,10 +305,10 @@ img {
 	
 	<div>
 		<form action="playlist/player" id="form2" method="post" style="display: none">
-		<input type="hidden" name="playerId" id="playerId">
-		<input type="hidden" name="playerTitle" id="playerTitle">
-		<input type="hidden" name="playerDuration" id="playerDuration">
-	</form>
+			<input type="hidden" name="playerId" id="playerId">
+			<input type="hidden" name="playerTitle" id="playerTitle">
+			<input type="hidden" name="playerDuration" id="playerDuration">
+		</form>
 	</div>
 
 	<!-- Youtube video player -->
@@ -381,11 +405,19 @@ img {
 		}
 				
 	</script>
-
+	
+	
 	<div id="get_view"></div>
-
-	<div id="nav_view"></div>
-
+	
+	<div class="container">
+		<div class="row">
+			<div id="nav_view"></div>
+		</div>
+	</div>
+	
+	
+	</div>
+</div>
 
 </body>
 </html>

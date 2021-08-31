@@ -8,14 +8,10 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-html {
+/* html {
 	font-size: 16px;
-}
-body {
-	padding: 10px;
-}
-
-.video {
+} */
+video {
 	padding: 7px;
 }
 
@@ -58,14 +54,28 @@ img {
 }
 
 .card-header {
+	color: black;
+	background-color: white;
 	border-bottom: 1px solid;
-	margin: 0px -10px;
+	/* margin: 0px -10px; */
 	/* padding: 5px 10px; */
-	padding-top: 0px;
+	padding: 0px!important;
 }
 
 .card-body {
 	font-size: 13.5px;
+	background-color: white;
+	color: black;
+	opacity: 90%;
+}
+
+/* mouse hover 헀을시에 시각적 효과  */
+.videos {
+	transition: .2s ease-out; 
+}
+.videos:hover {
+  box-shadow: 0 3px 15px rgba(0,0,0,.2);
+  transform: translate3d(0,-2px,0);
 }
 
 #popup_bg{
@@ -307,12 +317,15 @@ img {
 												+ value.tag
 												+ '" > '
 												+ thumbnail
+												+ '<div style="display:inline-block">'
 												+ (value.seq+1)
 												+ ". "
 												+ value.newTitle
-												+ '<span style="text-align: right; color: blue;">'
+												+ '<br>'
+												+ '<div style="text-align: right; color: blue; display:inline-block;">'
 												+ tags
-												+ '</span>'
+												+ '</div>'
+												+ '</div>'
 												+ '<a href="#" class="aDeleteVideo" onclick="deleteVideo('
 												+ playlistSeq
 												+ ','
@@ -337,13 +350,11 @@ img {
 		var playlistSearch = null;
 
 		function searchPlaylist() {
-			console.log(playlistSearch);
 
 			if (playlistSearch != null) {
 				playlistSearch.forEach(function(element) {
-					//$("[tag*='"+ element + "']").css("background-color", "#d9edf7;"); 
-					$("[playlistname*='" + element + "']").css(
-							"background-color", "#17a2b8;");
+					$("[tag*='"+ element + "']").css("background-color", "#d9edf7;"); 
+					$("[playlistname*='" + element + "']").css("background-color", "#17a2b8;");
 				});
 			}
 
@@ -351,25 +362,29 @@ img {
 			playlistSearch = playlistSearch.replace(/ /g, '').split(",");
 
 			playlistSearch.forEach(function(element) {
-				//$("[tag*='"+ element + "']").css("background-color", "yellow");
+				$("[tag*='"+ element + "']").css("background-color", "yellow");
 				$("[playlistname*='" + element + "']").css("background-color",
 						"green");
 			});
 		}
 
-		function moveToMyPlaylist(){
+		/* function moveToMyPlaylist(){
 			var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
 			location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/' + myEmail;
-		}
+		} */
 	</script>
-
-	<div class="nav">
-		<button onclick="moveToMyPlaylist();">내 컨텐츠</button>
-		<button onclick="location.href='${pageContext.request.contextPath}/youtube'">영상추가</button>
-		<button onclick="#">LMS내 컨텐츠</button>
-	</div>
 	
-	<hr>
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="nav-item"> <!-- 이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !! -->
+	      <a class="nav-link" href='${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu'>내 컨텐츠</a> 
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link"href='${pageContext.request.contextPath}/youtube'>Youtube영상추가</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link active" href="#">LMS 내 컨텐츠</a>
+	    </li>
+	</ul>
 	
 	<div class="container-fluid playlist">
 		<div class="row">
