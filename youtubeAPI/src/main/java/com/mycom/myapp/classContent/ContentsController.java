@@ -37,7 +37,7 @@ public class ContentsController {
 		return "contentDetail";
 	}
 	
-	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //class contents 추가
+	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //사용안함
 	public String addContent(@PathVariable("classID") int classID, @PathVariable("day") int day, Model model) {
 		
 		ClassContentsVO vo = new ClassContentsVO();

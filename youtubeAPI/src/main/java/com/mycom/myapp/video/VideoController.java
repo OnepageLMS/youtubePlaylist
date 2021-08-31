@@ -143,7 +143,7 @@ public class VideoController {
 			int count = videoService.getTotalCount(playlistID);
 			
 			if(count == 0) {
-				if(playlistService.addThumbnailID(Pvo) != 0) {
+				if(playlistService.updateThumbnailID(Pvo) != 0) {
 					System.out.println("playlist 썸네일 추가 성공! ");
 				}
 				else {

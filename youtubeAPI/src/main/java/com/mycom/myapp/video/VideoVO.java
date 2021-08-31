@@ -16,7 +16,7 @@ public class VideoVO {
 	private Date regdate;
 	private List<Integer> playlistArr;
 	private double maxLength;
-	private double duration;
+	private float duration;
 	
 	public int getId() {
 		return id;
@@ -90,10 +90,10 @@ public class VideoVO {
 	public void setmaxLength(double maxLength) {
 		this.maxLength = maxLength;
 	}
-	public double getDuration() {
+	public float getDuration() {
 		return duration;
 	}
-	public void setDuration(double duration) {
+	public void setDuration(float duration) {
 		this.duration = duration;
 	}
 

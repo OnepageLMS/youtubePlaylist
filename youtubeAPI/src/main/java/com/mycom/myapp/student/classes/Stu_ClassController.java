@@ -87,21 +87,32 @@ public class Stu_ClassController{
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/ajaxTest.do", method = RequestMethod.POST)
-	public List<Stu_VideoVO> ajaxTest(HttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
+	public List<Stu_VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-	    Stu_VideoVO pvo = new Stu_VideoVO();
-	    pvo.setPlaylistID(playlistID);
+		//int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+	    Stu_VideoVO vo = new Stu_VideoVO();
+	    vo.setPlaylistID(playlistID);
 	    
+	    //Stu_VideoCheckVO vco = new Stu_VideoCheckVO();
+	    //vco.setClassPlaylistID(classPlaylistID);
 	    //model.addAttribute("totalVideo", playlistcheckService.getTotalVideo(playlistID));
 	    //System.out.println("totalVideo 가 잘 나오니? " + playlistcheckService.getTotalVideo(playlistID));
 	    
-	    return videoService.getVideoList(pvo);
+	    return videoService.getVideoList(vo);
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/ajaxTest2.do", method = RequestMethod.POST)
-	public Stu_PlaylistCheckVO ajaxTest2(HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/forClassInformation", method = RequestMethod.POST)
+	public Stu_ClassContentsVO ajaxTest(HttpServletRequest request, Model model) throws Exception {
+		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+	   
+	    return classContentsService.getOneContent(classPlaylistID);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/progressbar", method = RequestMethod.POST)
+	public Stu_PlaylistCheckVO progressbar(HttpServletRequest request) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("id"));
 		//System.out.println()
@@ -119,8 +130,8 @@ public class Stu_ClassController{
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/ajaxTest3.do", method = RequestMethod.POST)
-	public String ajaxTest3(HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/isExisted", method = RequestMethod.POST)
+	public String isExisted(HttpServletRequest request) throws Exception {
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
@@ -238,7 +249,7 @@ public class Stu_ClassController{
 		//이럴때 playlistcheck테이블의 totalWatched업데이트 시켜주기
 		
 		
-		if (videoCheckService.updateWatch(vo) == 0) {
+		if (videoCheckService.updateWatch(vo) == 0) { //하나도 안멈추고 처음부터 끝까지 보는 경우에!!! 업데이ㅡ가 안되자나!!
 			System.out.println("데이터 업데이트 실패 ======= ");
 			videoCheckService.insertTime(vo);
 			playlistcheckService.updateTotalWatched(pcvo);
@@ -246,7 +257,7 @@ public class Stu_ClassController{
 		}
 		else { //업데이트가 성공하면 
 			if(checkVO.getWatched() == 0) { //checkVO의정보가 playlistcheck에 업데이트가 되지 않았면 
-				if(vo.getWatched() == 1) {
+				if(vo.getWatched() == 1) { //원래 값은 0이었는데 1로 업뎃된것을 의미
 					System.out.println("값이 뭔데 ? " +vo.getWatchedUpdate());
 					System.out.println("값이 뭔데 ? " +vo.getWatched());
 					System.out.println("값이 뭔디 3 " +pcvo.getStudentID() + " / " + pcvo.getPlaylistID() + " / " + pcvo.getVideoID());

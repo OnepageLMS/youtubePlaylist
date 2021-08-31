@@ -8,6 +8,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+html {
+	font-size: 16px;
+}
 body {
 	padding: 10px;
 }
@@ -28,14 +31,14 @@ img {
 
 .playlistSeq {
 	background-color: #cecece;
-	padding: 10px;
+	/* padding: 10px; */
 	margin: 5px;
 }
 
-.container-fluid {
+/* .container-fluid {
 	margin: 7px;
 	width: 70%;
-}
+} */
 /* 이동 타켓 */
 .card-placeholder {
 	border: 1px dashed grey;
@@ -57,7 +60,7 @@ img {
 .card-header {
 	border-bottom: 1px solid;
 	margin: 0px -10px;
-	padding: 5px 10px;
+	/* padding: 5px 10px; */
 	padding-top: 0px;
 }
 
@@ -98,6 +101,18 @@ img {
 	right: 5px;
 	top: 5px;
 }
+
+/* // 지워도 됨. 그냥 vertical line 그리려고 한거 */
+.v1{
+	border-left: 1px solid gray;
+	height: 1000px;
+}
+
+@media only screen and (min-width: 1330px) {
+  .col-1 {width: 0%;}
+  .col-2 {width: 100%;}
+}
+
 </style>
 
 </head>
@@ -110,8 +125,8 @@ img {
 <!-- jquery for drag&drop list order -->
 <link rel="stylesheet"
 	href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet"
-	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <!-- fontawesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -187,15 +202,20 @@ img {
 														sec = parseFloat(sec).toFixed(2);
 													}
 
+													var thumbnail = '<img src="https://img.youtube.com/vi/' + value.thumbnailID + '/0.jpg" style="width: 150px; height: auto;">';
+
 													var html = '<div class = "playlistSeq card text-white bg-info mb-10" >'
 															+ '<div class="card-header" listID="' + playlistID + '"playlistName="' + value.playlistName + '"onclick="togglePlaylist(\'' + num + '\')" >'
 															+ '<input type="checkbox" value="' + playlistID + '" class="selectPlaylists custom-control-input" style="margin:2px 4px; display:none;" onclick="stopDefaultAction(event);">'
-															
+															+ '<div style="display:inline-block">'
 															+ '<i class="caret-icon fa fa-caret-right fa-lg" style="margin:5px;"></i>'
 															+ (index + 1)
 															+ ' : '
+															+ thumbnail
+															+ '</div>'
+															+ '<div style="margin: 10px; display:inline-block;">'
 															+ value.playlistName
-															+ '  ('
+															+ '<br>  ('
 															+ value.totalVideo
 															+ '개: '
 															+ hr + '시간 ' + min + '분 ' + sec + '초 )'
@@ -206,6 +226,7 @@ img {
 															+ playlistID
 															+ '\')" style="display:none;"> 삭제 </a></div>'
 															+ '<div class="card-body"></div>'
+															+ '</div>'
 															+ '</div>';
 
 													$('#allPlaylist').append(
@@ -322,7 +343,7 @@ img {
 				playlistSearch.forEach(function(element) {
 					//$("[tag*='"+ element + "']").css("background-color", "#d9edf7;"); 
 					$("[playlistname*='" + element + "']").css(
-							"background-color", "#d9edf7;");
+							"background-color", "#17a2b8;");
 				});
 			}
 
@@ -347,20 +368,35 @@ img {
 		<button onclick="location.href='${pageContext.request.contextPath}/youtube'">영상추가</button>
 		<button onclick="#">LMS내 컨텐츠</button>
 	</div>
+	
+	<hr>
+	
 	<div class="container-fluid playlist">
-		
-		<h3>LMS내 컨텐츠 검색</h3>	
-
-		<!-- <div id="addPlaylist">
-			<button onclick="createPlaylist()" style="width: 200px;">생 성</button>
-		</div> -->
-		
-		<div>
-			<input type="text" id="playlistSearch" placeholder="플레이리스트/ 태그 / 영상이름으로 검색 " size="40"/>
-			<button onclick="searchPlaylist()">검색</button>
-		</div>
-		<div id="allPlaylist" class="">
-			<!-- 각 카드 리스트 박스 추가되는 공간-->
+		<div class="row">
+			<div class="col-1 col-sm-2">
+			</div>
+			
+			<div class="v1"></div>
+			
+			<div class="col-2 col-sm-8">
+				<h3>LMS내 컨텐츠 검색</h3>	
+	
+				<!-- <div id="addPlaylist">
+					<button onclick="createPlaylist()" style="width: 200px;">생 성</button>
+				</div> -->
+				
+				<div>
+					<input type="text" id="playlistSearch" placeholder="플레이리스트/ 태그 / 영상이름으로 검색 " size="40"/>
+					<button onclick="searchPlaylist()">검색</button>
+				</div>
+				<div id="allPlaylist" class="">
+					<!-- 각 카드 리스트 박스 추가되는 공간-->
+				</div>
+			</div>
+			
+			<div class="col-1 col-sm-2">
+			</div>
+			
 		</div>
 	</div>
 

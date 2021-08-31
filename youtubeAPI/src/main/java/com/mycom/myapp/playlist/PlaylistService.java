@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface PlaylistService {
 	public int addPlaylist(PlaylistVO vo);
-	public int addThumbnailID(PlaylistVO vo);
+	public int updateThumbnailID(PlaylistVO vo);
 	public int changeSeq(PlaylistVO vo);
 	public int updatePlaylistName(PlaylistVO vo);
 	public int updateDescription(PlaylistVO vo);
