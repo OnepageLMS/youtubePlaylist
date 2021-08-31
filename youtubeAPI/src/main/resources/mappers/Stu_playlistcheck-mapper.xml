@@ -18,7 +18,7 @@
 		set totalWatched = totalWatched + (select duration
 		from Video join videocheck on Video.id = videocheck.videoID
 		where studentID=#{studentID} AND lms_playlistCheck.playlistID=#{playlistID} AND videocheck.videoID=#{videoID} AND videocheck.watched=1 )
-		where playlistID=#{playlistID}
+		where playlistID=#{playlistID} AND classPlaylistID = #{classPlaylistID}
 	</update>
 	
 	<delete id="deletePlaylist">

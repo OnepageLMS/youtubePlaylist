@@ -327,7 +327,10 @@
         function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
  			start_s = startTime;
     		
- 			$('.videoTitle').text(playlist[ori_index].newTitle); //비디오 제목 정해두기\
+        	$(".video").css({'background-color' : 'unset'});
+        	item.style.background = "lightgrey";
+        	
+ 			$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
         	
  			if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
  				flag = 0;
@@ -512,7 +515,9 @@
 								videoID : playlist[ori_index].id, //videoID 그대로
 								timer : time + parseInt(playlist[ori_index].timer), //timer도 업데이트를 위해 필요
 								watch : 1, //영상을 다 보았으니 시청여부는 1로(출석) 업데이트!
-								playlistID : playlist[0].playlistID
+								playlistID : playlist[0].playlistID,
+								classPlaylistID : classPlaylistID,
+								classID : classID
 					},
 					
 					success : function(data){

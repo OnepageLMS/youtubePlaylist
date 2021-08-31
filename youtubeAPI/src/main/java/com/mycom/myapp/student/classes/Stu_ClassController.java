@@ -78,7 +78,7 @@ public class Stu_ClassController{
 		model.addAttribute("playlistID", playlistID);
 		model.addAttribute("classPlaylistID", id);
 		model.addAttribute("classID", classInfo);
-		model.addAttribute("list", videoCheckService.getTime(175)); //studentID가 3으로 설정되어있음
+		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
 		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		
@@ -210,6 +210,8 @@ public class Stu_ClassController{
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int watch = Integer.parseInt(request.getParameter("watch"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+		int classID = Integer.parseInt(request.getParameter("classID"));
 		
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
@@ -217,6 +219,8 @@ public class Stu_ClassController{
 		vo.setStudentEmail(studentID);
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
+		vo.setClassID(classID);
+		vo.setClassPlaylistID(classPlaylistID);
 		
 		Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
 		vo.setWatched(watch);
@@ -226,6 +230,7 @@ public class Stu_ClassController{
 		pcvo.setStudentID(Integer.parseInt(studentID));
 		pcvo.setPlaylistID(playlistID);
 		pcvo.setVideoID(videoID);
+		pcvo.setClassPlaylistID(classPlaylistID);
 		
 		//우선 현재 db테이블의 getWatched를 가져온다. 이때 가져온 값이 0이다
 		//vo.setWatched를 한다.
@@ -236,6 +241,7 @@ public class Stu_ClassController{
 		if (videoCheckService.updateWatch(vo) == 0) {
 			System.out.println("데이터 업데이트 실패 ======= ");
 			videoCheckService.insertTime(vo);
+			playlistcheckService.updateTotalWatched(pcvo);
 
 		}
 		else { //업데이트가 성공하면 
