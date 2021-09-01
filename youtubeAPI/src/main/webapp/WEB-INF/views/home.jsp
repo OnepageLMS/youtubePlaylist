@@ -7,7 +7,7 @@
 	<title>Home</title>
 </head>
 <body>
-
+<button onclick="location.href='dashboard'">대시보드</button>
 <button onclick="location.href='class/contentList/1'">Teacher</button>
 <button onclick="location.href='student/class/contentList/1'">Student</button>
 <!-- 나중에는 학생이 join한 class들을 먼저 보여주고, 거기서 선택해서 들어갈 수 있도록하기
