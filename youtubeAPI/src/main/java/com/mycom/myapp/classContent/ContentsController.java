@@ -23,11 +23,20 @@ public class ContentsController {
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classID") int classID, Model model) {
-		classID = 1;//임의로 1번 class 설정
+		//classID = 1;//임의로 1번 class 설정
 
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
 		return "contentsList";
+	}
+	
+	@RequestMapping(value = "/contentList2/{classID}", method = RequestMethod.GET)
+	public String contentList2(@PathVariable("classID") int classID, Model model) {
+		//classID = 1;//임의로 1번 class 설정
+
+		model.addAttribute("classInfo", classService.getClass(classID)); 
+		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
+		return "t_contentsList";
 	}
 	
 	@RequestMapping(value = "/contentDetail/{id}", method = RequestMethod.GET) //class contents 전체 보여주기
