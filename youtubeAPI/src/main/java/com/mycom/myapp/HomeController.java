@@ -17,11 +17,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.video.VideoService;
 import com.mycom.myapp.youtube.GoogleOAuthRequest;
 import com.mycom.myapp.youtube.GoogleOAuthResponse;
 import com.mycom.myapp.youtube.youtubeProvider;
+
+import net.sf.json.JSONArray;
 
 /**
  * Handles requests for the application home page.
@@ -42,7 +45,9 @@ public class HomeController {
 	@Autowired
 	VideoService videoService;
 	
-
+	@Autowired
+	private ClassesService classService;	//임의로 example 함수에 사용하려 추가함
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -50,6 +55,14 @@ public class HomeController {
 	public String home() {
 
 		return "home";
+	}
+	
+	@RequestMapping(value = "/example", method = RequestMethod.GET)
+	public String example(Model model) {
+		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+		
+		return "t_example";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
