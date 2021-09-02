@@ -17,7 +17,7 @@ public class ClassController {
 	
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String dashboard(Model model) {
-		String email = "yewon.lee@onepage.edu";
+		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
 		
 		return "dashboard";
