@@ -1,13 +1,21 @@
 package com.mycom.myapp.classContent;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.playlist.PlaylistService;
+import com.mycom.myapp.playlist.PlaylistVO;
+import com.mycom.myapp.student.video.Stu_VideoVO;
 
 import net.sf.json.JSONArray;
 
@@ -19,6 +27,8 @@ public class ContentsController {
 	private ClassesService classService;
 	@Autowired
 	private ClassContentsService classContentsService;
+	@Autowired
+	private PlaylistService playlistService;
 
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
@@ -35,6 +45,18 @@ public class ContentsController {
 		ClassContentsVO vo = classContentsService.getOneContent(id);
 		model.addAttribute("vo", vo);
 		return "contentDetail";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
+	public List<PlaylistVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
+		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		
+		//playlistmapper를 통해 playlistID에 맞는 영상들을 가져와서 리턴해주는역할을 해야한ㄷㅏ. 
+		PlaylistVO vo = new PlaylistVO();
+	    vo.setPlaylistID(playlistID);
+	    
+	    return playlistService.getPlaylistForInstructor(vo);
 	}
 	
 	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //사용안함

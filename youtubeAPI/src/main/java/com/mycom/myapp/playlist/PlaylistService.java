@@ -15,4 +15,5 @@ public interface PlaylistService {
 	public int getCount();
 	public int updateCount(int playlistID);
 	public int updateTotalVideoLength(int playlistID); 
+	public List<PlaylistVO> getPlaylistForInstructor(PlaylistVO vo);
 }

@@ -67,4 +67,9 @@
 		where playlistID=#{playlistID}
 	</update>
 	
+	<select id="getPlaylistForInstructor" resultType="playlist"> 
+		select * from lms_playlist join Video on lms_playlist.playlistID = Video.playlistID
+		where lms_playlist.playlistID=#{playlistID}
+	</select>
+	
 </mapper>

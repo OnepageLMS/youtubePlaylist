@@ -70,5 +70,10 @@ public class PlaylistDAO {
 		int result = sqlSession.update("Playlist.updateTotalVideoLength", playlistID);
 		return result;
 	}
+	
+	public List<PlaylistVO> getPlaylistForInstructor(PlaylistVO vo){ //선생님 contentsDetail페이지에서 선택한 플레이리스트에 대한 영상 보여주기 위한 코드
+		List<PlaylistVO> result = sqlSession.selectList("Playlist.getPlaylistForInstructor", vo);
+		return result;
+	}
 
 }

@@ -14,6 +14,13 @@ public class PlaylistVO {
 	private int exposed;
 	private Date modDate;
 	
+	private String youtubeID; //이거 영상재생할 때 진짜 필요하다
+	private String title;
+	private String newTitle;
+	private double start_s;
+	private double end_s;
+	private double duration;
+	
 	public String getThumbnailID() {
 		return thumbnailID;
 	}
@@ -76,5 +83,42 @@ public class PlaylistVO {
 	}
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
+	}
+	
+	public String getYoutubeID() {
+		return youtubeID;
+	}
+	public void setYoutubeID(String youtubeID) {
+		this.youtubeID = youtubeID;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getNewtTitle() {
+		return newTitle;
+	}
+	public void setNewTitle(String newTitle) {
+		this.newTitle = newTitle;
+	}
+	public double getStart_s() {
+		return start_s;
+	}
+	public void setStart_s(double start_s) {
+		this.start_s = start_s;
+	}
+	public double getEnd_s() {
+		return end_s;
+	}
+	public void setEnd_s(double end_s) {
+		this.end_s = end_s;
+	}
+	public double getDuration() {
+		return duration;
+	}
+	public void setDuration(double duration) {
+		this.duration = duration;
 	}
 }
