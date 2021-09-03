@@ -200,7 +200,7 @@ img {
 							+ '</b> </p></div>');
 		}
 	}
-	function lastAndNext(token, direction) { // 검색결과 이전/다음 페이지 이동
+	function lastAndNext(token, direction) { // 검색결과 이전/다음 페이지 이동//
 		$("#nav_view").append(
 				'<a href="javascript:fnGetList(\'' + token + '\');"> '
 						+ direction + ' </a>');

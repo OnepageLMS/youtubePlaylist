@@ -95,6 +95,7 @@
 				var content = $('.day:eq(' + day + ')');
 				
 				//if(i==0 || weekContents[i-1].playlistID != weekContents[i].playlistID){ //강의리스트에서는 플레이리스트의 첫번째 영상 썸네일만 보이도록
+				console.log(" // " + weekContents[i].playlistID);
 				content.append("<div class='content card col list-group-item' seq='" + weekContents[i].daySeq + ">"
 									+ '<div class="row">'
 										+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'

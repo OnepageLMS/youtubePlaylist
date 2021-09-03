@@ -26,6 +26,16 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/jquery-3.1.1.js" type="text/javascript"></script>
 	
+	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" /> <!-- jquery for drag&drop list order -->
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script 
+	  src="http://code.jquery.com/jquery-3.5.1.js"
+	  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+	  crossorigin="anonymous"></script>
+	
+	
 	<style>
 		.container {
   		
@@ -58,62 +68,46 @@
 		background-color: lightgrey;
 		cursor: pointer;
 		}
-
+		
+		.videoNewTitle :hover{
+		 color: #db4437;
+		}
+		
+		
 		
 	</style>
 	
 </head>
 <body>
-
-	<!--<div>
-			<div class="first">
-				<p class="videoTitle"></p>
-	    		<div id="onepageLMS"></div>
-	    		<div id='timerBox' class="timerBox">
-					<div id="time" class="time">00:00:00</div>
-				</div>
-				<div id="myProgress">
-  					<div id="myBar"></div>
-				</div>
-			</div> 
-			
-	        <div id="myPlaylist" class="second" >
-	        	<div id="total_runningtime"></div>
-	        	<div id="get_view" ></div>
-	        </div>
-        </div> -->
-        <div class="container">
+	<div class="container">
 	        <div class = "row">
 	        	
 	        	<div class="displayVideo col-12 col-xs-8 col-sm-8 col-md-8 col-lg-8">
-	        	 <div class="videoTitle col-12 col-md-12 col-lg-12"></div>
+	        		<div class="videoTitle col-12 col-md-12 col-lg-12"></div>
 	        	 
-	        	 <div id = "onepageLMS" class="col-12 col-md-12 col-lg-12">
-	        	 	<div class="tab-content">
-	        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
-	        	 			 <div class="single-feature-post video-post bg-img">
-	                             
-	        	 			 </div>
-	        	 		</div>
-	        	 	</div>
-	        	 </div>
+		        	 <div id = "onepageLMS" class="col-12 col-md-12 col-lg-12">
+		        	 	<div class="tab-content">
+		        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
+		        	 			 <div class="single-feature-post video-post bg-img">
+		                             
+		        	 			 </div>
+		        	 		</div>
+		        	 	</div>
+		        	 </div>
 	        	 
-	        	 <div class=" col-12 col-md-12 col-lg-12">
-		        	 <div id="myProgress" class="progress">
-	  					<div id="myBar" class="progress-bar" ></div>
+		        	 <div class=" col-12 col-md-12 col-lg-12">
+			        	 <div id="myProgress" class="progress">
+		  					<div id="myBar" class="progress-bar" ></div>
+						 </div>
 					 </div>
-				 </div>
 				 
-				 <div class=" col-12 col-md-12 col-lg-12">
-		        	 <div id="classDescription"> </div>
-				 </div>
+					 <div class=" col-12 col-md-12 col-lg-12">
+			        	 <div id="classDescription"> </div>
+					 </div>
 	        	 	
 	        	</div>
 	        	
 	        	<div id="allVideo" class="col-12 col-xs-4 col-sm-4 col-md-4 col-lg-4">
-		        <!--<div id="myProgress">
-		  				<div id="myBar"></div>
-					</div> -->
 					
 					<div id="classTitle"></div>
 					<div id="total_runningtime"></div>
@@ -127,11 +121,9 @@
  				 	
 		       	</div>
 
-        </div>
-       </div>
-       
- 		
- 		
+        	</div>
+    </div>
+        	
  		
     <script type="text/javascript">
     	
@@ -209,7 +201,6 @@
 	 				//classPlaylistInfo = data;
 	 				$("#classTitle").append('<div style = " margin: 0; padding-top: 10px; padding-bottom: 10px; font-size: 25px;">"' + classPlaylistInfo.title + '"</div>');
 	 				$("#classDescription").append('<div>' + classPlaylistInfo.description + '</div>');
-	 				console.log("success forClassInformation!");
 	 			},
 	 			error : function() {
 	 				alert("error forClassInformation");
@@ -235,27 +226,27 @@
 	 				playlist[i].title = '';
 			    }
 	 			
-	 			/*if ((playlist[i].newTitle).length > 45){
-	 				playlist[i].newTitle = (playlist[i].newTitle).substring(0, 45) + " ..."; 
-				}*/
+	 			if ((playlist[i].newTitle).length > 30){
+	 				playlist[i].newTitle = (playlist[i].newTitle).substring(0, 30) + " ..."; 
+				}
 				
 				var completed ='';
 				if(playlist[i].watched == 1 && playlist[i].classPlaylistID == classPlaylistID){
-					completed = '<div class="col-xs-1 col-lg-1"><span class="badge badge-primary"> 완료 </span></div>';
+					completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
 				}
 				
-				$("#get_view").append('<ul >' +
- 						'<li class="nav-item"> <a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
+				$("#get_view").append(
+ 						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
  						'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
  							'<div class="post-thumbnail col-xs-4 col-lg-4"> ' + thumbnail + ' </div>' +
- 							'<div class="post-content col-xs-7 col-lg-7" onclick="viewVideo(\'' 
+ 							'<div class="post-content col-xs-7 col-lg-6" onclick="viewVideo(\'' 
 		 						+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
 			 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ', this)" >' 
-			 					+ 	'<h6 class="post-title">' + playlist[i].newTitle + '</h6>' 
+			 					+ 	'<h6 class="post-title videoNewTitle">' + playlist[i].newTitle + '</h6>' 
 			 					+	'<div class="">'+  convertTotalLength(playlist[i].duration) +'</div>' +
 			 				'</div>' 
 		 					+ 	completed 
-	 					+ '</div></li></ul>'
+	 					+ '</div>'
 	 					+ '<div class="videoLine"></div>'
 	 			);
 				
@@ -349,9 +340,8 @@
 	 	
         function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
  			start_s = startTime;
-      $(".video").css({'background-color' : 'unset'});
-      item.style.background = "lightgrey";
-
+	      	$(".video").css({'background-color' : 'unset'});
+	      	item.style.background = "lightgrey";
  			$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
         	
  			if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
@@ -401,7 +391,6 @@
     		
     		else{   //취소
     			return;
-
     		}
  		}
         
@@ -469,9 +458,7 @@
             			flag = 1;
             			player.playVideo();
             			return;
-
             		}
-
         		}
         	}
         	

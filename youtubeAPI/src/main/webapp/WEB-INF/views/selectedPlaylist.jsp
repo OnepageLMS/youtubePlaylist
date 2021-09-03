@@ -198,8 +198,8 @@
 			    $.each(videos, function( index, value ){ 
 			    	var tmp_newTitle = value.newTitle;
 			    	var tmp_title = value.title;
-			    	//if (title.length > 45
-						//title = title.substring(0, 45) + " ..."; 
+			    	if (tmp_title.length > 30)
+						tmp_title = tmp_title.substring(0, 30) + " ..."; 
 					
 			    	if (tmp_newTitle == null || tmp_newTitle == ''){
 			    		tmp_newTitle = tmp_title;
@@ -232,9 +232,7 @@
 			    	else 
 			    		var addStyle = '';
 				    
-			    	var html = '<ul><li class="nav-item"> '
-						    		//+ '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
-						    		+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
+			    	var html = '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
 									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 									+ '" videoID="' + value.id 
 									+ '" youtubeID="' + value.youtubeID 
@@ -248,13 +246,13 @@
 								+ 	'<div class="videoSeq ">' + (index+1) + thumbnail + '</div>'
 								+ 	'<div class="tag" tag="' + value.tag + '">' + tmp_tags + '</div>'
 								+'</div>'
-								+ '<div class="videoNewTitle col-lg-8">' 
-								+ 	'<h6 class="post-title">' + tmp_newTitle + '</h6>'
-								+ 	'<div class="videoOriTitle" style = "color :#a6a6a6 ">' + tmp_title + '</div>'
+								+ '<div class="col-lg-7">' 
+								+ 	'<h6 class="post-title ">' + tmp_newTitle + '</h6>'
+								+ 	'<div class="videoOriTitle" style = "color :#a6a6a6; font-size: 0.1em;">' + tmp_title + '</div>'
 								+ 	'<div class="duration"> ' + convertTotalLength(value.duration) + '</div>'
 								+'</div>'
 								+ '<a href="#" class="aDeleteVideo col-lg-1 badge badge-primary" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-							+ '</div></li></ul>'
+							+ '</div>'
 							+ '<div class="videoLine"></div>';
 					$('.videos').append(html); 
 				});
