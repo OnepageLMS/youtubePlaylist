@@ -136,13 +136,12 @@ $(document).ready(function(){
 		day -= 1; //임의로 설정... 
 		
 		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
-		var htmlAddCancel = "'javascript:addCancel()'";
 		
-		var addFormHtml = '<div class="addContentForm col p-3">'
-							+ '<div>'
+		var addFormHtml = '<div class="addContentForm card-border mb-3 card card-body border-alternate">'
+							+ '<div class="card-header">'
 								+ '<h5> 학습페이지 추가 </h5>'
 							+ '</div>'
-							+ '<form id="addContent" class="form-group" action="${pageContext.request.contextPath}/class/addContentOK" onsubmit="return checkForm(this);" method="post">' 
+							+ '<form id="addContent" class="form-group card-body" action="${pageContext.request.contextPath}/class/addContentOK" onsubmit="return checkForm(this);" method="post">' 
 								+ '<input type="hidden" name="classID" value="${classInfo.id}">'
 								+ '<input type="hidden" name="day" value="' + day + '"/>'
 								+ '<div class="selectContent m-3">'
@@ -182,7 +181,7 @@ $(document).ready(function(){
 									+ '</div>'
 								+ '</div>'
 								+ '<div class="text-center m-3">'
-									+ '<button class="btn btn-sm btn-warning" onclick="location.href=' + htmlAddCancel + '" >취소</button>'
+									+ '<button type="button" class="btn btn-sm btn-warning" onclick="cancelForm();" >취소</button>'
 									+ '<button type="submit" class="btn btn-sm btn-primary">저장</button>'
 								+ '</div>'
 							+ '</form>'
@@ -213,10 +212,11 @@ $(document).ready(function(){
 		console.log(hour, min);
 	}
 
-	function addCancel(daySeq) {	//미완성
-		var a = confirm("등록을 취소하시겠습니까?");
-		//if (a)
-			
+	function cancelForm(){
+		var a = confirm("작성을 취소하시겠습니까?");
+		if (a) {
+			$('.addContentForm').remove();
+		}
 	}
 
 	function popupOpen(){
