@@ -16,18 +16,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.classes.ClassesService;
+
+import net.sf.json.JSONArray;
+
 
 @Controller
 @RequestMapping(value="/playlist")
 public class PlaylistController {
 	@Autowired
 	private PlaylistService playlistService;
+	@Autowired
+	private ClassesService classService;
 	
 	//myplaylist(내 playlist) 새창 띄우기
 	@RequestMapping(value = "/myPlaylist/{creatorEmail}", method = RequestMethod.GET) 
 	public String selectPlaylist(@PathVariable("creatorEmail") String creatorEmail, Model model) {
 		model.addAttribute("email", creatorEmail);
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(creatorEmail)));
 		return "myPlaylist";
+	}
+	
+	@RequestMapping(value = "/myPlaylist2/{creatorEmail}", method = RequestMethod.GET) 
+	public String selectPlaylist2(@PathVariable("creatorEmail") String creatorEmail, Model model) {
+		model.addAttribute("email", creatorEmail);
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(creatorEmail)));
+		return "t_myPlaylist";
 	}
 	
 //	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 

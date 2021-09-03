@@ -71,7 +71,7 @@ $(document).ready(function(){
 });
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
                 <div class="logo-src"></div>
@@ -119,13 +119,13 @@ $(document).ready(function(){
                             </a>
                         </li>
                        
-                        <li class="dropdown nav-item">
+                        <li class="nav-item">
                             <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
                             </a>
                         </li>
-                    </ul>        
+                    </ul>  
                 </div>
                 <div class="app-header-right">
                     <div class="header-btn-lg pr-0">
