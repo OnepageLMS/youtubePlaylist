@@ -129,44 +129,42 @@ img {
 						//console.log(jdata);
 						$(jdata.items)
 								.each(
-										function(i) {
-											setAPIResultToList(i, this.id.videoId,
-													this.snippet.title,
-													this.snippet.publishedAt);
-										})
+								function(i) {
+									setAPIResultToList(i, this.id.videoId,
+											this.snippet.title,
+											this.snippet.publishedAt);
+								})
 								.promise()
-								.done(
-										$(jdata.items)
-												.each(
-														function(i) {
-															var id = idList[i];
-															var getVideo = "https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id="
-																	+ id
-																	+ "&key=" + key;
-																	//+ "&access_token="
-																	//+ accessToken;
-
-															$.ajax({
-																		type : "GET",
-																		url : getVideo, //youtube-videos api
-																		dataType : "jsonp",
-																		success : function(jdata2) {
-																			//console.log(jdata2);
-																			setAPIResultDetails(
-																					i,
-																					jdata2.items[0].statistics.viewCount,
-																					jdata2.items[0].statistics.likeCount,
-																					jdata2.items[0].statistics.dislikeCount,
-																					jdata2.items[0].contentDetails.duration);
-																		},
-																		error : function(xhr, textStatus) {
-																			console.log(xhr.responseText);
-																			alert("video detail 에러");
-																			return;
-																		}
-
-																	})
-														}));
+								.done($(jdata.items).each(
+									function(i) {
+										var id = idList[i];
+										var getVideo = "https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id="
+												+ id
+												+ "&key=" + key;
+												//+ "&access_token="
+												//+ accessToken;
+	
+										$.ajax({
+													type : "GET",
+													url : getVideo, //youtube-videos api
+													dataType : "jsonp",
+													success : function(jdata2) {
+														//console.log(jdata2);
+														setAPIResultDetails(
+																i,
+																jdata2.items[0].statistics.viewCount,
+																jdata2.items[0].statistics.likeCount,
+																jdata2.items[0].statistics.dislikeCount,
+																jdata2.items[0].contentDetails.duration);
+													},
+													error : function(xhr, textStatus) {
+														console.log(xhr.responseText);
+														alert("video detail 에러");
+														return;
+													}
+	
+												})
+									}));
 
 						if (jdata.prevPageToken) {
 							lastAndNext(jdata.prevPageToken, " <-이전 ");
@@ -200,20 +198,24 @@ img {
 			link = link + "?duration=" + durationCount[i] + "'";
 			
 			$("#get_view").append(					
-					/* '<div class="searchedVideo" onclick="location.href='+ link +'" >'
-							+ thumbnail
-							+ titleList[i] */
 					/* '<div class="searchedVideo" onclick="$(#form2).submit();">' */
-					'<div class="searchedVideo" onclick="selectVideoForm(\'' + id.toString()
+					'<div class="searchedVideo" onclick="viewVideo(\'' + id.toString()
 							+ '\'' + ',\'' + title + '\''
-							+ ',\'' + durationCount[i] + '\');" >'
+							+ ',\'' + durationCount[i] + '\'' + ',' + i + ');">'
 							+ thumbnail
 							+ titleList[i]
 							+ '<p class="info"> publised: <b>' + dateList[i]
 							+ '</b> view: <b>' + view
 							+ '</b> like: <b>' + likeCount[i]
 							+ '</b> dislike: <b>' + dislikeCount[i]
-							+ '</b> </p></div>');
+							+ '</b> </p>'
+							+ '</div>');
+							/* + '<div style="display:none">'
+							+ '<div id="player_info"></div>'
+							+ '<div id="player"></div>' 
+							+ '</div> </div>'); */
+			<!-- <div id="player_info"></div> -->
+			<!-- <div id="player"></div> -->
 		}
 	}
 	function lastAndNext(token, direction) { // 검색결과 이전/다음 페이지 이동
@@ -235,8 +237,7 @@ img {
 		dislikeCount[i] = convertNotation(dislike);
 		durationCount[i] = duration;
 		count += 1;
-		if (count == 20)
-			displayResultList();
+		if (count == 20) displayResultList();
 	}
 
 	function convertNotation(value) { //조회수 등 단위 변환
@@ -300,8 +301,8 @@ img {
 		<button onclick="fnGetList();">검색</button>
 	</form>
 
-	<div id="player_info"></div>
-	<div id="player"></div>
+	<!-- <div id="player_info"></div> -->
+	<!-- <div id="player"></div> -->
 	
 	<div>
 		<form action="playlist/player" id="form2" method="post" style="display: none">
@@ -313,7 +314,6 @@ img {
 
 	<!-- Youtube video player -->
 	<script>
-	
 		// 각 video를 클릭했을 때 함수 parameter로 넘어오는 정보들
 		var videoId;
 		var videoTitle;
@@ -330,11 +330,102 @@ img {
 		var end_s;
 		var youtubeID;
 
-		function showYoutubePlayer(id, title){
-			$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
+		// 이전 index 존재 유무 확인
+		var prev_index;
+
+		function viewVideo(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
+			$('.videos').css({'fontWeight' : 'normal'});
+			//$('input:checkbox').prop("checked", false); //youtube 검색결과에서 비디오 선택하면 playlist 체크된것 다 초기화 
+			$('.submitBtn').html('추가');
+			//document.getElementById("inputVideoID").value = -1; //updateVideo()가 아닌 createVideo()가 실행되도록 초기화!
+			
+			// 클릭한 영상 밑에 player 띄우기
+			/* if(prev_index != null){
+				
+			}
+			console.log(index); */
+
+			<!-- <div id="player_info"></div> -->
+			<!-- <div id="player"></div> -->
+
+			// 클릭한 영상 밑에 player 띄우기
+			var $div = $('<div id="player_info"></div> <br> <div id="player"></div>');
+			
+			if(prev_index != null){
+				//$("#get_view").children().eq(prev_index).children().eq(0).text() = ""; 
+				/* $("#get_view").children().eq(prev_index).children().eq(1).text() = "";
+				$("#get_view").children().eq(prev_index).children().eq(2).text() = ""; */
+
+				$('#player_info').remove();
+				$('#player').remove();
+				
+			    //$("#get_view").children().eq(prev_index).attr('style', 'display: block');
+			    //$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: none');
+			}
+			
+			$("#get_view").children().eq(index).append($div);
+			
+			//$("#get_view").children().eq(index).attr('style', 'display: block');
+			//$("#get_view").children().eq(index).children().eq(0).attr('style', 'display: block');
+				
+			
+			//$("#get_view")[i].append('<div id="player_info"></div><br><div id="player"></div>');
+			
+			//이게 맞는건가 모르겠네..:
+			//$("#get_view").children().eq(index).append('<div id="player_info"></div><br><div id="player"></div>');
+			
+			//document.getElementById(item).innerHTML = "<div id='player_info'></div><br><div id='player'></div>";
+				
+			showYoutubePlayer(id, title, index);	
+
+			prev_index = index;		
+
+			//console.log("check duration", duration); // 직접찍어본 결과 희한하게 영상에 따라 총 영상 길이가 보통 1초가 다 긴데, 어떤건 정확하게 영상 길이만큼 나온다. 
+
+			/*
+					var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+					var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
+					var hours = parseInt(regex_result[1] || 0);
+					var minutes = parseInt(regex_result[2] || 0);
+					var seconds = parseInt(regex_result[3] || 0);
+		
+					/* if(seconds != "00") {
+						seconds = parseInt(seconds) - 1;  // 어떤건 1초 적게 나올 수 있음 이게 영상 마다 정의된 총 길이시간이 1초가 더해지기도 안더해지기도 해서 . 
+					}	  
+		
+					document.getElementById("end_hh").value = hours;
+					document.getElementById("end_mm").value = minutes;
+					document.getElementById("end_ss").value = seconds;
+		
+					var total_seconds = hours * 60 * 60 + minutes * 60 + seconds;
+		
+					// for validty check: 
+					limit = parseInt(total_seconds);
+					document.getElementById("maxLength").value = limit;
+		
+					// 클릭한 영상의 videoId form에다가 지정. 
+					document.getElementById("inputYoutubeID").value = id;
+					document.getElementById("inputYoutubeTitle").value = videoTitle;
+		
+					//이미 다른 영상이 player로 띄워져 있을 때 새로운 id로 띄우기
+					//player.loadVideoById(videoId, 0, "large");
+		
+					document.getElementById("start_hh").value = 0;
+					document.getElementById("start_mm").value = 0;
+					document.getElementById("start_ss").value = 0;
+			*/
+		}
+
+		function showYoutubePlayer(id, title, index){
+			//$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
 
 			videoId = id;
 			videoTitle = title;
+
+			if(prev_index != null){
+				$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: inline-block');
+			}
+			$("#get_view").children().eq(index).children().eq(0).attr('style', 'display: none');
 			
 			document.getElementById("player_info").innerHTML = '<h3 class="videoTitle">' + videoTitle + '</h3>';
 
@@ -343,6 +434,9 @@ img {
 			tag.src = "https://www.youtube.com/iframe_api";
 			firstScriptTag = document.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+			onYouTubeIframeAPIReady();
+			
 		}
 
 		// 3. This function creates an <iframe> (and YouTube player)
@@ -370,7 +464,7 @@ img {
 				player.loadVideoById({
 					'videoId': youtubeID, 
 					'startSeconds': start_s, 
-					'endSeconds':end_s
+					'endSeconds':end_s 
 				});
 			}
 		}
@@ -378,10 +472,9 @@ img {
 		// (jw) player가 끝시간을 넘지 못하게 만들기 : 일단 임의로 시작 시간으로 되돌리기 했는데, 하영이거에서 마지막 재생 위치에서 부터 다시 재생되게 하면 될듯. 
 		function onPlayerStateChange(state) {
 		    if (player.getCurrentTime() >= end_s) {
-		      
-		      player.pauseVideo();
-		      //player.seekTo(start_s);
-		      player.loadVideoById({
+			   player.pauseVideo();
+			   //player.seekTo(start_s);
+			   player.loadVideoById({
 					'videoId': youtubeID, 
 					'startSeconds': start_s, 
 					'endSeconds':end_s

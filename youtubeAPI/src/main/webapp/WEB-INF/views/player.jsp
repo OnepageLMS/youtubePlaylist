@@ -270,48 +270,45 @@ img {
 								playlists = result.allPlaylist; //order seq desc 로 가져온다.
 
 								$.each(
-												playlists,
-												function(index, value) { //여기서 index는 playlistID가 아님! 
-													var playlistID = value.playlistID;
-													var num = index;
+										playlists,
+										function(index, value) { //여기서 index는 playlistID가 아님! 
+											var playlistID = value.playlistID;
+											var num = index;
+			
+											var hr = Math.floor(value.totalVideoLength / 3600);
+											var min = Math.floor(value.totalVideoLength % 3600 / 60); 
+											var sec = value.totalVideoLength % 3600 % 60;
+											if(sec % 1 !=0){ 	// 소수점 있을시에는 2자리까지만 표기 하도록. 
+												sec = parseFloat(sec).toFixed(2);
+											}													
+			
+											var html = '<div class = "playlistSeq card text-white bg-info mb-10" >'
+											+ '<div class="card-header" listID="' + playlistID + '"playlistName="' + value.playlistName + '"onclick="togglePlaylist(\'' + num + '\')" >'
+											+ '<input type="checkbox" value="' + playlistID + '" class="selectPlaylists custom-control-input" style="margin:2px 4px; display:none;" onclick="stopDefaultAction(event);">'	
+											+ '<i class="fa fa-caret-right fa-lg" style="margin:5px;"></i>'
+											+ (index + 1)
+											+ ' : '
+											+ value.playlistName
+											+ '  ('
+											+ value.totalVideo
+											+ '개: '
+											+ hr + '시간 ' + min + '분 ' + sec + '초 )'
+											+ '<a href="#" class="aUpdatePlaylist" onclick="updatePlaylist(\''
+											+ playlistID
+											+ '\')" style="display:none;"> 수정 </a>'
+											+ '<a href="#" class="aDeletePlaylist" onclick="deletePlaylist(\''
+											+ playlistID
+											+ '\')" style="display:none;"> 삭제 </a></div>'
+											+ '<div class="card-body"></div>'
+											+ '</div>';
 
-													var hr = Math.floor(value.totalVideoLength / 3600);
-													var min = Math.floor(value.totalVideoLength % 3600 / 60); 
-													var sec = value.totalVideoLength % 3600 % 60;
-													if(sec % 1 !=0){ 	// 소수점 있을시에는 2자리까지만 표기 하도록. 
-														sec = parseFloat(sec).toFixed(2);
-													}													
-
-													var html = '<div class = "playlistSeq card text-white bg-info mb-10" >'
-															+ '<div class="card-header" listID="' + playlistID + '"playlistName="' + value.playlistName + '"onclick="togglePlaylist(\'' + num + '\')" >'
-															+ '<input type="checkbox" value="' + playlistID + '" class="selectPlaylists custom-control-input" style="margin:2px 4px; display:none;" onclick="stopDefaultAction(event);">'	
-															+ '<i class="fa fa-caret-right fa-lg" style="margin:5px;"></i>'
-															+ (index + 1)
-															+ ' : '
-															+ value.playlistName
-															+ '  ('
-															+ value.totalVideo
-															+ '개: '
-															+ hr + '시간 ' + min + '분 ' + sec + '초 )'
-															+ '<a href="#" class="aUpdatePlaylist" onclick="updatePlaylist(\''
-															+ playlistID
-															+ '\')" style="display:none;"> 수정 </a>'
-															+ '<a href="#" class="aDeletePlaylist" onclick="deletePlaylist(\''
-															+ playlistID
-															+ '\')" style="display:none;"> 삭제 </a></div>'
-															+ '<div class="card-body"></div>'
-															+ '</div>';
-
-													$('#allPlaylist').append(
-															html);
-													getAllVideo(index);
-
-												});
+									$('#allPlaylist').append(html);
+									getAllVideo(index);
+								});
 								if ($("#createVideoForm").css('display') === 'block') //video 추가할 Playlist 선택칸 보여주기
-									$(".selectPlaylists").css("display",
-											"inline");
-							} else
-								alert('playlist 불러오기 실패! ');
+									$(".selectPlaylists").css("display","inline");
+								} else
+									alert('playlist 불러오기 실패! ');
 
 						},
 						error : function(json) {
@@ -480,13 +477,9 @@ img {
 												+ ')" style="display:none;"> 삭제</a>'
 												+ '</div>';
 
-										$(
-											'.card-body:eq('
-													+ playlistSeq
-													+ ')').append(
-											html2);
+										$('.card-body:eq('+ playlistSeq + ')').append(html2);
 									});
-
+							
 							if ($("#createVideoForm").css('display') === 'block') //video 추가할 Playlist 선택칸 보여주기
 								$(".selectPlaylists").css("display", "inline");
 						}
@@ -553,8 +546,7 @@ img {
 			if (playlistSearch != null) {
 				playlistSearch.forEach(function(element) {
 					//$("[tag*='"+ element + "']").css("background-color", "#d9edf7;"); 
-					$("[playlistname*='" + element + "']").css(
-							"background-color", "#d9edf7;");
+					$("[playlistname*='" + element + "']").css("background-color", "#d9edf7;");
 				});
 			}
 
@@ -588,13 +580,12 @@ img {
 			<!-- <div id="player_info"></div> -->
 			<br>
 			<div id="title"></div>
-			
-			
 			<br>
 			
 			<div>
 				<textarea id="newName" name="newName" cols="62" rows="2"> </textarea>
 			</div>
+			
 			<div id="player" style="min-width: 500px;"></div>
 		
 			<!-- (jw) 영상 구간 설정 부분  -->
@@ -610,8 +601,8 @@ img {
 		
 				<br>
 				<div>
-					<button onclick="getCurrentPlayTime1()" type="button">start time</button>
-					: <input type="text" id="start_hh" maxlength="2" size="2"> 시 
+					<button onclick="getCurrentPlayTime1()" type="button">start time</button> : 
+					<input type="text" id="start_hh" maxlength="2" size="2"> 시 
 					<input type="text" id="start_mm" maxlength="2" size="2"> 분 
 					<input type="text" id="start_ss" maxlength="5" size="5"> 초
 					<button onclick="seekTo1()" type="button">위치이동</button>
@@ -619,10 +610,10 @@ img {
 				</div>
 				
 				<div>
-					<button onclick="getCurrentPlayTime2()" type="button">end time</button>
-				: <input type="text" id="end_hh" max="" maxlength="2" size="2">
-				시 <input type="text" id="end_mm" max="" maxlength="2" size="2">
-				분 <input type="text" id="end_ss" maxlength="5" size="5"> 초
+					<button onclick="getCurrentPlayTime2()" type="button">end time</button> : 
+					<input type="text" id="end_hh" max="" maxlength="2" size="2"> 시 
+					<input type="text" id="end_mm" max="" maxlength="2" size="2"> 분 
+					<input type="text" id="end_ss" maxlength="5" size="5"> 초
 				<button onclick="seekTo2()" type="button">위치이동</button>
 				<span id=warning2 style="color: red;"></span> <br>
 				</div>
@@ -684,9 +675,7 @@ img {
 				}
 		
 				function selectVideo(id, title, duration) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
-					$('.videos').css({ 
-						'fontWeight' : 'normal'
-					});
+					$('.videos').css({'fontWeight' : 'normal'});
 					$('input:checkbox').prop("checked", false); //youtube 검색결과에서 비디오 선택하면 playlist 체크된것 다 초기화 
 					$('.submitBtn').html('추가');
 					document.getElementById("inputVideoID").value = -1; //updateVideo()가 아닌 createVideo()가 실행되도록 초기화!
@@ -760,7 +749,6 @@ img {
 				// (jw) player가 끝시간을 넘지 못하게 만들기 : 일단 임의로 시작 시간으로 되돌리기 했는데, 하영이거에서 마지막 재생 위치에서 부터 다시 재생되게 하면 될듯. 
 				function onPlayerStateChange(state) {
 					if (player.getCurrentTime() >= end_s) {
-		
 						player.pauseVideo();
 						//player.seekTo(start_s);
 						player.loadVideoById({
@@ -805,8 +793,7 @@ img {
 					var m = Math.floor(d % 3600 / 60);
 					var s = d % 3600 % 60;
 		
-					document.getElementById("start_ss").value = parseFloat(s)
-							.toFixed(2);
+					document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
 					document.getElementById("start_hh").value = h;/* .toFixed(2); */
 					document.getElementById("start_mm").value = m;/* .toFixed(2); */
 					document.getElementById("start_s").value = parseFloat(d).toFixed(2);
@@ -837,8 +824,7 @@ img {
 					var start_hh = $('#start_hh').val();
 					var start_mm = $('#start_mm').val();
 					var start_ss = $('#start_ss').val();
-					start_time = start_hh * 3600.00 + start_mm * 60.00 + start_ss
-							* 1.00;
+					start_time = start_hh * 3600.00 + start_mm * 60.00 + start_ss* 1.00;
 					$('#start_s').val(start_time);
 					var end_hh = $('#end_hh').val();
 					var end_mm = $('#end_mm').val();
