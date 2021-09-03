@@ -29,17 +29,18 @@ public class ContentsController {
 	private ClassContentsService classContentsService;
 	@Autowired
 	private PlaylistService playlistService;
+  
+	private String email = "yewon.lee@onepage.edu";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classID") int classID, Model model) {
-		classID = 1;//임의로 1번 class 설정
-
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
 		return "contentsList";
 	}
-	
+
 	@RequestMapping(value = "/contentDetail/{id}", method = RequestMethod.GET) //class contents 전체 보여주기
 	public String contentDetail(@PathVariable("id") int id, Model model) {
 		ClassContentsVO vo = classContentsService.getOneContent(id);

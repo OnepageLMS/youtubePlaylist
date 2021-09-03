@@ -9,4 +9,8 @@
 	<select id="getClass" resultType="classes">
 		select * from lms_class where id=#{id}
 	</select>
+	
+	<select id="getAllMyClass" resultType="classes">
+		select id, className, startDate from lms_class where instructorEmail=#{instructorEmail} and active=1
+	</select>
 </mapper>
