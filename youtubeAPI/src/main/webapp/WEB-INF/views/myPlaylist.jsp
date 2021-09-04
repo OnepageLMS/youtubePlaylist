@@ -521,43 +521,6 @@ function convertTotalLength(seconds){ //duration 변환
 	
 	return result;
 }
-
-function selectOK(){
-	var index = $('input:radio[name="check"]:checked').val();
-	
-	if(index){
-		var item = $('.playlist')[index].attributes;
-		var children = $('.playlist')[index].childNodes;
-		console.log(item);
-		console.log(children);
-		var playlistID = item[2].value;
-		var thumbnailID = item[3].value;	
-		var name = children[2].innerText;
-		var totalVideo = children[4].innerText;
-		
-		var thumbnail = '<div class="image-area mt-4"><img id="imageResult" src="https://img.youtube.com/vi/' + thumbnailID + '/0.jpg" class="img-fluid rounded shadow-sm mx-auto d-block"></div>';
-		var playlistInfo = thumbnail + '<p>총 ' + totalVideo + ' </p>';
-		$('#playlistThubmnail', opener.document).empty();
-		console.log(thumbnailID);
-		console.log(playlistInfo);
-		$('#playlistThumbnail', opener.document).append(playlistInfo);
-		
-		$('#playlistTitle', opener.document).text('"' + name + '" 선택됨');
-		
-		$('#inputPlaylistID', opener.document).val(playlistID); //부모페이지에 선택한 playlistID 설정
-		$('#inputThumbnailID', opener.document).val(thumbnailID);
-		$('#selectPlaylistBtn', opener.document).text('playlist 변경');
-		
-		if (confirm('playlist가 선택되었습니다. 현재 창을 닫으시겠습니까?')){
-			self.close();
-		}
-	}
-	else {
-		alert('playlist를 선택해주세요');
-		return false;
-	}
-		
-}
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">

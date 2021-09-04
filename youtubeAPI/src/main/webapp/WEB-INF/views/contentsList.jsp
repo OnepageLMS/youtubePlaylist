@@ -104,10 +104,10 @@ $(document).ready(function(){
 			else
 				published = '<label class="custom-control-label" for="switch">비공개</label>'
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
-					
+								
 			content.append(
-						"<div class='content list-group-item-action list-group-item' seq='" + allContents[i].daySeq + "'>"
-								+ '<div class="row class="main-card mb-3 card">'
+						/*"<div class='content' seq='" + allContents[i].daySeq + "'>"
+								+ '<div class="row main-card mb-3 card">'
 									+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
 									+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
 									+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
@@ -125,10 +125,32 @@ $(document).ready(function(){
 									+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
 										+ published
 									+ '</div>'
-									+ '<div class="contentModBtn col-sm-1 text-center">' + '<button class="btn btn-sm btn-info">more</button>' 
 								+ '</div>'
-							 + "</div>");
-			
+							 + "</div>");*/
+
+						"<div class='content card' seq='" + allContents[i].daySeq + "'>"
+						+ '<div class="row mb-3 card-header">'
+							//아래부분 바꾸기. data-target 부분!!!
+							+ '<button type="button" data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">'
+								+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
+								+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-12'>"
+										+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']' 
+									+ '</div>'
+									+ '<div class="col-sm-12">'
+											+ '<div class="contentInfoBorder"></div>'
+											+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
+											+ '<div class="contentInfoBorder"></div>'
+											+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+									+ '</div>' 
+								+ '</div>'
+								+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
+									+ published
+								+ '</div>'
+		                    + '</button>'
+						+ '</div>'
+					 + "</div>");
+
 		}
 	}
 
@@ -146,8 +168,9 @@ $(document).ready(function(){
 								+ '<input type="hidden" name="day" value="' + day + '"/>'
 								+ '<div class="selectContent m-3">'
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
-									+ '<button id="selectPlaylistBtn" type="button" class="d-sm-inline-block float-right btn btn-sm btn-primary" onclick="popupOpen();" style="border:none;">'
-										+ 'Playlist 가져오기</button>'
+									//+ '<button id="selectPlaylistBtn" type="button" class="d-sm-inline-block float-right btn btn-sm btn-primary" onclick="popupOpen();" style="border:none;">'
+										//+ 'Playlist 가져오기</button>'
+									+ '<button type="button" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".bd-example-modal-lg">Playlist 가져오기</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
 								+ '</div>'
 								+ '<div class="inputTitle input-group col">'
@@ -230,9 +253,7 @@ $(document).ready(function(){
 		}
 		
 		var myEmail = "yewon.lee@onepage.edu"; //이부분 나중에 로그인 구현하면 로그인한 정보 가져오기
-		var url = "${pageContext.request.contextPath}/playlist/myPlaylist/" + myEmail;
-		var popOption = "width=500, height=600";
-		var p = window.open(url, "myPlaylist", popOption);
+		
 		p.focus();
 	} 
 
@@ -450,7 +471,7 @@ $(document).ready(function(){
 											</div>
 
 											<div>
-												<ul class="list-group"></ul>
+												<div class="list-group accordion-wrapper"></div>
 											</div>
 										</div>
 									</div>
@@ -487,4 +508,25 @@ $(document).ready(function(){
         </div>
     </div>
 </body>
+
 </html>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                My Playlists Here!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary">선택완료</button>
+            </div>
+        </div>
+    </div>
+</div>
