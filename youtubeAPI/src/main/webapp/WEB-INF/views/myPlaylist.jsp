@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Dashboard</title>
+    <title>MyPlaylist</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -23,12 +23,66 @@
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="./resources/js/main.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	<script 
+	  src="http://code.jquery.com/jquery-3.5.1.js"
+	  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+	  crossorigin="anonymous"></script>
+	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	 <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" /> <!-- jquery for drag&drop list order -->
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	
+	<style>
+		.playlistPic {
+			width: -webkit-fill-available;
+		}
+		
+		.playlist:hover{
+			background-color: #F0F0F0;
+			cursor: pointer;
+		}
+		
+		.videoIndex {
+			cursor: grab;
+		}
+		
+		/*sortable 이동 타켓 */
+		.video-placeholder {
+			border: 1px dashed grey;
+			margin: 0 1em 1em 0;
+			height: 150px;
+			margin-left:auto;
+			margin-right:auto;
+			background-color: #E8E8E8;
+		}
+		
+		.videoContent:hover{
+			cursor: pointer;
+		}
+		
+		.duration{
+			text-align: center;
+			margin: 3px;
+		}
+		
+		.videoNewTitle{
+			font-size: 16px;
+			margin: 3px 0;
+			font-weight: bold;
+		}
+		
+		.videoOriTitle {
+			font-size: 13px;
+			margin: 0;
+		}
+		
+	</style>
 </head>
 <script>
 var email;
@@ -74,7 +128,6 @@ $(document).ready(function(){
 	}
 });
 
-
 function getAllMyPlaylist(email){
 	$.ajax({
 		type : 'post',
@@ -95,32 +148,37 @@ function getAllMyPlaylist(email){
 										+ '<button type="button" class="btn btn-primary d-sm-inline-block">검색</button>'
 									+ '</div>'
 								+ '</div>';
-				$('.myPlaylist').append(searchHtml);
+				//$('.myPlaylist').append(searchHtml);
+				var setFormat = '<div class="card">'
+									+ '<div class="card-body">'
+									+ '<div class="card-title input-group">'
+										+ '<div class="input-group-prepend">'
+											+ '<button class="btn btn-outline-secondary">전체</button>'
+											+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
+											+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;"><h6 tabindex="-1" class="dropdown-header">Header</h6>'
+												+ '<button type="button" tabindex="-1" class="dropdown-item">Playlist 이름</button>'
+												+ '<button type="button" tabindex="0" class="dropdown-item">Video 제목</button>'
+												+ '<button type="button" tabindex="0" class="dropdown-item">태그</button>'
+											+ '</div>'
+										+ '</div>'
+										+ '<input placeholder="검색어를 입력하세요" type="text" class="form-control">'
+										+ ' <div class="input-group-append">'
+											+ '<button class="btn btn-secondary">검색</button>'
+										+ '</div>'
+									+ '</div>'
+									+ '<div><ul class="allPlaylist list-group"></div></div>'
+								+ '</div>'
+							+ '</div>';
+				$('.myPlaylist').append(setFormat);
 						
 				$.each(playlists, function( index, value ){
-					/*
-					var contentHtml = '<div class="playlist" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
+					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
 																					+ ')" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
-											+ '<input type="radio" class="d-sm-inline-block" name="check" value="' + index + '"> '
-											//+ '<p class="playlistSeq">' + (index+1) + '. </p> '
-											+ '<p class="selectPlaylistName d-sm-inline-block"><b>' + value.playlistName + '</b></p>'
-											+ ' <p class="totalVideo d-sm-inline-block">' + convertTotalLength(value.totalVideoLength) + '</p>'
-										+ '</div>';
-					*/
+										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength)
+										+ '</button>'
 
-					var contentHtml = '<div class="playlist nav-item" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
-																		+ ')" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
-									
-												+ '<input type="radio" class="d-sm-inline-block" name="check" value="' + index + '"> '
-												+ '<p class="selectPlaylistName d-sm-inline-block"><b>' + value.playlistName + '</b></p>'
-												+ ' <p class="totalVideo d-sm-inline-block">' + convertTotalLength(value.totalVideoLength) + '</p>'
-											
-										+ '</div>';
-										
-					$('.myPlaylist').append(contentHtml);
+                	$('.allPlaylist').append(contentHtml);
 				});
-				var selectButton = '<button class="selectOK btn btn-primary mb-2" onclick="selectOK()">선택완료</button>';
-				$('.myPlaylist').append(selectButton);
 			}
 		}, error:function(request,status,error){
 			console.log(error);
@@ -138,9 +196,10 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가�
 		datatype : 'json',
 		success : function(result){
 			var lastIdx = $('#playlistInfo').attr('displayIdx'); //새로운 결과 출력 위해 이전 저장된 정보 비우기
-		    $('.playlist:eq(' + lastIdx + ')').css("background-color", "unset");
-		    $(".playlist:eq(" + displayIdx + ")").css("background-color", " #F0F0F0;"); //클릭한 playlist 표시
+		    //$('.playlist:eq(' + lastIdx + ')').css("background-color", "unset");
+		    //$(".playlist:eq(" + displayIdx + ")").css("background-color", " #F0F0F0;"); //클릭한 playlist 표시
 		    $('#playlistInfo').empty(); 
+		    $('.playlistName').empty();
 
 		    $('.selectedPlaylist').attr('playlistID', playlistID); //혹시 나중에 사용할 일 있지 않을까?
 		    
@@ -154,13 +213,13 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가�
 			    			+ '</div>';
 		    $('#playlistInfo').append(thumbnail);
 		    
-			var name = '<div class="playlistName">'
+			var name = '<h4>'
 							+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
 							+ '<input type="text" id="inputPlaylistName" style="display:none;">'
-							+ '<button onclick="showEditPlaylistName()" class="btn btn-info btn-sm float-right" style="display:inline;">수정</button>'
+							+ '<button onclick="showEditPlaylistName()" class="btn btn-info btn-sm" style="display:inline;">수정</button>'
 							+ '<div class="editPlaylistNameButtons" style="padding:3px;"></div>'
-					+ '</div>';
-		    $('#playlistInfo').append(name); //중간영역
+					+ '</h4>';
+		    $('.playlistName').append(name); //중간영역
 		    
 			var modDate = convertTime(result.modDate);
 			var totalVideoLength = convertTotalLength(result.totalVideoLength);
@@ -174,7 +233,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가�
 								+ '<p class="totalInfo"> 총 재생시간 <b>' + totalVideoLength + '</b></p>'
 							+ '</div>'
 							+ '<p> 업데이트 <b>' + modDate + '</b> </p>'
-							+ '<div class="description">'
+							+ '<div class="description card-border card card-body border-secondary">'
 								+ '<p id="displayDescription">' + description + '</p>'
 								+ '<input type="text" id="inputDescription" style="display:none";>'
 								+ '<button onclick="showEditDescription()" class="btn btn-info btn-sm">수정</button>'
@@ -229,9 +288,9 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 					$("#playAllVideo").attr("onclick", forButton);
 				} 
 				
-				var html = '<div class="row">'
+				var html = '<div class="row list-group-item">'
 								+ '<div class="video col-sm-12" videoID="' + value.id + '">'
-									+ '<div class="videoIndex col-sm-1 d-sm-inline-block align-middle">  <p class="h-100">' + (value.seq+1) + '</p></div>'
+									+ '<div class="videoIndex col-sm-1 d-sm-inline-block align-middle">  <p>' + (value.seq+1) + '</p></div>'
 									+ '<div class="videoContent col-sm-10 p-0 d-sm-inline-block" onclick="location.href=' + address + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
 										+ '<div class="row">'
 											+ '<div class="thumbnailBox col-sm-3 row">' 
@@ -240,7 +299,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 											+ '</div>'
 											+ '<div class="titles col-sm-9">'
 												+ '<div class="row">'
-													+ '<p class="tag col-sm-12">' + tags + '</p>'
+													+ '<p class="col-sm-12 text-primary">' + tags + '</p>'
 													+ '<p class="videoNewTitle col-sm-12">' + newTitle + '</p>'
 													+ '<p class="videoOriTitle col-sm-12">' + title + '</p>'
 												+ '</div>'
@@ -248,7 +307,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 										+ '</div>'
 									+ '</div>'
 									+ '<div class="videoEditBtn col-sm-1 d-sm-inline-block">'
-										+ '<button href="#" class="aDeleteVideo btn btn-primary btn-sm align-middle" onclick="deleteVideo(' + value.id + ')"> 삭제</button>'
+										+ '<button href="#" class="aDeleteVideo btn btn-primary btn-sm align-middle" onclick="deleteVideo(' + value.id + ')">삭제</button>'
 									+ '</div>'
 									+ '</div>'
 								+ '<div class="videoLine"></div>'
@@ -501,7 +560,7 @@ function selectOK(){
 }
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
                 <div class="logo-src"></div>
@@ -550,8 +609,8 @@ function selectOK(){
                             </a>
                         </li>
                        
-                        <li class="dropdown nav-item">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-primary">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
                             </a>
@@ -569,11 +628,11 @@ function selectOK(){
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                                       		<h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <button type="button" tabindex="0" class="dropdown-item">User Account</button>
                                             <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
+                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
                                         </div>
                                     </div>
                                 </div>
@@ -637,46 +696,46 @@ function selectOK(){
                         </div>
                     </div>
                 </div>   
-                 <div class="app-main__outer">
-                                                
+                 <div class="app-main__outer">                         
                     <div class="app-main__inner">
-          
-                        <div class="">
-                            <div class="">
-                                <div class="">
-                                  	<ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
-			                            <li class="nav-item">
-			                                <a role="tab" class="nav-link show active" id="tab-0" data-toggle="tab" href="#" aria-selected="true">
-			                                    <span>내 Playlist</span>
-			                                </a>
-			                            </li>
-			                            <li class="nav-item">
-			                                <a role="tab" class="nav-link show" id="tab-1" data-toggle="tab" href="${pageContext.request.contextPath}/youtube" aria-selected="false">
-			                                    <span>Youtube영상검색</span>
-			                                </a>
-			                            </li>
-			                            <li class="nav-item">
-			                                <a role="tab" class="nav-link show" id="tab-2" data-toggle="tab" href="${pageContext.request.contextPath}/playlist/searchLms" aria-selected="false">
-			                                    <span>LMS영상검색</span>
-			                                </a>
-			                            </li>
-			                        </ul>   
-                                </div>
-                          </div>
-                        </div>      
+						<div>
+	                       	<ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+			                    <li class="nav-item">
+			                        <a role="tab" class="nav-link show active" id="tab-0" data-toggle="tab" href="#" aria-selected="true">
+			                            <span>내 Playlist</span>
+			                        </a>
+			                        
+			                    </li>
+			                    
+			                    <li class="nav-item">
+			                    	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
+                                    	<span>Youtube영상검색</span>
+                                	</a>	                        
+			                    </li>
+			                    <li class="nav-item">
+			                        <a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
+			                            <span>LMS영상검색</span>
+			                        </a>
+			                    </li>
+	               			 </ul>   
+                    	</div>
 
                         <div class="row">
-                           <div class="col-lg-3 card">
-								<ul class="myPlaylist card nav nav-pills flex-column"></ul>
+                           <div class="col-lg-3">
+								<div class="myPlaylist"></div>
 							</div>
 							
 							<div class="selectedPlaylist col-lg-9 card">
-								<div class="row">
-									<div class="col-lg-3">
-										<div id="playlistInfo"></div>
-									</div>
-									<div class="col-lg-9">
-										<div id="allVideo"></div>
+								<div class="card-body">
+									<div class="card-title playlistName"></div>
+									<div class="row">
+										<div class="col-lg-3">
+											<div id="playlistInfo"></div>
+										</div>
+										<div class="divider"> </div>
+										<div class="col-lg-9">
+											<div id="allVideo" class="list-group list-group-flush"></div>
+										</div>
 									</div>
 								</div>
 							</div>
