@@ -138,7 +138,7 @@ function myThumbnail(){
 			completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
 		}
 		
-		$("#get_view").append( //stu
+		$("#get_view").append( //stu//stu
 					'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
 					'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
 						'<div class="post-thumbnail col-xs-4 col-lg-4"> ' + thumbnail + ' </div>' +
