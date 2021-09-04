@@ -22,8 +22,8 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-	<link href="./resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="./resources/js/main.js"></script>
+	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
@@ -138,11 +138,11 @@ $(document).ready(function(){
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                                           <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <button type="button" tabindex="0" class="dropdown-item">User Account</button>
                                             <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
+                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
                                         </div>
                                     </div>
                                 </div>

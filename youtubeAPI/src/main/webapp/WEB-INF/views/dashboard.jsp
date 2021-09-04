@@ -135,13 +135,13 @@ $(document).ready(function(){
                     </div>
                     <ul class="header-menu nav">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link text-primary">
                                 <i class="nav-link-icon fa fa-home"> </i>
                                 대시보드
                             </a>
                         </li>
                        
-                        <li class="dropdown nav-item">
+                        <li class="nav-item">
                             <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
@@ -160,11 +160,11 @@ $(document).ready(function(){
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <button type="button" tabindex="0" class="dropdown-item">User Account</button>
                                             <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
+                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
                                         </div>
                                     </div>
                                 </div>
