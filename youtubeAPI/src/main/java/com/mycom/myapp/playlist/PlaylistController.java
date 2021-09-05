@@ -37,13 +37,6 @@ public class PlaylistController {
 		return "myPlaylist";
 	}
 	
-	@RequestMapping(value = "/myPlaylist2/{creatorEmail}", method = RequestMethod.GET) 
-	public String selectPlaylist2(@PathVariable("creatorEmail") String creatorEmail, Model model) {
-		model.addAttribute("email", creatorEmail);
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(creatorEmail)));
-		return "t_myPlaylist";
-	}
-	
 //	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
 //	@ResponseBody
 //	public Object getAllPlaylist(@RequestParam(value = "email") String creatorEmail) {

@@ -25,16 +25,72 @@
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <script>
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
 	setAllMyClass();	//왼쪽 내 class 목록 띄우기
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
+
+	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈
+		var email = 'yewon.lee@onepage.edu';	//임의로 설정
+		
+		$.ajax({
+			type : 'post',
+			url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
+			data : {email : email},
+			success : function(result){
+				playlists = result.allMyPlaylist;
+				
+				if (playlists == null)
+					$('.myPlaylist').append('저장된 playlist가 없습니다.');
+
+				else{
+					$('.myPlaylist').empty();
+					var setFormat = '<div class="card">'
+										+ '<div class="card-body">'
+										+ '<div class="card-title input-group">'
+											+ '<div class="input-group-prepend">'
+												+ '<button class="btn btn-outline-secondary">전체</button>'
+												+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
+												+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;"><h6 tabindex="-1" class="dropdown-header">Header</h6>'
+													+ '<button type="button" tabindex="-1" class="dropdown-item">Playlist 이름</button>'
+													+ '<button type="button" tabindex="0" class="dropdown-item">Video 제목</button>'
+													+ '<button type="button" tabindex="0" class="dropdown-item">태그</button>'
+												+ '</div>'
+											+ '</div>'
+											+ '<input placeholder="검색어를 입력하세요" type="text" class="form-control">'
+											+ ' <div class="input-group-append">'
+												+ '<button class="btn btn-secondary">검색</button>'
+											+ '</div>'
+										+ '</div>'
+										+ '<form><fieldset class="allPlaylist position-relative form-group"></fieldset></form>'
+									+ '</div>'
+								+ '</div>';
+					$('.myPlaylist').append(setFormat);
+							
+					$.each(playlists, function( index, value ){
+						var contentHtml = '<div class="playlist list-group-item-action list-group-item position-relative form-check">'
+											+ '<label class="form-check-label">' 
+												+ '<input name="playlist" type="radio" class="form-check-input" value="' + value.playlistID + '">'
+												+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength) 
+											+ '</label>'
+										+ '</div>';
+
+	                	$('.allPlaylist').append(contentHtml);
+					});
+				}
+				$('#selectPlaylistModal').modal('show');
+				
+			}, error:function(request,status,error){
+				console.log(error);
+			}
+		});
+	})
+	
 });
 	function setAllMyClass(){	//이 함수는 
 		var allMyClass = JSON.parse('${allMyClass}');
@@ -155,7 +211,7 @@ $(document).ready(function(){
 	}
 
 	function showAddContentForm(day){
-		day -= 1; //임의로 설정... 
+		day -= 1; //임의로 조절... 
 		
 		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
 		
@@ -168,9 +224,9 @@ $(document).ready(function(){
 								+ '<input type="hidden" name="day" value="' + day + '"/>'
 								+ '<div class="selectContent m-3">'
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
-									//+ '<button id="selectPlaylistBtn" type="button" class="d-sm-inline-block float-right btn btn-sm btn-primary" onclick="popupOpen();" style="border:none;">'
-										//+ 'Playlist 가져오기</button>'
-									+ '<button type="button" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".bd-example-modal-lg">Playlist 가져오기</button>'
+									
+										//data-toggle="modal" data-target=".selectPlaylistModal"
+									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn mr-2 mb-2 btn-primary float-right">Playlist 가져오기</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
 								+ '</div>'
 								+ '<div class="inputTitle input-group col">'
@@ -309,6 +365,41 @@ $(document).ready(function(){
 		var a = confirm("정말 삭제하시겠습니까?");
 		if (a)
 			location.href = '../deleteContent/' + classID + "/" + id;
+	}
+
+	function selectOK(){	//modal창에서 playlist 선택완료시
+		var playlistID = $('input:radio[name="playlist"]:checked').val();
+		
+		if(playlistID){
+			$.ajax({
+				type : 'post',
+				url : '${pageContext.request.contextPath}/playlist/getPlaylistInfo',
+				data : {playlistID : playlistID},
+				datatype : 'json',
+				success : function(result){
+					var thumbnailID = result.thumbnailID;	
+					var name = result.playlistName;
+					var totalVideo = result.totalVideo;
+
+					var thumbnail = '<div class="image-area mt-4"><img id="imageResult" src="https://img.youtube.com/vi/' + thumbnailID + '/0.jpg" class="img-fluid rounded shadow-sm mx-auto d-block"></div>';
+					var playlistInfo = thumbnail + '<p>총 ' + totalVideo + ' 개의 비디오</p>';
+					$('#playlistThumbnail').empty();
+					$('#playlistThumbnail').append(playlistInfo);
+					
+					$('#playlistTitle').text('"' + name + '" 선택됨');
+					
+					$('#inputPlaylistID').val(playlistID); //부모페이지에 선택한 playlistID 설정
+					$('#inputThumbnailID').val(thumbnailID);
+					$('#selectPlaylistBtn').text('playlist 다시선택');
+
+					$('#selectPlaylistModal').modal('hide');
+				}
+			});
+		}
+		else {
+			alert('playlist를 선택해주세요');
+			return false;
+		}
 	}
 
 </script>
@@ -508,25 +599,29 @@ $(document).ready(function(){
         </div>
     </div>
 </body>
+	<div class="modal" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                Playlist를 선택해주세요
+	                <div class="myPlaylist"></div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="button" class="btn btn-primary" onclick="selectOK();">선택완료</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
 </html>
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                My Playlists Here!
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary">선택완료</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
+
