@@ -97,7 +97,7 @@ $(document).ready(function(){
 			
 			//if(i==0 || weekContents[i-1].playlistID != weekContents[i].playlistID){ //강의리스트에서는 플레이리스트의 첫번째 영상 썸네일만 보이도록
 		console.log(" // " + weekContents[i].playlistID);
-		content.append("<div class='content card ' seq='" + weekContents[i].daySeq + ">"
+		/*content.append("<div class='content card ' seq='" + weekContents[i].daySeq + ">"
 							+ '<div>'
 								+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
 								+ '<div class="videoIcon col-sm-1">' 
@@ -116,8 +116,34 @@ $(document).ready(function(){
 									+ '</div>' 
 								+ '</div>'
 							+ '</div>'
-						+ '</div>');
+						+ '</div>');*/
+						
+			content.append("<div id=\'heading" +(i+1)+ "\' >"
+	                + '<button type="button" data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded="true" aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
+		                + "<div class='content card ' seq='" + weekContents[i].daySeq + ">"
+							+ '<div>'
+								+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
+								
+								+ "<div class='col-sm-7' style='cursor: pointer;'>"
+									+ "<div class='col-sm-12'>"
+									+ weekContents[i].title  + '  [' + weekContents[i].totalVideo + ']' 
+									+ '</div>'
+									+ '<div class="col-sm-12">'
+										+ '<p style="display:inlne">' + 'Youtube' + '</p>'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<p class="videoLength contentInfo" style="display:inlne">' + convertTotalLength(weekContents[i].totalVideoLength) + '</p>'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<p class="endDate contentInfo">' + '마감일: ' + endDate + '</p>'
+									+ '</div>' 
+								+ '</div>'
+								
+							+ '</div>'
+						+ '</div>'
+	   				+ '</button>'
+				+ '</div>');
 		}
+		
+		
  		
  		for(var j=0; j<playlist.length; j++){
  			total_runningtime += parseInt(playlist[j].duration);
@@ -293,14 +319,42 @@ function toggle(e){
                        
                         <div class="row">
 							<div class="contents col-lg-12" classID="${classInfo.id}">
-									
-								<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-									<div class="day  col-lg-12" day="${status.index}">
-										<div class="card-header col-lg-12">
-											<h4 style="display: inline; font-weight : bold; color : #3f6ad8">${j} 일 강의</h4>
+								<div id="accordion" class="accordion-wrapper mb-3">
+									<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+										<div class="card">
+											<div class="day  col-lg-12" day="${status.index}">
+												<div class="card-header col-lg-12">
+													<h4 style="display: inline; font-weight : bold; color : #3f6ad8">${j} 일 강의</h4>
+												</div>
+											</div>
 										</div>
-									</div>
-								</c:forEach>
+									</c:forEach>
+								</div>
+							</div>
+							
+							<div class="contents col-lg-12" classID="${classInfo.id}">
+									
+								<div id="accordion" class="accordion-wrapper mb-3">
+                                    
+                                    	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+                                    		<div class="card">
+												<div class="day col-lg-12">
+													<div id="heading${status.index}" class="card-header">
+		                                                <button type="button" data-toggle="collapse" data-target="#collapse${status.index}" aria-expanded="true" aria-controls="collapse0${status.index}" class="text-left m-0 p-0 btn btn-link btn-block">
+		                                                    <h5 class="m-0 p-0">${j} 일 강의</h5>
+		                                                </button>
+                                            		</div>
+                                            		
+                                            		<div data-parent="#accordion" id="collapse${status.index}" aria-labelledby="heading${status.index}" class="collapse show">
+                                                		<div class="card-body" day="${status.index}"></div>
+                                            		</div>
+                                            		
+                                            		<!-- id, data-target과 aria-controls 조절하기 -->
+												</div>
+											</div>
+										</c:forEach>
+
+                                   </div>
 							</div>
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
