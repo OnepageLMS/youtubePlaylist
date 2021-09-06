@@ -81,6 +81,7 @@
 </head>
 <script>
 var email;
+
 $(document).ready(function(){
 	email = '${email}'; 
 	getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
@@ -168,7 +169,7 @@ function getAllMyPlaylist(email){
 						
 				$.each(playlists, function( index, value ){
 					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
-																					+ ')" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
+																					+ ');" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
 										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength)
 										+ '</button>'
 
@@ -182,7 +183,13 @@ function getAllMyPlaylist(email){
 	});
 }
 
+// 왼쪽에서 플레이리스트 선택시에 영상추가 버튼 보여지게 하기 
+function showAddVideoButton(playlistID, playlistName){
+	$('#addVideoButton').attr('style', 'display: block');
+	
+}
 
+// 여기서 얻은 playlistName, playlistID를 영상 추가 버튼에 넘겨주게 하기..? (21/09/06) 
 function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가져오기
 	$.ajax({
 		type : 'post',
@@ -240,6 +247,8 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가�
 		    $('#playlistInfo').attr('displayIdx', displayIdx); //현재 오른쪽에 가져와진 playlistID 저장
 
 			getAllVideo(playlistID); //먼저 playlist info 먼저 셋팅하고 videolist 가져오기
+
+			showAddVideoButton(playlistID, result.playlistName); 
 		}
 	});
 	
@@ -662,16 +671,8 @@ function convertTotalLength(seconds){ //duration 변환
                                 <div class="page-title-heading">
                                 </div>
                                  <div class="page-title-actions">
-                                 	<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="text-right mb-2 mr-2 dropdown-toggle btn btn-primary">영상 추가하기</button>
-		                             <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-		                             	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
-	                                    	<button type="button" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
-	                                	</a>	                        
-	                                 	<a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
-				                            <button type="button" tabindex="0" class="dropdown-item">LMS 영상검색 </button>
-				                        </a>
-		                             </div>
                                  </div>
+                                 
 	                       	<%-- <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
 			                    <li class="nav-item">
 			                        <a role="tab" class="nav-link show active" id="tab-0" data-toggle="tab" href="#" aria-selected="true">
@@ -703,7 +704,31 @@ function convertTotalLength(seconds){ //duration 변환
 							
 							<div class="selectedPlaylist col-lg-9 card">
 								<div class="card-body">
-									<div class="card-title playlistName"></div>
+								
+									<div class="row">
+										<div class="col-lg-9 card-title playlistName">										
+										</div>
+										 <!-- 영상 추가 버튼 (21/09/06) -->	
+									 	<div class="col-lg-3">
+											 <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="float-right text-right mb-2 mr-2 dropdown-toggle btn btn-primary" id="addVideoButton" style="display: none" >영상 추가하기</button>
+				                             <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+				                             	<%-- <form name="${pageContext.request.contextPath}/youtube" method="post" style="display:none">
+				                             		<input type="hidden" name="playlistID" id="playlistID">
+				                             		<input type="hidden" name="playlistName" id="playlistName">
+				                             		<button type="submit" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
+				                             	</form> --%>
+				                             	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
+			                                    	<button type="button" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
+			                                	</a>	                   
+			                                 	<a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
+						                            <button type="button" tabindex="0" class="dropdown-item">LMS 영상검색 </button>
+						                        </a>
+		                             		 </div>
+		                             		 
+									 	 </div>
+									 </div>
+									 
+		                             
 									<div class="row">
 										<div class="col-lg-3">
 											<div id="playlistInfo"></div>
@@ -744,6 +769,7 @@ function convertTotalLength(seconds){ //duration 변환
                     </div>    
               </div>
         </div>
+    </div>
     </div>
 </body>
 </html>
