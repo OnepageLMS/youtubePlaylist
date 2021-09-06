@@ -362,7 +362,7 @@ function convertTotalLength(seconds){ //duration 변환
 	}
 
 	
-	// 영상 담기 할 시에 player 새로뜨게 하는거 방지하는 코드인데, 작동이 안됨. (21/09/05) 
+	// 카트에 영상 담기 할 시에 player 새로고침 되는거 방지하는 코드인데, 작동이 안됨. (21/09/05) 
 	$(".searchedVideo fas").click(function(e){
 		e.stopPropagation();
 	});
@@ -463,7 +463,13 @@ function convertTotalLength(seconds){ //duration 변환
 		var youtubeID;
 
 		// 이전 index 존재 유무 확인
-		var prev_index;
+		var prev_index=null;
+
+		//아래는 youtube-API 공식 문서에서 iframe 사용방법으로 나온 코드.
+		tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+		firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 		function addToCart(id, title){
 			console.log(id, title);
@@ -477,6 +483,8 @@ function convertTotalLength(seconds){ //duration 변환
 			//$('.videos').css({'fontWeight' : 'normal'});
 			//$('input:checkbox').prop("checked", false); //youtube 검색결과에서 비디오 선택하면 playlist 체크된것 다 초기화 
 			//$('.submitBtn').html('추가');
+			
+			console.log(id, title, duration, index);
 			
 			// 클릭한 영상 밑에 player 띄우기
 			var $div = $('<div id="player_info"></div><div id="player"></div><div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 카트에 영상 담기 </i></div>'); 
@@ -518,11 +526,7 @@ function convertTotalLength(seconds){ //duration 변환
 			
 			document.getElementById("player_info").innerHTML = '<h3 class="videoTitle">' + videoTitle + '</h3>';
 
-			//아래는 youtube-API 공식 문서에서 iframe 사용방법으로 나온 코드.
-			tag = document.createElement('script');
-			tag.src = "https://www.youtube.com/iframe_api";
-			firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			
 
 			onYouTubeIframeAPIReady();
 			
@@ -735,73 +739,63 @@ function convertTotalLength(seconds){ //duration 변환
                         </div>            
                        
                        <div class="row">
-                       		<div class="col-lg-3">
+                       		<div class="col-lg-2">
 								<div class="myPlaylist"></div>
 							</div>
                        		
-                       		<div class="selectedPlaylist col-lg-9 card">
+                       		<div class="selectedPlaylist col-lg-6 card">
 								<div class="card-body">
-									<div class="card-title playlistName"></div>
-									<div class="row">
-										
-										<div class="col-lg-7 ">
+									<div class="card-title playlistName"></div>					
+											<div class="row">
+												<div class="col-lg-8 ">
+														<form class="card mb-3 widget-content bg-midnight-bloom" name="form1" method="post" onsubmit="return false;" >
+															<select name="opt" id="opt" class="mr-2 dropdown-toggle btn btn-primary btn-lg">
+																<option value="relevance">관련순</option>
+																<option value="date">날짜순</option>
+																<option value="viewCount">조회순</option>
+																<option value="title">문자순</option>
+																<option value="rating">평가순</option>
+															</select> 
+															<input type="text" id="search_box" class="form-control">
+															<button onclick="fnGetList();" class="btn btn-primary">검색</button>
+														</form>
+												</div>
+											</div>
+											
+											<div>
+												<form action="playlist/player" id="form2" method="post" style="display: none">
+													<input type="hidden" name="playerId" id="playerId">
+													<input type="hidden" name="playerTitle" id="playerTitle">
+													<input type="hidden" name="playerDuration" id="playerDuration">
+												</form>
+											</div>
+				                            
+				                            <div id="get_view"></div>
+					
+											<div class="container">
 												<div class="row">
-													<div class="col-lg-8 ">
-															<form class="card mb-3 widget-content bg-midnight-bloom" name="form1" method="post" onsubmit="return false;" >
-																<select name="opt" id="opt" class="mr-2 dropdown-toggle btn btn-primary btn-lg">
-																	<option value="relevance">관련순</option>
-																	<option value="date">날짜순</option>
-																	<option value="viewCount">조회순</option>
-																	<option value="title">문자순</option>
-																	<option value="rating">평가순</option>
-																</select> 
-																<input type="text" id="search_box" class="form-control">
-																<button onclick="fnGetList();" class="btn btn-primary">검색</button>
-															</form>
-														
-													</div>
-													
+													<div id="nav_view"></div>
 												</div>
-												
-												<div>
-													<form action="playlist/player" id="form2" method="post" style="display: none">
-														<input type="hidden" name="playerId" id="playerId">
-														<input type="hidden" name="playerTitle" id="playerTitle">
-														<input type="hidden" name="playerDuration" id="playerDuration">
-													</form>
-												</div>
-					                            
-					                            <div id="get_view"></div>
-						
-												<div class="container">
-													<div class="row">
-														<div id="nav_view"></div>
-													</div>
-												</div>
-			                            </div>
+											</div>
 
-										<div class="divider"> </div>
-											 <div class="col-lg-5">
-					                            	<div class="main-card mb-3 card">
-					                            		<div class="card-header">
-					                            			카트에 담긴 영상들 
-					                            		</div>
-					                            		<div class="card-body">
-					                            			<div class="scroll-area-sm"> 
-					                            				<div id="videosInCart" class="scrollbar-container ps--active-y ps">
-					                            					
-					                            				</div>
-					                            			</div>
-					                            		</div>
-					                            	</div>
-				                            </div>
-									</div>
 								</div>
-							</div>						
+							</div>	
 							
-                        </div>	
+							 <div class="col-lg-4">
+	                            	<div class="main-card mb-3 card">
+	                            		<div class="card-header">
+	                            			카트에 담긴 영상들 
+	                            		</div>
+	                            		<div class="card-body">
+	                            			<div class="scroll-area-sm"> 
+	                            				<div id="videosInCart" class="scrollbar-container ps--active-y ps">	                            					
+	                            				</div>
+	                            			</div>
+	                            		</div>
+	                            	</div>
+                            </div>					
+                    </div>	
                        		
-           
                        
                     </div>
                     <div class="app-wrapper-footer">
