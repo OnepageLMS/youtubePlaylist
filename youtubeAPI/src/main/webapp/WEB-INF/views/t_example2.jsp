@@ -79,7 +79,13 @@ img {
 
 </head>
 <script>
+var email;
 $(document).ready(function(){
+	//email = '${email}'; 
+	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
+	console.log(email);
+	getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
+	
 	var allMyClass = JSON.parse('${allMyClass}');
 
 	for(var i=0; i<allMyClass.length; i++){
@@ -117,6 +123,136 @@ $(document).ready(function(){
 		$('.sideClassList').append(html);
 	}
 });
+
+function getAllMyPlaylist(email){
+	$.ajax({
+		type : 'post',
+		url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
+		data : {email : email},
+		success : function(result){
+			playlists = result.allMyPlaylist;
+			$('.myPlaylist').empty();
+			if (playlists == null)
+				$('.myPlaylist').append('저장된 playlist가 없습니다.');
+			else{
+				var searchHtml = '<div class="searchPlaylist input-group mb-1">'
+									+ '<input type="text" class="d-sm-inline-block form-control" name="search" placeholder="playlist 검색" >'
+									+ '<div class="input-group-append">'
+										+ '<button type="button" class="btn btn-primary d-sm-inline-block">검색</button>'
+									+ '</div>'
+								+ '</div>';
+				//$('.myPlaylist').append(searchHtml);
+				var setFormat = '<div class="card">'
+									+ '<div class="card-body">'
+									+ '<div class="card-title input-group">'
+										+ '<div class="input-group-prepend">'
+											+ '<button class="btn btn-outline-secondary">전체</button>'
+											+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
+											+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;"><h6 tabindex="-1" class="dropdown-header">Header</h6>'
+												+ '<button type="button" tabindex="-1" class="dropdown-item">Playlist 이름</button>'
+												+ '<button type="button" tabindex="0" class="dropdown-item">Video 제목</button>'
+												+ '<button type="button" tabindex="0" class="dropdown-item">태그</button>'
+											+ '</div>'
+										+ '</div>'
+										+ '<input placeholder="검색어를 입력하세요" type="text" class="form-control">'
+										+ ' <div class="input-group-append">'
+											+ '<button class="btn btn-secondary">검색</button>'
+										+ '</div>'
+									+ '</div>'
+									+ '<div><ul class="allPlaylist list-group"></div></div>'
+								+ '</div>'
+							+ '</div>';
+				$('.myPlaylist').append(setFormat);
+						
+				$.each(playlists, function( index, value ){
+					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
+																					+ ')" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
+										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength)
+										+ '</button>'
+                	$('.allPlaylist').append(contentHtml);
+				});
+			}
+		}, error:function(request,status,error){
+			console.log(error);
+		}
+		
+	});
+}
+
+function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가져오기
+	$.ajax({
+		type : 'post',
+		url : '${pageContext.request.contextPath}/playlist/getPlaylistInfo',
+		data : {playlistID : playlistID},
+		datatype : 'json',
+		success : function(result){
+			var lastIdx = $('#playlistInfo').attr('displayIdx'); //새로운 결과 출력 위해 이전 저장된 정보 비우기
+		    //$('.playlist:eq(' + lastIdx + ')').css("background-color", "unset");
+		    //$(".playlist:eq(" + displayIdx + ")").css("background-color", " #F0F0F0;"); //클릭한 playlist 표시
+		    $('#playlistInfo').empty(); 
+		    $('.playlistName').empty();
+		    $('.selectedPlaylist').attr('playlistID', playlistID); //혹시 나중에 사용할 일 있지 않을까?
+		    
+		    var thumbnail = '<div class="row">'
+			    				+ '<div class="col-sm-12">'
+				    				+ '<img src="https://img.youtube.com/vi/' + result.thumbnailID + '/0.jpg" class="playlistPic">'
+				    			+ '</div>'
+				    			+ '<div class="col-sm-12 text-center">'
+				    				+ '<button id="playAllVideo" onclick="" class="btn btn-primary btn-sm">playlist 전체재생</button>'
+				    			+ '</div>'
+			    			+ '</div>';
+		    $('#playlistInfo').append(thumbnail);
+		    
+			var name = '<h4>'
+							+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
+							+ '<input type="text" id="inputPlaylistName" style="display:none;">'
+							+ '<button onclick="showEditPlaylistName()" class="btn btn-info btn-sm" style="display:inline;">수정</button>'
+							+ '<div class="editPlaylistNameButtons" style="padding:3px;"></div>'
+					+ '</h4>';
+		    $('.playlistName').append(name); //중간영역
+		    
+			var modDate = convertTime(result.modDate);
+			var totalVideoLength = convertTotalLength(result.totalVideoLength);
+			var description = result.description;
+			if (result.description == null)
+				description = "설명 없음";
+			var info = '<div class="info">' 
+							+ '<div>'
+								+ '<p class="totalInfo"> 총 영상 <b>' + result.totalVideo + '개</b></p>'
+								+ '<p class="totalInfo"> 총 재생시간 <b>' + totalVideoLength + '</b></p>'
+							+ '</div>'
+							+ '<p> 업데이트 <b>' + modDate + '</b> </p>'
+							+ '<div class="description card-border card card-body border-secondary">'
+								+ '<p id="displayDescription">' + description + '</p>'
+								+ '<input type="text" id="inputDescription" style="display:none";>'
+								+ '<button onclick="showEditDescription()" class="btn btn-info btn-sm">수정</button>'
+								+ '<div class="editDescriptionButtons" style="padding:3px;"></div>'
+							+ '</div>'
+						+ '</div>';
+						
+			$('#playlistInfo').append(info);
+		    $('#playlistInfo').attr('displayIdx', displayIdx); //현재 오른쪽에 가져와진 playlistID 저장
+			getAllVideo(playlistID); //먼저 playlist info 먼저 셋팅하고 videolist 가져오기
+		}
+	});
+	
+}
+
+
+function convertTotalLength(seconds){ //duration 변환
+	var seconds_hh = Math.floor(seconds / 3600);
+	var seconds_mm = Math.floor(seconds % 3600 / 60);
+	var seconds_ss = parseInt(seconds % 3600 % 60); //소숫점단위 안보여주기
+	var result = "";
+	
+	if (seconds_hh > 0)
+		result = seconds_hh + ":";
+	result += seconds_mm + ":" + seconds_ss;
+	
+	return result;
+}
+
+
 </script>
 
 <script>
@@ -367,6 +503,7 @@ $(document).ready(function(){
 		}
 
 		
+		
 
 		function showYoutubePlayer(id, title, index){
 			//$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
@@ -597,67 +734,75 @@ $(document).ready(function(){
                           </div>
                         </div>            
                        
-                        <div class="row">
-                           	
-							<div class="col-lg-7 ">
-							
-								<div class="row">
-									<div class="col-lg-8 ">
-										
-											<form class="card mb-3 widget-content bg-midnight-bloom" name="form1" method="post" onsubmit="return false;" >
-												<select name="opt" id="opt" class="mr-2 dropdown-toggle btn btn-primary btn-lg">
-													<option value="relevance">관련순</option>
-													<option value="date">날짜순</option>
-													<option value="viewCount">조회순</option>
-													<option value="title">문자순</option>
-													<option value="rating">평가순</option>
-												</select> 
-												<input type="text" id="search_box" class="form-control">
-												<button onclick="fnGetList();" class="btn btn-primary">검색</button>
-											</form>
-										
-									</div>
-									
-								</div>
-								
-								<div>
-									<form action="playlist/player" id="form2" method="post" style="display: none">
-										<input type="hidden" name="playerId" id="playerId">
-										<input type="hidden" name="playerTitle" id="playerTitle">
-										<input type="hidden" name="playerDuration" id="playerDuration">
-									</form>
-								</div>
-	                            
-	                            <div id="get_view"></div>
-		
-								<div class="container">
+                       <div class="row">
+                       		<div class="col-lg-3">
+								<div class="myPlaylist"></div>
+							</div>
+                       		
+                       		<div class="selectedPlaylist col-lg-9 card">
+								<div class="card-body">
+									<div class="card-title playlistName"></div>
 									<div class="row">
-										<div id="nav_view"></div>
+										
+										<div class="col-lg-7 ">
+												<div class="row">
+													<div class="col-lg-8 ">
+															<form class="card mb-3 widget-content bg-midnight-bloom" name="form1" method="post" onsubmit="return false;" >
+																<select name="opt" id="opt" class="mr-2 dropdown-toggle btn btn-primary btn-lg">
+																	<option value="relevance">관련순</option>
+																	<option value="date">날짜순</option>
+																	<option value="viewCount">조회순</option>
+																	<option value="title">문자순</option>
+																	<option value="rating">평가순</option>
+																</select> 
+																<input type="text" id="search_box" class="form-control">
+																<button onclick="fnGetList();" class="btn btn-primary">검색</button>
+															</form>
+														
+													</div>
+													
+												</div>
+												
+												<div>
+													<form action="playlist/player" id="form2" method="post" style="display: none">
+														<input type="hidden" name="playerId" id="playerId">
+														<input type="hidden" name="playerTitle" id="playerTitle">
+														<input type="hidden" name="playerDuration" id="playerDuration">
+													</form>
+												</div>
+					                            
+					                            <div id="get_view"></div>
+						
+												<div class="container">
+													<div class="row">
+														<div id="nav_view"></div>
+													</div>
+												</div>
+			                            </div>
+
+										<div class="divider"> </div>
+											 <div class="col-lg-5">
+					                            	<div class="main-card mb-3 card">
+					                            		<div class="card-header">
+					                            			카트에 담긴 영상들 
+					                            		</div>
+					                            		<div class="card-body">
+					                            			<div class="scroll-area-sm"> 
+					                            				<div id="videosInCart" class="scrollbar-container ps--active-y ps">
+					                            					
+					                            				</div>
+					                            			</div>
+					                            		</div>
+					                            	</div>
+				                            </div>
 									</div>
 								</div>
-								
-								
-                            </div>
-                            
-                            <div class="col-lg-5">
-                            	<div class="main-card mb-3 card">
-                            		<div class="card-header">
-                            			카트에 담긴 영상들 
-                            		</div>
-                            		<div class="card-body">
-                            			<div class="scroll-area-sm"> 
-                            				<div id="videosInCart" class="scrollbar-container ps--active-y ps">
-                            					
-                            				</div>
-                            			</div>
-                            		</div>
-                            	</div>
-                            </div>
-                            
+							</div>						
 							
-							
-                        </div>	<!-- 대시보드 안 box 끝 !! -->
-        
+                        </div>	
+                       		
+           
+                       
                     </div>
                     <div class="app-wrapper-footer">
                         <div class="app-footer">
