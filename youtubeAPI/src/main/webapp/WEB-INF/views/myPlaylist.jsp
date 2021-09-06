@@ -660,6 +660,7 @@ function convertTotalLength(seconds){ //duration 변환
 						
 						 <div class="page-title-wrapper">
                                 <div class="page-title-heading">
+                                	
                                 </div>
                                  <div class="page-title-actions">
                                  	<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="text-right mb-2 mr-2 dropdown-toggle btn btn-primary">영상 추가하기</button>
@@ -672,7 +673,7 @@ function convertTotalLength(seconds){ //duration 변환
 				                        </a>
 		                             </div>
                                  </div>
-	                       	<%-- <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+	                       	<!-- <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
 			                    <li class="nav-item">
 			                        <a role="tab" class="nav-link show active" id="tab-0" data-toggle="tab" href="#" aria-selected="true">
 			                            <span>내 Playlist</span>
@@ -690,7 +691,7 @@ function convertTotalLength(seconds){ //duration 변환
 			                            <span>LMS영상검색</span>
 			                        </a>
 			                    </li>
-	               			 </ul>    --%>
+	               			 </ul>    --!>
 	               			 
 	               			 
 	               			 
@@ -745,5 +746,6 @@ function convertTotalLength(seconds){ //duration 변환
               </div>
         </div>
     </div>
+   </div>
 </body>
 </html>
