@@ -162,7 +162,7 @@ $(document).ready(function(){
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
 								
 			content.append(
-						/*"<div class='content' seq='" + allContents[i].daySeq + "'>"
+						"<div class='content' seq='" + allContents[i].daySeq + "'>"
 								+ '<div class="row main-card mb-3 card">'
 									+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
 									+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
@@ -182,8 +182,8 @@ $(document).ready(function(){
 										+ published
 									+ '</div>'
 								+ '</div>'
-							 + "</div>");*/
-
+							 + "</div>");
+						/*
 						"<div class='content card' seq='" + allContents[i].daySeq + "'>"
 						+ '<div class="row mb-3 card-header">'
 							//아래부분 바꾸기. data-target 부분!!!
@@ -205,7 +205,7 @@ $(document).ready(function(){
 								+ '</div>'
 		                    + '</button>'
 						+ '</div>'
-					 + "</div>");
+					 + "</div>");*/
 
 		}
 	}
