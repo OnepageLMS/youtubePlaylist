@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Dashboard</title>
+    <title>내 컨텐츠</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -29,14 +29,41 @@
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	
+	
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css" integrity="sha512-SZgE3m1he0aEF3tIxxnz/3mXu/u/wlMNxQSnE0Cni9j/O8Gs+TjM9tm1NX34nRQ7GiLwUEzwuE3Wv2FLz2667w==" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous"></script>
+	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	
 	<style>
-			.videoPic {
-				width: 120px;
-				height: 70px;
-				padding: 5px;
-				display: inline;
-			}
+		.videoPic {
+			width: 120px;
+			height: 70px;
+			padding: 5px;
+			display: inline;
+		}
+		
+		#slider-div {
+		  display: flex;
+		  flex-direction: row;
+		  margin-top: 30px;
+		}
+		
+		#slider-div>div {
+		  margin: 8px;
+		}
+		
+		.slider-label {
+		  position: absolute;
+		  background-color: #eee;
+		  padding: 4px;
+		  font-size: 0.75rem;
+		}
 	</style>
 </head>
 <script>
@@ -247,7 +274,7 @@ function setDisplayVideoInfo(index){ //비디오 플레이어가 뜰 때 같이 
 		title = '';
 	}
 	$('.videoTitle').empty();
-	var html =  '<input type="text" name="newTitle" id="inputNewTitle" value="' + newTitle+ '">'
+	var html =  '<input type="text" name="newTitle" class="form-control" id="inputNewTitle" value="' + newTitle+ '">'
 				+ '<p class="originalTitle">' + title + '</p>';
 	$('.videoTitle').append(html);
 	
@@ -455,9 +482,22 @@ function updateVideo(){ // video 정보 수정
 		}
 
 	});
-
 }
 
+</script>
+<script>	//시작, 끝 시간 설정 bar
+	$( function() {
+		$( "#slider-range" ).slider({
+			range: true,
+			min: 0,
+			max: 500,
+			values: [ 75, 300 ],
+			slide: function( event, ui ) {
+				$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
+			}
+		});
+		$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + " - 끝: " + $( "#slider-range" ).slider( "values", 1 ) );
+	} );
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -502,7 +542,7 @@ function updateVideo(){ // video 정보 수정
                     </div>
                     <ul class="header-menu nav">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
                                 <i class="nav-link-icon fa fa-home"> </i>
                                 대시보드
                             </a>
@@ -600,21 +640,8 @@ function updateVideo(){ // video 정보 수정
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading">
-                                	<button class="btn" onclick="history.back();"><i class="pe-7s-left-arrow"></i> 이전</button>
+                                	<button class="btn" onclick="history.back();"><i class="pe-7s-left-arrow"></i> <-이전</button>
                                 	<h3 class="displayPlaylistName"></h3>
-                                	<!--  
-                                  	<ul class="nav nav-tabs" role="tablist">
-										<li class="nav-item">
-									      <a class="nav-link active" href="#">내 컨텐츠</a>
-									    </li>
-									    <li class="nav-item">
-									      <a class="nav-link"href='${pageContext.request.contextPath}/youtube'>Youtube영상추가</a>
-									    </li>
-									    <li class="nav-item">
-									      <a class="nav-link" href='${pageContext.request.contextPath}/playlist/searchLms'>LMS 내 컨텐츠</a>
-									    </li>
-									</ul>
-									-->
                                 </div>
                           </div>
                         </div>            
@@ -622,25 +649,56 @@ function updateVideo(){ // video 정보 수정
                        
                         <div class="row">
                             <div class="displayVideo col-lg-8">
-								<div id="player" class="embed-responsive embed-responsive-4by3">
+								<div id="player" class="embed-responsive embed-responsive-4by3 card">
 									<div class="tab-content">
 					        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
-					        	 			 <div class="single-feature-post video-post bg-img">
-					        	 			 </div>
+					        	 			 <div class="single-feature-post video-post bg-img"></div>
 					        	 		</div>
 					        	 	</div>
 					        	 </div>
 								
-								<div id="timeSetting" class="col-12 col-md-12 col-lg-12">
+								<div class="card main-card">
 									<form id="videoForm" onsubmit="return validation(event)" style="display: none">
-										<input type="hidden" name="start_s" id="start_s">
-										<input type="hidden" name="end_s" id="end_s">
-									 	<input type="hidden" name="duration" id="duration">
-									 	<input type="hidden" name="id" id="inputVideoID">
-									 	<input type="hidden" name="playlistID" id="inputPlaylistID">
-									 	
-									 	
-										<div class="col-12 col-md-12 col-lg-12 m-2">
+										<div id="timeSetting" class="col-12 col-md-12 col-lg-12">
+											<input type="hidden" name="start_s" id="start_s">
+											<input type="hidden" name="end_s" id="end_s">
+										 	<input type="hidden" name="duration" id="duration">
+										 	<input type="hidden" name="id" id="inputVideoID">
+										 	<input type="hidden" name="playlistID" id="inputPlaylistID">
+										 </div>
+									</form>
+										 	
+									<div class="card-body">
+										<div class="card-title">
+											<h5>저장된 비디오 수정</h5>
+										</div>
+										
+										<div class="divider"></div>
+										
+										<div class="videoTitle"></div>
+										
+										<div class="setTimeRange col row input-group">
+											<div class="col-2 input-group-prepend">
+												<button class="btn btn-outline-secondary">시작</button>
+											</div>
+											<div class="col-8">
+												<div id="slider-range"></div>
+											</div>
+											<div class="col-2 input-group-append">
+												<button class="btn btn-outline-secondary">끝</button>
+											</div>
+											<div class="col">
+												<label for="amount"><b>설정된 시간</b></label>
+												<input type="text" id="amount" readonly style="border:0;">
+											</div>
+										</div>
+										
+										<div class="col">
+											태그추가<input type="text" id="inputTag" class="form-control" name="tag">
+											<button form="videoForm" type="submit" class="btn btn-sm btn-primary">업데이트</button>
+										</div>
+										
+										<div>
 											<button onclick="getCurrentPlayTime1()" type="button" class="btn btn-sm btn-light"> start time </button> : 
 											<input type="text" id="start_hh" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
 											<input type="text" id="start_mm" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
@@ -648,8 +706,8 @@ function updateVideo(){ // video 정보 수정
 											<button onclick="seekTo1()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button>
 											<span id=warning1 style="color:red;"></span> <br>
 										</div>
-										
-										<div class="col-12 col-md-12 col-lg-12 m-2">
+												
+										<div>
 											<button onclick="getCurrentPlayTime2()" type="button" class="btn btn-sm btn-light"> end time </button> : 
 											<input type="text" id="end_hh" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
 											<input type="text" id="end_mm" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
@@ -657,23 +715,20 @@ function updateVideo(){ // video 정보 수정
 											<button onclick="seekTo2()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button> 
 											<span id=warning2 style="color:red;"></span> <br>
 										</div>
-										
-										<div class="col-12 col-md-12 col-lg-12">
-											태그추가: <input type="text" id="inputTag" name="tag">
-											<button form="videoForm" type="submit" class="btn btn-sm btn-primary">업데이트</button>
-										</div>
-									</form>
-								</div>
-							
+									</div>
+									
 							</div>
-						
-							<div id="allVideo" class="col-lg-4">
+							
+                        </div>
+                        
+                        <div id="allVideo" class="col-lg-4 card">
+                        	<div class="card-body">
 								<div class="playlistInfo"></div>
 								<div class="videos"></div>
 							</div>
-                        </div>	<!-- 대시보드 안 box 끝 !! -->
-        
-                    </div>
+						</div>
+ 
+                    </div><!-- 대시보드 안 box 끝 !! -->
                     <div class="app-wrapper-footer">
                         <div class="app-footer">
                             <div class="app-footer__inner">

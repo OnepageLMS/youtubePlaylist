@@ -36,8 +36,8 @@ $(document).ready(function(){
 
 	for(var i=0; i<allMyClass.length; i++){
 		var name = allMyClass[i].className;
-		var startDate = allMyClass[i].startDate;
-		//var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
+		var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
+		var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
 
 		var html = '<li>'
@@ -77,7 +77,7 @@ $(document).ready(function(){
 										+ '<div class="widget-content-wrapper">'
 											+ '<div class="widget-content-left">'
 												+ '<div class="widget-heading">' + name + '</div>'
-												+ '<div class="widget-subheading">' + startDate + '</div>'
+												+ '<div class="widget-subheading">시작일 ' + startDate + '</div>'
 											+ '</div>'
 											+ '<div class="widget-content-right">'
 												+ '<div class="widget-numbers ' + colors[i%(colors.length)] + '">??</div>'

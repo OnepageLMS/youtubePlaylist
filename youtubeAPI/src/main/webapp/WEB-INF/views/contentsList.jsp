@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ContentsList</title>
+    <title>학습 컨텐츠</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -29,6 +29,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <script>
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
@@ -162,16 +163,15 @@ $(document).ready(function(){
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
 								
 			content.append(
-						"<div class='content' seq='" + allContents[i].daySeq + "'>"
-								+ '<div class="row main-card mb-3 card">'
+						"<div class='content card col list-group-item' seq='" + allContents[i].daySeq + "'>"
+								+ '<div class="row">'
 									+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
 									+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
 									+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-										+ "<div class='col-sm-12'>"
+										+ "<div class='col-sm-12 card-title'>"
 											+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']' 
 										+ '</div>'
 										+ '<div class="col-sm-12">'
-												+ '<p class="contentInfo">' + 'Youtube' + '</p>'
 												+ '<div class="contentInfoBorder"></div>'
 												+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
 												+ '<div class="contentInfoBorder"></div>'
@@ -194,7 +194,6 @@ $(document).ready(function(){
 										+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']' 
 									+ '</div>'
 									+ '<div class="col-sm-12">'
-											+ '<div class="contentInfoBorder"></div>'
 											+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
 											+ '<div class="contentInfoBorder"></div>'
 											+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
@@ -215,7 +214,7 @@ $(document).ready(function(){
 		
 		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
 		
-		var addFormHtml = '<div class="addContentForm card-border mb-3 card card-body border-alternate">'
+		var addFormHtml = '<div class="addContentForm card-border mb-3 card card-body border-alternate" name="contentForm">'
 							+ '<div class="card-header">'
 								+ '<h5> 학습페이지 추가 </h5>'
 							+ '</div>'
@@ -276,7 +275,10 @@ $(document).ready(function(){
 		startDate.min = date;
 		startDate.value = date;
 
-		//"../addContent/${classInfo.id}/${j}"
+		//페이지 추가 form 영역으로 페이지 스크롤 
+		var offset = $('.addContentForm').offset();
+		$('html, body').animate({scrollTop : offset.top}, 400);
+		
 	}
 
 	function getCurrentTime(){
