@@ -656,8 +656,23 @@ function convertTotalLength(seconds){ //duration 변환
                 </div>   
                  <div class="app-main__outer">                         
                     <div class="app-main__inner">
-						<div>
-	                       	<ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+						<div class="app-page-title">
+						
+						 <div class="page-title-wrapper">
+                                <div class="page-title-heading">
+                                </div>
+                                 <div class="page-title-actions">
+                                 	<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="text-right mb-2 mr-2 dropdown-toggle btn btn-primary">영상 추가하기</button>
+		                             <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+		                             	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
+	                                    	<button type="button" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
+	                                	</a>	                        
+	                                 	<a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
+				                            <button type="button" tabindex="0" class="dropdown-item">LMS 영상검색 </button>
+				                        </a>
+		                             </div>
+                                 </div>
+	                       	<%-- <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
 			                    <li class="nav-item">
 			                        <a role="tab" class="nav-link show active" id="tab-0" data-toggle="tab" href="#" aria-selected="true">
 			                            <span>내 Playlist</span>
@@ -675,7 +690,10 @@ function convertTotalLength(seconds){ //duration 변환
 			                            <span>LMS영상검색</span>
 			                        </a>
 			                    </li>
-	               			 </ul>   
+	               			 </ul>    --%>
+	               			 
+	               			 
+	               			 
                     	</div>
 
                         <div class="row">
