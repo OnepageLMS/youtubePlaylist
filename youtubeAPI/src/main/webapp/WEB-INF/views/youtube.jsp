@@ -334,9 +334,9 @@ img {
 		var prev_index;
 
 		function viewVideo(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
-			$('.videos').css({'fontWeight' : 'normal'});
+			//$('.videos').css({'fontWeight' : 'normal'});
 			//$('input:checkbox').prop("checked", false); //youtube 검색결과에서 비디오 선택하면 playlist 체크된것 다 초기화 
-			$('.submitBtn').html('추가');
+			//$('.submitBtn').html('추가');
 			//document.getElementById("inputVideoID").value = -1; //updateVideo()가 아닌 createVideo()가 실행되도록 초기화!
 			
 			// 클릭한 영상 밑에 player 띄우기
@@ -349,7 +349,7 @@ img {
 			<!-- <div id="player"></div> -->
 
 			// 클릭한 영상 밑에 player 띄우기
-			var $div = $('<div id="player_info"></div> <br> <div id="player"></div>');
+			var $div = $('<div id="player_info"></div><div id="player"></div>');
 			
 			if(prev_index != null){
 				//$("#get_view").children().eq(prev_index).children().eq(0).text() = ""; 

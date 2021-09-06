@@ -220,7 +220,7 @@ $(document).ready(function(){
                             <p>여기에 기존 웹페이지 내용 붙여넣기. div container-fluid 같은것 없어도 되고 기존 'row' 기준으로 !!!</p>
                             <div>
                             	<p>왼쪽의 내 수업은 임의의 계정으로 로그인 했을때를 가정했고, 컨트롤러에서 아래 부분 추가해주면 그 사람의 수업들 정보가 전달됨.</p>
-                            	<b>> model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));</b>
+                            	<b> model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));</b>
                             </div>
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
