@@ -36,7 +36,9 @@ $(document).ready(function(){
 
 	for(var i=0; i<allMyClass.length; i++){
 		var name = allMyClass[i].className;
-		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
+		var startDate = allMyClass[i].startDate;
+		//var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
 
 		var html = '<li>'
 						+ '<a href="#">'
@@ -52,7 +54,7 @@ $(document).ready(function(){
 								+ '</a>'
 							+ '</li>'
 							+ '<li>'
-								+ '<a href="' + classContentURL + '">'
+								+ '<a href=' + classContentURL + '>'
 									+ '<i class="metismenu-icon"></i>'
 									+ '학습 컨텐츠'
 								+ '</a>'
@@ -66,12 +68,32 @@ $(document).ready(function(){
 						+ '</ul>'
 					+ '</li>';
 				
-		$('.sideClassList').append(html);
+		$('.sideClassList').append(html);	//side bar class list
+		
+		var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
+		var dashboardHtml = '<div class="col-md-6 col-lg-3">'
+								+ '<div class="card mb-3 widget-content" onclick="location.href=' + classContentURL + '">'
+									+ '<div class="widget-content-outer">'
+										+ '<div class="widget-content-wrapper">'
+											+ '<div class="widget-content-left">'
+												+ '<div class="widget-heading">' + name + '</div>'
+												+ '<div class="widget-subheading">' + startDate + '</div>'
+											+ '</div>'
+											+ '<div class="widget-content-right">'
+												+ '<div class="widget-numbers ' + colors[i%(colors.length)] + '">??</div>'
+											+ '</div>'
+										+ '</div>'
+									+ '</div>'
+								+ '</div>'
+							+ '</div>';
+
+		$('.dashboardClass').append(dashboardHtml);
 	}
+
 });
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
                 <div class="logo-src"></div>
@@ -113,13 +135,13 @@ $(document).ready(function(){
                     </div>
                     <ul class="header-menu nav">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link text-primary">
                                 <i class="nav-link-icon fa fa-home"> </i>
                                 대시보드
                             </a>
                         </li>
                        
-                        <li class="dropdown nav-item">
+                        <li class="nav-item">
                             <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
@@ -138,11 +160,11 @@ $(document).ready(function(){
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <button type="button" tabindex="0" class="dropdown-item">User Account</button>
                                             <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
+                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
                                         </div>
                                     </div>
                                 </div>
@@ -216,63 +238,19 @@ $(document).ready(function(){
                           </div>
                         </div>            
                        
-                        <div class="row">
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">ClassName</div>
-                                                <div class="widget-subheading">StartDate</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-success">??</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">ClassName</div>
-                                                <div class="widget-subheading">StartDate</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-warning">??</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">ClassName</div>
-                                                <div class="widget-subheading">StartDate</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-danger">??</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row dashboardClass">
+                            
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
                     <div class="app-wrapper-footer">
                         <div class="app-footer">
                             <div class="app-footer__inner">
-                                <div class="app-footer-left">
+                                <div class="app-footer-center">
                                     <ul class="nav">
                                         <li class="nav-item">
                                             <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 1
+                                                OnepageLMS
                                             </a>
                                         </li>
                                     </ul>
