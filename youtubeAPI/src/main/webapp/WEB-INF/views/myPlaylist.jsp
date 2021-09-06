@@ -302,7 +302,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 										+ '</div>'
 									+ '</div>'
 									+ '<div class="videoEditBtn col-sm-1 d-sm-inline-block">'
-										+ '<button href="#" class="aDeleteVideo btn btn-primary btn-sm align-middle" onclick="deleteVideo(' + value.id + ')">삭제</button>'
+										+ '<a href="#" class="aDeleteVideo badge badge-danger" onclick="deleteVideo(' + value.id + ')">삭제</a>'
 									+ '</div>'
 									+ '</div>'
 								+ '<div class="videoLine"></div>'
