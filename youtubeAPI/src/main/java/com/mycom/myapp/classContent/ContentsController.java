@@ -45,14 +45,15 @@ public class ContentsController {
 	public String contentDetail(@PathVariable("id") int id, Model model) {
 		ClassContentsVO vo = classContentsService.getOneContent(id);
 		model.addAttribute("vo", vo);
-		return "contentDetail";
+		System.out.println("???여기는?");
+		return "t_contentDetail";
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
 	public List<PlaylistVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		
+		System.out.println("here!");
 		//playlistmapper를 통해 playlistID에 맞는 영상들을 가져와서 리턴해주는역할을 해야한ㄷㅏ. 
 		PlaylistVO vo = new PlaylistVO();
 	    vo.setPlaylistID(playlistID);

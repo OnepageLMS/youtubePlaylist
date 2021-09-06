@@ -58,7 +58,7 @@ public class Stu_ClassController{
 		Stu_VideoVO pvo = new Stu_VideoVO();
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
-		return "contentsList_Stu";
+		return "t_contentsList_Stu";
 	}
 	
 	
@@ -73,7 +73,7 @@ public class Stu_ClassController{
 		//pvo.setPlaylistID(playlistID);
 		ccvo.setPlaylistID(playlistID);
 		ccvo.setId(id);
-		System.out.println("id : " + ccvo.getId());
+		System.out.println("id :/// ?????" + ccvo.getId()); //
 		
 		model.addAttribute("playlistID", playlistID);
 		model.addAttribute("classPlaylistID", id);
@@ -82,7 +82,7 @@ public class Stu_ClassController{
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
 		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		
-		return "contentsDetail_Stu";
+		return "t_contentsDetail_Stu";
 		
 	}
 	
