@@ -44,7 +44,7 @@ public class VideoController {
 		model.addAttribute("videoID", videoID);
 		model.addAttribute("playlistID", playlistID);
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
-		return "t_selectedPlaylist";
+		return "selectedPlaylist";
 	}
 
 	//선택한 playlist에 속한 video list 가져오기
