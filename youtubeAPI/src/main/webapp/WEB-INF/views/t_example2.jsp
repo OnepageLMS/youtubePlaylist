@@ -739,7 +739,7 @@ function convertTotalLength(seconds){ //duration 변환
                         </div>            
                        
                        <div class="row">
-                       		<div class="col-lg-2">
+                       		<div class="col-lg-3">
 								<div class="myPlaylist"></div>
 							</div>
                        		
@@ -781,7 +781,7 @@ function convertTotalLength(seconds){ //duration 변환
 								</div>
 							</div>	
 							
-							 <div class="col-lg-4">
+							 <div class="col-lg-3">
 	                            	<div class="main-card mb-3 card">
 	                            		<div class="card-header">
 	                            			카트에 담긴 영상들 
