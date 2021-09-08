@@ -45,6 +45,12 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
 	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String studentDashboard() {
+
+		return "dashboard_Stu";
+	}
+	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classID") int classID, Model model) {
 		classID = 1;//임의로 1번 class 설정
@@ -56,8 +62,10 @@ public class Stu_ClassController{
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentsService.getWeekClassContents(ccvo)));
 		
 		Stu_VideoVO pvo = new Stu_VideoVO();
+		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
+		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); 
 		return "t_contentsList_Stu";
 	}
 	
