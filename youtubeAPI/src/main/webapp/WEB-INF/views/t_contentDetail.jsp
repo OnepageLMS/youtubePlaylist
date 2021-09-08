@@ -22,8 +22,8 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-	<link href="./resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="./resources/js/main.js"></script>
+	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
@@ -31,69 +31,184 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <script>
-$(document).ready(function(){
-	var allMyClass = JSON.parse('${allMyClass}');
-
-	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
-		var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
-		var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
-
-		var html = '<li>'
-						+ '<a href="#">'
-							+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-							+ name
-							+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-						+ '</a>'
-						+ '<ul>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '공지'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href=' + classContentURL + '>'
-									+ '<i class="metismenu-icon"></i>'
-									+ '학습 컨텐츠'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '성적'
-								+ '</a>'
-							+ '</li>'
-						+ '</ul>'
-					+ '</li>';
-				
-		$('.sideClassList').append(html);	//side bar class list
+	var playlistID = ${vo.playlistID};
+	var playlist;
 		
-		var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
-		var dashboardHtml = '<div class="col-md-6 col-lg-3">'
-								+ '<div class="card mb-3 widget-content" onclick="location.href=' + classContentURL + '">'
-									+ '<div class="widget-content-outer">'
-										+ '<div class="widget-content-wrapper">'
-											+ '<div class="widget-content-left">'
-												+ '<div class="widget-heading">' + name + '</div>'
-												+ '<div class="widget-subheading">시작일 ' + startDate + '</div>'
-											+ '</div>'
-											+ '<div class="widget-content-right">'
-												+ '<div class="widget-numbers ' + colors[i%(colors.length)] + '">??</div>'
-											+ '</div>'
-										+ '</div>'
-									+ '</div>'
-								+ '</div>'
-							+ '</div>';
-
-		$('.dashboardClass').append(dashboardHtml);
+	$(document).ready(function(){
+		/*var allMyClass = JSON.parse('${allMyClass}');
+	
+		for(var i=0; i<allMyClass.length; i++){
+			var name = allMyClass[i].className;
+			var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
+	
+			var html = '<li>'
+							+ '<a href="#">'
+								+ '<i class="metismenu-icon pe-7s-notebook"></i>'
+								+ name
+								+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
+							+ '</a>'
+							+ '<ul>'
+								+ '<li>'
+									+ '<a href="#">'
+										+ '<i class="metismenu-icon"></i>'
+										+ '공지'
+									+ '</a>'
+								+ '</li>'
+								+ '<li>'
+									+ '<a href="' + classContentURL + '">'
+										+ '<i class="metismenu-icon"></i>'
+										+ '학습 컨텐츠'
+									+ '</a>'
+								+ '</li>'
+								+ '<li>'
+									+ '<a href="#">'
+										+ '<i class="metismenu-icon"></i>'
+										+ '성적'
+									+ '</a>'
+								+ '</li>'
+							+ '</ul>'
+						+ '</li>';
+					
+			$('.sideClassList').append(html);
+			
+			displayDates('${vo.startDate}', '.startDate');
+			displayDates('${vo.endDate}', '.endDate');
+			
+		}*/
+		
+		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			  url : "../forVideoInformation",
+			  type : "post",
+			  async : false,
+			  data : {	
+				 playlistID : playlistID
+			  },
+			  success : function(data) {
+				 console.log(data);
+				 playlist = data; //data는 video랑 playlist테이블 join한거 가져온다.
+				 playlist_length = Object.keys(playlist).length;
+				 //console.log("join 잘됐나? " + data);
+				 //console.log("playlist[0].youtubeID" + playlist[0].youtubeID);
+			  },
+			  error : function() {
+			  	alert("playlistID" + playlistID);
+			  }
+		})
+		
+		myThumbnail();
+	});
+	
+	
+	function displayDates(fulldate, name){
+		 var monthToNumber = {'Jan':'01', 'Fab':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06', 
+					'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'};
+			
+		 var end = fulldate.split(' ');
+		 var day = end[5] + "-" + monthToNumber[end[1]] + "-" + end[2];
+		 var end2 = end[3].split(':');
+		 var time = end2[0] + ":" + end2[1];
+		 $(name).append('<p style="display:inline; font-weight:bold">' + day + " " + time + '</p>');
 	}
-
-});
+	
+	
+	var tag = document.createElement('script');
+	tag.src = "https://www.youtube.com/iframe_api";
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	
+	var player;
+	function onYouTubeIframeAPIReady() {
+	    player = new YT.Player('contentDetail', {
+	        height: '480',            
+	        width: '854',             
+	        videoId: playlist[0].youtubeID, //여기에 videoID 넣을 수 있도록 !!!
+	        playerVars: {             
+	            controls: '2'
+	        },
+	        events: {
+	            'onReady': onPlayerReady,         
+	        }
+	    });
+	    
+	}
+	
+	function onPlayerReady(event) { 
+	   console.log('onPlayerReady 실행');
+	}
+	
+	var total_runningtime = 0;
+	function myThumbnail(){
+		
+		for(var i=0; i<playlist_length; i++){
+			var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg">';
+			
+			var newTitle = playlist[i].newTitle;
+			var title = playlist[i].title;
+			
+			if (playlist[i].newTitle == null){
+				playlist[i].newTitle = playlist[i].title;
+				playlist[i].title = '';
+		    }
+			
+			if ((playlist[i].newTitle).length > 30){
+				playlist[i].newTitle = (playlist[i].newTitle).substring(0, 30) + " ..."; 
+			}
+			
+			var completed ='';
+			if(playlist[i].watched == 1 && playlist[i].classPlaylistID == classPlaylistID){
+				completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+			}
+			
+			$("#get_view").append(
+						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
+						'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
+							'<div class="post-thumbnail col-xs-4 col-lg-4"> ' + thumbnail + ' </div>' +
+							'<div class="post-content col-xs-7 col-lg-6" onclick="viewVideo(\'' 
+							+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
+		 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ', this)" >' 
+		 					+ 	'<h6 class="post-title videoNewTitle">' + playlist[i].newTitle + '</h6>' 
+		 					+	'<div>'+  convertTotalLength(playlist[i].duration) +'</div>' 
+		 				+'</div>' 
+					+ '</div>'
+					+ '<div class="videoLine"></div>'
+			);
+			
+			
+			total_runningtime += parseInt(playlist[i].duration);
+		}
+		$("#total_runningtime").append('<div> total runningTime ' + convertTotalLength(total_runningtime) + '</div>');
+	}
+		
+	function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
+		start_s = startTime;
+	 	$(".video").css({'background-color' : 'unset'});
+		item.style.background = "lightgrey";
+		$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
+	       	
+		player.loadVideoById({'videoId': videoID,
+			               'startSeconds': startTime,
+			               'endSeconds': endTime,
+			               'suggestedQuality': 'default'})
+	}
+			
+	   
+	  
+	function convertTotalLength(seconds){
+		var seconds_hh = Math.floor(seconds / 3600);
+		var seconds_mm = Math.floor(seconds % 3600 / 60);
+		var seconds_ss = Math.floor(seconds % 3600 % 60);
+		var result = "";
+			
+		if (seconds_hh > 0)
+				result = ("00"+seconds_hh .toString()).slice(-2)+ ":";
+		
+		result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
+			
+		return result;
+	}
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
                 <div class="logo-src"></div>
@@ -135,13 +250,13 @@ $(document).ready(function(){
                     </div>
                     <ul class="header-menu nav">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-primary">
+                            <a href="#" class="nav-link">
                                 <i class="nav-link-icon fa fa-home"> </i>
                                 대시보드
                             </a>
                         </li>
                        
-                        <li class="nav-item">
+                        <li class="dropdown nav-item">
                             <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
@@ -160,11 +275,11 @@ $(document).ready(function(){
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <button type="button" tabindex="0" class="dropdown-item">User Account</button>
                                             <button type="button" tabindex="0" class="dropdown-item">Settings</button>
+                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
+                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
                                         </div>
                                     </div>
                                 </div>
@@ -173,7 +288,7 @@ $(document).ready(function(){
                                         홍길동
                                     </div>
                                     <div class="widget-subheading">
-                                        교수
+                                        교수 
                                     </div>
                                 </div>
                                 <div class="widget-content-right header-user-info ml-3">
@@ -233,24 +348,77 @@ $(document).ready(function(){
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading">
-                                  	<h2>대시보드</h2>
+                                  	<h4>ex. 내 Playlist</h4>
                                 </div>
                           </div>
                         </div>            
                        
-                        <div class="row dashboardClass">
-                            
+                        <div class="row">
+                            <div class="displayVideo col-12 col-xs-8 col-sm-8 col-md-8 col-lg-8">
+				        		<div class="videoTitle col-12 col-md-12 col-lg-12"></div>
+				        		
+				        		<div>
+					        		<div class="endDate" style="display:inline">
+										<p style="display:inline">마감일</p>
+									</div>
+										
+									<div class="startDate" style="display:inline"> 
+										<p style="display:inline">공개일</p>
+									</div>
+								</div>
+				        	 
+					        	<div id = "contentDetail" class="col-12 col-md-12 col-lg-12">
+					        	 	<div class="tab-content">
+					        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
+					        	 			 <div class="single-feature-post video-post bg-img">
+					                             
+					        	 			 </div>
+					        	 		</div>
+					        	 	</div>
+					        	</div>
+					        	
+					        	<div class="content col-12 col-md-12 col-lg-12">
+									<!--  <div class="selectContent">
+										<div id="selectedContent">
+											<p>playlist 총 재생시간 및 각 비디오시간 출력!</p>
+											<p>${vo.playlistID}번 playlist 정보 여기에</p>
+										</div>
+									</div> -->
+									
+									<div class="title">
+										<p style="font-weight : bold">제목: ${vo.title}</p>
+									</div>
+									
+									<div class="description">
+										<p style="font-weight : bold">설명</p>
+										<p style="font-style : italic">${vo.description}</p>
+									</div>
+									
+									
+								</div>
+				        	 	
+				        	</div>
+	        	
+				        	<div id="allVideo" class="col-12 col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					        <!--<div id="myProgress">
+					  				<div id="myBar"></div>
+								</div> -->
+								
+								<div id="classTitle"></div>
+								<div id="total_runningtime"></div>
+								<div id="get_view"></div>
+					       	</div>
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
                     <div class="app-wrapper-footer">
                         <div class="app-footer">
                             <div class="app-footer__inner">
-                                <div class="app-footer-center">
+                                <div class="app-footer-left">
                                     <ul class="nav">
                                         <li class="nav-item">
                                             <a href="javascript:void(0);" class="nav-link">
-                                                OnepageLMS
+                                                Footer Link 1
                                             </a>
                                         </li>
                                     </ul>

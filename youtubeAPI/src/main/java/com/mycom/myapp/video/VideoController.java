@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.classContent.ClassContentsService;
+import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.playlist.PlaylistService;
 
 import com.mycom.myapp.playlist.PlaylistVO;
@@ -31,13 +33,17 @@ public class VideoController {
 	private VideoService videoService;
 	@Autowired
 	private PlaylistService playlistService;
+	@Autowired
+	private ClassesService classService;
+	
+	private String email = "yewon.lee@onepage.edu";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 	
 	//video 수정/재생page 이동
 	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
 	public String getSelectedPlaylistVideos(@PathVariable("playlistID") int playlistID, @PathVariable("videoID") int videoID, Model model) {
 		model.addAttribute("videoID", videoID);
 		model.addAttribute("playlistID", playlistID);
-		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
 		return "selectedPlaylist";
 	}
 

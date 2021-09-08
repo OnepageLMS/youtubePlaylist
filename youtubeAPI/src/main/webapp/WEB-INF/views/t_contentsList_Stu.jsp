@@ -22,23 +22,26 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-	<link href="./resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="./resources/js/main.js"></script>
+	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	<style>
+		
+	
+	</style>
 </head>
 <script>
 $(document).ready(function(){
-	var allMyClass = JSON.parse('${allMyClass}');
+	//var allMyClass = JSON.parse('${allMyClass}');
 
-	for(var i=0; i<allMyClass.length; i++){
+	/*for(var i=0; i<allMyClass.length; i++){
 		var name = allMyClass[i].className;
-		var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
-		var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
+		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
 
 		var html = '<li>'
 						+ '<a href="#">'
@@ -54,7 +57,7 @@ $(document).ready(function(){
 								+ '</a>'
 							+ '</li>'
 							+ '<li>'
-								+ '<a href=' + classContentURL + '>'
+								+ '<a href="' + classContentURL + '">'
 									+ '<i class="metismenu-icon"></i>'
 									+ '학습 컨텐츠'
 								+ '</a>'
@@ -68,32 +71,108 @@ $(document).ready(function(){
 						+ '</ul>'
 					+ '</li>';
 				
-		$('.sideClassList').append(html);	//side bar class list
-		
-		var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
-		var dashboardHtml = '<div class="col-md-6 col-lg-3">'
-								+ '<div class="card mb-3 widget-content" onclick="location.href=' + classContentURL + '">'
-									+ '<div class="widget-content-outer">'
-										+ '<div class="widget-content-wrapper">'
-											+ '<div class="widget-content-left">'
-												+ '<div class="widget-heading">' + name + '</div>'
-												+ '<div class="widget-subheading">시작일 ' + startDate + '</div>'
-											+ '</div>'
-											+ '<div class="widget-content-right">'
-												+ '<div class="widget-numbers ' + colors[i%(colors.length)] + '">??</div>'
-											+ '</div>'
-										+ '</div>'
-									+ '</div>'
+		$('.sideClassList').append(html);
+	}*/
+	
+	var allContents = JSON.parse('${allContents}');
+	var weekContents = JSON.parse('${weekContents}');
+	playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해
+	playlist = JSON.parse('${playlist}'); //total 시간을 위해
+	total_runningtime = 0;
+	
+	var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
+	
+ 	for(var i=0; i<weekContents.length; i++){
+		var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
+		var day = weekContents[i].day;
+		var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
+			
+		var result_date = convertTotalLength(date);
+			
+		var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
+			
+		var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+  "'";
+			
+		var content = $('.day:eq(' + day + ')');
+			
+			//if(i==0 || weekContents[i-1].playlistID != weekContents[i].playlistID){ //강의리스트에서는 플레이리스트의 첫번째 영상 썸네일만 보이도록
+		console.log(" // " + weekContents[i].playlistID);
+		/*content.append("<div class='content card ' seq='" + weekContents[i].daySeq + ">"
+							+ '<div>'
+								+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
+								+ '<div class="videoIcon col-sm-1">' 
+									+'<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' 
 								+ '</div>'
-							+ '</div>';
-
-		$('.dashboardClass').append(dashboardHtml);
-	}
-
+								+ "<div class='col-sm-7' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-12'>"
+									+ weekContents[i].title  + '  [' + weekContents[i].totalVideo + ']' 
+									+ '</div>'
+									+ '<div class="col-sm-12">'
+										+ '<p style="display:inlne">' + 'Youtube' + '</p>'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<p class="videoLength contentInfo" style="display:inlne">' + convertTotalLength(weekContents[i].totalVideoLength) + '</p>'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<p class="endDate contentInfo">' + '마감일: ' + endDate + '</p>'
+									+ '</div>' 
+								+ '</div>'
+							+ '</div>'
+						+ '</div>');*/
+						
+			content.append("<div id=\'heading" +(i+1)+ "\' >"
+	                + '<button type="button" data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded="true" aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
+		                + "<div class='content card ' seq='" + weekContents[i].daySeq + ">"
+							+ '<div>'
+								+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
+								
+								+ "<div class='col-sm-7' style='cursor: pointer;'>"
+									+ "<div class='col-sm-12'>"
+									+ weekContents[i].title  + '  [' + weekContents[i].totalVideo + ']' 
+									+ '</div>'
+									+ '<div class="col-sm-12">'
+										+ '<p style="display:inlne">' + 'Youtube' + '</p>'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<p class="videoLength contentInfo" style="display:inlne">' + convertTotalLength(weekContents[i].totalVideoLength) + '</p>'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<p class="endDate contentInfo">' + '마감일: ' + endDate + '</p>'
+									+ '</div>' 
+								+ '</div>'
+								
+							+ '</div>'
+						+ '</div>'
+	   				+ '</button>'
+				+ '</div>');
+		}
+		
+		
+ 		
+ 		for(var j=0; j<playlist.length; j++){
+ 			total_runningtime += parseInt(playlist[j].duration);
+ 		}
 });
+
+function convertTotalLength(seconds){
+	var seconds_hh = Math.floor(seconds / 3600);
+	var seconds_mm = Math.floor(seconds % 3600 / 60);
+	var seconds_ss = Math.floor(seconds % 3600 % 60);
+	var result = "";
+	
+	if (seconds_hh > 0)
+		result = ("00"+seconds_hh .toString()).slice(-2)+ ":";
+	result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
+	
+	return result;
+}
+
+function toggle(e){
+	var idx = $(e).attr('week');
+	console.log("idx : " + idx);
+	$(e).on("click", function(){
+		$('.week:eq(' + (idx-1) + ')').toggle("1000", "linear");
+	});
+}
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
                 <div class="logo-src"></div>
@@ -135,13 +214,13 @@ $(document).ready(function(){
                     </div>
                     <ul class="header-menu nav">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-primary">
+                            <a href="#" class="nav-link">
                                 <i class="nav-link-icon fa fa-home"> </i>
                                 대시보드
                             </a>
                         </li>
                        
-                        <li class="nav-item">
+                        <li class="dropdown nav-item">
                             <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
@@ -160,11 +239,11 @@ $(document).ready(function(){
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <button type="button" tabindex="0" class="dropdown-item">User Account</button>
                                             <button type="button" tabindex="0" class="dropdown-item">Settings</button>
+                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
+                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
                                         </div>
                                     </div>
                                 </div>
@@ -233,24 +312,61 @@ $(document).ready(function(){
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading">
-                                  	<h2>대시보드</h2>
+                                  	<h4>수업명 띄우기</h4>
                                 </div>
                           </div>
                         </div>            
                        
-                        <div class="row dashboardClass">
-                            
+                        <div class="row">
+							<div class="contents col-lg-12" classID="${classInfo.id}">
+								<div id="accordion" class="accordion-wrapper mb-3">
+									<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+										<div class="card">
+											<div class="day  col-lg-12" day="${status.index}">
+												<div class="card-header col-lg-12">
+													<h4 style="display: inline; font-weight : bold; color : #3f6ad8">${j} 일 강의</h4>
+												</div>
+											</div>
+										</div>
+									</c:forEach>
+								</div>
+							</div>
+							
+							<div class="contents col-lg-12" classID="${classInfo.id}">
+									
+								<div id="accordion" class="accordion-wrapper mb-3">
+                                    
+                                    	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+                                    		<div class="card">
+												<div class="day col-lg-12">
+													<div id="heading${status.index}" class="card-header">
+		                                                <button type="button" data-toggle="collapse" data-target="#collapse${status.index}" aria-expanded="true" aria-controls="collapse0${status.index}" class="text-left m-0 p-0 btn btn-link btn-block">
+		                                                    <h5 class="m-0 p-0">${j} 일 강의</h5>
+		                                                </button>
+                                            		</div>
+                                            		
+                                            		<div data-parent="#accordion" id="collapse${status.index}" aria-labelledby="heading${status.index}" class="collapse show">
+                                                		<div class="card-body" day="${status.index}"></div>
+                                            		</div>
+                                            		
+                                            		<!-- id, data-target과 aria-controls 조절하기 -->
+												</div>
+											</div>
+										</c:forEach>
+
+                                   </div>
+							</div>
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
                     <div class="app-wrapper-footer">
                         <div class="app-footer">
                             <div class="app-footer__inner">
-                                <div class="app-footer-center">
+                                <div class="app-footer-left">
                                     <ul class="nav">
                                         <li class="nav-item">
                                             <a href="javascript:void(0);" class="nav-link">
-                                                OnepageLMS
+                                                Footer Link 1
                                             </a>
                                         </li>
                                     </ul>
