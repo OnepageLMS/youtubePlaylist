@@ -82,7 +82,6 @@
 				
 				var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+  "'";
 				
-				//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');
 				
 				//$('.lecture').append(" <a style='display: inline;' name= 'target" + (i+1) + "'>" + (i+1) + "일 강의</a> ");
 				var content = $('.day:eq(' + day + ')');
@@ -311,7 +310,7 @@
 								<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 									<div class="day card list-group list-group-flush" day="${status.index}">
 										 <div class="card-header lecture">
-											   <a style="display: inline;" name= "target">${j} 일 강의</a>  
+											   <a style="display: inline;" name= "target${j}">${j} 차시</a>  
 											
 										</div>
 									</div>
