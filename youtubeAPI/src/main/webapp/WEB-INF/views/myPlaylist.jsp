@@ -32,6 +32,7 @@
 	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 	 <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" /> <!-- jquery for drag&drop list order -->
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	
 	<style>
 		.playlistPic {
@@ -138,13 +139,6 @@ function getAllMyPlaylist(email){
 				$('.myPlaylist').append('저장된 playlist가 없습니다.');
 
 			else{
-				var searchHtml = '<div class="searchPlaylist input-group mb-1">'
-									+ '<input type="text" class="d-sm-inline-block form-control" name="search" placeholder="playlist 검색" >'
-									+ '<div class="input-group-append">'
-										+ '<button type="button" class="btn btn-primary d-sm-inline-block">검색</button>'
-									+ '</div>'
-								+ '</div>';
-				//$('.myPlaylist').append(searchHtml);
 				var setFormat = '<div class="card">'
 									+ '<div class="card-body">'
 									+ '<div class="card-title input-group">'
@@ -162,6 +156,7 @@ function getAllMyPlaylist(email){
 											+ '<button class="btn btn-secondary">검색</button>'
 										+ '</div>'
 									+ '</div>'
+									+ '<button class="btn btn-primary col-12 mb-2">+ Playlist 생성</button>'
 									+ '<div><ul class="allPlaylist list-group"></div></div>'
 								+ '</div>'
 							+ '</div>';
@@ -217,9 +212,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가�
 		    
 			var name = '<h4>'
 							+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
-							+ '<input type="text" id="inputPlaylistName" style="display:none;">'
-							+ '<button onclick="showEditPlaylistName()" class="btn btn-info btn-sm" style="display:inline;">수정</button>'
-							+ '<div class="editPlaylistNameButtons" style="padding:3px;"></div>'
+							+ '<a href="javascript:void(0);" class="nav-link" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
 					+ '</h4>';
 		    $('.playlistName').append(name); //중간영역
 		    
@@ -237,9 +230,6 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가�
 							+ '<p> 업데이트 <b>' + modDate + '</b> </p>'
 							+ '<div class="description card-border card card-body border-secondary">'
 								+ '<p id="displayDescription">' + description + '</p>'
-								+ '<input type="text" id="inputDescription" style="display:none";>'
-								+ '<button onclick="showEditDescription()" class="btn btn-info btn-sm">수정</button>'
-								+ '<div class="editDescriptionButtons" style="padding:3px;"></div>'
 							+ '</div>'
 						+ '</div>';
 						
@@ -311,7 +301,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 										+ '</div>'
 									+ '</div>'
 									+ '<div class="videoEditBtn col-sm-1 d-sm-inline-block">'
-										+ '<button href="#" class="aDeleteVideo btn btn-primary btn-sm align-middle" onclick="deleteVideo(' + value.id + ')">삭제</button>'
+										+ '<a href="#" class="aDeleteVideo col-lg-1 badge badge-danger" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
 									+ '</div>'
 									+ '</div>'
 								+ '<div class="videoLine"></div>'
@@ -394,92 +384,7 @@ function deleteVideo(videoID){ // video 삭제
 
 		});
 	}
-	else 
-		false;
-}
-
-function savePlaylistName(){ //playlist name 수정
-	var playlistID = $('.selectedPlaylist').attr('playlistID');
-	var name = $("#inputPlaylistName").val();
-
-	$.ajax({
-		'type' : 'post',
-		'url' : '${pageContext.request.contextPath}/playlist/updatePlaylistName',
-		'data' :{
-				'playlistID' : playlistID,
-				'name' : name
-			},
-		success :function(data){
-			$("#displayPlaylistName").text(data);
-			//왼쪽 menu에서도 바뀌도록 변경하기! 
-			hideEditPlaylistName();
-		}
-	});
-}
-
-function showEditPlaylistName(){
-	$("#displayPlaylistName").css("display", "none");
-	$(".playlistName").children('button').css("display", "none");
-	
-	var value = $("#displayPlaylistName").text();
-	
-	$("#inputPlaylistName").val(value);
-	$("#inputPlaylistName").css("display", "inline");
-	
-	var buttons = '<button onclick="hideEditPlaylistName()" class="btn btn-info btn-sm">취소</button>' 
-					+ '<button onclick="savePlaylistName()" class="btn btn-info btn-sm">확인</button>';
-	$(".editPlaylistNameButtons").append(buttons);
-}
-
-function hideEditPlaylistName(){
-	$(".editPlaylistNameButtons").empty(); 
-	$("#inputPlaylistName").css("display", "none");
-	
-	$("#displayPlaylistName").css("display", "inline");
-	$(".playlistName").children('button').css("display", "inline");
-}
-
-function saveDescription(){ //description 수정
-	var playlistID = $('.selectedPlaylist').attr('playlistID');
-	var description = $("#inputDescription").val();
-
-	$.ajax({
-		'type' : 'post',
-		'url' : '${pageContext.request.contextPath}/playlist/updatePlaylistDesciption',
-		'data' :{
-				'playlistID' : playlistID,
-				'description' : description
-			},
-		success :function(data){
-			$("#displayDescription").text(data);
-			hideEditDescription();
-		}
-	});
-	
-}
-
-function hideEditDescription(){
-	$(".editDescriptionButtons").empty();
-	$("#inputDescription").css("display", "none");
-	
-	$("#displayDescription").css("display", "block");
-	$(".description").children('button').css("display", "block");
-}
-
-function showEditDescription(){ //playlist설명 수정
-	$("#displayDescription").css("display", "none");
-	$(".description").children('button').css("display", "none");
-
-	var value = $("#displayDescription").text();
-	if (value != "설명 없음")
-		$("#inputDescription").val(value);
-
-	$("#inputDescription").css("display", "block");
-	
-	var buttons = '<button onclick="hideEditDescription()" class="btn btn-info btn-sm">취소</button>' 
-					+ ' <button onclick="saveDescription()" class="btn btn-info btn-sm">확인</button>';
-	$(".editDescriptionButtons").append(buttons);
-	
+	else false;
 }
 
 function convertTime(timestamp){ //timestamp형식을 사용자에게 보여주기
@@ -611,11 +516,6 @@ function convertTotalLength(seconds){ //duration 변환
                                         교수
                                     </div>
                                 </div>
-                                <div class="widget-content-right header-user-info ml-3">
-                                    <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
-                                        <i class="fa text-white fa-calendar pr-1 pl-1"></i>
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>        
@@ -672,29 +572,6 @@ function convertTotalLength(seconds){ //duration 변환
                                 </div>
                                  <div class="page-title-actions">
                                  </div>
-                                 
-	                       	<%-- <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
-			                    <li class="nav-item">
-			                        <a role="tab" class="nav-link show active" id="tab-0" data-toggle="tab" href="#" aria-selected="true">
-			                            <span>내 Playlist</span>
-			                        </a>
-			                        
-			                    </li>
-			                    
-			                    <li class="nav-item">
-			                    	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
-                                    	<span>Youtube영상검색</span>
-                                	</a>	                        
-			                    </li>
-			                    <li class="nav-item">
-			                        <a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
-			                            <span>LMS영상검색</span>
-			                        </a>
-			                    </li>
-	               			 </ul>    --%>
-	               			 
-	               			 
-	               			 
                     	</div>
 
                         <div class="row">
