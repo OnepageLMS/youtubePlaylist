@@ -2,76 +2,66 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
-<html>
-<head>
-   <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Language" content="en">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
-    <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
-	<link href="./resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="./resources/js/main.js"></script>
-	
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
-</head>
+
+<link href="./resources/css/main.css" rel="stylesheet">
+<script type="text/javascript" src="./resources/js/main.js"></script>
+
+<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+
 <script>
 $(document).ready(function(){
-	var allMyClass = JSON.parse('${allMyClass}');
 
-	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
-		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
+	$.ajax({
+		type : 'post',
+		url : '${pageContext.request.contextPath}/allMyClass',
+		success : function(result){
+			var allMyClass = JSON.parse('${allMyClass}');
 
-		var html = '<li>'
-						+ '<a href="#">'
-							+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-							+ name
-							+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-						+ '</a>'
-						+ '<ul>'
-							+ '<li>'
+			for(var i=0; i<allMyClass.length; i++){
+				var name = allMyClass[i].className;
+				var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
+
+				var html = '<li>'
 								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '공지'
+									+ '<i class="metismenu-icon pe-7s-notebook"></i>'
+									+ name
+									+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
 								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="' + classContentURL + '">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '학습 컨텐츠'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '성적'
-								+ '</a>'
-							+ '</li>'
-						+ '</ul>'
-					+ '</li>';
-				
-		$('.sideClassList').append(html);
-	}
+								+ '<ul>'
+									+ '<li>'
+										+ '<a href="#">'
+											+ '<i class="metismenu-icon"></i>'
+											+ '공지'
+										+ '</a>'
+									+ '</li>'
+									+ '<li>'
+										+ '<a href="' + classContentURL + '">'
+											+ '<i class="metismenu-icon"></i>'
+											+ '학습 컨텐츠'
+										+ '</a>'
+									+ '</li>'
+									+ '<li>'
+										+ '<a href="#">'
+											+ '<i class="metismenu-icon"></i>'
+											+ '성적'
+										+ '</a>'
+									+ '</li>'
+								+ '</ul>'
+							+ '</li>';
+						
+				$('.sideClassList').append(html);
+			}
+		}, error:function(request,status,error){
+			console.log(error);
+		}
+	});
 });
 </script>
-<body>
+
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
@@ -212,17 +202,13 @@ $(document).ready(function(){
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading">
-                                  	<h4>ex. 내 Playlist</h4>
+                                  	
                                 </div>
                           </div>
                         </div>            
                        
                         <div class="row">
-                            <p>여기에 기존 웹페이지 내용 붙여넣기. div container-fluid 같은것 없어도 되고 기존 'row' 기준으로 !!!</p>
-                            <div>
-                            	<p>왼쪽의 내 수업은 임의의 계정으로 로그인 했을때를 가정했고, 컨트롤러에서 아래 부분 추가해주면 그 사람의 수업들 정보가 전달됨.</p>
-                            	<b> model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));</b>
-                            </div>
+                            
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
@@ -253,5 +239,4 @@ $(document).ready(function(){
               </div>
         </div>
     </div>
-</body>
-</html>
+

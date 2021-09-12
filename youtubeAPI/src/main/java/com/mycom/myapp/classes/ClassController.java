@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.sf.json.JSONArray;
 
@@ -22,6 +23,21 @@ public class ClassController {
 		
 		return "dashboard";
 	}	
+	
+	@RequestMapping(value = "/dashboard2", method = RequestMethod.GET)
+	public String t_dashboard(Model model) {
+		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+		
+		return "class/dashboard";
+	}	
+	
+	@ResponseBody
+	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//outer.jsp에서 ajax로 왼쪽 class list 가져오기
+	public void getAllMyClass(Model model) {
+		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+	}
 	
 	
 	@RequestMapping(value = "/addDays", method = RequestMethod.POST) //class contents 추가

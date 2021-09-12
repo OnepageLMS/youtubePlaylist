@@ -62,7 +62,7 @@ public class HomeController {
 		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
 		
-		return "t_example2";
+		return "t_example";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
