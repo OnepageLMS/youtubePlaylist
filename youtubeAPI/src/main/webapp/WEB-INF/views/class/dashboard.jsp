@@ -63,7 +63,7 @@ $(document).ready(function(){
 									+ '</div>'
 	                        	'</div>'
 	                        + '</div>';
-		//이건디자인만 다르게
+		//이건 디자인만 다르게
 		var border_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];
       	var dashboardCard2 = '<div class="col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card border ' + border_colors[i%(border_colors.length)] + '">'
