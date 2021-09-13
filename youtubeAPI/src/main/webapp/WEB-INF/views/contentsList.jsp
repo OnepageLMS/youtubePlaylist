@@ -149,6 +149,10 @@ $(document).ready(function(){
 			//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 			var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 
+			// (jw) endDate 넘겨주기 
+			//console.log("check here", endDate);
+			localStorage.setItem("endDate", endDate);
+
 			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
 			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "'";

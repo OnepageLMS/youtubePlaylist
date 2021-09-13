@@ -29,6 +29,8 @@
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
 </head>
 <script>
 	var playlistID = ${vo.playlistID};
@@ -96,6 +98,9 @@
 		})
 		
 		myThumbnail();
+
+		// endDate 설정하기
+		$("#endDate").after(localStorage.getItem("endDate"));
 	});
 	
 	
@@ -348,24 +353,33 @@
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading">
-                                  	<h4>ex. 내 Playlist</h4>
+                                  	<h4> ${vo.className} - 학습컨텐츠 </h4>
                                 </div>
                           </div>
                         </div>            
                        
                         <div class="row">
                             <div class="displayVideo col-12 col-xs-8 col-sm-8 col-md-8 col-lg-8">
-				        		<div class="videoTitle col-12 col-md-12 col-lg-12"></div>
-				        		
-				        		<div>
-					        		<div class="endDate" style="display:inline">
-										<p style="display:inline">마감일</p>
-									</div>
+				        		<div class="videoTitle col-12 col-md-12 col-lg-12">
+				        			<div class="card p-3">
+					        			<div class="row">
+					        				<div class="title col-9">
+												 <h5 class="mb-0"> ${vo.title} </h5>
+											</div>
 										
-									<div class="startDate" style="display:inline"> 
-										<p style="display:inline">공개일</p>
+							        		<div class="endDate text-right col-2" style="display:inline">
+												<p id="endDate" style="display:inline"> 마감일 : </p>
+											</div>
+											<!-- <div class="startDate" style="display:inline"> 
+												<p style="display:inline">공개일</p>
+											</div> -->
+											<div class="col-1"> 
+												<i class="text-right fas fa-ellipsis-v"></i> 
+											</div>
+					        			</div>
 									</div>
-								</div>
+				        		</div>
+				        		
 				        	 
 					        	<div id = "contentDetail" class="col-12 col-md-12 col-lg-12">
 					        	 	<div class="tab-content">
@@ -385,13 +399,10 @@
 										</div>
 									</div> -->
 									
-									<div class="title">
-										<p style="font-weight : bold">제목: ${vo.title}</p>
-									</div>
 									
-									<div class="description">
-										<p style="font-weight : bold">설명</p>
-										<p style="font-style : italic">${vo.description}</p>
+									
+									<div class="card description p-2">
+										<p>${vo.description}</p>
 									</div>
 									
 									

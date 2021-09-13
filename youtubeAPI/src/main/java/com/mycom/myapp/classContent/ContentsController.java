@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.playlist.PlaylistVO;
-import com.mycom.myapp.student.video.Stu_VideoVO;
 
 import net.sf.json.JSONArray;
 
@@ -45,6 +44,8 @@ public class ContentsController {
 	public String contentDetail(@PathVariable("id") int id, Model model) {
 		ClassContentsVO vo = classContentsService.getOneContent(id);
 		model.addAttribute("vo", vo);
+		System.out.println(vo.getClassID());
+		System.out.println(vo.getClassName());
 		System.out.println("???여기는?");
 		return "t_contentDetail";
 	}
