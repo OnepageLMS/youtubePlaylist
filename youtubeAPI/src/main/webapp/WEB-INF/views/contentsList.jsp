@@ -212,6 +212,7 @@ $(document).ready(function(){
 
 		}
 	}
+	
 
 	function showAddContentForm(day){
 		day -= 1; //임의로 조절... 

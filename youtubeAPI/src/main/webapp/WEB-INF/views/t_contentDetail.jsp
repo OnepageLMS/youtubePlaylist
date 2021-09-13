@@ -211,6 +211,7 @@
 			
 		return result;
 	}
+	
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -415,7 +416,18 @@
 					  				<div id="myBar"></div>
 								</div> -->
 								
-								<div id="classTitle"></div>
+								<div id="classTitle">
+									<div class="btn-group-toggle" data-toggle="buttons">  
+										<label class="btn btn-outline-primary">
+											<input type="radio" name="options" id="option1" autocomplete="off">
+											1
+										</label>
+										<label class="btn btn-outline-primary">
+											<input type="radio" name="options" id="option2" autocomplete="off">
+											2
+										</label>
+									</div>
+								</div>
 								<div id="total_runningtime"></div>
 								<div id="get_view"></div>
 					       	</div>
