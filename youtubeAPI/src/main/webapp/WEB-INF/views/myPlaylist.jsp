@@ -125,6 +125,7 @@ $(document).ready(function(){
 	}
 });
 
+//왼쪽 내 playlist 목록 가져오기
 function getAllMyPlaylist(email){
 	$.ajax({
 		type : 'post',
@@ -156,7 +157,7 @@ function getAllMyPlaylist(email){
 											+ '<button class="btn btn-secondary">검색</button>'
 										+ '</div>'
 									+ '</div>'
-									+ '<button class="btn btn-primary col-12 mb-2">+ Playlist 생성</button>'
+									+ '<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>'
 									+ '<div><ul class="allPlaylist list-group"></div></div>'
 								+ '</div>'
 							+ '</div>';
@@ -185,7 +186,7 @@ function showAddVideoButton(playlistID, playlistName){
 }
 
 // 여기서 얻은 playlistName, playlistID를 영상 추가 버튼에 넘겨주게 하기..? (21/09/06) 
-function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가져오기
+function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 가져오기
 	$.ajax({
 		type : 'post',
 		url : '${pageContext.request.contextPath}/playlist/getPlaylistInfo',
@@ -212,9 +213,9 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlistInfo 가�
 		    
 			var name = '<h4>'
 							+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
-							+ '<a href="javascript:void(0);" class="nav-link" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
+							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
 					+ '</h4>';
-		    $('.playlistName').append(name); //중간영역
+		    $('.playlistName').append(name); //중간영역 
 		    
 			var modDate = convertTime(result.modDate);
 			var totalVideoLength = convertTotalLength(result.totalVideoLength);
@@ -648,5 +649,77 @@ function convertTotalLength(seconds){ //duration 변환
         </div>
     </div>
     </div>
+   
+    <!-- add playlist modal -->
+    <div class="modal fade" id="addPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="addPlaylistModal" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="addPlaylistModalLabel">Playlist 생성</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	               <div class="position-relative form-group">
+	               		<label for="inputPlaylistName" class="">Playlist 이름</label>
+	               		<input name="playlistName" id="inputPlaylistName" type="text" class="form-control">
+	               </div>
+	               <div class="position-relative form-group">
+	               		<label for="inputPlaylistDescription" class="">설명</label>
+	               		<textarea name="description" id="inputPlaylistDescription" class="form-control"></textarea>
+	               </div>
+                   <div class="position-relative form-group">
+	               		<label for="inputPlaylistTag" class="">태그</label>
+	               		<input name="tag" id="inputPlaylistTag" placeholder="ex) spring, 웹개발초보" type="text" class="form-control">
+	               </div>
+                   <div class="custom-control custom-switch">
+			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
+			            <label class="custom-control-label" for="customSwitch1">LMS내 공개</label>
+			       </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="button" class="btn btn-primary">생성</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- edit playlist modal -->
+    <div class="modal fade" id="editPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="editPlaylistModal" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="editPlaylistModalLabel">Playlist 수정</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	               <div class="position-relative form-group">
+	               		<label for="editPlaylistName" class="">Playlist 이름</label>
+	               		<input name="playlistName" id="editPlaylistName" type="text" class="form-control">
+	               </div>
+	               <div class="position-relative form-group">
+	               		<label for="editPlaylistDescription" class="">설명</label>
+	               		<textarea name="description" id="editPlaylistDescription" class="form-control"></textarea>
+	               </div>
+                   <div class="position-relative form-group">
+	               		<label for="editPlaylistTag" class="">태그</label>
+	               		<input name="tag" id="editPlaylistTag" type="text" class="form-control">
+	               </div>
+                   <div class="custom-control custom-switch">
+			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
+			            <label class="custom-control-label" for="customSwitch2">LMS내 공개</label>
+			       </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="button" class="btn btn-primary">수정완료</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 </body>
 </html>

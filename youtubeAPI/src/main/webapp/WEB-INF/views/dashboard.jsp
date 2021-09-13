@@ -50,7 +50,7 @@ $(document).ready(function(){
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + bg_colors[i%(bg_colors.length)] + '">' 
 										+ name 
-										+ '<a href="javascript:void(0);" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
+										+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#setClassroomModal" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
@@ -69,7 +69,7 @@ $(document).ready(function(){
 								+ '<div class="mb-3 card border ' + border_colors[i%(border_colors.length)] + '">'
 									+ '<div class="card-header">' 
 										+ name 
-										+ '<a href="javascript:void(0);" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
+										+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#setClassroomModal" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
@@ -150,7 +150,7 @@ $(document).ready(function(){
                                 <div class="page-title-heading">
                                   	<h2>대시보드</h2>
                                 </div>
-                                <button class="btn btn-primary float-right">강의실 생성</button>
+                                <button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassroomModal">강의실 생성</button>
                           </div>
                         </div>            
                        
@@ -209,5 +209,101 @@ $(document).ready(function(){
               </div>
         </div>
     </div>
+    </div>
+
+	<!-- add classroom modal -->    
+	<div class="modal fade" id="addClassroomModal" tabindex="-1" role="dialog" aria-labelledby="addClassroomModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 생성</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	               <div class="position-relative form-group">
+	               		<label for="inputClassName" class="">강의실 이름</label>
+	               		<input name="className" id="inputClassName" type="text" class="form-control">
+	               </div>
+	               <div class="position-relative form-group">
+	               		<label for="iinputDescription" class="">강의실 설명</label>
+	               		<textarea name="description" id="inputDescription" class="form-control"></textarea>
+	               </div>
+	               <div class="form-row">
+	               		<div class="col-md-3">
+		                   <div class="position-relative form-group">
+		                   		<label for="inputClassDays" class="">강의 횟수</label>
+			               		<input name="days" placeholder="ex)12" id="inputClassDays" type="text" class="form-control">
+		                   </div>
+	                   	</div>
+	                   	
+						<div class="col-md-9">
+		                   <div class="position-relative form-group">
+			               		<label for="inputClassTag" class="">태그</label>
+			               		<input name="tag" placeholder="ex) 21-겨울캠프, 웹캠프" id="inputClassTag" type="text" class="form-control">
+			               </div>
+		               	</div>
+                   </div>
+                   <div class="custom-control custom-switch">
+			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
+			            <label class="custom-control-label" for="customSwitch1">강의실 활성화</label>
+			        </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="button" class="btn btn-primary">생성</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- setting classroom modal -->
+    <div class="modal fade" id="setClassroomModal" tabindex="-1" role="dialog" aria-labelledby="setClassroomModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 설정</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	               <div class="position-relative form-group">
+	               		<label for="editClassName" class="">강의실 이름</label>
+	               		<input name="className" id="editClassName" type="text" class="form-control">
+	               </div>
+	               <div class="position-relative form-group">
+	               		<label for="editDescription" class="">강의실 설명</label>
+	               		<textarea name="description" id="editDescription" class="form-control"></textarea>
+	               </div>
+	               <div class="form-row">
+	               		<div class="col-md-3">
+		                   <div class="position-relative form-group">
+		                   		<label for="editClassDays" class="">강의 횟수</label>
+			               		<input name="days" id="editClassDays" type="text" class="form-control">
+		                   </div>
+	                   	</div>
+	                   	
+						<div class="col-md-9">
+		                   <div class="position-relative form-group">
+			               		<label for="editClassTag" class="">태그</label>
+			               		<input name="tag" id="editClassTag" type="text" class="form-control">
+			               </div>
+		               	</div>
+                   </div>
+                    <div class="custom-control custom-switch">
+			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
+			            <label class="custom-control-label" for="customSwitch1">강의실 활성화</label>
+			        </div>
+	            </div>
+	            <div class="modal-footer">
+	            	<button type="button" class="btn btn-danger">강의실 삭제</button>
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="button" class="btn btn-primary">수정완료</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 </body>
 </html>
