@@ -22,8 +22,8 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+    <link href="./resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="./resources/js/main.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
@@ -40,7 +40,7 @@ $(document).ready(function(){
 		var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
 		var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 		var classNoticeURL = '#';
-		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + allMyClass[i].id + "'";
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
 		var classAttendanceURL = '#';
 		
 		var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
@@ -50,6 +50,7 @@ $(document).ready(function(){
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + bg_colors[i%(bg_colors.length)] + '">' 
 										+ name 
+										+ '<a href="javascript:void(0);" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
@@ -58,6 +59,7 @@ $(document).ready(function(){
 	                        		+ '</div>'
 	                        		+ '<div class="card-footer">'
 	                        			+ '<div class="widget-subheading col-6">시작일 ' + startDate + '</div>'
+										+ '<div class="widget-subheading col-6">참여자 **명</div>'
 									+ '</div>'
 	                        	'</div>'
 	                        + '</div>';
@@ -67,6 +69,7 @@ $(document).ready(function(){
 								+ '<div class="mb-3 card border ' + border_colors[i%(border_colors.length)] + '">'
 									+ '<div class="card-header">' 
 										+ name 
+										+ '<a href="javascript:void(0);" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
@@ -75,12 +78,14 @@ $(document).ready(function(){
 	                        		+ '</div>'
 	                        		+ '<div class="card-footer">'
 	                        			+ '<div class="widget-subheading col-6">시작일 ' + startDate + '</div>'
+										+ '<div class="widget-subheading col-6">참여자 **명</div>'
 									+ '</div>'
 	                        	'</div>'
 	                        + '</div>';
 		$('.classActive').append(dashboardCard);
 		$('.classInactive').append(dashboardCard2);
 	}
+
 });
 </script>
 <body>
@@ -128,7 +133,7 @@ $(document).ready(function(){
                                         홍길동
                                     </div>
                                     <div class="widget-subheading">
-                                        학생
+                                        교수
                                     </div>
                                 </div>
                             </div>
@@ -145,22 +150,35 @@ $(document).ready(function(){
                                 <div class="page-title-heading">
                                   	<h2>대시보드</h2>
                                 </div>
+                                <button class="btn btn-primary float-right">강의실 생성</button>
                           </div>
                         </div>            
                        
                         <div class="dashboardClass">
                         	<div class="classActive row col">
                         		<div class="col-12">
+                        			<h4>활성화된 강의실</h4>
 	                        		<div class="dropdown d-inline-block">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-			                               <button type="button" tabindex="0" class="dropdown-item">참가일순</button>
+			                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
 			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
 			                           </div>
 			                       </div>
                         		</div>
                         		
                         	</div>
+                            <div class="classInactive row col">
+                            	<div class="col-12">
+                        			<h4>비활성화된 강의실</h4>
+	                        		<div class="dropdown d-inline-block">
+			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
+			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+			                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
+			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
+			                           </div>
+			                       </div>
+                            </div>
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
@@ -190,7 +208,6 @@ $(document).ready(function(){
                     </div>    
               </div>
         </div>
-    </div>
     </div>
 </body>
 </html>

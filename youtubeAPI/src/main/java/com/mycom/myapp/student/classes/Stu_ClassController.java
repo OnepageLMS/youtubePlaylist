@@ -46,8 +46,9 @@ public class Stu_ClassController{
 	private Stu_VideoCheckService videoCheckService;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String studentDashboard() {
-
+	public String studentDashboard(Model model) {
+		String email = "yewon.lee@onepage.edu";	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(email)));
 		return "dashboard_Stu";
 	}
 	
