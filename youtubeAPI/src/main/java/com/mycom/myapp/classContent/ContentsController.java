@@ -42,10 +42,18 @@ public class ContentsController {
 
 	@RequestMapping(value = "/contentDetail/{id}", method = RequestMethod.GET) //class contents 전체 보여주기
 	public String contentDetail(@PathVariable("id") int id, Model model) {
+		//int classID = Integer.parseInt(request.getParameter("classID"));
+		
 		ClassContentsVO vo = classContentsService.getOneContent(id);
 		model.addAttribute("vo", vo);
 		System.out.println(vo.getClassID());
 		System.out.println(vo.getClassName());
+		
+//		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
+//		model.addAttribute("classInfo", classService.getClass(classID)); 
+//		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+		
 		System.out.println("???여기는?");
 		return "t_contentDetail";
 	}
