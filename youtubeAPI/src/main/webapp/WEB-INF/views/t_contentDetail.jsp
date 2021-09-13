@@ -211,6 +211,7 @@
 			
 		return result;
 	}
+	
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -295,11 +296,6 @@
                                     <div class="widget-subheading">
                                         교수 
                                     </div>
-                                </div>
-                                <div class="widget-content-right header-user-info ml-3">
-                                    <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
-                                        <i class="fa text-white fa-calendar pr-1 pl-1"></i>
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -415,7 +411,18 @@
 					  				<div id="myBar"></div>
 								</div> -->
 								
-								<div id="classTitle"></div>
+								<div id="classTitle">
+									<div class="btn-group-toggle" data-toggle="buttons">  
+										<label class="btn btn-outline-primary">
+											<input type="radio" name="options" id="option1" autocomplete="off">
+											1
+										</label>
+										<label class="btn btn-outline-primary">
+											<input type="radio" name="options" id="option2" autocomplete="off">
+											2
+										</label>
+									</div>
+								</div>
 								<div id="total_runningtime"></div>
 								<div id="get_view"></div>
 					       	</div>
