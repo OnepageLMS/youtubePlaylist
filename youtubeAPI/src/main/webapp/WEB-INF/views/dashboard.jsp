@@ -246,9 +246,9 @@ $(document).ready(function(){
 		               	</div>
                    </div>
                    <div class="custom-control custom-switch">
-						<label class="custom-control-label" for="inputClassActive">강의실 활성화</label>
-						<input type="checkbox" class="custom-control-input" name="active" id="inputClassActive" checked>
-                   </div>
+			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
+			            <label class="custom-control-label" for="customSwitch1">강의실 활성화</label>
+			        </div>
 	            </div>
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
@@ -292,11 +292,10 @@ $(document).ready(function(){
 			               </div>
 		               	</div>
                    </div>
-                   <div class="custom-control custom-switch">
-                   		<input type="checkbox" class="custom-control-input" name="active" id="editClassActive" checked>
-						<label class="custom-control-label" for="editClassActive">강의실 활성화</label>
-                   		
-                   </div>
+                    <div class="custom-control custom-switch">
+			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
+			            <label class="custom-control-label" for="customSwitch1">강의실 활성화</label>
+			        </div>
 	            </div>
 	            <div class="modal-footer">
 	            	<button type="button" class="btn btn-danger">강의실 삭제</button>
