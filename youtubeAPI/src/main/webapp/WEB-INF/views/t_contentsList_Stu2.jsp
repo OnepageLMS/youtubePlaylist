@@ -103,7 +103,9 @@ $(document).ready(function(){
 	var allContents = JSON.parse('${allContents}');
 	var weekContents = JSON.parse('${weekContents}');
 	playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해
-	playlist = JSON.parse('${playlist}'); //total 시간을 위해
+	//playlist = JSON.parse('${playlist}'); //total 시간을 위해
+	console.log("playlist : " + playlist);
+	console.log("playlist[0] : " + playlist[0]);
 	total_runningtime = 0;
 	
 	var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
