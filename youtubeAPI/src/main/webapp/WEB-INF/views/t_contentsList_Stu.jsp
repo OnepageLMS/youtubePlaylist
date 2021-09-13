@@ -296,12 +296,9 @@
                         
                         	<div class="col-sm-12">
 	                        	<ul class = "navi_ul">
-	                        		<li class = "navi_li"><a href="#target1">  1차시 </a></li>
-	                        		<li class = "navi_li"><a href="#target2">  2차시 </a></li>
-	                        		<li class = "navi_li"><a href="#target3">  3차시 </a></li>
-	                        		<li class = "navi_li"><a href="#target4">  4차시 </a></li>
-	                        		<li class = "navi_li"><a href="#target5">  5차시 </a></li>
-	                        	
+	                        		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+										<li class = "navi_li"><a href="#target${j}">  ${j} 차시 </a></li>
+									</c:forEach>
 	                        	</ul>
                         	</div>
                         

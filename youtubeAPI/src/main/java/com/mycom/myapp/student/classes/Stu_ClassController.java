@@ -95,6 +95,7 @@ public class Stu_ClassController{
 		//model.addAttribute("classID", classInfo);
 		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistcheckService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
+		System.out.println("~~playlistID : " +pvo.getPlaylistID());
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); 

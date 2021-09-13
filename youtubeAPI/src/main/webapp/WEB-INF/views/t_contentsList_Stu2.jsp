@@ -30,8 +30,29 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	
 	<style>
-		
-	
+		.navi_ul{
+			background-color: #FFDAB9;
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		.navi_li{
+			float : left;
+		}
+		.navi_li a{
+			display: block;
+			background-color: #FFDAB9;
+			color : #000000;
+			padding: 8px;
+			text-decoration: none;
+			text-align: center;
+			font-weight: bold;
+		}
+		.navi_li a:hover{
+			background-color : #CD853F;
+			color: white;
+		}
 	</style>
 </head>
 <script>
@@ -82,7 +103,9 @@ $(document).ready(function(){
 	var allContents = JSON.parse('${allContents}');
 	var weekContents = JSON.parse('${weekContents}');
 	playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해
-	playlist = JSON.parse('${playlist}'); //total 시간을 위해
+	//playlist = JSON.parse('${playlist}'); //total 시간을 위해
+	console.log("playlist : " + playlist);
+	console.log("playlist[0] : " + playlist[0]);
 	total_runningtime = 0;
 	
 	var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
@@ -219,7 +242,7 @@ function showLecture(playlistID, id, classInfo, idx){
 		  type : "post",
 		  async : false,
 		  data : {	
-			 playlistID : playlistID
+			 playlistID : playlistcheck[0].playlistID //contentsList에서 선택한 주차의 첫번째 영상 보여주기
 		  },
 		  success : function(data) {
 			 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다.
@@ -721,7 +744,7 @@ function collectPlayCount(data) {
                           </div>
                         </div>            
                        
-                        <div class="row">
+                        <div class="row">  	
                         
                         	<div id = "onepageLMS" class="col-8 col-md-8 col-lg-8">
 					        	 	<div class="tab-content">
@@ -734,12 +757,20 @@ function collectPlayCount(data) {
 					        </div>
 					        
 							<div class="contents col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
+									<div class="col-12 col-sm-12 col-md-12 col-lg-12 ">
+			                        	<ul class = "navi_ul">
+			                        		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+												<li class = "navi_li"><a href="#target${j}">${j} 차시</a></li>
+											</c:forEach>
+			                        	</ul>
+		                        	</div>
+                        	
 								<div id="accordion" class="accordion-wrapper mb-3">
 									<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 										<div class="card">
 											<div class="day  col-lg-12" day="${status.index}">
 												<div class="card-header col-lg-12">
-													<h4 style="display: inline; font-weight : bold; color : #3f6ad8">${j} 일 강의</h4>
+													<h4 style="display: inline; font-weight : bold; name= "target${j}">${j} 차시</h4>
 												</div>
 											</div>
 										</div>
