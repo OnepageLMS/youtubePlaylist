@@ -45,7 +45,7 @@ $(document).ready(function(){
 		
 		var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 							
-		var bg_colors = ["bg-primary", "bg-warning", "bg-success", "bg-secondary", "bg-info", "bg-focus", "bg-alternate", "bg-shadow"];
+		var bg_colors = ["bg-warning", "bg-success", "bg-info", "bg-focus", "bg-alternate", "bg-shadow"];
 		var dashboardCard = '<div class="col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + bg_colors[i%(bg_colors.length)] + '">' 
@@ -78,7 +78,6 @@ $(document).ready(function(){
 	                        		+ '</div>'
 	                        		+ '<div class="card-footer">'
 	                        			+ '<div class="widget-subheading col-6">시작일 ' + startDate + '</div>'
-										+ '<div class="widget-subheading col-6">참여자 **명</div>'
 									+ '</div>'
 	                        	'</div>'
 	                        + '</div>';
