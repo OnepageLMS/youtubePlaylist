@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 
 <link href="./resources/css/main.css" rel="stylesheet">
@@ -14,46 +15,51 @@
 
 <script>
 $(document).ready(function(){
-
 	$.ajax({
-		type : 'post',
-		url : '${pageContext.request.contextPath}/allMyClass',
+		type : 'get',
+		url : '${pageContext.request.contextPath}/allMyClassMap',
 		success : function(result){
-			var allMyClass = JSON.parse('${allMyClass}');
+			var allMyClass = result.allMyClass;
 
-			for(var i=0; i<allMyClass.length; i++){
-				var name = allMyClass[i].className;
-				var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
+			$('.sideClassList').empty();
 
-				var html = '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-									+ name
-									+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-								+ '</a>'
-								+ '<ul>'
-									+ '<li>'
-										+ '<a href="#">'
-											+ '<i class="metismenu-icon"></i>'
-											+ '공지'
-										+ '</a>'
-									+ '</li>'
-									+ '<li>'
-										+ '<a href="' + classContentURL + '">'
-											+ '<i class="metismenu-icon"></i>'
-											+ '학습 컨텐츠'
-										+ '</a>'
-									+ '</li>'
-									+ '<li>'
-										+ '<a href="#">'
-											+ '<i class="metismenu-icon"></i>'
-											+ '성적'
-										+ '</a>'
-									+ '</li>'
-								+ '</ul>'
-							+ '</li>';
-						
-				$('.sideClassList').append(html);
+			if (allMyClass == null)
+				 $('.sideClassList').append('생성된 강의실이 없습니다');
+			 
+			else {
+				$.each(allMyClass, function(index, value) {
+					var name = value.className;
+					var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + value.id;
+					var html = '<li>'
+									+ '<a href="#">'
+										+ '<i class="metismenu-icon pe-7s-notebook"></i>'
+										+ name
+										+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
+									+ '</a>'
+									+ '<ul>'
+										+ '<li>'
+											+ '<a href="#">'
+												+ '<i class="metismenu-icon"></i>'
+												+ '공지'
+											+ '</a>'
+										+ '</li>'
+										+ '<li>'
+											+ '<a href="' + classContentURL + '">'
+												+ '<i class="metismenu-icon"></i>'
+												+ '학습 컨텐츠'
+											+ '</a>'
+										+ '</li>'
+										+ '<li>'
+											+ '<a href="#">'
+												+ '<i class="metismenu-icon"></i>'
+												+ '성적'
+											+ '</a>'
+										+ '</li>'
+									+ '</ul>'
+								+ '</li>';
+							
+					$('.sideClassList').append(html);
+				});
 			}
 		}, error:function(request,status,error){
 			console.log(error);
@@ -104,7 +110,7 @@ $(document).ready(function(){
                     </div>
                     <ul class="header-menu nav">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link text-primary">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
                                 <i class="nav-link-icon fa fa-home"> </i>
                                 대시보드
                             </a>
@@ -125,7 +131,6 @@ $(document).ready(function(){
                                 <div class="widget-content-left">
                                     <div class="btn-group">
                                         <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
@@ -204,7 +209,7 @@ $(document).ready(function(){
                        
                         <div class="row">
                             
-                        </div>	<!-- 대시보드 안 box 끝 !! -->
+                        </div>	<!-- inner box 끝 !! -->
         
                     </div>
                     <div class="app-wrapper-footer">
