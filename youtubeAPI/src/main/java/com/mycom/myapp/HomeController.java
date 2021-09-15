@@ -39,8 +39,6 @@ public class HomeController {
 	static String refreshToken = "";
 
 	@Autowired
-	private youtubeProvider service;
-	@Autowired
 	PlaylistService playlistService;
 	@Autowired
 	VideoService videoService;
@@ -59,8 +57,8 @@ public class HomeController {
 	
 	@RequestMapping(value = "/example", method = RequestMethod.GET)
 	public String example(Model model) {
-		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
 		return "t_example";
 	}

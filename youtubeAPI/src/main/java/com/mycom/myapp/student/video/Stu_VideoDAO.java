@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.mycom.myapp.commons.VideoVO;
+
 @Repository
 public class Stu_VideoDAO {
 	
@@ -13,11 +15,11 @@ public class Stu_VideoDAO {
 	SqlSession sqlSession;
 	
 	
-	public Stu_VideoVO getVideo(int playlistID) {
+	public VideoVO getVideo(int playlistID) {
 		return sqlSession.selectOne("Stu_Video.getVideo", playlistID);
 	}
 	
-	public List<Stu_VideoVO> getVideoList(Stu_VideoVO vo) {
+	public List<VideoVO> getVideoList(VideoVO vo) {
 		//System.out.println("dao!");
 		return sqlSession.selectList("Stu_Video.getVideoList", vo);
 	}

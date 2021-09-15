@@ -13,15 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mycom.myapp.student.video.Stu_VideoService;
-import com.mycom.myapp.student.video.Stu_VideoVO;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
-import com.mycom.myapp.student.classContent.Stu_ClassContentsService;
-import com.mycom.myapp.student.classContent.Stu_ClassContentsVO;
-import com.mycom.myapp.student.classes.Stu_ClassesService;
+import com.mycom.myapp.commons.ClassContentVO;
+import com.mycom.myapp.commons.VideoVO;
+import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
 
@@ -34,7 +32,7 @@ public class Stu_ClassController{
 	private Stu_ClassesService classesService;
 	
 	@Autowired
-	private Stu_ClassContentsService classContentsService;
+	private Stu_ClassContentService classContentService;
 	
 	@Autowired
 	private Stu_VideoService videoService;
@@ -47,8 +45,8 @@ public class Stu_ClassController{
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String studentDashboard(Model model) {
-		String email = "yewon.lee@onepage.edu";	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(email)));
+		int studentID = 1;	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
 		return "dashboard_Stu";
 	}
 	
@@ -56,17 +54,19 @@ public class Stu_ClassController{
 	public String contentList(@PathVariable("classID") int classID, Model model) {
 		classID = 1;//임의로 1번 class 설정
 		
-		Stu_ClassContentsVO ccvo = new Stu_ClassContentsVO();
+		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(1); //임의로 1번 class 설정
-		model.addAttribute("classInfo", classesService.getClass(classID)); 
-		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentsService.getWeekClassContents(ccvo)));
+		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
+		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); 
+		//classContents테이블에서 가져온다. 해당 classID의 모든 것을 가져온다
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(ccvo))); 
+		//classContents테이블에서 가져온다. 해당 classID의 특정 playlistID를 가진 것을 가져온다. (주차별로 가져오는 느낌) - allContents있는데 이게 굳이 필요..?
 		
-		Stu_VideoVO pvo = new Stu_VideoVO();
-		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
+		VideoVO pvo = new VideoVO();
+		model.addAttribute("list", videoCheckService.getTime(176)); //studentID가 1로 설정되어있음
 	    model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
-		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); 
+		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
 		return "t_contentsList_Stu";
 	}
 	
@@ -75,9 +75,9 @@ public class Stu_ClassController{
 	public String contentDetail(@PathVariable("playlistID") int playlistID, @PathVariable("id") int id, @PathVariable("classInfo") int classInfo, Model model) {
 		//playlistID : playlistID, id : id (classPlaylist테이블의 id/ 혹시 playlistID가 같은 경우를 대비함), classInfo : classID
 		//VideoVO vo = new VideoVO();
-		Stu_VideoVO pvo = new Stu_VideoVO();
+		VideoVO pvo = new VideoVO();
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		Stu_ClassContentsVO ccvo = new Stu_ClassContentsVO();
+		ClassContentVO ccvo = new ClassContentVO();
 		
 		//pvo.setPlaylistID(playlistID);
 		ccvo.setPlaylistID(playlistID);
@@ -87,28 +87,28 @@ public class Stu_ClassController{
 		
 
 		model.addAttribute("classInfo", classesService.getClass(classInfo)); 
-		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classInfo)));
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentsService.getWeekClassContents(ccvo)));
+		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classInfo)));
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(ccvo)));
 		
 		//model.addAttribute("playlistID", playlistID);
 		//model.addAttribute("classPlaylistID", id);
 		//model.addAttribute("classID", classInfo);
 		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistcheckService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
-		System.out.println("~~playlistID : " +pvo.getPlaylistID());
+		System.out.println("~~playlistID : " + pvo.getPlaylistID());
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
-		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
-		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); 
+		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
+		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
 		return "t_contentsList_Stu2";
 		
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
-	public List<Stu_VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
+	public List<VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		//int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
-	    Stu_VideoVO vo = new Stu_VideoVO();
+	    VideoVO vo = new VideoVO();
 	    vo.setPlaylistID(playlistID);
 	    System.out.println("playlistID : " + playlistID);
 	    //Stu_VideoCheckVO vco = new Stu_VideoCheckVO();
@@ -121,10 +121,10 @@ public class Stu_ClassController{
 	
 	@ResponseBody
 	@RequestMapping(value = "/forClassInformation", method = RequestMethod.POST)
-	public Stu_ClassContentsVO ajaxTest(HttpServletRequest request, Model model) throws Exception {
+	public ClassContentVO ajaxTest(HttpServletRequest request, Model model) throws Exception {
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
 	   
-	    return classContentsService.getOneContent(classPlaylistID);
+	    return classContentService.getOneContent(classPlaylistID);
 	}
 	
 	@ResponseBody
@@ -148,7 +148,7 @@ public class Stu_ClassController{
 	
 	@ResponseBody
 	@RequestMapping(value = "/isExisted", method = RequestMethod.POST)
-	public String isExisted(HttpServletRequest request) throws Exception {
+	public String isExisted(HttpServletRequest request) throws Exception { //변수들 하나씩 가져오는거 아니고 json 형식으로 가져올 수 있도록
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
@@ -178,13 +178,12 @@ public class Stu_ClassController{
 	@ResponseBody
 	public Map<Double, Double> videoCheck(HttpServletRequest request) {
 		Map<Double, Double> map = new HashMap<Double, Double>();
-		String studentID = request.getParameter("studentID");
+		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		System.out.println(studentID + " / " + videoID);
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
-		
-		vo.setStudentEmail(studentID);
+		vo.setStudentID(studentID);
 		vo.setvideoID(videoID);
 		
 		if (videoCheckService.getTime(vo) != null) {
@@ -202,7 +201,7 @@ public class Stu_ClassController{
 	public List<Stu_VideoCheckVO> changeVideoOK(HttpServletRequest request) {
 		double lastTime = Double.parseDouble(request.getParameter("lastTime"));
 		double timer = Double.parseDouble(request.getParameter("timer"));
-		String studentID = request.getParameter("studentID");
+		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classID = Integer.parseInt(request.getParameter("classID"));
@@ -211,7 +210,7 @@ public class Stu_ClassController{
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);
-		vo.setStudentEmail(studentID);
+		vo.setStudentID(studentID);
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
 		vo.setPlaylistID(playlistID);
@@ -234,7 +233,7 @@ public class Stu_ClassController{
 	public String changeWatchOK(HttpServletRequest request) {
 		double lastTime = Double.parseDouble(request.getParameter("lastTime"));
 		double timer = Double.parseDouble(request.getParameter("timer"));
-		String studentID = request.getParameter("studentID");
+		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int watch = Integer.parseInt(request.getParameter("watch"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
@@ -244,7 +243,7 @@ public class Stu_ClassController{
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);
-		vo.setStudentEmail(studentID);
+		vo.setStudentID(studentID);
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
 		vo.setClassID(classID);
@@ -255,7 +254,7 @@ public class Stu_ClassController{
 		
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 		
-		pcvo.setStudentID(Integer.parseInt(studentID));
+		pcvo.setStudentID(studentID);
 		pcvo.setPlaylistID(playlistID);
 		pcvo.setVideoID(videoID);
 		pcvo.setClassPlaylistID(classPlaylistID);
@@ -280,9 +279,7 @@ public class Stu_ClassController{
 					System.out.println("값이 뭔디 3 " +pcvo.getStudentID() + " / " + pcvo.getPlaylistID() + " / " + pcvo.getVideoID());
 					playlistcheckService.updateTotalWatched(pcvo); //
 				}
-
 			}
-			
 		}
 			
 		return "redirect:/"; // 이것이 ajax 성공시 파라미터로 들어가는구만!!

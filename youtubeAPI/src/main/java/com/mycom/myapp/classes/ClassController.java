@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.commons.ClassesVO;
+
 import net.sf.json.JSONArray;
 
 @Controller
@@ -22,24 +24,24 @@ public class ClassController {
 	
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String dashboard(Model model) {
-		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
 		return "dashboard";
 	}	
 	
 	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//기존 내 class list 가져오기
 	public void getAllMyClass(Model model) {
-		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/allMyClassMap", method = RequestMethod.GET) //outer.jsp에서 ajax로 왼쪽 class list 가져오기
 	public Object getAllMyClass_Map(Model model) {
-		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
+		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
 		List<ClassesVO> classes = new ArrayList<ClassesVO>();
-		classes = classService.getAllMyClass(email);
+		classes = classService.getAllMyClass(instructorID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("allMyClass", classes);

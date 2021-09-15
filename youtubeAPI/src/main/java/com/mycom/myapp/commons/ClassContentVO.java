@@ -1,8 +1,8 @@
-package com.mycom.myapp.classContent;
+package com.mycom.myapp.commons;
 
 import java.util.Date;
 
-public class ClassContentsVO {
+public class ClassContentVO {
 	private int id;
 	private String title;
 	private String description;
@@ -111,4 +111,3 @@ public class ClassContentsVO {
 		this.className = className;
 	}
 }
-
