@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Stu_PlaylistCheck">
 	<insert id="insertPlaylist">
-		insert into lms_playlistCheck(studentID, playlistID, classPlaylistID, classID, totalVideo, totalWatched, regdate, updateWatched)
+		insert into lms_playlistCheck(studentID, playlistID, classPlaylistID, classID, totalVideo, totalWatched, updateWatched)
 		values
-		(#{studentID}, #{playlistID}, #{classPlaylistID}, #{classID}, #{totalVideo}, #{totalWatched}, #{regdate}, #{updateWatched})
+		(#{studentID}, #{playlistID}, #{classPlaylistID}, #{classID}, #{totalVideo}, #{totalWatched}, #{updateWatched})
 	</insert>
 	
 	<update id="updatePlaylist">
@@ -16,9 +16,9 @@
 	<update id="updateTotalWatched">
 		update lms_playlistCheck
 		set totalWatched = totalWatched + (select duration
-		from Video join videocheck on Video.id = videocheck.videoID
-		where studentID=#{studentID} AND lms_playlistCheck.playlistID=#{playlistID} AND videocheck.videoID=#{videoID} AND videocheck.watched=1 )
-		where playlistID=#{playlistID} AND classPlaylistID = #{classPlaylistID}
+		from lms_video join lms_videoCheck on lms_video.id = lms_videoCheck.videoID
+		where studentID=#{studentID} AND lms_playlistCheck.playlistID=#{playlistID} AND lms_videoCheck.videoID=#{videoID} AND lms_videoCheck.watched=1 )
+		where playlistID=#{playlistID} AND classContentID = #{classContentID}
 	</update>
 	
 	<delete id="deletePlaylist">
@@ -39,7 +39,7 @@
 	<select id="getPlaylistByPlaylistID" resultType="PlaylistCheckVO">
 		select * 
 		from lms_playlistCheck
-		where playlistID=#{playlistID} AND classPlaylistID = #{classPlaylistID}
+		where playlistID=#{playlistID} AND classContentID = #{classContentID}
 	</select>
 	
 	<select id="getAllPlaylist" resultType="PlaylistCheckVO">

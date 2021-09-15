@@ -1,10 +1,10 @@
-package com.mycom.myapp.video;
+package com.mycom.myapp.commons;
 
 import java.util.Date;
 import java.util.List;
 
 public class VideoVO {
-	private int id;	//video id 
+	private int id;	
 	private String youtubeID; 
 	private String title;
 	private String newTitle;
@@ -17,6 +17,12 @@ public class VideoVO {
 	private List<Integer> playlistArr;
 	private double maxLength;
 	private float duration;
+	
+	//아래는 Student Video
+	private int classPlaylistID;
+	private double lastTime;
+	private double timer;
+	private int watched;
 	
 	public int getId() {
 		return id;
@@ -96,5 +102,29 @@ public class VideoVO {
 	public void setDuration(float duration) {
 		this.duration = duration;
 	}
-
+	
+	public int getClassPlaylistID() {
+		return classPlaylistID;
+	}
+	public void setClassPlaylistID(int classPlaylistID) {
+		this.classPlaylistID = classPlaylistID;
+	}
+	public double getLastTime() {
+		return lastTime;
+	}
+	public void setLastTime(double lastTime) {
+		this.lastTime = lastTime;
+	}
+	public double getTimer() {
+		return timer;
+	}
+	public void setTimer(double timer) {
+		this.timer = timer;
+	}
+	public int getWatched() {
+		return watched;
+	}
+	public void setWatched(int watched) {
+		this.watched = watched;
+	}
 }

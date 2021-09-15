@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.PlaylistVO;
 
 import net.sf.json.JSONArray;
 
@@ -31,9 +32,9 @@ public class PlaylistController {
 	
 	//myplaylist(내 playlist) 새창 띄우기
 	@RequestMapping(value = "/myPlaylist/{creatorEmail}", method = RequestMethod.GET) 
-	public String selectPlaylist(@PathVariable("creatorEmail") String creatorEmail, Model model) {
-		model.addAttribute("email", creatorEmail);
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(creatorEmail)));
+	public String selectPlaylist(@PathVariable("instructorID") int instructorID, Model model) {
+		model.addAttribute("email", instructorID);
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		return "myPlaylist";
 	}
 	
@@ -50,8 +51,8 @@ public class PlaylistController {
 //	}
 	
 	@RequestMapping(value= "/addPlaylistPopup/{creatorEmail}", method= RequestMethod.GET)
-	public String popup(@PathVariable("creatorEmail") String creatorEmail, Model model) {
-		model.addAttribute("email", creatorEmail);
+	public String popup(@PathVariable("instructorID") int instructorID, Model model) {
+		model.addAttribute("email", instructorID);	//instructorID로 이름 바꾸기!!!!!! (09/15)
 		return "addPlaylistPopup";
 	}
 	
@@ -60,7 +61,7 @@ public class PlaylistController {
 	public void addPlaylist(HttpServletRequest request) {
 		
 		PlaylistVO vo = new PlaylistVO();
-		vo.setCreatorEmail(request.getParameter("creator"));
+		vo.setInstructorID(Integer.parseInt(request.getParameter("creator")));	//이부분 creator->instructorID로 변환하기!! (9/15)
 		vo.setPlaylistName(request.getParameter("name"));
 		vo.setDescription(request.getParameter("description"));
 		vo.setSeq(playlistService.getCount()); //새로운 playlist의 seq가 될 숫자 구하기
@@ -74,9 +75,9 @@ public class PlaylistController {
 
 	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
 	@ResponseBody
-	public Object getAllPlaylist(@RequestParam(value = "email") String creatorEmail) {
+	public Object getAllPlaylist(@RequestParam(value = "instructorID") int instructorID) {
 		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
-		playlists = playlistService.getAllMyPlaylist(creatorEmail); //playlist의 모든 video 가져오기
+		playlists = playlistService.getAllMyPlaylist(instructorID); //playlist의 모든 video 가져오기
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("allMyPlaylist", playlists);
@@ -112,7 +113,7 @@ public class PlaylistController {
 	public String updatePlaylistName(@RequestParam(value = "playlistID") String playlistID, 
 												@RequestParam(value = "name") String name) {
 		PlaylistVO vo = new PlaylistVO();
-		vo.setPlaylistID(Integer.parseInt(playlistID));
+		vo.setId(Integer.parseInt(playlistID));
 		vo.setPlaylistName(name);
 		
 		if (playlistService.updatePlaylistName(vo) == 0)
@@ -129,7 +130,7 @@ public class PlaylistController {
 	public String updatePlaylistDesciption(@RequestParam(value = "playlistID") String playlistID, 
 												@RequestParam(value = "description") String description) {
 		PlaylistVO vo = new PlaylistVO();
-		vo.setPlaylistID(Integer.parseInt(playlistID));
+		vo.setId(Integer.parseInt(playlistID));
 		vo.setDescription(description);
 		
 		if (playlistService.updateDescription(vo) == 0)

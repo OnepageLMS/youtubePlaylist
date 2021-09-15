@@ -10,7 +10,7 @@ public class Stu_VideoCheckVO {
 	private int classID;
 	private int playlistID;
 	private int classPlaylistID;
-	private String studentEmail;
+	private int studentID;	//새로추가
 	private double lastTime;
 	private double timer;
 	private int watched;
@@ -52,14 +52,12 @@ public class Stu_VideoCheckVO {
 	public void setClassPlaylistID(int classPlaylistID) {
 		this.classPlaylistID = classPlaylistID;
 	}
-	
-	public String getStudentEmail() {
-		return studentEmail;
+	public int getStudentID() {
+		return studentID;
 	}
-	public void setStudentEmail(String studentEmail) {
-		this.studentEmail = studentEmail;
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
 	}
-	
 	public double getLastTime() {
 		return lastTime;
 	}

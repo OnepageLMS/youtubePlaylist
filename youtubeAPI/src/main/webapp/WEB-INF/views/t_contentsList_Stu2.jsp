@@ -56,12 +56,13 @@
 	</style>
 </head>
 <script>
-var studentEmail = ${list.studentEmail};
-var classPlaylistID = 0;
+var studentEmail = ${list.studentID};
+//var classPlaylistID = 0;
 var classID;
 var playlistSameCheck;
 var ori_index =0;
 //var classPlaylistID = ${classPlaylistID};
+var classContentID = 1;
 
 $(document).ready(function(){
 	//var allMyClass = JSON.parse('${allMyClass}');
@@ -100,12 +101,9 @@ $(document).ready(function(){
 				
 		$('.sideClassList').append(html);
 	}*/
-	var allContents = JSON.parse('${allContents}');
-	var weekContents = JSON.parse('${weekContents}');
-	playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해
+	var weekContents = JSON.parse('${weekContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
+	playlistcheck = JSON.parse('${playlistCheck}'); 
 	playlist = JSON.parse('${playlist}'); //total 시간을 위해
-	console.log("playlist : " + playlist);
-	console.log("playlist[0] : " + playlist[0]);
 	total_runningtime = 0;
 	
 	var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
@@ -115,7 +113,7 @@ $(document).ready(function(){
 	var index = 0;
  	for(var i=0; i<weekContents.length; i++){
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
-		var day = weekContents[i].day;
+		var day = weekContents[i].days;
 		var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
 			
 		var result_date = convertTotalLength(date);
@@ -123,7 +121,7 @@ $(document).ready(function(){
 		var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 			
 		var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+  "'";
-		classPlaylistID = weekContents[i].id;
+		classContentID = weekContents[i].id; // classContent의 id //여기 수정
 		//console.log("classPlaylistID : " + classPlaylistID);
 		var content = $('.day:eq(' + day + ')');
 			
@@ -139,6 +137,8 @@ $(document).ready(function(){
 			var showing = 'class="collapse"';
 		}
 		console.log("area-labelledby " +area_labelledby);
+		
+		//weekContents는 하나의 playlistID를 가지고 있는거니까 당연히 이렇게 나오지...
 		content.append("<div id=\'heading" +(i+1)+ "\' >"
 	               + '<button type="button" onclick="showLecture('
  					+ weekContents[i].playlistID  + ',' + weekContents[i].id + ',' + classInfo + ',' + (i+1) +')"'
@@ -223,15 +223,6 @@ function convertTotalLength(seconds){
 	return result;
 }
 
-function toggle(e){
-	var idx = $(e).attr('week');
-	console.log("idx : " + idx);
-	$(e).on("click", function(){
-		$('.week:eq(' + (idx-1) + ')').toggle("1000", "linear");
-	});
-}
-
-
 var n ;
 function showLecture(playlistID, id, classInfo, idx){
 	n = idx;
@@ -289,11 +280,8 @@ function showLecture(playlistID, id, classInfo, idx){
 	myThumbnail(id, idx);
 }
 
-function myThumbnail(classPlaylistID, idx){
-	//console.log("thumbnail index : " + index + " idx : " + idx);
-
+function myThumbnail(classContentID, idx){
 	var className = '#get_view' + idx;
-	//console.log("className" + className + " / " + playlist_length);
 	$(className).empty();
 	
 	for(var i=0; i<playlist_length; i++){
@@ -313,11 +301,10 @@ function myThumbnail(classPlaylistID, idx){
 		}
 	
 		var completed ='';
-		if(playlist[i].watched == 1 && playlist[i].classPlaylistID == classPlaylistID){
+		if(playlist[i].watched == 1 && playlist[i].classContentID == classContentID){
 			completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
 		}
 		
-		//console.log("start" + className + " / " + thumbnail);
 		$(className).append( //stu//stu
 					'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
 					'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
@@ -332,7 +319,6 @@ function myThumbnail(classPlaylistID, idx){
 					+ '</div>'
 					+ '<div class="videoLine"></div>'
 		);
-		//console.log("end");
 		
 		total_runningtime += parseInt(playlist[i].duration);
 		
@@ -360,11 +346,11 @@ function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 
 			'url' : "../../../changevideo",
 			'data' : {
 						lastTime : 30, //player.getCurrentTime(),
-						studentID : studentEmail,
-						videoID : lastVideo,
-						classID : classID,
+						studentID : studentEmail, //studentEmail
+						videoID : lastVideo, //playlist[0].id; 원래 비디오 id
+						classID : classID, //classID
 						playlistID : playlist[ori_index].playlistID,
-						classPlaylistID : classPlaylistID,
+						classPlaylistID : classContentID,
 						timer : 0
 			},
 			success : function(data){
@@ -406,25 +392,24 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 var player;
 
-//function onYoutube(){
-	function onYouTubeIframeAPIReady() { 
-		//var playerID = 'onepageLMS' + n;
+function onYouTubeIframeAPIReady() { 
+	//var playerID = 'onepageLMS' + n;
 		
-		player = new YT.Player('onepageLMS', {
-	        height: '480',            // <iframe> 태그 지정시 필요없음
-	        width: '854',             // <iframe> 태그 지정시 필요없음
-	        videoId: playlist[0].youtubeID,
-	        playerVars: {             // <iframe> 태그 지정시 필요없음
-	            controls: '2'
-	        },
-	        events: {
-	            'onReady': onPlayerReady,               // 플레이어 로드가 완료되고 API 호출을 받을 준비가 될 때마다 실행
-	            'onStateChange': onPlayerStateChange    // 플레이어의 상태가 변경될 때마다 실행
-	        }
-	    });
+	player = new YT.Player('onepageLMS', {
+	       height: '480',            // <iframe> 태그 지정시 필요없음
+	       width: '854',             // <iframe> 태그 지정시 필요없음
+	       videoId: playlist[0].youtubeID,
+	       playerVars: {             // <iframe> 태그 지정시 필요없음
+	           controls: '2'
+	       },
+	       events: {
+	           'onReady': onPlayerReady,               // 플레이어 로드가 완료되고 API 호출을 받을 준비가 될 때마다 실행
+	           'onStateChange': onPlayerStateChange    // 플레이어의 상태가 변경될 때마다 실행
+	       }
+	   });
 	    
-	}
-//}
+}
+
 
 function onPlayerReady(event) { 
 	//이거는 플레이리스트의 첫번째 영상이 실행되면서 진행되는 코드 (영상클릭없이 페이지 딱 처음 로딩되었을 )
@@ -540,7 +525,7 @@ function onPlayerStateChange(event) {
 						timer : time + parseInt(playlist[ori_index].timer), //timer도 업데이트를 위해 필요
 						watch : 1, //영상을 다 보았으니 시청여부는 1로(출석) 업데이트!
 						playlistID : playlist[0].playlistID,
-						classPlaylistID : classPlaylistID,
+						classPlaylistID : classContentID,
 						classID : classID
 			},
 			

@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="Stu_VideoCheck">
+<mapper namespace="Stu_videoCheck">
 	<insert id="insertTime">
-		insert into videocheck (id, videoID, classID, playlistID, classPlaylistID, studentEmail ,lastTime, timer, watched)
+		insert into lms_videoCheck (id, videoID, classID, playlistID, classContentID, studentID ,lastTime, timer, watched)
 		values
-		(#{id}, #{videoID},  #{classID}, #{playlistID}, #{classPlaylistID}, #{studentEmail}, #{lastTime}, #{timer}, #{watched})
+		(#{id}, #{videoID},  #{classID}, #{playlistID}, #{classContentID}, #{studentID}, #{lastTime}, #{timer}, #{watched})
 	</insert>
 	
 	<update id="updateTime">
-		update videocheck
+		update lms_videoCheck
 		set lastTime=#{lastTime}, timer=#{timer}
-		where studentEmail=#{studentEmail} AND videoID=#{videoID}
+		where studentID=#{studentID} AND videoID=#{videoID}
 	</update>
 	
 	<update id="updateWatch">
-		update videocheck
+		update lms_videoCheck
 		set lastTime=#{lastTime}, timer=#{timer}, watched=#{watched}
-		where studentEmail=#{studentEmail} AND videoID=#{videoID}
+		where studentID=#{studentID} AND videoID=#{videoID}
 	</update>
 	
 	<delete id="deleteTime">
-		delete from videocheck where id=#{id}
+		delete from lms_videoCheck where id=#{id}
 	</delete>
 	
-	<select id="getTime" resultType="VideoCheckVO">
+	<select id="getTime" resultType="videoCheckVO">
 		select * 
-		from videocheck 
+		from lms_videoCheck 
 		where id=#{id}
 	</select>
 	
-	<select id="getTime2" resultType="VideoCheckVO">
+	<select id="getTime2" resultType="videoCheckVO">
 		select *
-		from videocheck
-		where studentEmail=#{studentEmail} AND videoID=#{videoID}
+		from lms_videoCheck
+		where studentID=#{studentID} AND videoID=#{videoID}
 	</select>
 	
-	<select id="getTimeList" resultType="VideoCheckVO">
+	<select id="getTimeList" resultType="videoCheckVO">
 		SELECT * 
-		FROM videocheck order
+		FROM lms_videoCheck order
 		by id desc
 	</select>
 	

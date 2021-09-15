@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ClassContents">
+<mapper namespace="ClassContent">
 	<insert id="insertContent">
-		insert into lms_classPlaylist (title, description, classID, playlistID, day, daySeq, startDate, endDate)
+		insert into lms_classContent (title, description, classID, playlistID, day, daySeq, startDate, endDate)
 		values (#{title}, #{description}, #{classID}, #{playlistID}, #{day}, #{daySeq}, #{startDate}, #{endDate})
 	</insert>
 	
 	<select id="getDaySeq" resultType="int">
-		select count(*) from lms_classPlaylist 
-		where classID=#{classID} and day=#{days}
+		select count(*) from lms_classContent
+		where classID=#{classID} and day=#{day}
 	</select>
 	
 	<update id="updateContent">
-		update lms_classPlaylist
+		update lms_classContent
 		set title=#{title}, description=#{description}, startDate=#{startDate}, endDate=#{endDate}, playlistID=#{playlistID} 
 		where id=#{id}
 	</update>
 	
 	<delete id="deleteContent">
-		delete from lms_classPlaylist where id=#{id}
+		delete from lms_classContent where id=#{id}
 	</delete>
 	
 	<select id="getOneContent" resultType="classContent">
-		select * from lms_classPlaylist join lms_playlist on lms_classPlaylist.playlistID = lms_playlist.playlistID 
-		inner join lms_class on lms_class.id = lms_classPlaylist.classID
-		where lms_classPlaylist.id=#{id}
+		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.playlistID 
+		inner join lms_class on lms_class.id = lms_classContent.classID
+		where lms_classContent.id=#{id}
 	</select>
 	
 	<select id="getAllClassContents" resultType="classContent">
-		select * from lms_classPlaylist join lms_playlist on lms_classPlaylist.playlistID = lms_playlist.playlistID
+		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.playlistID
 		where classID=#{classID} order by day and daySeq
 	</select>
 

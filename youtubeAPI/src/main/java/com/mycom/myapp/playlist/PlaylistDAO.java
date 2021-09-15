@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.mycom.myapp.commons.PlaylistVO;
+
 @Repository
 public class PlaylistDAO {
 	
@@ -37,13 +39,13 @@ public class PlaylistDAO {
 		return result;
 	}
 	
-	public int deletePlaylist(int playlistID) {
-		int result = sqlSession.delete("Playlist.deletePlaylist", playlistID);
+	public int deletePlaylist(int id) {
+		int result = sqlSession.delete("Playlist.deletePlaylist", id);
 		return result;
 	}
 	
-	public PlaylistVO getPlaylist(int playlistID) {
-		PlaylistVO result = sqlSession.selectOne("Playlist.getPlaylist", playlistID);
+	public PlaylistVO getPlaylist(int id) {
+		PlaylistVO result = sqlSession.selectOne("Playlist.getPlaylist", id);
 		return result;
 	}
 	
@@ -52,8 +54,8 @@ public class PlaylistDAO {
 		return result;
 	}
 	
-	public List<PlaylistVO> getAllMyPlaylist(String creatorEmail){ //내가 만든 playlist만 가져올 때
-		List<PlaylistVO> result = sqlSession.selectList("Playlist.getAllMyPlaylist", creatorEmail);
+	public List<PlaylistVO> getAllMyPlaylist(int instructorID){ //내가 만든 playlist만 가져올 때
+		List<PlaylistVO> result = sqlSession.selectList("Playlist.getAllMyPlaylist", instructorID);
 		return result;
 	}
 	
@@ -62,12 +64,12 @@ public class PlaylistDAO {
 		return result;
 	}
 	
-	public int updateCount(int playlistID) { //totalVideo 업데이트
-		int result = sqlSession.update("Playlist.updateCount", playlistID);
+	public int updateCount(int id) { //totalVideo 업데이트
+		int result = sqlSession.update("Playlist.updateCount", id);
 		return result;
 	}
-	public int updateTotalVideoLength(int playlistID) {
-		int result = sqlSession.update("Playlist.updateTotalVideoLength", playlistID);
+	public int updateTotalVideoLength(int id) {
+		int result = sqlSession.update("Playlist.updateTotalVideoLength", id);
 		return result;
 	}
 	

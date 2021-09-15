@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Playlist">
 	<insert id="addPlaylist">
-		insert into lms_playlist (playlistName, creatorEmail, seq, totalVideoLength, description)
-		values (#{playlistName}, #{creatorEmail}, #{seq}, #{totalVideoLength}, #{description})
+		insert into lms_playlist (playlistName, instructorID, seq, totalVideoLength, description)
+		values (#{playlistName}, #{instructorID}, #{seq}, #{totalVideoLength}, #{description})
 	</insert>
 	
 	<insert id="updateThumbnailID">
@@ -43,7 +43,7 @@
 	
 	<select id="getAllMyPlaylist" resultType="playlist"> 
 		select * from lms_playlist 
-		where creatorEmail=#{creatorEmail}
+		where instructorID=#{instructorID}
 		order by seq desc
 	</select>
 	
@@ -68,7 +68,7 @@
 	</update>
 	
 	<select id="getPlaylistForInstructor" resultType="playlist"> 
-		select * from lms_playlist join Video on lms_playlist.playlistID = Video.playlistID
+		select * from lms_playlist join lms_video on lms_playlist.playlistID = Video.playlistID
 		where lms_playlist.playlistID=#{playlistID}
 	</select>
 	

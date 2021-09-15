@@ -13,30 +13,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.playlist.PlaylistService;
-import com.mycom.myapp.playlist.PlaylistVO;
+import com.mycom.myapp.commons.PlaylistVO;
 
 import net.sf.json.JSONArray;
 
 @Controller
 @RequestMapping(value="/class")
-public class ContentsController {
-	
+public class ClassContentController {
 	@Autowired
 	private ClassesService classService;
 	@Autowired
-	private ClassContentsService classContentsService;
+	private ClassContentService classContentService;
 	@Autowired
 	private PlaylistService playlistService;
   
 	private String email = "yewon.lee@onepage.edu";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
-
+	private int instructorID = 1;
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classID") int classID, Model model) {
 		model.addAttribute("classInfo", classService.getClass(classID)); 
-		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		return "contentsList";
 	}
 
@@ -44,15 +44,15 @@ public class ContentsController {
 	public String contentDetail(@PathVariable("id") int id, Model model) {
 		//int classID = Integer.parseInt(request.getParameter("classID"));
 		
-		ClassContentsVO vo = classContentsService.getOneContent(id);
+		ClassContentVO vo = classContentService.getOneContent(id);
 		model.addAttribute("vo", vo);
 		System.out.println(vo.getClassID());
 		System.out.println(vo.getClassName());
 		
 //		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
 //		model.addAttribute("classInfo", classService.getClass(classID)); 
-//		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+//		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContents(classID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
 		System.out.println("???여기는?");
 		return "t_contentDetail";
@@ -65,7 +65,7 @@ public class ContentsController {
 		System.out.println("here!");
 		//playlistmapper를 통해 playlistID에 맞는 영상들을 가져와서 리턴해주는역할을 해야한ㄷㅏ. 
 		PlaylistVO vo = new PlaylistVO();
-	    vo.setPlaylistID(playlistID);
+	    vo.setId(playlistID);
 	    
 	    return playlistService.getPlaylistForInstructor(vo);
 	}
@@ -73,7 +73,7 @@ public class ContentsController {
 	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //사용안함
 	public String addContent(@PathVariable("classID") int classID, @PathVariable("day") int day, Model model) {
 		
-		ClassContentsVO vo = new ClassContentsVO();
+		ClassContentVO vo = new ClassContentVO();
 		vo.setClassID(classID);
 		vo.setDay(day);
 		model.addAttribute("content", vo);
@@ -82,11 +82,11 @@ public class ContentsController {
 	}
 	
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
-	public String addContentOK(ClassContentsVO vo) {
+	public String addContentOK(ClassContentVO vo) {
 		int classID = vo.getClassID();
-		vo.setDaySeq(classContentsService.getDaySeq(vo));
+		vo.setDaySeq(classContentService.getDaySeq(vo));
 		
-		if (classContentsService.insertContent(vo) == 0)
+		if (classContentService.insertContent(vo) == 0)
 			System.out.println("classContents 추가 실패!");
 		else
 			System.out.println("classContents 추가 성공!");
@@ -96,32 +96,30 @@ public class ContentsController {
 	
 	@RequestMapping(value = "/editContent/{id}", method = RequestMethod.GET)
 	public String editContent(@PathVariable("id") int id, Model model) {
-		ClassContentsVO vo = classContentsService.getOneContent(id);
+		ClassContentVO vo = classContentService.getOneContent(id);
 		model.addAttribute("vo", vo);
 		return "editContent";
 	}
 	
 	@RequestMapping(value = "/editContentOK", method = RequestMethod.POST)
-	public String editContentOK(ClassContentsVO vo) {
+	public String editContentOK(ClassContentVO vo) {
 		int classID = vo.getClassID();
 		
-		if (classContentsService.updateContent(vo) == 0)
-			System.out.println("classContents 수정 실패!");
+		if (classContentService.updateContent(vo) == 0)
+			System.out.println("classContent 수정 실패!");
 		else
-			System.out.println("classContents 수정 성공!");
+			System.out.println("classContent 수정 성공!");
 		
 		return "redirect:contentList/" + classID;
 	}
 	
 	@RequestMapping(value = "/deleteContent/{classID}/{id}", method = RequestMethod.GET)
 	public String deleteContent(@PathVariable("classID") int classID, @PathVariable("id") int id) {
-		if (classContentsService.deleteContent(id) == 0)
-			System.out.println("classContents 삭제 실패!");
+		if (classContentService.deleteContent(id) == 0)
+			System.out.println("classContent 삭제 실패!");
 		else
-			System.out.println("classContents 삭제 성공!");
+			System.out.println("classContent 삭제 성공!");
 		
 		return "redirect:../../contentList/" + classID;
 	}
-	
 }
-
