@@ -1,9 +1,13 @@
 package com.mycom.myapp.classes;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,19 +28,22 @@ public class ClassController {
 		return "dashboard";
 	}	
 	
-	@RequestMapping(value = "/dashboard2", method = RequestMethod.GET)
-	public String t_dashboard(Model model) {
-		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
-		
-		return "class/dashboard";
-	}	
-	
-	@ResponseBody
-	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//outer.jsp에서 ajax로 왼쪽 class list 가져오기
+	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//기존 내 class list 가져오기
 	public void getAllMyClass(Model model) {
 		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(email)));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/allMyClassMap", method = RequestMethod.GET) //outer.jsp에서 ajax로 왼쪽 class list 가져오기
+	public Object getAllMyClass_Map(Model model) {
+		String email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
+		List<ClassesVO> classes = new ArrayList<ClassesVO>();
+		classes = classService.getAllMyClass(email);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("allMyClass", classes);
+		return map;
 	}
 	
 	
