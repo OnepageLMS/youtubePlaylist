@@ -58,9 +58,11 @@ public class Stu_ClassController{
 		
 		Stu_ClassContentsVO ccvo = new Stu_ClassContentsVO();
 		ccvo.setClassID(1); //임의로 1번 class 설정
-		model.addAttribute("classInfo", classesService.getClass(classID)); 
-		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID)));
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentsService.getWeekClassContents(ccvo)));
+		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
+		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classID))); 
+		//classContents테이블에서 가져온다. 해당 classID의 모든 것을 가져온다
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentsService.getWeekClassContents(ccvo))); 
+		//classContents테이블에서 가져온다. 해당 classID의 특정 playlistID를 가진 것을 가져온다. (주차별로 가져오는 느낌) - allContents있는데 이게 굳이 필요..?
 		
 		Stu_VideoVO pvo = new Stu_VideoVO();
 		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
@@ -148,7 +150,7 @@ public class Stu_ClassController{
 	
 	@ResponseBody
 	@RequestMapping(value = "/isExisted", method = RequestMethod.POST)
-	public String isExisted(HttpServletRequest request) throws Exception {
+	public String isExisted(HttpServletRequest request) throws Exception { //변수들 하나씩 가져오는거 아니고 json 형식으로 가져올 수 있도록
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));

@@ -63,17 +63,17 @@
 	
 	$(document).ready(function(){
 		
-		var allContents = JSON.parse('${allContents}');
+		//var allContents = JSON.parse('${allContents}'); //안쓰고 있음
 		var weekContents = JSON.parse('${weekContents}');
-		playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해
-		playlist = JSON.parse('${playlist}'); //total 시간을 위해
+		//playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해 //안쓰고있음
+		playlist = JSON.parse('${playlist}'); //total 시간을 위해 //playlist테이블에서 직접 가져오면 되지 않을까 ??
 		total_runningtime = 0;
 		
 		var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
 		
 	 		for(var i=0; i<weekContents.length; i++){
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
-				var day = weekContents[i].day;
+				var day = weekContents[i].days;
 				var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
 				
 				var result_date = convertTotalLength(date);
@@ -82,8 +82,6 @@
 				
 				var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+  "'";
 				
-				
-				//$('.lecture').append(" <a style='display: inline;' name= 'target" + (i+1) + "'>" + (i+1) + "일 강의</a> ");
 				var content = $('.day:eq(' + day + ')');
 				
 				//if(i==0 || weekContents[i-1].playlistID != weekContents[i].playlistID){ //강의리스트에서는 플레이리스트의 첫번째 영상 썸네일만 보이도록
