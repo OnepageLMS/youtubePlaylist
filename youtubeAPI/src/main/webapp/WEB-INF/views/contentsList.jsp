@@ -33,7 +33,7 @@
 <script>
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
-	//setAllMyClass();	//왼쪽 내 class 목록 띄우기
+	setAllMyClass();	//왼쪽 내 class 목록 띄우기
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
 
 	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈
