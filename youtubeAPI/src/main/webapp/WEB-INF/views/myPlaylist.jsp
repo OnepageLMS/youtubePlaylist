@@ -81,11 +81,11 @@
 	</style>
 </head>
 <script>
-var email;
+var instructorID;
 
 $(document).ready(function(){
-	email = '${email}'; 
-	getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
+	instructorID = '${instructorID}'; 
+	getAllMyPlaylist(instructorID); //나중에는 사용자 로그인정보로 email 가져와야할듯..
 	
 	var allMyClass = JSON.parse('${allMyClass}');
 
@@ -130,7 +130,7 @@ function getAllMyPlaylist(email){
 	$.ajax({
 		type : 'post',
 		url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
-		data : {email : email},
+		data : {instructorID : instructorID},
 		success : function(result){
 			playlists = result.allMyPlaylist;
 
@@ -359,12 +359,12 @@ function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 �
 	      success  : function(data) {
 		     	getPlaylistInfo(playlistID, $('#playlistInfo').attr('displayIdx'));
 	  	  		getAllVideo(playlistID); //새로 정렬한 뒤 video 새로 불러와서 출력하기
-	  	  		getAllMyPlaylist(email);
+	  	  		getAllMyPlaylist(instructorID);
 	    	  
 	      }, error:function(request,status,error){
 	    	  	getPlaylistInfo(playlistID, $('#playlistInfo').attr('displayIdx'));
 	  	  		getAllVideo(playlistID);
-	  	  		getAllMyPlaylist(email);
+	  	  		getAllMyPlaylist(instructorID);
 	       }
 	    });
 }

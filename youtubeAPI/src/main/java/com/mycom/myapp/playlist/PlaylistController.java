@@ -31,9 +31,9 @@ public class PlaylistController {
 	private ClassesService classService;
 	
 	//myplaylist(내 playlist) 새창 띄우기
-	@RequestMapping(value = "/myPlaylist/{creatorEmail}", method = RequestMethod.GET) 
+	@RequestMapping(value = "/myPlaylist/{instructorID}", method = RequestMethod.GET) 
 	public String selectPlaylist(@PathVariable("instructorID") int instructorID, Model model) {
-		model.addAttribute("email", instructorID);
+		model.addAttribute("instructorID", instructorID);
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		return "myPlaylist";
 	}
@@ -50,7 +50,7 @@ public class PlaylistController {
 //		return map;
 //	}
 	
-	@RequestMapping(value= "/addPlaylistPopup/{creatorEmail}", method= RequestMethod.GET)
+	@RequestMapping(value= "/addPlaylistPopup/{instructorID}", method= RequestMethod.GET)
 	public String popup(@PathVariable("instructorID") int instructorID, Model model) {
 		model.addAttribute("email", instructorID);	//instructorID로 이름 바꾸기!!!!!! (09/15)
 		return "addPlaylistPopup";

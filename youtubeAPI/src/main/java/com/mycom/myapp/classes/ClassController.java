@@ -22,9 +22,10 @@ public class ClassController {
 	@Autowired
 	private ClassesService classService;
 	
+	private int instructorID = 1;
+	
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String dashboard(Model model) {
-		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
 		return "dashboard";
@@ -32,14 +33,12 @@ public class ClassController {
 	
 	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//기존 내 class list 가져오기
 	public void getAllMyClass(Model model) {
-		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/allMyClassMap", method = RequestMethod.GET) //outer.jsp에서 ajax로 왼쪽 class list 가져오기
 	public Object getAllMyClass_Map(Model model) {
-		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
 		List<ClassesVO> classes = new ArrayList<ClassesVO>();
 		classes = classService.getAllMyClass(instructorID);
 		

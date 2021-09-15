@@ -37,12 +37,12 @@ $(document).ready(function(){
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
 
 	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈
-		var email = 'yewon.lee@onepage.edu';	//임의로 설정
+		var instructorID = 1;	//임의로 설정
 		
 		$.ajax({
 			type : 'post',
 			url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
-			data : {email : email},
+			data : {instructorID : instructorID},
 			success : function(result){
 				playlists = result.allMyPlaylist;
 				
@@ -109,7 +109,7 @@ $(document).ready(function(){
 				var contentMenu = '<a href="' + classContentURL + '">';
 					
 			}
-			var html = li
+			var html = '<li>'
 							+ '<a href="#">'
 								+ '<i class="metismenu-icon pe-7s-notebook"></i>'
 								+ name
@@ -165,7 +165,6 @@ $(document).ready(function(){
 			else
 				published = '<label class="custom-control-label" for="switch">비공개</label>'
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
-								
 			content.append(
 						"<div class='content card col list-group-item' seq='" + allContents[i].daySeq + "'>"
 								+ '<div class="row">'
@@ -460,7 +459,7 @@ $(document).ready(function(){
                         </li>
                        
                         <li class="dropdown nav-item">
-                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
+                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/1" class="nav-link">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
                             </a>
@@ -474,7 +473,6 @@ $(document).ready(function(){
                                 <div class="widget-content-left">
                                     <div class="btn-group">
                                         <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">

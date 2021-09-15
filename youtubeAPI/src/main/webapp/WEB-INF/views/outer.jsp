@@ -117,7 +117,8 @@ $(document).ready(function(){
                         </li>
                        
                         <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
+                        	<!-- myplaylist/1 은 뒤에 instructorID 변경하기!!! (예원) -->
+                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/1" class="nav-link">
                                 <i class="nav-link-icon fa fa-archive"></i>
                                 학습컨텐츠 보관함
                             </a>
