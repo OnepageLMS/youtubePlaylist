@@ -82,7 +82,7 @@
 		
 	 		for(var i=0; i<weekContents.length; i++){
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
-				var day = weekContents[i].day;
+				var day = weekContents[i].days;
 				var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
 				
 				var result_date = convertTotalLength(date);

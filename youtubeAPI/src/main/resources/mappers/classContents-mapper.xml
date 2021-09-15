@@ -8,7 +8,7 @@
 	
 	<select id="getDaySeq" resultType="int">
 		select count(*) from lms_classPlaylist 
-		where classID=#{classID} and day=#{day}
+		where classID=#{classID} and day=#{days}
 	</select>
 	
 	<update id="updateContent">

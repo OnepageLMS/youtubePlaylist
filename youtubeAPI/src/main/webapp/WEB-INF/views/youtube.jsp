@@ -84,11 +84,14 @@ $(document).ready(function(){
 	//email = '${email}'; 
 	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
 	console.log(email);
-	getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
-	
-	var allMyClass = JSON.parse('${allMyClass}');
 
-	for(var i=0; i<allMyClass.length; i++){
+	// 좌측 사이드 바 어떻게 할건지 알고 작업하기 (jw: 2021/09/14)
+	
+	//getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
+	
+	//var allMyClass = JSON.parse('${allMyClass}');
+
+	/* for(var i=0; i<allMyClass.length; i++){
 		var name = allMyClass[i].className;
 		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
 
@@ -121,7 +124,11 @@ $(document).ready(function(){
 					+ '</li>';
 				
 		$('.sideClassList').append(html);
-	}
+	} */
+	// Playlist 이름 보여지게 하기
+	//console.log(JSON.stringify(localStorage.getItem("selectedPlaylist")));
+	console.log(localStorage.getItem("selectedPlaylistName"));
+	$("#playlistName").before('<h4>' + localStorage.getItem("selectedPlaylistName") + '</h4>');	
 });
 
 
@@ -600,7 +607,7 @@ $(document).ready(function(){
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading">
-                                  	<h4> Youtube 검색 </h4>
+                                  	<h4 id="playlistName">  - Youtube 영상 추가 </h4>
                                 </div>
                           </div>
                         </div>            

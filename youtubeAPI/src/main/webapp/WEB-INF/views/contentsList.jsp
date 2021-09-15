@@ -76,7 +76,7 @@ $(document).ready(function(){
 					$.each(playlists, function( index, value ){
 						var contentHtml = '<div class="playlist list-group-item-action list-group-item position-relative form-check">'
 											+ '<label class="form-check-label">' 
-												+ '<input name="playlist" type="radio" class="form-check-input" value="' + value.playlistID + '">'
+												+ '<input name="playlist" type="radio" class="form-check-input" value="' + value.id + '">'
 												+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength) 
 											+ '</label>'
 										+ '</div>';
@@ -144,7 +144,7 @@ $(document).ready(function(){
 	function setAllContents(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
 		for(var i=0; i<allContents.length; i++){
-			var day = allContents[i].day;
+			var day = allContents[i].days;
 			var date = new Date(allContents[i].endDate.time); //timestamp -> actural time
 			//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 			var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();

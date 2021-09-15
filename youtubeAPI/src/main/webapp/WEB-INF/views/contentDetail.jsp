@@ -52,7 +52,7 @@
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	
- 	var playlistID = ${vo.playlistID};
+ 	var playlistID = ${vo.id};
  	var playlist;
  	
 	$(document).ready(function(){
@@ -65,7 +65,7 @@
 	 			  type : "post",
 	 			  async : false,
 	 			  data : {	
-	 				 playlistID : playlistID
+	 				 id : playlistID
 	 			  },
 	 			  success : function(data) {
 	 				  console.log(data);
@@ -133,9 +133,9 @@
 			}
 			
 			var completed ='';
-			if(playlist[i].watched == 1 && playlist[i].classPlaylistID == classPlaylistID){
+			/*if(playlist[i].watched == 1 && playlist[i].classPlaylistID == classPlaylistID){
 				completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
-			}
+			}*/
 			
 			$("#get_view").append(
 						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +

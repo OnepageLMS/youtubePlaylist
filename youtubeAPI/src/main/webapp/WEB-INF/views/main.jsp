@@ -260,7 +260,7 @@ img {
 			    playlists = result.allPlaylist; //order seq desc 로 가져온다.
 			    
 			    $.each(playlists, function( index, value ){ //여기서 index는 playlistID가 아님! 
-					var playlistID = value.playlistID;
+					var playlistID = value.id;
 
 					var html = '<div class = "playlistSeq card text-white bg-info mb-10" >' 
 						+ '<div class="card-header" listID="' + playlistID + '"playlistName="' + value.playlistName + '" >' 
@@ -289,14 +289,14 @@ img {
 
 	function createPlaylist(){ //playlist 추가
 		var playlistName = $("#playlistName").val();
-		var creatorEmail = "yewon.lee@onepage.edu"; //나중에 사용자 로그인 정보 가져오기!
+		var instructorID = 2 //"yewon.lee@onepage.edu"; //나중에 사용자 로그인 정보 가져오기!
 
 		$.ajax({
 			'type' : "post",
 			'url' : "http://localhost:8080/myapp/addPlaylist",
 			'data' : {
 						name : playlistName,
-						creator : creatorEmail,
+						creator : instructorID,
 			},
 			success : function(data){
 				getAllPlaylist();

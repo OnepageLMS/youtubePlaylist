@@ -164,8 +164,8 @@ function getAllMyPlaylist(email){
 				$('.myPlaylist').append(setFormat);
 						
 				$.each(playlists, function( index, value ){
-					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' + value.playlistID + ', ' + index 
-																					+ ');" playlistID="' + value.playlistID + '" thumbnailID="' + value.thumbnailID + '">'
+					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' + value.id + ', ' + index 
+																					+ ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
 										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength)
 										+ '</button>'
 
@@ -185,7 +185,7 @@ function showAddVideoButton(playlistID, playlistName){
 	
 }
 
-// 여기서 얻은 playlistName, playlistID를 영상 추가 버튼에 넘겨주게 하기..? (21/09/06) 
+// (jw) 여기서 얻은 playlistName, playlistID를 영상 추가 버튼에 넘겨주게 하기..? (21/09/06) 
 function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 가져오기
 	$.ajax({
 		type : 'post',
@@ -240,6 +240,11 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 			getAllVideo(playlistID); //먼저 playlist info 먼저 셋팅하고 videolist 가져오기
 
 			showAddVideoButton(playlistID, result.playlistName); 
+
+			// (jw) playlistID를 설정해서 
+			console.log(result.playlistName);
+			localStorage.setItem("selectedPlaylistName", result.playlistName);
+			localStorage.setItem("selectedPlaylistID", playlistID);
 		}
 	});
 	
