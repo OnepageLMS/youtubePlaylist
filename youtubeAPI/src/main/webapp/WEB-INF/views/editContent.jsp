@@ -139,7 +139,7 @@
 					</div>
 				</div>
 				<button type="button" id="selectPlaylistBtn" onclick="popupOpen();">playlist 다시선택</button>
-				<input type="hidden" name="playlistID" id="inputPlaylistID" value="${vo.playlistID}">
+				<input type="hidden" name="playlistID" id="inputPlaylistID" value="${vo.id}">
 				<input type="hidden" name="thumbnailID" id="inputThumbnailID" value="${vo.thumbnailID}">
 			</div>
 			

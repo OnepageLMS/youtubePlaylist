@@ -213,7 +213,7 @@ img {
 								$.each(
 										playlists,
 										function(index, value) { //여기서 index는 playlistID가 아님! 
-											var playlistID = value.playlistID;
+											var playlistID = value.id;
 											var num = index;
 
 											var hr = Math.floor(value.totalVideoLength / 3600);
@@ -272,7 +272,7 @@ img {
 								$.each(
 										playlists,
 										function(index, value) { //여기서 index는 playlistID가 아님! 
-											var playlistID = value.playlistID;
+											var playlistID = value.id;
 											var num = index;
 			
 											var hr = Math.floor(value.totalVideoLength / 3600);
@@ -321,8 +321,11 @@ img {
 		function createPlaylist() { //playlist 추가
 			/* var popup = window.open('addPlaylistPopup') */
 			//var playlistName = $("#playlistName").val();
-			var creatorEmail = "yewon.lee@onepage.edu"; //나중에 사용자 로그인 정보 가져오기!
-			var url = "${pageContext.request.contextPath}/playlist/addPlaylistPopup/" + creatorEmail;
+			
+			//var instructorID = 2; //"yewon.lee@onepage.edu"; //나중에 사용자 로그인 정보 가져오기!
+			
+			var instructorID = 2;
+			var url = "${pageContext.request.contextPath}/playlist/addPlaylistPopup/" + instructorID;
 			var popOption = "width=500, height=600";
 
 			var popup = window.open(url, "addPlaylistPopup", popOption);
@@ -336,7 +339,7 @@ img {
 				'url' : '${pageContext.request.contextPath}/playlist/addPlaylist',
 				'data' : {
 					name : playlistName,
-					creator : creatorEmail,
+					creator : instructorID,
 					description : description
 				},
 				success : function(data) {

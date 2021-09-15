@@ -45,6 +45,13 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
 	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String studentDashboard(Model model) {
+		String email = "yewon.lee@onepage.edu";	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(email)));
+		return "dashboard_Stu";
+	}
+	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classID") int classID, Model model) {
 		classID = 1;//임의로 1번 class 설정
@@ -56,8 +63,10 @@ public class Stu_ClassController{
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentsService.getWeekClassContents(ccvo)));
 		
 		Stu_VideoVO pvo = new Stu_VideoVO();
-		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
+		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
+	    model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
+		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); 
 		return "t_contentsList_Stu";
 	}
 	
@@ -73,16 +82,24 @@ public class Stu_ClassController{
 		//pvo.setPlaylistID(playlistID);
 		ccvo.setPlaylistID(playlistID);
 		ccvo.setId(id);
-		System.out.println("id :/// ?????" + ccvo.getId()); //
+		ccvo.setClassID(1); //임의로 1번 class 설정
+		System.out.println("id :/// ?????" + ccvo.getId() + "classID " + classInfo); //
 		
-		model.addAttribute("playlistID", playlistID);
-		model.addAttribute("classPlaylistID", id);
-		model.addAttribute("classID", classInfo);
+
+		model.addAttribute("classInfo", classesService.getClass(classInfo)); 
+		model.addAttribute("allContents", JSONArray.fromObject(classContentsService.getAllClassContents(classInfo)));
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentsService.getWeekClassContents(ccvo)));
+		
+		//model.addAttribute("playlistID", playlistID);
+		//model.addAttribute("classPlaylistID", id);
+		//model.addAttribute("classID", classInfo);
 		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
-		//model.addAttribute("playlist", JSONArray.fromObject(playlistService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
+		//model.addAttribute("playlist", JSONArray.fromObject(playlistcheckService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
+		System.out.println("~~playlistID : " +pvo.getPlaylistID());
+		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
-		
-		return "t_contentsDetail_Stu";
+		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentsService.getSamePlaylistID(ccvo))); 
+		return "t_contentsList_Stu2";
 		
 	}
 	
@@ -163,7 +180,7 @@ public class Stu_ClassController{
 		Map<Double, Double> map = new HashMap<Double, Double>();
 		String studentID = request.getParameter("studentID");
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
-		
+		System.out.println(studentID + " / " + videoID);
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		

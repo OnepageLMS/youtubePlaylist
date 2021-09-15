@@ -202,7 +202,7 @@ img {
 										.each(
 												playlists,
 												function(index, value) { //여기서 index는 playlistID가 아님! 
-													var playlistID = value.playlistID;
+													var playlistID = value.id;
 													var num = index;
 
 													var hr = Math.floor(value.totalVideoLength / 3600);
