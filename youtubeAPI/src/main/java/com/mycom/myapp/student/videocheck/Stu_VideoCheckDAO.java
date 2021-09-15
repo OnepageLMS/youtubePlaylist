@@ -13,37 +13,37 @@ public class Stu_VideoCheckDAO {
 	SqlSessionTemplate sqlSession;
 	
 	public int insertTime(Stu_VideoCheckVO vo) {
-		int result = sqlSession.insert("Stu_VideoCheck.insertTime", vo);
+		int result = sqlSession.insert("Stu_videoCheck.insertTime", vo);
 		return result;
 	}
 	
 	public int deleteTime(int id) {
-		int result = sqlSession.delete("Stu_VideoCheck.deleteTime", id);
+		int result = sqlSession.delete("Stu_videoCheck.deleteTime", id);
 		return result;
 	}
 	
 	public int updateTime(Stu_VideoCheckVO vo) {
-		int result = sqlSession.update("Stu_VideoCheck.updateTime", vo);
+		int result = sqlSession.update("Stu_videoCheck.updateTime", vo);
 		return result;
 	}
 	
 	public int updateWatch(Stu_VideoCheckVO vo) {
-		int result = sqlSession.update("Stu_VideoCheck.updateWatch", vo);
+		int result = sqlSession.update("Stu_videoCheck.updateWatch", vo);
 		return result;
 	}
 	
 	public Stu_VideoCheckVO getTime(int id) {
 		//System.out.println("2번방문!");
-		return sqlSession.selectOne("Stu_VideoCheck.getTime", id);
+		return sqlSession.selectOne("Stu_videoCheck.getTime", id);
 	}
 	
 	public Stu_VideoCheckVO getTime(Stu_VideoCheckVO vo) {
 		//System.out.println(sqlSession.selectOne("Video.getTime2", vo));
-		return sqlSession.selectOne("Stu_VideoCheck.getTime2", vo);
+		return sqlSession.selectOne("Stu_videoCheck.getTime2", vo);
 	}
 	
 	public List<Stu_VideoCheckVO> getTimeList() {
-		List<Stu_VideoCheckVO> result = sqlSession.selectList("Stu_VideoCheck.getTimeList");
+		List<Stu_VideoCheckVO> result = sqlSession.selectList("Stu_videoCheck.getTimeList");
 		return result;
 	}
 }

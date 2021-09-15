@@ -75,7 +75,7 @@ public class ClassContentController {
 		
 		ClassContentVO vo = new ClassContentVO();
 		vo.setClassID(classID);
-		vo.setDay(day);
+		vo.setDays(day);
 		model.addAttribute("content", vo);
 		
 		return "addContent";
