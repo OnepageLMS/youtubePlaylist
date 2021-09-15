@@ -282,7 +282,7 @@
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading">
-                                  	<h4>수업명 띄우기</h4>
+                                  	<h4>수업명 - 강의 컨텐츠</h4>
                                 </div>
                           </div>
                         </div>            
