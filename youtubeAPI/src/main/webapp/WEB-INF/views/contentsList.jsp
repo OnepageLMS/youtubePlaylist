@@ -131,7 +131,7 @@ $(document).ready(function(){
 								+ '<li>'
 									+ '<a href="#">'
 										+ '<i class="metismenu-icon"></i>'
-										+ '성적'
+										+ '출결 / 학습현황'
 									+ '</a>'
 								+ '</li>'
 							+ '</ul>'
@@ -553,13 +553,13 @@ $(document).ready(function(){
                         <!-- 여기 안에 각자 만든 내용 넣기! -->
                         <div class="row">
 							<div class="contents col-sm-12" classID="${classInfo.id}">
-								<button onclick="#" class="btn btn-primary">강의추가</button>
+								<button onclick="#" class="btn btn-primary">차시 추가</button>
 								
 								<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 									<div class="day main-card mb-3 card" day="${status.index}">
 										<div class="card-body">
 											<div>
-												<h3 class="card-title" style="font-size: 20px;">${j} 일 강의</h3>
+												<h3 class="card-title" style="font-size: 20px;">${j} 차시</h3>
 												<button onclick='showAddContentForm(${status.index})' class="btn btn-sm btn-success">+페이지추가</button>
 											</div>
 
