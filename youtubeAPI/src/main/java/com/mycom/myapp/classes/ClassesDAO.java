@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.mycom.myapp.commons.ClassesVO;
+
 @Repository
 public class ClassesDAO {
 	@Autowired
@@ -21,8 +23,8 @@ public class ClassesDAO {
 		return vo;
 	}
 	
-	public List<ClassesVO> getAllMyClass(String email){
-		List<ClassesVO> result = sqlSession.selectList("Classes.getAllMyClass", email);
+	public List<ClassesVO> getAllMyClass(int instructorID){
+		List<ClassesVO> result = sqlSession.selectList("Classes.getAllMyClass", instructorID);
 		return result;
 	}
 }

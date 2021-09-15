@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.myapp.commons.ClassesVO;
+
 @Service
 public class ClassesServiceImpl implements ClassesService {
 	@Autowired
@@ -21,8 +23,8 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
-	public List<ClassesVO> getAllMyClass(String instructorEmail){
-		return classesDAO.getAllMyClass(instructorEmail);
+	public List<ClassesVO> getAllMyClass(int instructorID){
+		return classesDAO.getAllMyClass(instructorID);
 	}
 }
 

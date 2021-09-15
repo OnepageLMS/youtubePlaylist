@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.myapp.commons.VideoVO;
+
 @Service
 public class Stu_VideoServiceImpl implements Stu_VideoService{
 	
@@ -12,12 +14,12 @@ public class Stu_VideoServiceImpl implements Stu_VideoService{
 	Stu_VideoDAO videoDAO;
 	
 	@Override
-	public Stu_VideoVO getVideo(int playlistID) {
+	public VideoVO getVideo(int playlistID) {
 		return videoDAO.getVideo(playlistID);
 	}
 	
 	@Override
-	public List<Stu_VideoVO> getVideoList(Stu_VideoVO vo) {
+	public List<VideoVO> getVideoList(VideoVO vo) {
 		return videoDAO.getVideoList(vo);
 	}
 }

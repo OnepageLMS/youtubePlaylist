@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.myapp.commons.PlaylistVO;
+
 @Service
 public class PlaylistServiceImpl implements PlaylistService{
 	@Autowired
@@ -51,8 +53,8 @@ public class PlaylistServiceImpl implements PlaylistService{
 	}
 	
 	@Override
-	public List<PlaylistVO> getAllMyPlaylist(String creatorEmail){
-		return playlistDAO.getAllMyPlaylist(creatorEmail);
+	public List<PlaylistVO> getAllMyPlaylist(int instructorID){
+		return playlistDAO.getAllMyPlaylist(instructorID);
 	}
 	
 	@Override
@@ -61,13 +63,13 @@ public class PlaylistServiceImpl implements PlaylistService{
 	}
 	
 	@Override
-	public int updateCount(int playlistID) {
-		return playlistDAO.updateCount(playlistID);
+	public int updateCount(int id) {
+		return playlistDAO.updateCount(id);
 	}
 
 	@Override
-	public int updateTotalVideoLength(int playlistID) {
-		return playlistDAO.updateTotalVideoLength(playlistID);
+	public int updateTotalVideoLength(int id) {
+		return playlistDAO.updateTotalVideoLength(id);
 	}
 	
 	@Override
