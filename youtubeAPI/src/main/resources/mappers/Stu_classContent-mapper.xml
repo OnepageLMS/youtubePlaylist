@@ -4,7 +4,7 @@
 	
 	<select id="getDaySeq" resultType="int">
 		select count(*) from lms_classContent
-		where classID=#{classID} and day=#{day}
+		where classID=#{classID} and days=#{days}
 	</select>
 	
 	<select id="getOneContent" resultType="classContent">
@@ -14,8 +14,8 @@
 	
 	<select id="getWeekClassContent" resultType="classContent">
 		select * 
-		from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.playlistID
-		where classID=#{classID} AND published =1 order by day, daySeq
+		from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
+		where classID=#{classID} AND published =1 order by days, daySeq
 	</select>
 	
 	<select id="getSamePlaylistID" resultType="classContent">
@@ -26,7 +26,7 @@
 	
 	<select id="getAllClassContent" resultType="classContent">
 		select * from lms_classContent
-		where classID=#{classID} order by day and daySeq
+		where classID=#{classID} order by days and daySeq
 	</select>
 
 </mapper>

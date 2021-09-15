@@ -65,6 +65,7 @@
 		
 		//var allContents = JSON.parse('${allContents}'); //안쓰고 있음
 		var weekContents = JSON.parse('${weekContents}');
+		//console.log("weekContents")
 		//playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해 //안쓰고있음
 		playlist = JSON.parse('${playlist}'); //total 시간을 위해 //playlist테이블에서 직접 가져오면 되지 않을까 ??
 		total_runningtime = 0;
@@ -74,6 +75,7 @@
 	 		for(var i=0; i<weekContents.length; i++){
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 				var day = weekContents[i].days;
+				console.log("day : " + day);
 				var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
 				
 				var result_date = convertTotalLength(date);

@@ -93,7 +93,7 @@ public class Stu_ClassController{
 		//model.addAttribute("playlistID", playlistID);
 		//model.addAttribute("classPlaylistID", id);
 		//model.addAttribute("classID", classInfo);
-		model.addAttribute("list", videoCheckService.getTime(153)); //studentID가 3으로 설정되어있음
+		model.addAttribute("list", videoCheckService.getTime(200)); //studentID가 3으로 설정되어있음
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistcheckService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
 		System.out.println("~~playlistID : " + pvo.getPlaylistID());
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
