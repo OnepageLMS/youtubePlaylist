@@ -1,6 +1,6 @@
-package com.mycom.myapp.youtube;
+package com.mycom.myapp.commons;
 
-public class youtubeVO {
+public class YoutubeVO {
 	private String title;
     private String videoID;
     private String thumbnailUrl;
@@ -37,5 +37,4 @@ public class youtubeVO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 }

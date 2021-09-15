@@ -1,13 +1,14 @@
-package com.mycom.myapp.playlist;
+package com.mycom.myapp.commons;
 
 import java.util.Date;
 
 public class PlaylistVO {
-	private int playlistID;
+	private int id;
 	private String playlistName;
 	private String description;
 	private String thumbnailID;
-	private String creatorEmail;
+	private int instructorID;	//새로추가
+	
 	private int totalVideo;
 	private int totalVideoLength;
 	private int seq;
@@ -27,14 +28,11 @@ public class PlaylistVO {
 	public void setThumbnailID(String thumbnailID) {
 		this.thumbnailID = thumbnailID;
 	}
-	public int getExposed() {
-		return exposed;
+	public int getId() { 
+		return id;
 	}
-	public int getPlaylistID() { 
-		return playlistID;
-	}
-	public void setPlaylistID(int playlistID) { //playlist 정렬 순서 바꿀때 사용
-		this.playlistID = playlistID;
+	public void setId(int id) { //playlist 정렬 순서 바꿀때 사용
+		this.id = id;
 	}
 	public String getPlaylistName() {
 		return playlistName;
@@ -48,17 +46,23 @@ public class PlaylistVO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getCreatorEmail() {
-		return creatorEmail;
+	public int getInstructorID() {
+		return instructorID;
 	}
-	public void setCreatorEmail(String creatorEmail) {
-		this.creatorEmail = creatorEmail;
+	public void setInstructorID(int instructorID) {
+		this.instructorID = instructorID;
 	}
 	public int getSeq() {
 		return seq;
 	}
 	public void setSeq(int seq) {
 		this.seq = seq;
+	}
+	public int getExposed() {
+		return exposed;
+	}
+	public void setExposed(int exposed) {
+		this.exposed = exposed;
 	}
 	public int getTotalVideo() {
 		return totalVideo;
@@ -75,16 +79,13 @@ public class PlaylistVO {
 	public int isExposed() {
 		return exposed;
 	}
-	public void setExposed(int exposed) {
-		this.exposed = exposed;
-	}
+
 	public Date getModDate() {
 		return modDate;
 	}
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
 	}
-	
 	public String getYoutubeID() {
 		return youtubeID;
 	}

@@ -1,10 +1,10 @@
-package com.mycom.myapp.student.classes;
+package com.mycom.myapp.commons;
 
 import java.util.Date;
 
-public class Stu_ClassesVO {
+public class ClassesVO {
 	private int id;
-	private String instructorEmail;
+	private int instructorID;
 	private String className;
 	private int days;
 	private Date startDate;
@@ -16,11 +16,11 @@ public class Stu_ClassesVO {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getInstructorEmail() {
-		return instructorEmail;
+	public int getInstructorID() {
+		return instructorID;
 	}
-	public void setInstructorEmail(String instructorEmail) {
-		this.instructorEmail = instructorEmail;
+	public void setInstructorID(int instructorID) {
+		this.instructorID = instructorID;
 	}
 	public String getClassName() {
 		return className;
@@ -28,7 +28,6 @@ public class Stu_ClassesVO {
 	public void setClassName(String className) {
 		this.className = className;
 	}
-	
 	public int getDays() {
 		return days;
 	}

@@ -11,6 +11,6 @@
 	</select>
 	
 	<select id="getAllMyClass" resultType="classes">
-		select id, className, startDate from lms_class where instructorEmail=#{instructorEmail}
+		select id, className, startDate from lms_class where instructorID=#{instructorID}
 	</select>
 </mapper>
