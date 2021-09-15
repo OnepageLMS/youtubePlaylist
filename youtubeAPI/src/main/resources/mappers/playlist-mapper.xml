@@ -68,7 +68,7 @@
 	</update>
 	
 	<select id="getPlaylistForInstructor" resultType="playlist"> 
-		select * from lms_playlist join Video on lms_playlist.playlistID = Video.playlistID
+		select * from lms_playlist join lms_video on lms_playlist.playlistID = Video.playlistID
 		where lms_playlist.playlistID=#{playlistID}
 	</select>
 	

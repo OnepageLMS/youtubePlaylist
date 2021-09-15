@@ -3,8 +3,8 @@
 <mapper namespace="Stu_Video">
 	
 	<select id="getVideoList" resultType="video">
-		select * from Video left join videocheck on Video.id = videocheck.videoID
-		where Video.playlistID=#{playlistID} 
+		select * from lms_video left join lms_videoCheck on lms_video.id = lms_videoCheck.videoID
+		where lms_video.playlistID=#{playlistID} 
 		order by seq ASC
 	</select>
 

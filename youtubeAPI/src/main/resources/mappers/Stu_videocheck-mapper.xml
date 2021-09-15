@@ -3,42 +3,42 @@
 
 <mapper namespace="Stu_videoCheck">
 	<insert id="insertTime">
-		insert into videoCheck (id, videoID, classID, playlistID, classPlaylistID, studentEmail ,lastTime, timer, watched)
+		insert into lms_videoCheck (id, videoID, classID, playlistID, classContentID, studentID ,lastTime, timer, watched)
 		values
-		(#{id}, #{videoID},  #{classID}, #{playlistID}, #{classPlaylistID}, #{studentEmail}, #{lastTime}, #{timer}, #{watched})
+		(#{id}, #{videoID},  #{classID}, #{playlistID}, #{classContentID}, #{studentID}, #{lastTime}, #{timer}, #{watched})
 	</insert>
 	
 	<update id="updateTime">
-		update videoCheck
+		update lms_videoCheck
 		set lastTime=#{lastTime}, timer=#{timer}
 		where studentID=#{studentID} AND videoID=#{videoID}
 	</update>
 	
 	<update id="updateWatch">
-		update videoCheck
+		update lms_videoCheck
 		set lastTime=#{lastTime}, timer=#{timer}, watched=#{watched}
 		where studentID=#{studentID} AND videoID=#{videoID}
 	</update>
 	
 	<delete id="deleteTime">
-		delete from videoCheck where id=#{id}
+		delete from lms_videoCheck where id=#{id}
 	</delete>
 	
 	<select id="getTime" resultType="videoCheckVO">
 		select * 
-		from videoCheck 
+		from lms_videoCheck 
 		where id=#{id}
 	</select>
 	
 	<select id="getTime2" resultType="videoCheckVO">
 		select *
-		from videoCheck
+		from lms_videoCheck
 		where studentID=#{studentID} AND videoID=#{videoID}
 	</select>
 	
 	<select id="getTimeList" resultType="videoCheckVO">
 		SELECT * 
-		FROM videoCheck order
+		FROM lms_videoCheck order
 		by id desc
 	</select>
 	
