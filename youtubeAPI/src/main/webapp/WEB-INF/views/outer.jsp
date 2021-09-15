@@ -190,9 +190,9 @@ $(document).ready(function(){
                     </div>    
                     <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
                         <div class="app-sidebar__inner">
-                            <ul class="vertical-nav-menu sideClassList">
+                            <ul class="vertical-nav-menu">
                                 <li class="app-sidebar__heading">내 수업</li>
-                                <!-- 로그인한 사용자의 class 이자리에 추가됨 !! -->
+                                <li class="sideClassList"></li><!-- 로그인한 사용자의 강의실 list 여기에 추가됨 !! -->
                             </ul>
                         </div>
                     </div>
