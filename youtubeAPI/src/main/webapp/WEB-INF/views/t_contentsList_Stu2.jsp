@@ -56,7 +56,7 @@
 	</style>
 </head>
 <script>
-var studentEmail = ${list.studentID};
+var studentEmail = 1; //우선 임의로 넣기
 //var classPlaylistID = 0;
 var classID;
 var playlistSameCheck;

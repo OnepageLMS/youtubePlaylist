@@ -63,36 +63,26 @@
 	
 	$(document).ready(function(){
 		
-		//var allContents = JSON.parse('${allContents}'); //안쓰고 있음
 		var weekContents = JSON.parse('${weekContents}');
 		//console.log("weekContents")
 		//playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해 //안쓰고있음
-		playlist = JSON.parse('${playlist}'); //total 시간을 위해 //playlist테이블에서 직접 가져오면 되지 않을까 ??
-		total_runningtime = 0;
+		//playlist = JSON.parse('${playlist}'); //total 시간을 위해 //playlist테이블에서 직접 가져오면 되지 않을까 ?? //엥,, weekContents로 다 할 수 있는디..? 
+		//total_runningtime = 0;
 		
 		var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
 		
 	 		for(var i=0; i<weekContents.length; i++){
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 				var day = weekContents[i].days;
-				console.log("day : " + day);
 				var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
-				
 				var result_date = convertTotalLength(date);
-				
 				var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
 				var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+  "'";
 				
 				var content = $('.day:eq(' + day + ')');
 				
-				//if(i==0 || weekContents[i-1].playlistID != weekContents[i].playlistID){ //강의리스트에서는 플레이리스트의 첫번째 영상 썸네일만 보이도록
-				//console.log(" // " + weekContents[i].playlistID);
 				content.append(
-					//	"<div class='card-header lecture'> "
-					//	+ " <a style='display: inline;' name= 'target" + (i+1) + "'>" + (i+1) + "차시</a> "
-							
-					//	+ "</div>"
 						
 						 "<div class='content card col list-group-item' seq='" + weekContents[i].daySeq + ">"
 									+ '<div class="row">'
@@ -112,23 +102,7 @@
 										+ '</div>'
 									+ '</div>'
 								+ '</div>');
-				//}
-
-									/*
-									+ "<div class='content card col list-group-item' seq='" + weekContents[i].daySeq + "' onclick=" + onclickDetail 
-										+ " style='cursor: pointer;'><ul class='list-unstyled tutorial-section-list'> <li>"
-										+ '<h3 class="title"><i class="fa fa-play-circle-o" aria-hidden="true"></i>'  + " " +weekContents[i].title + ' [' + weekContents[i].totalVideo +  ']</h3>'
-										+ '<p><span class = "mr-2 mb-2">'+ convertTotalLength(weekContents[i].totalVideoLength) +'</span></p>'
-										+ '<p class="startDate play">' + "시작일: " + startDate + '</p>'
-									 + "</li></ul></div>");*/
-					
-				
-				//$("#weekContents").append(thumbnail +'<div> ' + weekContents[j].newTitle + '</div>');
 				}
-	 		
-	 		for(var j=0; j<playlist.length; j++){
-	 			total_runningtime += parseInt(playlist[j].duration);
-	 		}
 	 		
 	});
 	

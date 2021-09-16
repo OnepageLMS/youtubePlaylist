@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Takes">
+
+	<insert id="insertTakes">
+		insert into lms_takes(studentID, studentName, className, classID, pass)
+		values
+		(#{studentID}, #{studentName}, #{className}, #{classID}, #{pass})
+	</insert>
+	
+	<update id="updateTakes">
+		update lms_takes
+		set studentID=#{studentID}, studentName=#{studentName}, className=#{className}, classID=#{classID}, pass=#{pass}
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteTakes">
+		delete from lms_takes where id=#{id}
+	</delete>
+	
+	<select id="getTakes" resultType="TakesVO">
+		select * from lms_takes
+		where id=#{id}
+	</select>
+	
+
+</mapper>
