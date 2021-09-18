@@ -1,5 +1,6 @@
 package com.mycom.myapp.student.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class Stu_ClassController{
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
-		// takes테이블을 통해 가져올 수 있도록 해야겠다.
+		// takes테이블을 통해 가져올 수 있도록 해야겠다..
 		
 		return "dashboard_Stu";
 	}
@@ -76,8 +77,8 @@ public class Stu_ClassController{
 	}
 	
 	
-	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classInfo}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("playlistID") int playlistID, @PathVariable("id") int id, @PathVariable("classInfo") int classInfo, Model model) {
+	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classInfo}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
+	public String contentDetail(@PathVariable("playlistID") int playlistID, @PathVariable("id") int id, @PathVariable("classInfo") int classInfo, @PathVariable("daySeq") int daySeq, Model model) {
 		//playlistID : playlistID, id : id (classPlaylist테이블의 id/ 혹시 playlistID가 같은 경우를 대비함), classInfo : classID
 		//VideoVO vo = new VideoVO();
 		VideoVO pvo = new VideoVO();
@@ -88,24 +89,43 @@ public class Stu_ClassController{
 		ccvo.setPlaylistID(playlistID);
 		ccvo.setId(id);
 		ccvo.setClassID(1); //임의로 1번 class 설정
-		System.out.println("id :/// ?????" + ccvo.getId() + "classID " + classInfo); //
 		
 
 		model.addAttribute("classInfo", classesService.getClass(classInfo)); 
-		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classInfo)));
+		//model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classInfo)));
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(ccvo)));
 		
 		//model.addAttribute("playlistID", playlistID);
 		//model.addAttribute("classPlaylistID", id);
 		//model.addAttribute("classID", classInfo);
-		model.addAttribute("list", videoCheckService.getTime(200)); //studentID가 3으로 설정되어있음
+		//model.addAttribute("list", videoCheckService.getTime(200)); //studentID가 3으로 설정되어있음
 		//model.addAttribute("playlist", JSONArray.fromObject(playlistcheckService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
-		System.out.println("~~playlistID : " + pvo.getPlaylistID());
+		//System.out.println("~~playlistID : " + pvo.getPlaylistID());
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
-		model.addAttribute("playlistCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
+		//model.addAttribute("playlistCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
 		return "t_contentsList_Stu2";
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forStudentContentDetail", method = RequestMethod.POST)
+	public Map<Integer, Object> forStudentContentDetail(HttpServletRequest request, Model model) throws Exception {
+		//List<Map<Integer, Object>> listMap = new ArrayList<Map<Integer, Object>>();
+		Map<Integer, Object> map = new HashMap<Integer, Object>();
+		
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		
+		ClassContentVO ccvo = new ClassContentVO();
+		ccvo.setClassID(classID);
+		List<ClassContentVO> VOlist = new ArrayList<ClassContentVO>();
+		VOlist = classContentService.getWeekClassContent(ccvo);
+		
+		for(int i=0; i<VOlist.size(); i++) {
+			map.put(i, VOlist.get(i));
+			//listMap.add(map);
+		}
+	    return map;
 	}
 	
 	@ResponseBody
