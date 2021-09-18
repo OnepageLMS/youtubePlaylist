@@ -40,7 +40,8 @@ $(document).ready(function(){
 		var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
 		var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 		var classNoticeURL = '#';
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
+		//var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/1'";
 		var classAttendanceURL = '#';
 		
 		var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
