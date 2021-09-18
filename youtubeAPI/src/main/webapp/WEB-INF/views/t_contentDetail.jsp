@@ -98,7 +98,6 @@
 		})
 		
 		myThumbnail();
-
 		// endDate 설정하기
 		$("#endDate").after(localStorage.getItem("endDate"));
 	});

@@ -728,38 +728,48 @@ function collectPlayCount(data) {
                        
                         <div class="row">  	
                         
-                        	<div id = "onepageLMS" class="col-8 col-md-8 col-lg-8">
-					        	 	<div class="tab-content">
-					        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
-					        	 			 <div class="single-feature-post video-post bg-img">
-					                             
-					        	 			 </div>
-					        	 		</div>
-					        	 	</div>
-					        </div>
-					        
-							<div class="contents col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
-									<div class="col-12 col-sm-12 col-md-12 col-lg-12 ">
-			                        	<ul class = "navi_ul">
-			                        		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-												<li class = "navi_li"><a href="#target${j}">${j} 차시</a></li>
-											</c:forEach>
-			                        	</ul>
-		                        	</div>
-                        	
-								<div id="accordion" class="accordion-wrapper mb-3">
-									<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-										<div class="card">
-											<div class="day  col-lg-12" day="${status.index}">
-												<div class="card-header col-lg-12">
-													<h4 style="display: inline; font-weight : bold; name= "target${j}">${j} 차시</h4>
+                        	<div class="main-card mb-3 card col-8 col-md-8 col-lg-8">
+								<div class="card-body" style="margin : 0px; padding:0px; height:auto">
+									<div class="card-header"><h3>${vo.title }</h3></div>
+                                    <div id = "onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
+								        	 
+								        </div>
+								    
+								    <div class="card-footer"><h5>${vo.description }</h5></div>
+                                </div>
+                            </div>
+                            
+                            <div class="main-card mb-3 card col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
+                                    
+                                        <div class="scroll-area-lg" >
+                                            <div class="scrollbar-container ps--active-y">
+                                            
+                                            	<div class="col-12 col-sm-12 col-md-12 col-lg-12 ">
+						                        	<ul class = "navi_ul">
+						                        		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+															<li class = "navi_li"><a href="#target${j}">${j} 차시</a></li>
+														</c:forEach>
+						                        	</ul>
+					                        	</div>
+					                        	
+					                        	
+					                        	<div id="accordion" class="accordion-wrapper mb-3">
+													<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+														<div class="card">
+															<div class="day  col-lg-12" day="${status.index}">
+																<div class="card-header col-lg-12">
+																	<h4 style="display: inline; font-weight : bold; name= "target${j}">${j} 차시</h4>
+																</div>
+															</div>
+														</div>
+													</c:forEach>
 												</div>
-											</div>
-										</div>
-									</c:forEach>
-								</div>
-							</div>
-							
+					                        	
+                                            </div>
+                                        </div>
+                                    
+                            </div>
+                                
 					        	 
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
