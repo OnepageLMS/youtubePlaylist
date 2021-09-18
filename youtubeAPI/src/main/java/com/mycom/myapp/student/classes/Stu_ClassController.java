@@ -73,7 +73,8 @@ public class Stu_ClassController{
 	    //model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
 		//model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		return "t_contentsList_Stu";
+		//return "t_contentsList_Stu";
+		return "contentsList_Stu";
 	}
 	
 	
@@ -94,7 +95,7 @@ public class Stu_ClassController{
 		model.addAttribute("classInfo", classesService.getClass(classInfo)); 
 		//model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classInfo)));
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(ccvo)));
-		
+		model.addAttribute("vo", classContentService.getOneContent(id));
 		//model.addAttribute("playlistID", playlistID);
 		//model.addAttribute("classPlaylistID", id);
 		//model.addAttribute("classID", classInfo);
@@ -105,6 +106,7 @@ public class Stu_ClassController{
 		//model.addAttribute("playlistCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
 		return "t_contentsList_Stu2";
+		//return "contentsDetail_Stu";
 		
 	}
 	
