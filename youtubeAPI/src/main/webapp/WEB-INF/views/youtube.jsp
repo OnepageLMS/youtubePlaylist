@@ -471,8 +471,8 @@ $(document).ready(function(){
 				
 	</script>
 	
-		
-    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+		<jsp:include page="outer.jsp" flush="false"/>
+    <%-- <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
                 <div class="logo-src"></div>
@@ -560,9 +560,9 @@ $(document).ready(function(){
                     </div>        
                 </div>
             </div>
-        </div>              
+        </div>    --%>           
         <div class="app-main">
-                <div class="app-sidebar sidebar-shadow">
+                <!-- <div class="app-sidebar sidebar-shadow">
                     <div class="app-header__logo">
                         <div class="logo-src"></div>
                         <div class="header__pane ml-auto">
@@ -593,15 +593,15 @@ $(document).ready(function(){
                             </button>
                         </span>
                     </div>    
-                    <div class="scrollbar-sidebar ">	<!-- side menu 시작! -->
+                    <div class="scrollbar-sidebar ">	side menu 시작!
                         <div class="app-sidebar__inner">
                             <ul class="vertical-nav-menu sideClassList">
                                 <li class="app-sidebar__heading">내 수업</li>
-                                <!-- 로그인한 사용자의 class 이자리에 추가됨 !! -->
+                                로그인한 사용자의 class 이자리에 추가됨 !!
                             </ul>
                         </div>
                     </div>
-                </div>   
+                </div>  -->  
                  <div class="app-main__outer">
                     <div class="app-main__inner">
                         <div class="app-page-title">
@@ -669,10 +669,8 @@ $(document).ready(function(){
 	                            	</div>
                             </div>					
                     </div>	
-                       		
-                       
-                    </div>
-                    <div class="app-wrapper-footer">
+				</div>
+                    <!-- <div class="app-wrapper-footer">
                         <div class="app-footer">
                             <div class="app-footer__inner">
                                 <div class="app-footer-left">
@@ -695,10 +693,10 @@ $(document).ready(function(){
                                 </div>
                             </div>
                         </div>
-                    </div>    
-              </div>
+                    </div>  -->   
+             </div>
         </div>
-    </div>
+
     
     
     <script>

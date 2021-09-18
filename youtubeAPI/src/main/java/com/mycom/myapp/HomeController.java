@@ -22,7 +22,6 @@ import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.video.VideoService;
 import com.mycom.myapp.youtube.GoogleOAuthRequest;
 import com.mycom.myapp.youtube.GoogleOAuthResponse;
-import com.mycom.myapp.youtube.youtubeProvider;
 
 import net.sf.json.JSONArray;
 
@@ -60,7 +59,8 @@ public class HomeController {
 		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
-		return "t_example";
+		//return "t_example";
+		return "outer";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
