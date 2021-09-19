@@ -47,7 +47,6 @@ public class ClassController {
 		return map;
 	}
 	
-	
 	@RequestMapping(value = "/addDays", method = RequestMethod.POST) //class contents 추가
 	public String addContent(ClassesVO vo) {
 		if (classService.updateDays(vo) != 0)
@@ -56,6 +55,22 @@ public class ClassController {
 			System.out.println("addDays 실패");
 		
 		return "ok";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/insertClassroom", method = RequestMethod.POST)	//classroom 생성 처리
+	public String insertClassroom(ClassesVO vo) {
+		vo.setInstructorID(instructorID);//임의로 instructorID 설정 
+		
+		if (classService.insertClassroom(vo) != 0) {
+			System.out.println("controller 강의실 생성 성공");
+			return "ok";
+		}
+		else {
+			System.out.println("controller 강의실 생성 실패");
+			return "error";
+		}
+		
 	}
 	
 

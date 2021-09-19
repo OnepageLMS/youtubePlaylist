@@ -13,6 +13,11 @@ public class ClassesDAO {
 	@Autowired
 	SqlSession sqlSession;
 	
+	public int insertClassroom(ClassesVO vo) {
+		int result = sqlSession.insert("Classes.insertClassroom", vo);
+		return result;
+	}
+	
 	public int updateDays(ClassesVO vo){
 		int result = sqlSession.update("Classes.updateDays", vo);
 		return result;

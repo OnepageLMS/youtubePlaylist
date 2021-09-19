@@ -13,6 +13,11 @@ public class ClassesServiceImpl implements ClassesService {
 	ClassesDAO classesDAO;
 	
 	@Override
+	public int insertClassroom(ClassesVO vo) {
+		return classesDAO.insertClassroom(vo);
+	}
+	
+	@Override
 	public int updateDays(ClassesVO vo) {
 		return classesDAO.updateDays(vo);
 	}
