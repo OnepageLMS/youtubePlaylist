@@ -29,7 +29,7 @@ public class ClassContentController {
 	@Autowired
 	private PlaylistService playlistService;
   
-	private String email = "yewon.lee@onepage.edu";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
+	private String email = "yewon@gmail.com";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 	private int instructorID = 1;
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)

@@ -6,8 +6,10 @@ public class ClassesVO {
 	private int id;
 	private int instructorID;
 	private String className;
+	private String description;
 	private int days;
 	private Date startDate;
+	private Date closeDate;
 	private boolean active;
 	
 	public int getId() {
@@ -28,6 +30,12 @@ public class ClassesVO {
 	public void setClassName(String className) {
 		this.className = className;
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public int getDays() {
 		return days;
 	}
@@ -39,6 +47,12 @@ public class ClassesVO {
 	}
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+	public Date getCloseDate() {
+		return closeDate;
+	}
+	public void setCloseDate(Date closeDate) {
+		this.closeDate = closeDate;
 	}
 	public boolean isActive() {
 		return active;

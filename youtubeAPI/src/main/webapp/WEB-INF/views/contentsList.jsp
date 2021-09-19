@@ -93,7 +93,7 @@ $(document).ready(function(){
 	})
 	
 });
-	function setAllMyClass(){	//이 함수는 
+	function setAllMyClass(){	//이 함수는 왼쪽 side menu 가져오는데 사용. outer_left.jsp로 대체하면 지우기!!
 		var allMyClass = JSON.parse('${allMyClass}');
 
 		for(var i=0; i<allMyClass.length; i++){
