@@ -90,58 +90,8 @@ $(document).ready(function(){
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow">
-        <div class="app-header header-shadow">
-            <div class="app-header__content">
-                <div class="app-header-left">
-                    <ul class="header-menu nav">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-primary">
-                                <i class="nav-link-icon fa fa-home"> </i>
-                                대시보드
-                            </a>
-                        </li>
-                       
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/1" class="nav-link">
-                                <i class="nav-link-icon fa fa-archive"></i>
-                                학습컨텐츠 보관함
-                            </a>
-                        </li>
-                    </ul>        
-                </div>
-                <div class="app-header-right">
-                    <div class="header-btn-lg pr-0">
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left">
-                                    <div class="btn-group">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
-                                            <i class="fa fa-angle-down ml-2 opacity-8"></i>
-                                        </a>
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <button type="button" tabindex="0" class="dropdown-item">User Account</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
-                                        홍길동
-                                    </div>
-                                    <div class="widget-subheading">
-                                        교수
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>        
-                </div>
-            </div>
-        </div>              
+        <jsp:include page="../outer_top_noHamburgur.jsp" flush="true"/>       
+             
         <div class="app-main">  
                  <div class="app-main__outer">
                     <div class="app-main__inner">
@@ -182,34 +132,11 @@ $(document).ready(function(){
                         </div>	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
-                    <div class="app-wrapper-footer">
-                        <div class="app-footer">
-                            <div class="app-footer__inner">
-                                <div class="app-footer-center">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                OnepageLMS
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="app-footer-right">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 3
-                                            </a>
-                                        </li>  
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
+                   <jsp:include page="../outer_bottom.jsp" flush="true"/>
               </div>
         </div>
     </div>
-    </div>
+   </div>
 
 	<!-- add classroom modal -->    
 	<div class="modal fade" id="addClassroomModal" tabindex="-1" role="dialog" aria-labelledby="addClassroomModalLabel" aria-hidden="true" style="display: none;">

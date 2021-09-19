@@ -23,8 +23,8 @@
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
 </head>
-<link href="./resources/css/main.css" rel="stylesheet">
-<script type="text/javascript" src="./resources/js/main.js"></script>
+<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
 <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 <script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
