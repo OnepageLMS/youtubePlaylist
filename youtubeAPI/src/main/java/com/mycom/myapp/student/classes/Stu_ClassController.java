@@ -62,6 +62,7 @@ public class Stu_ClassController{
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(1); //임의로 1번 class 설정
 		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
+		//model.addAttribute("vo", classContentService.getOneContent(classID));
 		//model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); 
 		//classContents테이블에서 가져온다. 해당 classID의 모든 것을 가져온다
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(ccvo)));  //객체 아니고 그냥 classID보내면 안되나 ..?
@@ -73,8 +74,8 @@ public class Stu_ClassController{
 	    //model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
 		//model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		return "t_contentsList_Stu";
-		//return "contentsList_Stu";
+		//return "t_contentsList_Stu";
+		return "contentsList_Stu";
 	}
 	
 	
@@ -105,8 +106,8 @@ public class Stu_ClassController{
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		//model.addAttribute("playlistCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		return "t_contentsList_Stu2";
-		//return "contentsDetail_Stu";
+		//return "t_contentsList_Stu2";
+		return "contentsDetail_Stu";
 		
 	}
 	

@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Dashboard</title>
+    <title>Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -22,39 +22,15 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	
-	<style>
-		.navi_ul{
-			background-color: #FFDAB9;
-			list-style-type: none;
-			margin: 0;
-			padding: 0;
-			overflow: hidden;
-		}
-		.navi_li{
-			float : left;
-		}
-		.navi_li a{
-			display: block;
-			background-color: #FFDAB9;
-			color : #000000;
-			padding: 8px;
-			text-decoration: none;
-			text-align: center;
-			font-weight: bold;
-		}
-		.navi_li a:hover{
-			background-color : #CD853F;
-			color: white;
-		}
-	</style>
 </head>
+<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+
+<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <script>
 var studentEmail = 1; //우선 임의로 넣기
 //var classPlaylistID = 0;
@@ -79,6 +55,7 @@ $(document).ready(function(){
 		  success : function(data) {
 			information = data;
 			videoIdx = ${daySeq};
+			//console.log("daySeq" + daySeq);
 		  },
 		  error : function() {
 		  	alert("error");
@@ -106,7 +83,7 @@ $(document).ready(function(){
 
 	var playlistLen = JSON.parse('${playlist}'); //total 시간을 위해
 	
- 	for(var i=0; i<weekContents.length; i++){
+	for(var i=0; i<weekContents.length; i++){
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 		var day = weekContents[i].days;
 		var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
@@ -176,7 +153,7 @@ $(document).ready(function(){
 		var content = $('.day:eq(' + day + ')');
 		content.append("<div id=\'heading" +(i+1)+ "\' >"
 	               + '<button type="button" onclick="showLecture('
- 					+ information[i].playlistID + ',' + weekContents[i].id + ',' + classID + ',' + (i+1) +')"'
+					+ information[i].playlistID + ',' + weekContents[i].id + ',' + classID + ',' + (i+1) +')"'
 	 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
 		               + "<div class='content card ' seq='" + weekContents[i].daySeq + ">"
 						+ '<div>'
@@ -217,7 +194,7 @@ $(document).ready(function(){
 				       	+ '</div>'
 				       	+'</div>'
 					+ '</div>'
-    			+ '</div>');
+  			+ '</div>');
 		}
 		
 });
@@ -300,7 +277,7 @@ function myThumbnail(classContentID, idx){
 		if (playlist[i].newTitle == null){
 			playlist[i].newTitle = playlist[i].title;
 			playlist[i].title = '';
-    	}
+  	}
 		
 		if ((playlist[i].newTitle).length > 30){
 			playlist[i].newTitle = (playlist[i].newTitle).substring(0, 30) + " ..."; 
@@ -332,8 +309,8 @@ function myThumbnail(classContentID, idx){
 
 function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
 	start_s = startTime;
-  	$(".video").css({'background-color' : 'unset'});
-  	item.style.background = "lightgrey";
+	$(".video").css({'background-color' : 'unset'});
+	item.style.background = "lightgrey";
 	$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
 
 	if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
@@ -372,10 +349,10 @@ function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 
 		}
 		
 		player.loadVideoById({'videoId': videoID,
-               'startSeconds': startTime,
-               'endSeconds': endTime,
-               'suggestedQuality': 'default'})
-      
+             'startSeconds': startTime,
+             'endSeconds': endTime,
+             'suggestedQuality': 'default'})
+    
 	
 	//이 영상을 처음보는 것이 아니라면 이전에 보던 시간부터 startTime을 설정해두기
 		
@@ -415,9 +392,9 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) { 
 	//이거는 플레이리스트의 첫번째 영상이 실행되면서 진행되는 코드 (영상클릭없이 페이지 딱 처음 로딩되었을 )
-    console.log('onPlayerReady 실행');
-    $('.videoTitle').text(playlist[ori_index].newTitle);
-    $.ajax({
+  console.log('onPlayerReady 실행');
+  $('.videoTitle').text(playlist[ori_index].newTitle);
+  $.ajax({
 		'type' : "post",
 		'url' : "../../../../videocheck",
 		'data' : {
@@ -438,8 +415,8 @@ function onPlayerReady(event) {
 			alert(" videocheck playlist 추가 실패! : ", err.responseText);
 		}
 	});
-    console.log('onPlayerReady 마감');
-    
+  console.log('onPlayerReady 마감');
+  
 }
 
 
@@ -453,14 +430,14 @@ function onPlayerStateChange(event) {
 			if (confirm("이어서 시청하시겠습니까?") == true){    
 				flag = 1;
 				player.playVideo();
-    		}
-    		
-    		else{   //취소
-    			player.seekTo(playlist[ori_index].start_s, true);
-    			flag = 1;
-    			player.playVideo();
-    			return;
-    		}
+  		}
+  		
+  		else{   //취소
+  			player.seekTo(playlist[ori_index].start_s, true);
+  			flag = 1;
+  			player.playVideo();
+  			return;
+  		}
 		}
 	}*/
 	
@@ -560,238 +537,103 @@ function onPlayerStateChange(event) {
 		
 		
 		
-   		 if(time != 0){
-   		  	console.log("stop!!");
-  		    clearInterval(timer);
-  		    starFlag = true;
-  		    time = 0;
-  		    
-  		  
-  	  	}
+ 		 if(time != 0){
+ 		  	console.log("stop!!");
+		    clearInterval(timer);
+		    starFlag = true;
+		    time = 0;
+		    
+		  
+	  	}
 		}
-  
+
 	
-    // 재생여부를 통계로 쌓는다.
-    collectPlayCount(event.data);
+  // 재생여부를 통계로 쌓는다.
+  collectPlayCount(event.data);
 }
 
 var played = false;
 function collectPlayCount(data) {
-    if (data == YT.PlayerState.PLAYING && played == false) {
-        // todo statistics
-        played = true;
-        console.log('statistics');
-    }
+  if (data == YT.PlayerState.PLAYING && played == false) {
+      // todo statistics
+      played = true;
+      console.log('statistics');
+  }
 }
 	
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-        <div class="app-header header-shadow">
-            <div class="app-header__logo">
-                <div class="logo-src"></div>
-                <div class="header__pane ml-auto">
-                    <div>
-                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="app-header__mobile-menu">
-                <div>
-                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <div class="app-header__menu">
-                <span>
-                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                        <span class="btn-icon-wrapper">
-                            <i class="fa fa-ellipsis-v fa-w-6"></i>
-                        </span>
-                    </button>
-                </span>
-            </div>    <div class="app-header__content">
-                <div class="app-header-left">
-                    <div class="search-wrapper">
-                        <div class="input-holder">
-                            <input type="text" class="search-input" placeholder="Type to search">
-                            <button class="search-icon"><span></span></button>
-                        </div>
-                        <button class="close"></button>
-                    </div>
-                    <ul class="header-menu nav">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-link-icon fa fa-home"> </i>
-                                대시보드
-                            </a>
-                        </li>
-                       
-                      <!--  <li class="dropdown nav-item">
-                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
-                                <i class="nav-link-icon fa fa-archive"></i>
-                                학습컨텐츠 보관함
-                            </a>
-                        </li> --> 
-                    </ul>        
-                </div>
-                <div class="app-header-right">
-                    <div class="header-btn-lg pr-0">
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left">
-                                    <div class="btn-group">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
-                                            <i class="fa fa-angle-down ml-2 opacity-8"></i>
-                                        </a>
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <button type="button" tabindex="0" class="dropdown-item">User Account</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
-                                        홍길동
-                                    </div>
-                                    <div class="widget-subheading">
-                                        학생
-                                    </div>
-                                </div>
+	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+		<jsp:include page="outer_top.jsp" flush="false"/>
+
+		<div class="app-main">
+		 	<jsp:include page="outer_left.jsp" flush="false"/>
+		 	
+        	<div class="app-main__outer">
+        		 <div class="app-main__inner">
+        			<div class="app-page-title">
+                    	<div class="page-title-wrapper">
+                        	<div class="page-title-heading">
+                            	${classInfo.className}	<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
-                    </div>        
-                </div>
-            </div>
-        </div>              
-        <div class="app-main">
-                <div class="app-sidebar sidebar-shadow">
-                    <div class="app-header__logo">
-                        <div class="logo-src"></div>
-                        <div class="header__pane ml-auto">
-                            <div>
-                                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                                    <span class="hamburger-box">
-                                        <span class="hamburger-inner"></span>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="app-header__mobile-menu">
-                        <div>
-                            <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                                <span class="hamburger-box">
-                                    <span class="hamburger-inner"></span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="app-header__menu">
-                        <span>
-                            <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                                <span class="btn-icon-wrapper">
-                                    <i class="fa fa-ellipsis-v fa-w-6"></i>
-                                </span>
-                            </button>
-                        </span>
                     </div>    
-                    <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
-                        <div class="app-sidebar__inner">
-                            <ul class="vertical-nav-menu sideClassList">
-                                <li class="app-sidebar__heading">내 수업</li>
-                                <!-- 로그인한 사용자의 class 이자리에 추가됨 !! -->
-                            </ul>
-                        </div>
-                    </div>
-                </div>   
-                 <div class="app-main__outer">
-                    <div class="app-main__inner">
-                        <div class="app-page-title">
-                            <div class="page-title-wrapper">
-                                <div class="page-title-heading">
-                                  	<h4>${classInfo.className}</h4>
-                                </div>
-                          </div>
-                        </div>            
-                       
-                        <div class="row">  	
-                        
-                        	<div class="main-card mb-3 card card col-8 col-md-8 col-lg-8">
-								<div class="card-body" style="margin : 0px; padding:0px; height:auto">
-									<div class="card-header"><h3>${vo.title }</h3></div>
-                                    <div id = "onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
-								        	 
-								        </div>
-								    
-								    <div class="card-footer"><h5>${vo.description }</h5></div>
-                                </div>
+                            
+                    <div class="row">
+                    
+                    
+                    	<div class="main-card mb-3 card card col-8 col-md-8 col-lg-8">
+							<div class="card-body" style="margin : 0px; padding:0px; height:auto">
+								<div class="card-header"><h3 >${vo.title }</h3></div>
+                            	<div id = "onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
+								</div>
+								<div class="card-footer"><h5>${vo.description }</h5></div>
                             </div>
+                        </div>
                                     
 					        
-							<div class="contents col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
-									<div class="col-12 col-sm-12 col-md-12 col-lg-12 ">
-			                        	<ul class = "navi_ul">
-			                        		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-												<li class = "navi_li"><a href="#target${j}">${j} 차시</a></li>
-											</c:forEach>
-			                        	</ul>
-		                        	</div>
-                        	
-								<div id="accordion" class="accordion-wrapper mb-3">
-									<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-										<div class="card">
-											<div class="day  col-lg-12" day="${status.index}">
-												<div class="card-header col-lg-12">
-													<h4 style="display: inline; font-weight : bold; name= "target${j}">${j} 차시</h4>
+						<div class="contents col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
+							<div class="col-sm-12">
+	                           <nav class="" aria-label="Page navigation example">
+	                               <ul class="pagination">
+	                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+											<li class="page-item"><a href="#target${j}" class="page-link"> ${j} </a></li>
+										</c:forEach>
+	                                   
+	                              	</ul>
+	                            </nav>
+	                       	</div>
+	                       	
+	                       	<div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <div class="scroll-area-lg">
+                                            <div class="scrollbar-container ps--active-y">
+                                            	<div id="accordion" class="accordion-wrapper mb-3">
+													<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+														<div class="main-card mb-3 card">
+						                                   <!--<div class="card-body">-->
+																<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
+							                                    <div class="list-group day" day="${status.index}">
+							                                        	
+							                                    </div>
+						                                  <!-- </div>-->
+						                               </div>
+													</c:forEach>
 												</div>
-											</div>
-										</div>
-									</c:forEach>
-								</div>
-							</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                           	</div>
+	                       	
 							
-					        	 
-                        </div>	<!-- 대시보드 안 box 끝 !! -->
-        
-                    </div>
-                    <div class="app-wrapper-footer">
-                        <div class="app-footer">
-                            <div class="app-footer__inner">
-                                <div class="app-footer-left">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 1
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="app-footer-right">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 3
-                                            </a>
-                                        </li>  
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
-              </div>
-        </div>
-    </div>
+							
+						</div>
+                    	<!-- 여기 기존 jsp파일 내용 넣기 -->
+                    </div>	
+        		</div>
+        		<jsp:include page="outer_bottom.jsp" flush="false"/>
+	   		</div>
+	   	</div>
+   	</div>
 </body>
 </html>
