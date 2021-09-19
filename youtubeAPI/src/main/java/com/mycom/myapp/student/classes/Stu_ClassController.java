@@ -73,8 +73,8 @@ public class Stu_ClassController{
 	    //model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
 		//model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		//return "t_contentsList_Stu";
-		return "contentsList_Stu";
+		return "t_contentsList_Stu";
+		//return "contentsList_Stu";
 	}
 	
 	

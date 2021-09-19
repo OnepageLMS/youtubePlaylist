@@ -28,7 +28,7 @@ public class ClassController {
 	public String dashboard(Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
-		return "dashboard";
+		return "class/dashboard";
 	}	
 	
 	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//기존 내 class list 가져오기
