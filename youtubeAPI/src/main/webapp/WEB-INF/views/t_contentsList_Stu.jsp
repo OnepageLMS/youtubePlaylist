@@ -60,7 +60,7 @@
 				
 				content.append(
 						
-						 "<div class='content card col list-group-item' seq='" + weekContents[i].daySeq + ">"
+						 "<div class='list-group-item' seq='" + weekContents[i].daySeq + ">"
 									+ '<div class="row">'
 										+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
 										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
@@ -108,28 +108,55 @@
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	대시보드	<!-- 이부분 이름 바꾸기!! -->
+                            	${classInfo.className}	<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
-                    </div>            
+                    </div>    
+                            
                     <div class="row">
-                  		<div class="col-sm-12">
-	                        	<ul class = "navi_ul">
-	                        		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-										<li class = "navi_li"><a href="#target${j}">  ${j} 차시 </a></li>
+                    
+                    	
+                       <div class="col-sm-12">
+                           <nav class="" aria-label="Page navigation example">
+                               <ul class="pagination">
+                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+										<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
 									</c:forEach>
-	                        	</ul>
-                        </div>
+                                   
+                              	</ul>
+                            </nav>
+                       	</div>
                         
                        	<div class="contents col-sm-12" classID="${classInfo.id}">
 				
 							<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-								<div class="day card list-group list-group-flush" day="${status.index}">
+								<!-- <div class="day card list-group list-group-flush" day="${status.index}">
 									 <div class="card-header lecture">
 										   <a style="display: inline;" name= "target${j}">${j} 차시</a>  
 											
 									</div>
-								</div>
+								</div>-->
+								
+								<!--  <div class="main-card mb-3 card">
+                                	<div class="card-header">
+                                		<a style="display: inline;" name= "target${j}">${j} 차시</a> 
+                                	</div>
+                                    <div class="card-body day" day="${status.index}">
+                                        	
+                                    </div>
+                                </div>-->
+                                
+                                
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+										<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
+	                                    <div class="list-group day" day="${status.index}">
+	                                        	
+	                                    </div>
+                                   </div>
+                               </div>
+                                        
+                                        
 							</c:forEach>
 						</div>
                     	<!-- 여기 기존 jsp파일 내용 넣기 -->

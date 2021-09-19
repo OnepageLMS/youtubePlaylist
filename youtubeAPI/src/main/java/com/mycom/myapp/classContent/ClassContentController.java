@@ -1,6 +1,9 @@
 package com.mycom.myapp.classContent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,11 +40,12 @@ public class ClassContentController {
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
-		return "contentsList";
+		return "t_contentsList";
+		//return "contentsList";
 	}
 
-	@RequestMapping(value = "/contentDetail/{id}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("id") int id, Model model) {
+	@RequestMapping(value = "/contentDetail/{id}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
+	public String contentDetail(@PathVariable("id") int id, @PathVariable("daySeq") int daySeq, Model model) {
 		//int classID = Integer.parseInt(request.getParameter("classID"));
 		
 		ClassContentVO vo = classContentService.getOneContent(id);
@@ -50,12 +54,30 @@ public class ClassContentController {
 		System.out.println(vo.getClassName());
 		
 //		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
-//		model.addAttribute("classInfo", classService.getClass(classID)); 
-//		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContents(classID)));
+		model.addAttribute("classInfo", classService.getClass(1)); //여기도 임의로 classID 1 넣어두었다.
+		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(1))); //classID 임의로 1 넣어두었다.
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
 		System.out.println("???여기는?");
 		return "t_contentDetail";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forInstructorContentDetail", method = RequestMethod.POST)
+	public Map<Integer, Object> forInstructorContentDetail(HttpServletRequest request, Model model) throws Exception {
+		//List<Map<Integer, Object>> listMap = new ArrayList<Map<Integer, Object>>();
+		Map<Integer, Object> map = new HashMap<Integer, Object>();
+				
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		
+		List<ClassContentVO> VOlist = new ArrayList<ClassContentVO>();
+		VOlist = classContentService.getAllClassContent(classID);
+				
+		for(int i=0; i<VOlist.size(); i++) {
+			map.put(i, VOlist.get(i));
+		}
+		
+		return map;
 	}
 	
 	@ResponseBody
