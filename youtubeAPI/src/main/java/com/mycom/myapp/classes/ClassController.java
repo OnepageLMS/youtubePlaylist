@@ -40,6 +40,13 @@ public class ClassController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
+	public ClassesVO getClassInfo(@RequestParam(value = "classID") String classID) {
+		ClassesVO vo = classService.getClass(Integer.parseInt(classID));
+		return vo;
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/allMyClassMap", method = RequestMethod.GET) //outer.jsp에서 ajax로 왼쪽 class list 가져오기
 	public Object getAllMyClass_Map(Model model) {
 		List<ClassesVO> classes = new ArrayList<ClassesVO>();

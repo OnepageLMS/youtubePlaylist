@@ -38,6 +38,18 @@ public class PlaylistController {
 		return "myPlaylist";
 	}
 	
+	//myplaylist화면 들어가기 새로만든거 (9/20 yewon)
+	/*	지금처럼 url에 instructorID를 같이 넘겨주는게 아니라 controller 에서 현재 로그인한 사용자의 id를받아와 따로 처리해주는게 맞다. 
+		추후 이런 방식으로 수정해야함.
+	*/
+		@RequestMapping(value = "/myPlaylist", method = RequestMethod.GET) 
+		public String myPlaylist(Model model) {
+			int instructorID = 1;
+			model.addAttribute("instructorID", instructorID);
+			model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+			return "playlist/myPlaylist";
+		}
+	
 //	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
 //	@ResponseBody
 //	public Object getAllPlaylist(@RequestParam(value = "email") String creatorEmail) {
