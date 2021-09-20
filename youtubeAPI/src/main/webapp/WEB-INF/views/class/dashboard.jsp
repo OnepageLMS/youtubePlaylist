@@ -58,6 +58,7 @@ $(document).ready(function(){
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
 										+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#setClassroomModal" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
+										//+ '<a href="#setClassroomModal" data-toggle="modal" class="nav-link openEditClassModal"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
@@ -121,6 +122,21 @@ function submitAddClassroom(){	//add classroom form 전송
 			alert('controller 강의실 생성 실패! ');
 		}
 	});
+}
+$('#editClassroomModal').on('show.bs.modal', function(e) {
+	console.log("works!!");
+    //get data-id attribute of the clicked element
+    //var bookId = $(e.relatedTarget).data('book-id');
+
+    //populate the textbox
+    //$(e.currentTarget).find('input[name="bookId"]').val(bookId);
+    $('#editClassName').val("hello");
+    
+});
+function getClassInfo(){
+	//getClassInfo
+
+	
 }
 
 function submitEditClassroom(){
@@ -259,7 +275,7 @@ function submitEditClassroom(){
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 설정</h5>
+	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 재설정</h5>
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="initForm();">
 	                    <span aria-hidden="true">×</span>
 	                </button>
