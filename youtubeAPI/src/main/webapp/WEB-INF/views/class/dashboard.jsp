@@ -32,24 +32,30 @@
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
 <script>
+var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
+var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
+var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate", ];
+
 $(document).ready(function(){
 	var allMyClass = JSON.parse('${allMyClass}');
 
 	for(var i=0; i<allMyClass.length; i++){
 		var name = allMyClass[i].className;
-		var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
-		var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+		//var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
+		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 		var classNoticeURL = '#';
-		//var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/1'";
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
+		//var classContentURL = "'${pageContext.request.contextPath}/class/contentList/1'";
 		var classAttendanceURL = '#';
+
+		if(allMyClass[i].active == 1)
+			var cardColor = active_colors[i%(active_colors.length)];
+		else
+			var cardColor = inactive_colors[i%(inactive_colors.length)];
 		
-		var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
-							
-		var bg_colors = ["bg-warning", "bg-success", "bg-info", "bg-focus", "bg-alternate", "bg-shadow"];
-		var dashboardCard = '<div class="col-md-6 col-lg-3">'
+		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
 								+ '<div class="mb-3 card">'
-									+ '<div class="card-header ' + bg_colors[i%(bg_colors.length)] + '">' 
+									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
 										+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#setClassroomModal" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
@@ -58,32 +64,20 @@ $(document).ready(function(){
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        		+ '</div>'
-	                        		+ '<div class="card-footer">'
-	                        			+ '<div class="widget-subheading col-6">시작일 ' + startDate + '</div>'
-										+ '<div class="widget-subheading col-6">참여자 **명</div>'
+	                        		+ '<div class="card-footer col">'
+	                        			+ '<div class="row">'
+		                        			+ '<div class="widget-subheading col-6">종료일</div>'
+											+ '<div class="widget-subheading col-6">참여자 **명</div>'
+											+ '<div class="col-12">Progress Bar Here!</div>'
+										+ '</div>'
 									+ '</div>'
 	                        	'</div>'
 	                        + '</div>';
-		//이건 디자인만 다르게
-		var border_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];
-      	var dashboardCard2 = '<div class="col-md-6 col-lg-3">'
-								+ '<div class="mb-3 card border ' + border_colors[i%(border_colors.length)] + '">'
-									+ '<div class="card-header">' 
-										+ '<div class="col-sm-10">' +  name + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#setClassroomModal" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
-									+ '</div>'
-									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-	                        		+ '</div>'
-	                        		+ '<div class="card-footer">'
-	                        			+ '<div class="widget-subheading col-6">시작일 ' + startDate + '</div>'
-									+ '</div>'
-	                        	'</div>'
-	                        + '</div>';
-		$('.classActive').append(dashboardCard);
-		$('.classInactive').append(dashboardCard2);
+
+	    if(allMyClass[i].active == 1)
+			$('.classActive').append(dashboardCard);
+	    else
+			$('.classInactive').append(dashboardCard);
 	}
 
 });
@@ -94,17 +88,36 @@ function initForm(){	//강의실 생성 및 수정 form 내용 초기화
 }
 
 function submitAddClassroom(){	//add classroom form 전송
+	event.preventDefault();
+	
+	var inputClassName = $('#inputClassName').val();
+	var inputDescription = $('#inputDescription').val();
+	var inputDays = $('#inputDays').val();
+	var inputTag = $('#inputTag').val();
+	var inputCloseDate = $('#inputCloseDate').val();
+	var inputActive = $('#inputActivate').val();
+
+	if(inputDays == null)
+		inputDays = 0;
+		
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/insertClassroom',
-		data: $('#formAddClassroom').serialize(),
+		data: $("#formAddClassroom").serialize(),
+		data: {'className': inputClassName,
+				'description' : inputDescription,
+				'days' : inputDays,
+				'tag' : inputTag,
+				'closeDate' : inputCloseDate,
+				'active' : inputActive
+			},
 		success: function(data){
 			if(data == 'ok')
 				alert('강의실 생성 완료!');
 			else
 				alert('강의실 생성 실패! ');
 		},
-		error: function(data){
+		error: function(data, status,error){
 			alert('controller 강의실 생성 실패! ');
 		}
 	});
@@ -136,7 +149,7 @@ function submitEditClassroom(){
                         <div class="dashboardClass">
                         	<div class="classActive row col">
                         		<div class="col-12 row">
-                        			<h4 class="col-sm-3">활성화된 강의실</h4>
+                        			<h4 class="col-sm-5 col-md-2">활성화된 강의실</h4>
 	                        		<div class="dropdown d-inline-block">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -149,7 +162,7 @@ function submitEditClassroom(){
                         	</div>
                             <div class="classInactive row col">
                             	<div class="col-12 row">
-                        			<h4 class="col-sm-3">비활성화된 강의실</h4>
+                        			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
 	                        		<div class="dropdown d-inline-block">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -199,12 +212,12 @@ function submitEditClassroom(){
 							<div class="col-md-9">
 			                   <div class="position-relative form-group">
 				               		<label for="inputClassTag" class="">태그</label>
-				               		<input name="tag" placeholder="ex) 21-겨울 캠프, 웹캠프" id="inputClassTag" type="text" class="form-control">
+				               		<input name="tag" placeholder="ex) 21-겨울 캠프, 웹캠프" id="inputTag" type="text" class="form-control">
 				               </div>
 			               	</div>
 	                   </div>
 	                   <div class="form-group"> 
-			        		<label class="custom-control-label" for="inputCloseClassroom">강의실 게시 종료일</label>
+			        		<label for="inputCloseClassroom">강의실 게시 종료일</label>
 			        		<input type="date" name="closeDate" class="form-control" id="inputCloseClassroom"/>
 			        	</div> 
 	                   <div class="form-group custom-control custom-switch">

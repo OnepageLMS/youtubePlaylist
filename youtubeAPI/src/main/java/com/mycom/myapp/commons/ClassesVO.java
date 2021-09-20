@@ -7,7 +7,8 @@ public class ClassesVO {
 	private int instructorID;
 	private String className;
 	private String description;
-	private int days;
+	private int days = 0;
+	private String tag;
 	private Date startDate;
 	private Date closeDate;
 	private boolean active;
@@ -41,6 +42,12 @@ public class ClassesVO {
 	}
 	public void setDays(int days) {
 		this.days = days;
+	}
+	public String getTag() {
+		return tag;
+	}
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	public Date getStartDate() {
 		return startDate;
