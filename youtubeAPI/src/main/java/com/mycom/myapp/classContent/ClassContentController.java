@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.ClassContentVO;
+import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.commons.PlaylistVO;
 
@@ -40,6 +41,7 @@ public class ClassContentController {
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+		
 		return "t_contentsList";
 		//return "contentsList";
 	}
@@ -92,6 +94,22 @@ public class ClassContentController {
 	    return playlistService.getPlaylistForInstructor(vo);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/updateDays", method = RequestMethod.POST)
+	public int updateDays(HttpServletRequest request, Model model) throws Exception {
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		//System.out.println("??");
+		ClassesVO cvo = new ClassesVO();
+		cvo.setId(classID);
+		if( classService.updateDays(cvo) == 0) {
+			return 0;
+		}
+		else {
+			return 1;
+		}
+	   
+	}
+	
 	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //사용안함
 	public String addContent(@PathVariable("classID") int classID, @PathVariable("day") int day, Model model) {
 		
@@ -105,9 +123,12 @@ public class ClassContentController {
 	
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
 	public String addContentOK(ClassContentVO vo) {
+		System.out.println("addContentOK!!??");
 		int classID = vo.getClassID();
 		vo.setDaySeq(classContentService.getDaySeq(vo));
-		
+		vo.setPlaylistID(25); //playlist가 안들어가고있다. title이랑 description은 어떻게 들어가고 있는거
+		//days에 대한 정보도 넣어주어야 한다.
+		System.out.println(vo.getTitle() + " / " + vo.getDescription() + " / " + vo.getPlaylistID() + " /");
 		if (classContentService.insertContent(vo) == 0)
 			System.out.println("classContents 추가 실패!");
 		else

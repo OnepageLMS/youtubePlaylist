@@ -18,8 +18,8 @@ import com.mycom.myapp.commons.ClassContentVO;
  		return result;
  	}
  	
- 	public List<ClassContentVO> getWeekClassContent(ClassContentVO vo){
- 		List<ClassContentVO> result = sqlSession.selectList("Stu_ClassContent.getWeekClassContent", vo);
+ 	public List<ClassContentVO> getWeekClassContent(int classID){
+ 		List<ClassContentVO> result = sqlSession.selectList("Stu_ClassContent.getWeekClassContent", classID);
  		return result;
  	}
  	

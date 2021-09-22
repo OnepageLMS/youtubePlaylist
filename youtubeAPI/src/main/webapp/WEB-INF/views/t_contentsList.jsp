@@ -22,15 +22,15 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
+    
+    <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+	
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
-<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
-<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
@@ -409,10 +409,26 @@ $(document).ready(function(){
 		}
 	}
 	
-	function addDays(){
+	/*function addDays(){
 		var days = ${classInfo.days};
 		days += 1;
 		return days;
+	}*/
+	
+	function updateDays(classID){
+		$.ajax({
+			type : 'post',
+			url : '../updateDays',
+			data : {classID : classID},
+			datatype : 'json',
+			success : function(result){
+				console.log("성공!");
+				location.reload();
+			},
+			error : function() {
+			  	alert("updateDays error");
+			}
+		});
 	}
 	
 </script>
@@ -429,7 +445,7 @@ $(document).ready(function(){
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
                             	${classInfo.className}	<!-- 이부분 이름 바꾸기!! -->
-                            	<button onclick="#" class="float-right mb-2 mr-2 btn btn-primary">차시 추가</button>
+                            	<button onclick='updateDays(${classInfo.id})' class="float-right mb-2 mr-2 btn btn-primary">차시 추가</button>
                             </div>
                         </div>
                     </div>    

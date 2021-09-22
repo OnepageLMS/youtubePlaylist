@@ -34,7 +34,6 @@
 <script>
 $(document).ready(function(){
 	var allMyClass = JSON.parse('${allMyClass}');
- 	
 	for(var i=0; i<allMyClass.length; i++){
 		var name = allMyClass[i].className;
 		var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
