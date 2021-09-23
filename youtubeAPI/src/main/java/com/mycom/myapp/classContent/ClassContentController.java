@@ -126,9 +126,7 @@ public class ClassContentController {
 		System.out.println("addContentOK!!??");
 		int classID = vo.getClassID();
 		vo.setDaySeq(classContentService.getDaySeq(vo));
-		vo.setPlaylistID(25); //playlist가 안들어가고있다. title이랑 description은 어떻게 들어가고 있는거
-		//days에 대한 정보도 넣어주어야 한다.
-		System.out.println(vo.getTitle() + " / " + vo.getDescription() + " / " + vo.getPlaylistID() + " /");
+		
 		if (classContentService.insertContent(vo) == 0)
 			System.out.println("classContents 추가 실패!");
 		else

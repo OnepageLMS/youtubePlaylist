@@ -144,6 +144,7 @@ $(document).ready(function(){
 	
 	function setAllContents(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
+		console.log("길이 : " +allContents.length);
 		for(var i=0; i<allContents.length; i++){
 			var day = allContents[i].days;
 			var date = new Date(allContents[i].endDate.time); //timestamp -> actural time
@@ -216,6 +217,7 @@ $(document).ready(function(){
 
 	function showAddContentForm(day){
 		day -= 1; //임의로 조절... 
+		console.log('day :' + day);
 		
 		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
 		
@@ -225,7 +227,8 @@ $(document).ready(function(){
 							+ '</div>'
 							+ '<form id="addContent" class="form-group card-body" action="${pageContext.request.contextPath}/class/addContentOK" onsubmit="return checkForm(this);" method="post">' 
 								+ '<input type="hidden" name="classID" value="${classInfo.id}">'
-								+ '<input type="hidden" name="day" value="' + day + '"/>'
+								+ '<input type="hidden" name="days" value=""/>'
+								+ '<input type ="hidden" id="inputPlaylistID" name="playlistID">'
 								+ '<div class="selectContent m-3">'
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
 									
@@ -269,7 +272,7 @@ $(document).ready(function(){
 								+ '</div>'
 							+ '</form>'
 									
-
+		$('input[name=days]').attr('value', day);
 		$('.day:eq(' + day + ')').append(addFormHtml);
 
 		//아래부분 마감일 설정때 나오도록...?
