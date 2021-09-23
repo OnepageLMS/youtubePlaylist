@@ -53,7 +53,7 @@ public class Stu_ClassController{
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
 		
-		return "dashboard_Stu";
+		return "class/dashboard_Stu";
 	}
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)

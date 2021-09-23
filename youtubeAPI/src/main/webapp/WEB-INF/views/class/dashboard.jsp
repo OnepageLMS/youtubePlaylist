@@ -65,11 +65,15 @@ $(document).ready(function(){
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        		+ '</div>'
-	                        		+ '<div class="card-footer col">'
-	                        			+ '<div class="row">'
-		                        			+ '<div class="widget-subheading col-6">종료일</div>'
+	                        		+ '<div class="card-footer">'
+	                        			+ '<div class="row col">'
+		                        			+ '<div class="widget-subheading col-6">종료일here</div>'
 											+ '<div class="widget-subheading col-6">참여자 **명</div>'
-											+ '<div class="col-12">Progress Bar Here!</div>'
+											+ '<div class="col-12">'
+												+ '<div class="mb-3 progress">'
+	                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+	                                            + '</div>'
+											+ '</div>'
 										+ '</div>'
 									+ '</div>'
 	                        	'</div>'
@@ -153,7 +157,7 @@ function submitEditClassroom(){
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading col-sm-12">
-                                  	<h2 class="col-sm-10">대시보드</h2>
+                                  	<h2 class="col-sm-10">내 강의실</h2>
                                   	<button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassroomModal">
                                   		<b>+</b> 강의실 생성
                                   	</button>
