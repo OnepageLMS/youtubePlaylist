@@ -22,14 +22,13 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-	<link href="./resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="./resources/js/main.js"></script>
+	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 
 <style>
@@ -73,7 +72,6 @@ img {
 .card{
 	border-radius: 5px;
 }
-
 
 </style>
 
@@ -128,7 +126,7 @@ $(document).ready(function(){
 	// Playlist 이름 보여지게 하기
 	//console.log(JSON.stringify(localStorage.getItem("selectedPlaylist")));
 	console.log(localStorage.getItem("selectedPlaylistName"));
-	$("#playlistName").before('<h4>' + localStorage.getItem("selectedPlaylistName") + '</h4>');	
+	$("#playlistName").before('<h4 style="color: blue; display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');	
 });
 
 
@@ -251,7 +249,6 @@ $(document).ready(function(){
 			var id = idList[i];
 			var view = viewCount[i];
 			var title = titleList[i].replace("'", "\\'").replace("\"","\\\"");
-			console.log("display: " + title);
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg">';
 			//var url = '<a href="https://youtu.be/' + id + '">';
@@ -266,13 +263,14 @@ $(document).ready(function(){
 							+ '\'' + ',\'' + title + '\''
 							+ ',\'' + durationCount[i] + '\'' + ',' + i + ');">'
 							+ thumbnail
-							+ titleList[i]
-							+ '<p class="info"> published: <b>' + dateList[i]
+							+ '<span>' + title + '</span>'
+							+ '<div>'
+							+ '<p class="info m-0"> published: <b>' + dateList[i]
 							+ '</b> view: <b>' + view
 							+ '</b> like: <b>' + likeCount[i]
 							+ '</b> dislike: <b>' + dislikeCount[i]
 							+ '</b> </p>'
-							+ '</div>');
+							+ '</div></div>');
 							/* + '<div style="display:none">'
 							+ '<div id="player_info"></div>'
 							+ '<div id="player"></div>' 
@@ -352,9 +350,17 @@ $(document).ready(function(){
 
 		function addToCart(id, title){
 			console.log(id, title);
-			var thumbnail2 = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg">';
+			var thumbnail2 = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="img-fluid">';
+			if (title.length > 40) {
+				title = title.substring(0,40) + " ...";
+			}
+
+			//$('#setVideosInCart').html
 			var content = thumbnail2 + title;
 			$("#videosInCart").append(content);
+			
+			//$("#videosInCart").append($('#setVideosInCart').html);
+			
 			
 		}
 
@@ -366,22 +372,52 @@ $(document).ready(function(){
 			console.log(id, title, duration, index);
 			
 			// 클릭한 영상 밑에 player 띄우기
-			var $div = $('<div id="player_info"></div><div id="player"></div><div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 카트에 영상 담기 </i></div>'); 
+			var $div = $('<div id="playerBox" class="bg-success bg-opacity-10 d-flex flex-column align-items-center"> <div id="player"></div> </div>'); 
+			$div.append('<div class="p-1 m-1 bg-white text-dark">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
+			$div.append('<div id="player_info"></div>');
+
+			// 영상 구간 설정 
+			$div.append($('#setVideoInfo').html());
+			$div.append('<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>');
+
+			
+					/* <div>
+						<button onclick="getCurrentPlayTime1()" type="button">start time</button> : 
+						<input type="text" id="start_hh" maxlength="2" size="2"> 시 
+						<input type="text" id="start_mm" maxlength="2" size="2"> 분 
+						<input type="text" id="start_ss" maxlength="5" size="5"> 초
+						<button onclick="seekTo1()" type="button">위치이동</button>
+						<span id=warning1 style="color: red;"></span> <br>
+					</div>
+					
+					<div>
+						<button onclick="getCurrentPlayTime2()" type="button">end time</button> : 
+						<input type="text" id="end_hh" max="" maxlength="2" size="2"> 시 
+						<input type="text" id="end_mm" max="" maxlength="2" size="2"> 분 
+						<input type="text" id="end_ss" maxlength="5" size="5"> 초
+					<button onclick="seekTo2()" type="button">위치이동</button>
+					<span id=warning2 style="color: red;"></span> <br>
+					</div>
+					
+					
+						tag: <input type="text" id="tag" name="tag"> */
 			
 			if(prev_index != null){
 				//$("#get_view").children().eq(prev_index).children().eq(0).text() = ""; 
 				/* $("#get_view").children().eq(prev_index).children().eq(1).text() = "";
 				$("#get_view").children().eq(prev_index).children().eq(2).text() = ""; */
 
-				$('#player_info').remove();
+				/* $('#player_info').remove();
 				$('#player').remove();
-				$('.fa-plus-square').remove();
+				$('.fa-plus-square').remove(); */
+				$('#playerBox').remove();
 				
 			    //$("#get_view").children().eq(prev_index).attr('style', 'display: block');
 			    //$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: none');
 			}
-
-			$("#get_view").children().eq(index).append($div);
+			//console.log($("#get_view").children().eq(index).children().eq(2).html());
+			
+			$("#get_view").children().eq(index).after($div);
 
 			showYoutubePlayer(id, title, index);	
 
@@ -400,12 +436,24 @@ $(document).ready(function(){
 
 			if(prev_index != null){
 				$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: inline-block');
+				$("#get_view").children().eq(prev_index).children().eq(1).attr('style', 'display: inline-block');
+				$("#get_view").children().eq(prev_index).children().eq(2).attr('style', 'display: inline-block');
+				
+				console.log("check eq(1) ==> ", $("#get_view").children().eq(prev_index).children().eq(1));
+				//$("#get_view").children().eq(prev_index).children().eq(1).attr('style', 'display: inline-block');
 			}
 			$("#get_view").children().eq(index).children().eq(0).attr('style', 'display: none');
-			
-			document.getElementById("player_info").innerHTML = '<h3 class="videoTitle">' + videoTitle + '</h3>';
+			$("#get_view").children().eq(index).children().eq(1).attr('style', 'display: none');
+			$("#get_view").children().eq(index).children().eq(2).attr('style', 'display: none');
 
+			console.log("check videoTitle here", videoTitle);
 			
+			document.getElementById("player_info").innerHTML = '<p class="m-0"> <span style="font-weight: bold"> 제목: </span> <textarea id="newName" class="videoTitle bg-white p-1" style="border: 1px solid black" name="newName" cols="80" rows="1">' + videoTitle + '</textarea></p>';
+
+			/* <span class="videoTitle bg-white p-1" style="border: 1px solid black"> </span>
+			<div>
+				<textarea id="newName" name="newName" cols="62" rows="2"> </textarea>
+			</div> */
 
 			onYouTubeIframeAPIReady();
 			
@@ -418,6 +466,9 @@ $(document).ready(function(){
 				height : '360',
 				width : '640',
 				videoId : videoId,
+				playerVars: {
+					origin: 'https://localhost:8080'
+				},
 				events : {
 					'onReady' : onPlayerReady,
 					'onStateChange' : onPlayerStateChange
@@ -468,161 +519,117 @@ $(document).ready(function(){
 			var playerForm = document.getElementById('form2');
 			playerForm.submit();
 		}
+
+		function resizeRightCard(){
+			$('#rightCard').css('height', '800px');
+		}
+
+		// (jw) 여기서 부터 구간 설정 자바스크립트 
+
+		// Youtube player 특정 위치로 재생 위치 이동 : 
+		function seekTo1() {
+			// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
+			var start_hh = $('#start_hh').val();
+			var start_mm = $('#start_mm').val();
+			var start_ss = $('#start_ss').val();
+			start_time = start_hh * 3600.00 + start_mm * 60.00 + start_ss
+					* 1.00;
+			player.seekTo(start_time);
+		}
+		function seekTo2() {
+			var end_hh = $('#end_hh').val();
+			var end_mm = $('#end_mm').val();
+			var end_ss = $('#end_ss').val();
+
+			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
+			player.seekTo(end_time);
+		}
+		// 현재 재생위치를 시작,끝 시간에 지정 
+		function getCurrentPlayTime1() {
+			var d = Number(player.getCurrentTime());
+			var h = Math.floor(d / 3600);
+			var m = Math.floor(d % 3600 / 60);
+			var s = d % 3600 % 60;
+
+			document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
+			document.getElementById("start_hh").value = h;/* .toFixed(2); */
+			document.getElementById("start_mm").value = m;/* .toFixed(2); */
+			document.getElementById("start_s").value = parseFloat(d).toFixed(2);
+			start_time = parseFloat(d).toFixed(2);
+			start_time *= 1.00;
+			//console.log("check:", typeof start_time);
+		}
+		function getCurrentPlayTime2() {
+			var d = Number(player.getCurrentTime());
+			var h = Math.floor(d / 3600);
+			var m = Math.floor(d % 3600 / 60);
+			var s = d % 3600 % 60;
+
+			document.getElementById("end_ss").value = parseFloat(s).toFixed(2);
+			document.getElementById("end_hh").value = h;/* .toFixed(2); */
+			document.getElementById("end_mm").value = m;/* .toFixed(2); */
+			document.getElementById("end_s").value = parseFloat(d).toFixed(2);
+			end_time = parseFloat(d).toFixed(2);
+			end_time *= 1.00;
+			//console.log("check", typeof end_time);
+		}
+
+		// 재생 구간 유효성 검사: 
+		function validation(event) { //video 추가 form 제출하면 실행되는 함수
+			document.getElementById("warning1").innerHTML = "";
+			document.getElementById("warning2").innerHTML = "";
+			// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
+			var start_hh = $('#start_hh').val();
+			var start_mm = $('#start_mm').val();
+			var start_ss = $('#start_ss').val();
+			start_time = start_hh * 3600.00 + start_mm * 60.00 + start_ss* 1.00;
+			$('#start_s').val(start_time);
+			var end_hh = $('#end_hh').val();
+			var end_mm = $('#end_mm').val();
+			var end_ss = $('#end_ss').val();
+
+			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
+			$('#end_s').val(end_time);
+
+			console.log(limit);
+			//console.log(end_time - start_time);
+			$('#duration').val(end_time - start_time);
+
+			if (start_time > end_time) {
+				document.getElementById("warning1").innerHTML = "start time cannot exceed end time";
+				document.getElementById("start_ss").focus();
+				return false;
+			}
+			if (end_time > limit) {
+				//console.log(end_time,"  ", limit);
+				document.getElementById("warning2").innerHTML = "Please insert again";
+				document.getElementById("end_ss").focus();
+				return false;
+			} else {
+				/* if ($('#inputVideoID').val() > -1)
+					return updateVideo(event); */
+				return createVideo(event);
+			}
+		}
 				
 	</script>
-	
-		<jsp:include page="outer.jsp" flush="false"/>
-    <%-- <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-        <div class="app-header header-shadow">
-            <div class="app-header__logo">
-                <div class="logo-src"></div>
-                <div class="header__pane ml-auto">
-                    <div>
-                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="app-header__mobile-menu">
-                <div>
-                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <div class="app-header__menu">
-                <span>
-                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                        <span class="btn-icon-wrapper">
-                            <i class="fa fa-ellipsis-v fa-w-6"></i>
-                        </span>
-                    </button>
-                </span>
-            </div>    <div class="app-header__content">
-                <div class="app-header-left">
-                    <div class="search-wrapper">
-                        <div class="input-holder">
-                            <input type="text" class="search-input" placeholder="Type to search">
-                            <button class="search-icon"><span></span></button>
-                        </div>
-                        <button class="close"></button>
-                    </div>
-                    <ul class="header-menu nav">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-link-icon fa fa-home"> </i>
-                                대시보드
-                            </a>
-                        </li>
-                       
-                        <li class="dropdown nav-item">
-                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
-                                <i class="nav-link-icon fa fa-archive"></i>
-                                학습컨텐츠 보관함
-                            </a>
-                        </li>
-                    </ul>        
-                </div>
-                <div class="app-header-right">
-                    <div class="header-btn-lg pr-0">
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left">
-                                    <div class="btn-group">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
-                                            <i class="fa fa-angle-down ml-2 opacity-8"></i>
-                                        </a>
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <button type="button" tabindex="0" class="dropdown-item">User Account</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
-                                        홍길동
-                                    </div>
-                                    <div class="widget-subheading">
-                                        교수
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>        
-                </div>
-            </div>
-        </div>    --%>           
-        <div class="app-main">
-                <!-- <div class="app-sidebar sidebar-shadow">
-                    <div class="app-header__logo">
-                        <div class="logo-src"></div>
-                        <div class="header__pane ml-auto">
-                            <div>
-                                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                                    <span class="hamburger-box">
-                                        <span class="hamburger-inner"></span>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="app-header__mobile-menu">
-                        <div>
-                            <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                                <span class="hamburger-box">
-                                    <span class="hamburger-inner"></span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="app-header__menu">
-                        <span>
-                            <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                                <span class="btn-icon-wrapper">
-                                    <i class="fa fa-ellipsis-v fa-w-6"></i>
-                                </span>
-                            </button>
-                        </span>
-                    </div>    
-                    <div class="scrollbar-sidebar ">	side menu 시작!
-                        <div class="app-sidebar__inner">
-                            <ul class="vertical-nav-menu sideClassList">
-                                <li class="app-sidebar__heading">내 수업</li>
-                                로그인한 사용자의 class 이자리에 추가됨 !!
-                            </ul>
-                        </div>
-                    </div>
-                </div>  -->  
-                 <div class="app-main__outer">
-                    <div class="app-main__inner">
-                        <div class="app-page-title">
-                            <div class="page-title-wrapper">
-                                <div class="page-title-heading">
-                                  	<h4 id="playlistName">  - Youtube 영상 추가 </h4>
-                                </div>
-                          </div>
-                        </div>            
-                       
-                       <div class="row">
-                       		<!-- <div class="col-lg-3">
-								<div class="myPlaylist"></div>
-							</div> -->
-                       		
-                       		<div class="selectedPlaylist col-lg-8 card">
-								<div class="card-body">
-									<div class="card-title playlistName"></div>					
+	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+		<jsp:include page="outer_top.jsp" flush="false"/>
+
+		<div class="app-main">
+		 	<jsp:include page="outer_left.jsp" flush="false"/>
+		 	
+        	<div class="app-main__outer">
+        		 <div class="app-main__inner">
+        		 <h4 id="playlistName" style="display:inline-block">  - Youtube 영상 추가 </h4>                        
+                        <div class="row">
+                  		<div class="selectedPlaylist col-lg-8 card">
+								<!-- <div class="card-header"> -->
+									<div class="card-title playlistName m-3">
+										
 											<div class="row">
-												<div class="col-lg-8 ">
-														<form class="card mb-3 widget-content bg-midnight-bloom" name="form1" method="post" onsubmit="return false;" >
+												<div class="col-lg-12 ">
+														<form class="form-inline" name="form1" method="post" onsubmit="return false;" >
 															<select name="opt" id="opt" class="mr-2 dropdown-toggle btn btn-primary btn-lg">
 																<option value="relevance">관련순</option>
 																<option value="date">날짜순</option>
@@ -630,13 +637,16 @@ $(document).ready(function(){
 																<option value="title">문자순</option>
 																<option value="rating">평가순</option>
 															</select> 
-															<input type="text" id="search_box" class="form-control">
-															<button onclick="fnGetList();" class="btn btn-primary">검색</button>
+															<input type="text" id="search_box" class="form-control col-lg-8 mr-2">
+															<button onclick="fnGetList(); resizeRightCard()" class="btn btn-primary btn-lg">검색</button>
 														</form>
 												</div>
 											</div>
-											
-											<div>
+										
+									</div>	
+									<div class="card-body"> 
+									
+										<div>
 												<form action="playlist/player" id="form2" method="post" style="display: none">
 													<input type="hidden" name="playerId" id="playerId">
 													<input type="hidden" name="playerTitle" id="playerTitle">
@@ -651,14 +661,18 @@ $(document).ready(function(){
 													<div id="nav_view"></div>
 												</div>
 											</div>
+									</div>				
+											
+											
+											
 
-								</div>
+								<!-- </div> -->
 							</div>	
 							
-							 <div class="col-lg-4">
-	                            	<div class="main-card mb-3 card">
-	                            		<div class="card-header">
-	                            			카트에 담긴 영상들 
+							 <div class="col-lg-4" >
+	                            	<div class="main-card card sticky-top" id="rightCard">
+	                            		<div class="card-header" >
+	                            			선택된 비디오 리스트 
 	                            		</div>
 	                            		<div class="card-body">
 	                            			<div class="scroll-area-sm"> 
@@ -667,42 +681,55 @@ $(document).ready(function(){
 	                            			</div>
 	                            		</div>
 	                            	</div>
-                            </div>					
-                    </div>	
-				</div>
-                    <!-- <div class="app-wrapper-footer">
-                        <div class="app-footer">
-                            <div class="app-footer__inner">
-                                <div class="app-footer-left">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 1
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="app-footer-right">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 3
-                                            </a>
-                                        </li>  
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>  -->   
-             </div>
-        </div>
-
-    
-    
-    <script>
-
-
-
-    </script>
+                            </div>		
+                    		
+                    		<div id="setVideoInfo" style="display:none;">
+	                    		<div>
+									<button onclick="getCurrentPlayTime1()" type="button">start time</button> : 
+									<input type="text" id="start_hh" maxlength="2" size="2"> 시 
+									<input type="text" id="start_mm" maxlength="2" size="2"> 분 
+									<input type="text" id="start_ss" maxlength="5" size="5"> 초
+									<button onclick="seekTo1()" type="button">위치이동</button>
+									<span id=warning1 style="color: red;"></span> <br>
+								</div>
+								
+								<div>
+									<button onclick="getCurrentPlayTime2()" type="button">end time</button> : 
+									<input type="text" id="end_hh" max="" maxlength="2" size="2"> 시 
+									<input type="text" id="end_mm" max="" maxlength="2" size="2"> 분 
+									<input type="text" id="end_ss" maxlength="5" size="5"> 초
+									<button onclick="seekTo2()" type="button">위치이동</button>
+									<span id=warning2 style="color: red;"></span> <br>
+								</div>
+								
+								
+									<div style="inline-block"> <span style="font-weight:bold"> 태그: </span><input type="text" id="tag" name="tag"> </div>
+                    		</div>
+                    		
+                    		<div id="setVideosInCart" style="display:none;">
+                    			<div class="row">
+                    				<div class="col-lg-1">
+                    					<input type="checkbox" value="" >
+                    				</div>
+                    				<div class="col-lg-5">
+                    					<img>
+                    				</div>
+                    				<div class="col-lg-6">
+                    					<div class="row-fluid">
+                    						<div class="start"></div>
+                    						<div class="end"></div>
+                    					</div>
+                    				</div>
+                    			</div>
+                    		</div>
+                    		
+                    </div>         
+                    	
+        		</div>
+        		<jsp:include page="outer_bottom.jsp" flush="false"/>
+	   		</div>
+   		</div>
+   	</div>
+  
 </body>
 </html>

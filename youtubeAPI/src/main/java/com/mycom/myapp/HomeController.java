@@ -59,8 +59,8 @@ public class HomeController {
 		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
-		//return "t_example";
-		return "outer";
+		return "t_example";
+		//return "outer";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
