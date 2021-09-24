@@ -144,8 +144,9 @@ $(document).ready(function(){
 	
 	function setAllContents(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
-		console.log("길이 : " +allContents.length);
+		console.log("길이 : " + allContents.length);
 		for(var i=0; i<allContents.length; i++){
+			//console.log("day : " + allContents[i].days + "daySeq : " +allContents[i].daySeq+ " i : " + i);
 			var day = allContents[i].days;
 			var date = new Date(allContents[i].endDate.time); //timestamp -> actural time
 			//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
@@ -157,7 +158,7 @@ $(document).ready(function(){
 
 			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
-			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "/" + allContents[i].daySeq+ "'";
+			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "/" + i + "'";
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 			var published;
 

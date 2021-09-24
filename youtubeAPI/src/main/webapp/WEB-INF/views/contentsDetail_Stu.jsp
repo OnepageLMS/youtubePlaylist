@@ -44,6 +44,7 @@ var videoIdx;
 var playlist; 
 
 $(document).ready(function(){
+	console.log("학생페이지입니ㅏㄷ!");
 	$.ajax({ 
 		  url : "../../../../forStudentContentDetail",
 		  type : "post",

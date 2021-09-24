@@ -1,6 +1,8 @@
 package com.mycom.myapp.classContent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,9 @@ import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.playlist.PlaylistService;
+import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
 import com.mycom.myapp.commons.PlaylistVO;
+import com.mycom.myapp.commons.VideoVO;
 
 import net.sf.json.JSONArray;
 
@@ -56,11 +60,25 @@ public class ClassContentController {
 		System.out.println(vo.getClassName());
 		
 //		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
-		model.addAttribute("classInfo", classService.getClass(1)); //여기도 임의로 classID 1 넣어두었다.
-		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(1))); //classID 임의로 1 넣어두었다.
+		model.addAttribute("classInfo", classService.getClass(0)); //여기도 임의로 classID 0 넣어두었다.
+		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(0))); //classID 임의로 0 넣어두었다.
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
-		System.out.println("???여기는?");
+		
+		/*VideoVO pvo = new VideoVO();
+		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
+		ClassContentVO ccvo = new ClassContentVO();
+		
+		ccvo.setPlaylistID(playlistID);
+		ccvo.setId(id);
+		ccvo.setClassID(classID); //임의로 1번 class 설정
+		
+		model.addAttribute("classInfo", classesService.getClass(classID)); 
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
+		model.addAttribute("vo", classContentService.getOneContent(id));
+		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
+		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); */
+		//return "t_contentsList_Stu2";
 		return "t_contentDetail";
 	}
 	
@@ -86,12 +104,38 @@ public class ClassContentController {
 	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
 	public List<PlaylistVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		System.out.println("here!");
+		
 		//playlistmapper를 통해 playlistID에 맞는 영상들을 가져와서 리턴해주는역할을 해야한ㄷㅏ. 
 		PlaylistVO vo = new PlaylistVO();
 	    vo.setId(playlistID);
 	    
 	    return playlistService.getPlaylistForInstructor(vo);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/updateClassContents", method = RequestMethod.POST)
+	public int updateClassContents(HttpServletRequest request, Model model) throws Exception {
+		System.out.println("className : " + request.getParameter("className") + "classDescription : " + request.getParameter("classDescription") + "endDate : " + request.getParameter("endDate") + "id: " +request.getParameter("id"));
+		//잘 넘어오는 중! 마감일만 잘 받아서 db에 update하면 된다 //마감일도 잘 받음!
+		
+		SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date endDate = fm.parse(request.getParameter("endDate"));
+		
+		ClassContentVO ccvo = new ClassContentVO();
+		ccvo.setTitle(request.getParameter("className"));
+		ccvo.setDescription(request.getParameter("classDescription"));
+		ccvo.setEndDate(endDate);
+		ccvo.setId(Integer.parseInt(request.getParameter("id")));
+		
+		
+		if( classContentService.updateContent(ccvo) == 0) {
+			System.out.println("modal을 통한 classcontent 업데이트 실패");
+			return 0;
+		}
+		else {
+			return 1;
+		}
+	   
 	}
 	
 	@ResponseBody
