@@ -43,6 +43,7 @@ var classContentID = 1;
 var information;
 var videoIdx;
 var playlist; 
+var id = 0;
 
 $(document).ready(function(){
 	$.ajax({ 
@@ -54,8 +55,8 @@ $(document).ready(function(){
 		  },
 		  dataType : "json",
 		  success : function(data) {
-			 console.log("성공이긴");
 			information = data;
+			console.log("성공이긴" + information[0].playlistID);
 			videoIdx = ${daySeq};
 		  },
 		  error : function() {
@@ -97,14 +98,13 @@ $(document).ready(function(){
 		var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classID+  "'";
 		classContentID = weekContents[i].id; // classContent의 id //여기 수정
 		
-		
-			
-		
 		if(i == videoIdx){
-			console.log("i / videoIdx" + videoIdx);
+			console.log("i / videoIdx" + i + " " + videoIdx);
 			var area_expanded = true;
 			var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
 			var showing = 'class="collapse show"';
+			id = weekContents[i].id;
+			console.log(weekContents[i].id + " //////// " + id);
 		}
 		else{
 			var area_expanded = false;
@@ -198,6 +198,7 @@ $(document).ready(function(){
 					+ '</div>'
   			+ '</div>');
 		}
+	
 		
 });
 
@@ -243,6 +244,7 @@ function showLecture(playlistID, id, classInfo, idx){
 	
 	lastVideo = playlist[0].id;
 	myThumbnail(id, idx);
+	id = id;
 }
 
 function myThumbnail(classContentID, idx){
@@ -348,7 +350,31 @@ function onPlayerReady(event) {
   console.log('onPlayerReady 실행');
 
   console.log('onPlayerReady 마감');
+  console.log("endDate : " + endDate+ " id: " +id);
   
+}
+
+function submitContent(){
+	var endDate = ($("#endDate").val() + " " + ("00"+$("#endDate_h").val()).slice(-2) + ":" + ("00"+$("#endDate_m").val()).slice(-2) + ":00") ;
+	console.log("endDate : " + endDate+ " id: " +id);
+	$.ajax({ 
+		  url : "../../updateClassContents",
+		  type : "post",
+		  async : false,
+		  data : {	
+			className : $("#editContentName").val(),
+			classDescription : $("#editContentDescription").val(),
+			endDate : endDate,
+			id : id
+		  },
+		  dataType : "json",
+		  success : function(data) {
+			console.log("modalSubmit");
+		  },
+		  complete : function(data) {
+		  	location.reload();
+		  }
+	})
 }
 
 	
@@ -377,12 +403,16 @@ function onPlayerReady(event) {
 							<div class="card-body" style="margin : 0px; padding:0px; height:auto">
 								<div class="card-header">
 									<h3 >${vo.title }</h3>
-									<div class="font-icon-wrapper float-right"><i class="pe-7s-more"> </i>
+									<div class="float-right">
+                                        
+                                        <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#editContentModal">
+                                        	컨텐츠 수정
+                                        </button>
                                     </div>
 								</div>
                             	<div id = "onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
 								</div>
-								<div class="card-footer"><h5>${vo.description }</h5></div>
+								<div class="card-footer"><h5>${vo.description}</h5></div>
                             </div>
                         </div>
                                     
@@ -430,27 +460,49 @@ function onPlayerReady(event) {
 	   		</div>
 	   	</div>
    	</div>
-</body>
-
-	<div class="modal" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+   	
+   	
+   	<!-- edit classContent modal -->
+    <div class="modal fade" id="editContentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
+	                <h5 class="modal-title" id="editContentModalLabel">학습페이지 수정</h5>
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
+	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	                Playlist를 선택해주세요
-	                <div class="myPlaylist"></div>
+	               <div class="position-relative form-group">
+	               		<label for="editContentName" class="">이름</label>
+	               		<input name="contentName" id="editContentName" type="text" class="form-control">
+	               </div>
+	               <div class="position-relative form-group">
+	               		<label for="editContentDescription" class="">설명</label>
+	               		<textarea name="contentDescription" id="editContentDescription" class="form-control"></textarea>
+	               </div>
+	               <div class="position-relative form-group">
+	               		<!--  <label for="editContentDuedate" class="">마감일</label>
+	               		<textarea name="contentDuedate" id="editContentDuedate" class="form-control"></textarea>-->
+	               		
+	               		<div class="setEndDate input-group">
+							<div class="input-group-prepend">
+								<label for="endDate" class="input-group-text"> 마감일: </label>
+							</div>
+							<input type="hidden" name="endDate">
+							<input type="date" class="form-control col-sm-8" id="endDate">
+							<input type="number" class="setTime end_h form-control col-sm-2" id="endDate_h" value="0" min="0" max="23">
+							<input type="number" class="setTime end_m form-control col-sm-2" id="endDate_m" value="0" min="0" max="59"> 
+						</div>
+	               </div>
 	            </div>
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary" onclick="selectOK();">선택완료</button>
+	                <button id="modalSubmit" type="button" class="btn btn-primary" onclick="submitContent()">수정완료</button>
 	            </div>
 	        </div>
 	    </div>
 	</div>
 	
+</body>
 </html>
