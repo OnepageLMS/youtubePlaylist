@@ -9,8 +9,8 @@ public class ClassesVO {
 	private String description;
 	private int days = 0;
 	private String tag;
-	private Date startDate;
-	private Date closeDate;
+	private Date startDate;	//string 변환
+	private Date closeDate;	//string 변환
 	private boolean active;
 	
 	public int getId() {

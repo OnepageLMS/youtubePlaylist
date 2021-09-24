@@ -22,13 +22,13 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-    <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
 <script>
@@ -54,37 +54,71 @@ $(document).ready(function(){
 			var cardColor = inactive_colors[i%(inactive_colors.length)];
 		
 		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
-								+ '<div class="mb-3 card">'
+								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#setClassroomModal" class="nav-link"><i class="nav-link-icon fa fa-cog"></i></a>'
-										//+ '<a href="#setClassroomModal" data-toggle="modal" class="nav-link openEditClassModal"><i class="nav-link-icon fa fa-cog"></i></a>'
+										+ '<a href="void(0);" classID="' + allMyClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn"><i class="nav-link-icon fa fa-cog"></i></a>'
+										//+ '<a href="javascript:openEditClassModal(' + allMyClass[i].id + ');" class="nav-link openEditClassModal"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        		+ '</div>'
-	                        		+ '<div class="card-footer">'
-	                        			+ '<div class="row col">'
-		                        			+ '<div class="widget-subheading col-6">종료일here</div>'
-											+ '<div class="widget-subheading col-6">참여자 **명</div>'
-											+ '<div class="col-12">'
-												+ '<div class="mb-3 progress">'
-	                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
-	                                            + '</div>'
-											+ '</div>'
-										+ '</div>'
-									+ '</div>'
 	                        	'</div>'
 	                        + '</div>';
 
-	    if(allMyClass[i].active == 1)
+	    if(allMyClass[i].active == 1){
 			$('.classActive').append(dashboardCard);
-	    else
-			$('.classInactive').append(dashboardCard);
+			var footer = '<div class="card-footer">'
+									+ '<div class="row col footer-content">'
+									+ '<div class="widget-subheading col-6">종료일</div>'
+									+ '<div class="widget-subheading col-6">참여자 **명</div>'
+									+ '<div class="col-12">'
+										+ '<div class="mb-3 progress">'
+						                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+						                + '</div>'
+									+ '</div>'
+								+ '</div>'
+							+ '</div>';
+			$('.classCard').append(footer);
+	    }
+	    else 
+			$('.classInactive').append(dashboardCard);	
 	}
+});
 
+$(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn 눌렀을 때 modal에 데이터 전송
+	var classID = $(this).attr('classID');
+
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/getClassInfo',
+		data: { 'classID' : classID },
+		datatype: 'json',
+		success: function(data){
+			var className = data.className;
+			var description = data.description;
+			var days = data.days;
+			var tag = data.tag;
+			var closeDate = data.closeDate;
+			var active = data.active;
+
+			$('#editClassName').val(className);
+			$('#editDescription').val(description);
+			$('#editClassDays').val(days);
+			$('#editClassTag').val(tag);
+			$('#editCloseClassDate').val(closeDate);	//이부분 나중에 다시 수정하기! date type or string type으로!
+
+			if(active == 0)
+				$('#editClassActive').prop('checked', false);
+			else
+				$('#editClassActive').prop('checked', true);
+		},
+		error: function(data, status,error){
+			console.log('ajax class 정보 가져오기 실패!');
+		}
+	});
 });
 
 function initForm(){	//강의실 생성 및 수정 form 내용 초기화
@@ -108,7 +142,6 @@ function submitAddClassroom(){	//add classroom form 전송
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/insertClassroom',
-		data: $("#formAddClassroom").serialize(),
 		data: {'className': inputClassName,
 				'description' : inputDescription,
 				'days' : inputDays,
@@ -127,21 +160,7 @@ function submitAddClassroom(){	//add classroom form 전송
 		}
 	});
 }
-$('#editClassroomModal').on('show.bs.modal', function(e) {
-	console.log("works!!");
-    //get data-id attribute of the clicked element
-    //var bookId = $(e.relatedTarget).data('book-id');
 
-    //populate the textbox
-    //$(e.currentTarget).find('input[name="bookId"]').val(bookId);
-    $('#editClassName').val("hello");
-    
-});
-function getClassInfo(){
-	//getClassInfo
-
-	
-}
 
 function submitEditClassroom(){
 	
@@ -287,7 +306,7 @@ function submitEditClassroom(){
 	            <form class="needs-validation" id="formEditClassroom" method="post" novalidate>
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
-		               		<label for="editClassName" class="">강의실 이름</label>
+		               		<label for="editClassName" class="">강의실 이름</label> 
 		               		<input name="className" id="editClassName" type="text" class="form-control">
 		               </div>
 		               <div class="position-relative form-group">
@@ -309,8 +328,12 @@ function submitEditClassroom(){
 				               </div>
 			               	</div>
 	                   </div>
+	                    <div class="form-group"> 
+			        		<label for="inputCloseClassroom">강의실 게시 종료일</label>
+			        		<input type="date" name="closeDate" class="form-control" id="editCloseClassroom"/>
+			        	</div> 
 	                    <div class="custom-control custom-switch">
-				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
+				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="editClassActive">
 				            <label class="custom-control-label" for="customSwitch2">강의실 활성화</label>
 				        </div>
 		            </div>
