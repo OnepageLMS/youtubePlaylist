@@ -84,55 +84,17 @@
 var instructorID;
 
 $(document).ready(function(){
-	instructorID = '${instructorID}'; 
-	getAllMyPlaylist(instructorID); //나중에는 사용자 로그인정보로 email 가져와야할듯..
+	getAllMyPlaylist(); 
 
 	$('.myplaylistLink').addClass('text-primary');	//outer_top.jsp에서 '학습컨텐츠보관함' nav-link 색깔 변경
 	
-	var allMyClass = JSON.parse('${allMyClass}');
-
-	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
-		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
-
-		var html = '<li>'
-						+ '<a href="#">'
-							+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-							+ name
-							+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-						+ '</a>'
-						+ '<ul>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '공지'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="' + classContentURL + '">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '학습 컨텐츠'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '성적'
-								+ '</a>'
-							+ '</li>'
-						+ '</ul>'
-					+ '</li>';
-				
-		$('.sideClassList').append(html);
-	}
 });
 
 //왼쪽 내 playlist 목록 가져오기
-function getAllMyPlaylist(email){
+function getAllMyPlaylist(){
 	$.ajax({
 		type : 'post',
 		url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
-		data : {instructorID : instructorID},
 		success : function(result){
 			playlists = result.allMyPlaylist;
 
@@ -164,11 +126,16 @@ function getAllMyPlaylist(email){
 								+ '</div>'
 							+ '</div>';
 				$('.myPlaylist').append(setFormat);
-						
+
 				$.each(playlists, function( index, value ){
-					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' + value.id + ', ' + index 
-																					+ ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
+					var exposed = '';
+					if(value.exposed == 0)
+						exposed = '<i class="pe-7s-lock float-right" margin-right: 5px;"></i>';
+						
+					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' 
+												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
 										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength)
+										+ exposed
 										+ '</button>'
 
                 	$('.allPlaylist').append(contentHtml);
@@ -201,7 +168,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 		    $('#playlistInfo').empty(); 
 		    $('.playlistName').empty();
 
-		    $('.selectedPlaylist').attr('playlistID', playlistID); //혹시 나중에 사용할 일 있지 않을까?
+		    $('.selectedPlaylist').attr('playlistID', playlistID);
 		    
 		    var thumbnail = '<div class="row">'
 			    				+ '<div class="col-sm-12">'
@@ -212,10 +179,16 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 				    			+ '</div>'
 			    			+ '</div>';
 		    $('#playlistInfo').append(thumbnail);
-		    
+
+			if(result.exposed == 0)
+				var displayExposed = '<i class="pe-7s-lock text-focus" style="display:inline; margin-right: 5px; font-size: 13px;"><p id="displayExposed" style="display: inline;">비공개</p></i>';
+			else
+				var displayExposed = '<i class="fa fa-eye text-primary" style="display:inline; margin-right: 5px; font-size: 13px;"><p id="displayExposed" style="display: inline;">공개</p></i>';
+					
 			var name = '<h4>'
+							+ displayExposed
 							+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
-							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
+							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link editPlaylistBtn" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
 					+ '</h4>';
 		    $('.playlistName').append(name); //중간영역 
 		    
@@ -439,6 +412,26 @@ function convertTotalLength(seconds){ //duration 변환
 	return result;
 }
 
+$(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn 눌렀을 때 modal에 데이터 전송
+	//var playlistID = $(this).attr('playlistID');
+
+	//아래 내용은 이미 화면에 표시되어있기 때문에 db에서 다시 가져오지 않는다.
+	var playlistName = $('#displayPlaylistName').text();
+	var description = $('#displayDescription').text();
+	//var tag = $('').text();
+	var exposed = $('#displayExposed').text();
+	
+	$('#editPlaylistName').val(playlistName);
+	$('#editPlaylistDescription').val(description);
+
+	if(exposed == '비공개')
+		$('#editPlaylistExposed').prop('checked', false);
+	else
+		$('#editPlaylistExposed').prop('checked', true);
+
+});
+
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -526,7 +519,7 @@ function convertTotalLength(seconds){ //duration 변환
 	               		<input name="tag" id="inputPlaylistTag" placeholder="ex) spring, 웹개발초보" type="text" class="form-control">
 	               </div>
                    <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
+			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="inputPlaylistExposed">
 			            <label class="custom-control-label" for="customSwitch1">LMS내 공개</label>
 			       </div>
 	            </div>
@@ -562,7 +555,7 @@ function convertTotalLength(seconds){ //duration 변환
 	               		<input name="tag" id="editPlaylistTag" type="text" class="form-control">
 	               </div>
                    <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
+			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="editPlaylistExposed">
 			            <label class="custom-control-label" for="customSwitch2">LMS내 공개</label>
 			       </div>
 	            </div>

@@ -65,7 +65,6 @@
                            	</ul>
                        	</li>
 					</c:forEach>
-                   <li class="sideClassList"></li><!-- 로그인한 사용자의 강의실 list 여기에 추가됨 !! -->
                </ul>
            </div>
        </div>
