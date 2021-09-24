@@ -2,61 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<script>
-$(document).ready(function(){
-	$.ajax({
-		type : 'get',
-		url : '${pageContext.request.contextPath}/allMyClassMap',
-		success : function(result){
-			var allMyClass = result.allMyClass;
-
-			$('.sideClassList').empty();
-
-			if (allMyClass == null)
-				 $('.sideClassList').append('생성된 강의실이 없습니다');
-			 
-			else {
-				$.each(allMyClass, function(index, value) {
-					var name = value.className;
-					var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + value.id;
-					var html = '<li>'
-									+ '<a href="#">'
-										+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-										+ name
-										+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-									+ '</a>'
-									+ '<ul>'
-										+ '<li>'
-											+ '<a href="#">'
-												+ '<i class="metismenu-icon"></i>'
-												+ '공지'
-											+ '</a>'
-										+ '</li>'
-										+ '<li>'
-											+ '<a href="' + classContentURL + '">'
-												+ '<i class="metismenu-icon"></i>'
-												+ '학습 컨텐츠'
-											+ '</a>'
-										+ '</li>'
-										+ '<li>'
-											+ '<a href="#">'
-												+ '<i class="metismenu-icon"></i>'
-												+ '성적'
-											+ '</a>'
-										+ '</li>'
-									+ '</ul>'
-								+ '</li>';
-							
-					$('.sideClassList').append(html);
-				});
-			}
-		}, error:function(request,status,error){
-			console.log(error);
-		}
-	});
-});
-</script>
-
 	<div class="app-sidebar sidebar-shadow">
        <div class="app-header__logo">
            <div class="header__pane ml-auto">
@@ -91,6 +36,35 @@ $(document).ready(function(){
            <div class="app-sidebar__inner">
                <ul class="vertical-nav-menu">
                    <li class="app-sidebar__heading">내 수업</li>
+                   <c:forEach var="v" items="${allMyClass}">
+				 		<li>
+                           <a href="#">
+                               <i class="metismenu-icon pe-7s-notebook"></i>
+                               ${v.className}
+                               <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                           	</a>
+                           	<ul class="mm-collapse">
+								<li>
+									<a href="#">
+                                   		<i class="metismenu-icon"></i>
+                                   		공지
+                              		</a>
+                               	</li>
+                               	<li>
+                                	<a href="${pageContext.request.contextPath}/class/contentList/${v.id}">
+                                       <i class="metismenu-icon"></i>
+                                       	학습컨텐츠
+                                   	</a>
+                               	</li>
+                               	<li>
+                                   <a href="#">
+                                       <i class="metismenu-icon"></i>
+                                      	출결/학습 현황
+                                   </a>
+                               	</li>
+                           	</ul>
+                       	</li>
+					</c:forEach>
                    <li class="sideClassList"></li><!-- 로그인한 사용자의 강의실 list 여기에 추가됨 !! -->
                </ul>
            </div>
