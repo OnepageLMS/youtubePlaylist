@@ -44,6 +44,8 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
 	
+	private int studentID = 1;
+	
 	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)
 	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
 		//int studentID = 1;	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
@@ -52,6 +54,13 @@ public class Stu_ClassController{
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
+		
+		return "class/dashboard_Stu";
+	}
+	
+	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)	// 9/24 studentID url에서 지운 버전(yewon)
+	public String dashboard (Model model) {
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
 		
 		return "class/dashboard_Stu";
 	}
