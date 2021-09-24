@@ -44,17 +44,9 @@
                 </div>
                 <ul class="header-menu nav">
                     <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
+                        <a href="${pageContext.request.contextPath}/stu/class/dashboard" class="nav-link">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
                             <i class="nav-link-icon fa fa-home"> </i>
                             대시보드
-                        </a>
-                    </li>
-                   
-                    <li class="nav-item">
-                    	<!-- url /myplaylist 뒤에 instructorID 지움. controller에서 따로 설정!!! (9/20 예원) -->
-                        <a href="${pageContext.request.contextPath}/playlist/myPlaylist" class="nav-link myplaylistLink">
-                            <i class="nav-link-icon fa fa-archive"></i>
-                            학습컨텐츠 보관함
                         </a>
                     </li>
                 </ul>  
