@@ -18,6 +18,11 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
+	public int updateClassroom(ClassesVO vo) {
+		return classesDAO.updateClassroom(vo);
+	}
+	
+	@Override
 	public int updateDays(ClassesVO vo) {
 		return classesDAO.updateDays(vo);
 	}
@@ -25,6 +30,16 @@ public class ClassesServiceImpl implements ClassesService {
 	@Override
 	public ClassesVO getClass(int id) {
 		return classesDAO.getClass(id);
+	}
+	
+	@Override
+	public List<ClassesVO> getAllMyActiveClass(int instructorID){
+		return classesDAO.getAllMyActiveClass(instructorID);
+	}
+	
+	@Override
+	public List<ClassesVO> getAllMyInactiveClass(int instructorID){
+		return classesDAO.getAllMyInactiveClass(instructorID);
 	}
 	
 	@Override

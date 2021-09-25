@@ -81,7 +81,7 @@
 	</style>
 </head>
 <script>
-var instructorID;
+var instructorID = 1;	//지우기
 
 $(document).ready(function(){
 	getAllMyPlaylist(); 

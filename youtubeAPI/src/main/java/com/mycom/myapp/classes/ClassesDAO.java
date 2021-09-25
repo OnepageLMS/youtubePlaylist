@@ -18,6 +18,11 @@ public class ClassesDAO {
 		return result;
 	}
 	
+	public int updateClassroom(ClassesVO vo) {
+		int result = sqlSession.update("Classes.updateClassroom", vo);
+		return result;
+	}
+	
 	public int updateDays(ClassesVO vo){
 		int result = sqlSession.update("Classes.updateDays", vo);
 		return result;
@@ -26,6 +31,16 @@ public class ClassesDAO {
 	public ClassesVO getClass(int id) {
 		ClassesVO vo = sqlSession.selectOne("Classes.getClass", id);
 		return vo;
+	}
+	
+	public List<ClassesVO> getAllMyActiveClass(int instructorID){
+		List<ClassesVO> result = sqlSession.selectList("Classes.getAllMyActiveClass", instructorID);
+		return result;
+	}
+	
+	public List<ClassesVO> getAllMyInactiveClass(int instructorID){
+		List<ClassesVO> result = sqlSession.selectList("Classes.getAllMyInactiveClass", instructorID);
+		return result;
 	}
 	
 	public List<ClassesVO> getAllMyClass(int instructorID){
