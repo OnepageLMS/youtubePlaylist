@@ -84,53 +84,17 @@
 var instructorID;
 
 $(document).ready(function(){
-	instructorID = '${instructorID}'; 
-	getAllMyPlaylist(instructorID); //나중에는 사용자 로그인정보로 email 가져와야할듯..
+	getAllMyPlaylist(); 
+
+	$('.myplaylistLink').addClass('text-primary');	//outer_top.jsp에서 '학습컨텐츠보관함' nav-link 색깔 변경
 	
-	var allMyClass = JSON.parse('${allMyClass}');
-
-	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
-		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
-
-		var html = '<li>'
-						+ '<a href="#">'
-							+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-							+ name
-							+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-						+ '</a>'
-						+ '<ul>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '공지'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="' + classContentURL + '">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '학습 컨텐츠'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '성적'
-								+ '</a>'
-							+ '</li>'
-						+ '</ul>'
-					+ '</li>';
-				
-		$('.sideClassList').append(html);
-	}
 });
 
 //왼쪽 내 playlist 목록 가져오기
-function getAllMyPlaylist(email){
+function getAllMyPlaylist(){
 	$.ajax({
 		type : 'post',
 		url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
-		data : {instructorID : instructorID},
 		success : function(result){
 			playlists = result.allMyPlaylist;
 
@@ -162,11 +126,16 @@ function getAllMyPlaylist(email){
 								+ '</div>'
 							+ '</div>';
 				$('.myPlaylist').append(setFormat);
-						
+
 				$.each(playlists, function( index, value ){
-					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' + value.id + ', ' + index 
-																					+ ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
+					var exposed = '';
+					if(value.exposed == 0)
+						exposed = '<i class="pe-7s-lock float-right" margin-right: 5px;"></i>';
+						
+					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' 
+												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
 										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength)
+										+ exposed
 										+ '</button>'
 
                 	$('.allPlaylist').append(contentHtml);
@@ -199,7 +168,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 		    $('#playlistInfo').empty(); 
 		    $('.playlistName').empty();
 
-		    $('.selectedPlaylist').attr('playlistID', playlistID); //혹시 나중에 사용할 일 있지 않을까?
+		    $('.selectedPlaylist').attr('playlistID', playlistID);
 		    
 		    var thumbnail = '<div class="row">'
 			    				+ '<div class="col-sm-12">'
@@ -210,10 +179,16 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 				    			+ '</div>'
 			    			+ '</div>';
 		    $('#playlistInfo').append(thumbnail);
-		    
+
+			if(result.exposed == 0)
+				var displayExposed = '<i class="pe-7s-lock text-focus" style="display:inline; margin-right: 5px; font-size: 13px;"><p id="displayExposed" style="display: inline;">비공개</p></i>';
+			else
+				var displayExposed = '<i class="fa fa-eye text-primary" style="display:inline; margin-right: 5px; font-size: 13px;"><p id="displayExposed" style="display: inline;">공개</p></i>';
+					
 			var name = '<h4>'
+							+ displayExposed
 							+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
-							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
+							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link editPlaylistBtn" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
 					+ '</h4>';
 		    $('.playlistName').append(name); //중간영역 
 		    
@@ -281,7 +256,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 		    	else 
 			    	var tags = ' ';
 
-		    	var address = "'../../video/watch/" + value.playlistID + '/' + value.id + "'";
+		    	var address = "'${pageContext.request.contextPath}/video/watch/" + value.playlistID + '/' + value.id + "'";
 		    	
 		    	if (index == 0){
 			    	var forButton = 'location.href=' + address + '';
@@ -436,158 +411,50 @@ function convertTotalLength(seconds){ //duration 변환
 	
 	return result;
 }
+
+$(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn 눌렀을 때 modal에 데이터 전송
+	//var playlistID = $(this).attr('playlistID');
+
+	//아래 내용은 이미 화면에 표시되어있기 때문에 db에서 다시 가져오지 않는다.
+	var playlistName = $('#displayPlaylistName').text();
+	var description = $('#displayDescription').text();
+	//var tag = $('').text();
+	var exposed = $('#displayExposed').text();
+	
+	$('#editPlaylistName').val(playlistName);
+	$('#editPlaylistDescription').val(description);
+
+	if(exposed == '비공개')
+		$('#editPlaylistExposed').prop('checked', false);
+	else
+		$('#editPlaylistExposed').prop('checked', true);
+
+});
+
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-        <div class="app-header header-shadow">
-            <div class="app-header__logo">
-                <div class="logo-src"></div>
-                <div class="header__pane ml-auto">
-                    <div>
-                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="app-header__mobile-menu">
-                <div>
-                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <div class="app-header__menu">
-                <span>
-                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                        <span class="btn-icon-wrapper">
-                            <i class="fa fa-ellipsis-v fa-w-6"></i>
-                        </span>
-                    </button>
-                </span>
-            </div>   
-            <div class="app-header__content">
-                <div class="app-header-left">
-                    <div class="search-wrapper">
-                        <div class="input-holder">
-                            <input type="text" class="search-input" placeholder="Type to search">
-                            <button class="search-icon"><span></span></button>
-                        </div>
-                        <button class="close"></button>
-                    </div>
-                    <ul class="header-menu nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
-                                <i class="nav-link-icon fa fa-home"> </i>
-                                대시보드
-                            </a>
-                        </li>
-                       
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-primary">
-                                <i class="nav-link-icon fa fa-archive"></i>
-                                학습컨텐츠 보관함
-                            </a>
-                        </li>
-                    </ul>        
-                </div>
-                <div class="app-header-right">
-                    <div class="header-btn-lg pr-0">
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left">
-                                    <div class="btn-group">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
-                                            <i class="fa fa-angle-down ml-2 opacity-8"></i>
-                                        </a>
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                       		<h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <button type="button" tabindex="0" class="dropdown-item">User Account</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Sign Out</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
-                                        홍길동
-                                    </div>
-                                    <div class="widget-subheading">
-                                        교수
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>        
-                </div>
-            </div>
-        </div>              
+        <jsp:include page="../outer_top.jsp" flush="true"/>      
+              
         <div class="app-main">
-                <div class="app-sidebar sidebar-shadow">
-                    <div class="app-header__logo">
-                        <div class="logo-src"></div>
-                        <div class="header__pane ml-auto">
-                            <div>
-                                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                                    <span class="hamburger-box">
-                                        <span class="hamburger-inner"></span>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="app-header__mobile-menu">
-                        <div>
-                            <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                                <span class="hamburger-box">
-                                    <span class="hamburger-inner"></span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="app-header__menu">
-                        <span>
-                            <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                                <span class="btn-icon-wrapper">
-                                    <i class="fa fa-ellipsis-v fa-w-6"></i>
-                                </span>
-                            </button>
-                        </span>
-                    </div>    
-                    <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
-                        <div class="app-sidebar__inner">
-                            <ul class="vertical-nav-menu sideClassList">
-                                <li class="app-sidebar__heading">내 수업</li>
-                                <!-- 로그인한 사용자의 class 이자리에 추가됨 !! -->
-                            </ul>
-                        </div>
-                    </div>
-                </div>   
-                 <div class="app-main__outer">                         
-                    <div class="app-main__inner">
-						<div class="app-page-title">
-						
-						 <div class="page-title-wrapper">
-                                <div class="page-title-heading">
-                                </div>
-                                 <div class="page-title-actions">
-                                 </div>
-                    	</div>
+	    	<jsp:include page="../outer_left.jsp" flush="true"/>
+	    	 
+             <div class="app-main__outer">                         
+                <div class="app-main__inner">
+					<div class="app-page-title">
+		 				<div class="page-title-wrapper">
+                            <div class="page-title-heading"></div>
+                            <div class="page-title-actions"></div>
+                		</div>
 
-                        <div class="row">
-                           <div class="col-lg-3">
+                    	<div class="row">
+			                <div class="col-lg-3">
 								<div class="myPlaylist"></div>
 							</div>
-							
+			
 							<div class="selectedPlaylist col-lg-9 card">
 								<div class="card-body">
-								
 									<div class="row">
 										<div class="col-lg-9 card-title playlistName">										
 										</div>
@@ -595,23 +462,20 @@ function convertTotalLength(seconds){ //duration 변환
 									 	<div class="col-lg-3">
 											 <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="float-right text-right mb-2 mr-2 dropdown-toggle btn btn-primary" id="addVideoButton" style="display: none" >영상 추가하기</button>
 				                             <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-				                             	<%-- <form name="${pageContext.request.contextPath}/youtube" method="post" style="display:none">
-				                             		<input type="hidden" name="playlistID" id="playlistID">
-				                             		<input type="hidden" name="playlistName" id="playlistName">
-				                             		<button type="submit" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
-				                             	</form> --%>
-				                             	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
-			                                    	<button type="button" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
-			                                	</a>	                   
-			                                 	<a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
-						                            <button type="button" tabindex="0" class="dropdown-item">LMS 영상검색 </button>
-						                        </a>
-		                             		 </div>
-		                             		 
+					                             	<%-- <form name="${pageContext.request.contextPath}/youtube" method="post" style="display:none">
+					                             		<input type="hidden" name="playlistID" id="playlistID">
+					                             		<input type="hidden" name="playlistName" id="playlistName">
+					                             		<button type="submit" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
+					                             	</form> --%>
+					                             	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
+					                                   	<button type="button" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
+					                               	</a>	                   
+					                                	<a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
+							                            <button type="button" tabindex="0" class="dropdown-item">LMS 영상검색 </button>
+							                        </a>
+				                           		</div>
 									 	 </div>
-									 </div>
-									 
-		                             
+									</div>
 									<div class="row">
 										<div class="col-lg-3">
 											<div id="playlistInfo"></div>
@@ -623,36 +487,12 @@ function convertTotalLength(seconds){ //duration 변환
 									</div>
 								</div>
 							</div>
-                        </div>	<!-- 대시보드 안 box 끝 !! -->
-        
-                    </div>
-                    <div class="app-wrapper-footer">
-                        <div class="app-footer">
-                            <div class="app-footer__inner">
-                                <div class="app-footer-left">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 1
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="app-footer-right">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 3
-                                            </a>
-                                        </li>  
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
-              </div>
-        </div>
-    </div>
+                    	</div>	<!-- 대시보드 안 box 끝 !! -->
+                	</div>
+             		<jsp:include page="../outer_bottom.jsp" flush="true"/>
+          		</div>
+    		</div>
+    	</div>
     </div>
    
     <!-- add playlist modal -->
@@ -679,7 +519,7 @@ function convertTotalLength(seconds){ //duration 변환
 	               		<input name="tag" id="inputPlaylistTag" placeholder="ex) spring, 웹개발초보" type="text" class="form-control">
 	               </div>
                    <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
+			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="inputPlaylistExposed">
 			            <label class="custom-control-label" for="customSwitch1">LMS내 공개</label>
 			       </div>
 	            </div>
@@ -715,7 +555,7 @@ function convertTotalLength(seconds){ //duration 변환
 	               		<input name="tag" id="editPlaylistTag" type="text" class="form-control">
 	               </div>
                    <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
+			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="editPlaylistExposed">
 			            <label class="custom-control-label" for="customSwitch2">LMS내 공개</label>
 			       </div>
 	            </div>

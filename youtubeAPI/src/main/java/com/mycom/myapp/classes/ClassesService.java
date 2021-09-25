@@ -5,6 +5,7 @@ import java.util.List;
 import com.mycom.myapp.commons.ClassesVO;
 
 public interface ClassesService {
+	public int insertClassroom(ClassesVO vo);
 	public int updateDays(ClassesVO vo);
 	public ClassesVO getClass(int id);
 	public List<ClassesVO> getAllMyClass(int instructorID);

@@ -30,12 +30,25 @@ public class PlaylistController {
 	@Autowired
 	private ClassesService classService;
 	
+	private int instructorID = 1;
+	
 	//myplaylist(내 playlist) 새창 띄우기
 	@RequestMapping(value = "/myPlaylist/{instructorID}", method = RequestMethod.GET) 
 	public String selectPlaylist(@PathVariable("instructorID") int instructorID, Model model) {
 		model.addAttribute("instructorID", instructorID);
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		return "myPlaylist";
+	}
+	
+	//myplaylist화면 들어가기 새로만든거 (9/20 yewon)
+	/*	지금처럼 url에 instructorID를 같이 넘겨주는게 아니라 controller 에서 현재 로그인한 사용자의 id를받아와 따로 처리해주는게 맞다. 
+		추후 이런 방식으로 수정해야함.
+	*/
+	@RequestMapping(value = "/myPlaylist", method = RequestMethod.GET) 
+	public String myPlaylist(Model model) {
+		model.addAttribute("instructorID", instructorID);
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+		return "playlist/myPlaylist";
 	}
 	
 //	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
@@ -59,7 +72,6 @@ public class PlaylistController {
 	@RequestMapping(value = "/addPlaylist", method = RequestMethod.POST)
 	@ResponseBody
 	public void addPlaylist(HttpServletRequest request) {
-		
 		PlaylistVO vo = new PlaylistVO();
 		vo.setInstructorID(Integer.parseInt(request.getParameter("creator")));	//이부분 creator->instructorID로 변환하기!! (9/15)
 		vo.setPlaylistName(request.getParameter("name"));
@@ -75,7 +87,7 @@ public class PlaylistController {
 
 	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
 	@ResponseBody
-	public Object getAllPlaylist(@RequestParam(value = "instructorID") int instructorID) {
+	public Object getAllMyPlaylist() {
 		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
 		playlists = playlistService.getAllMyPlaylist(instructorID); //playlist의 모든 video 가져오기
 		

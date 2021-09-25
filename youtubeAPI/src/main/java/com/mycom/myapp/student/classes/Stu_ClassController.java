@@ -44,27 +44,35 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String studentDashboard(Model model) {
-		int studentID = 1;	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
+	private int studentID = 1;
+	
+	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)
+	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
+		//int studentID = 1;	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
+		
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
 		
-		return "dashboard_Stu";
+		return "class/dashboard_Stu";
+	}
+	
+	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)	// 9/24 studentID url에서 지운 버전(yewon)
+	public String dashboard (Model model) {
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
+		
+		return "class/dashboard_Stu";
 	}
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classID") int classID, Model model) {
-		classID = 1;//임의로 1번 class 설정
+		/*classID = 1;//임의로 1번 class 설정
 		
 		ClassContentVO ccvo = new ClassContentVO();
-		ccvo.setClassID(1); //임의로 1번 class 설정
+		ccvo.setClassID(classID); //임의로 1번 class 설정*/
 		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
-		//model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); 
-		//classContents테이블에서 가져온다. 해당 classID의 모든 것을 가져온다
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(ccvo)));  //객체 아니고 그냥 classID보내면 안되나 ..?
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));  //객체 아니고 그냥 classID보내면 안되나 ..?
 		//classContents테이블에서 가져온다. 해당 classID의 특정 playlistID를 가진 것을 가져온다. (주차별로 가져오는 느낌) - allContents있는데 이게 굳이 필요..?
 		// 아니,, allContents가 아니라 weekContents를 가져와야한다
 		
@@ -73,13 +81,13 @@ public class Stu_ClassController{
 	    //model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
 		//model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		return "t_contentsList_Stu";
-		//return "contentsList_Stu";
+		//return "t_contentsList_Stu";
+		return "contentsList_Stu";
 	}
 	
 	
-	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classInfo}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("playlistID") int playlistID, @PathVariable("id") int id, @PathVariable("classInfo") int classInfo, @PathVariable("daySeq") int daySeq, Model model) {
+	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classID}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
+	public String contentDetail(@PathVariable("playlistID") int playlistID, @PathVariable("id") int id, @PathVariable("classID") int classID, @PathVariable("daySeq") int daySeq, Model model) {
 		//playlistID : playlistID, id : id (classPlaylist테이블의 id/ 혹시 playlistID가 같은 경우를 대비함), classInfo : classID
 		//VideoVO vo = new VideoVO();
 		VideoVO pvo = new VideoVO();
@@ -89,12 +97,12 @@ public class Stu_ClassController{
 		//pvo.setPlaylistID(playlistID);
 		ccvo.setPlaylistID(playlistID);
 		ccvo.setId(id);
-		ccvo.setClassID(1); //임의로 1번 class 설정
+		ccvo.setClassID(classID); //임의로 1번 class 설정
 		
 
-		model.addAttribute("classInfo", classesService.getClass(classInfo)); 
+		model.addAttribute("classInfo", classesService.getClass(classID)); 
 		//model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classInfo)));
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(ccvo)));
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
 		model.addAttribute("vo", classContentService.getOneContent(id));
 		//model.addAttribute("playlistID", playlistID);
 		//model.addAttribute("classPlaylistID", id);
@@ -105,8 +113,8 @@ public class Stu_ClassController{
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		//model.addAttribute("playlistCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		return "t_contentsList_Stu2";
-		//return "contentsDetail_Stu";
+		//return "t_contentsList_Stu2";
+		return "contentsDetail_Stu";
 		
 	}
 	
@@ -121,7 +129,7 @@ public class Stu_ClassController{
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(classID);
 		List<ClassContentVO> VOlist = new ArrayList<ClassContentVO>();
-		VOlist = classContentService.getWeekClassContent(ccvo);
+		VOlist = classContentService.getWeekClassContent(classID);
 		
 		for(int i=0; i<VOlist.size(); i++) {
 			map.put(i, VOlist.get(i));

@@ -28,14 +28,6 @@
                             대시보드
                         </a>
                     </li>
-                   
-                    <li class="nav-item">
-                    	<!-- url에서 /myplaylist 뒤에 {instructorID} 없는걸로 수정됨 (9/20)-->
-                        <a href="${pageContext.request.contextPath}/playlist/myPlaylist" class="nav-link">
-                            <i class="nav-link-icon fa fa-archive"></i>
-                            학습컨텐츠 보관함
-                        </a>
-                    </li>
                 </ul>  
             </div>
             <div class="app-header-right">
@@ -61,7 +53,7 @@
                                     홍길동
                                 </div>
                                 <div class="widget-subheading">
-                                    교수
+                                    학생
                                 </div>
                             </div>
                         </div>

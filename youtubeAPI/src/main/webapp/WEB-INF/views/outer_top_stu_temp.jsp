@@ -2,7 +2,28 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+
 	<div class="app-header header-shadow">
+        <div class="app-header__logo">
+            <div class="header__pane ml-auto">
+                <div>
+                    <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                        <span class="hamburger-box">
+                            <span class="hamburger-inner"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="app-header__mobile-menu">
+            <div>
+                <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
         <div class="app-header__menu">
             <span>
                 <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
@@ -23,17 +44,9 @@
                 </div>
                 <ul class="header-menu nav">
                     <li class="nav-item">
-                        <a href="#" class="nav-link text-primary">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
+                        <a href="${pageContext.request.contextPath}/stu/class/dashboard" class="nav-link">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
                             <i class="nav-link-icon fa fa-home"> </i>
                             대시보드
-                        </a>
-                    </li>
-                   
-                    <li class="nav-item">
-                    	<!-- url에서 /myplaylist 뒤에 {instructorID} 없는걸로 수정됨 (9/20)-->
-                        <a href="${pageContext.request.contextPath}/playlist/myPlaylist" class="nav-link">
-                            <i class="nav-link-icon fa fa-archive"></i>
-                            학습컨텐츠 보관함
                         </a>
                     </li>
                 </ul>  

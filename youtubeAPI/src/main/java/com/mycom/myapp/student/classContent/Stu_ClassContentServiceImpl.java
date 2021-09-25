@@ -19,8 +19,8 @@ public class Stu_ClassContentServiceImpl implements Stu_ClassContentService{
 	}
 	
 	@Override
-	public List<ClassContentVO> getWeekClassContent(ClassContentVO vo){
-		return classContentDAO.getWeekClassContent(vo);
+	public List<ClassContentVO> getWeekClassContent(int classID){
+		return classContentDAO.getWeekClassContent(classID);
 	}
 	
 	@Override

@@ -3,17 +3,17 @@
 <mapper namespace="ClassContent">
 	<insert id="insertContent">
 		insert into lms_classContent (title, description, classID, playlistID, days, daySeq, startDate, endDate)
-		values (#{title}, #{description}, #{classID}, #{playlistID}, #{day}, #{daySeq}, #{startDate}, #{endDate})
+		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}, #{startDate}, #{endDate})
 	</insert>
 	
 	<select id="getDaySeq" resultType="int">
 		select count(*) from lms_classContent
-		where classID=#{classID} and days=#{day}
+		where classID=#{classID} and days=#{days}
 	</select>
 	
 	<update id="updateContent">
 		update lms_classContent
-		set title=#{title}, description=#{description}, startDate=#{startDate}, endDate=#{endDate}, playlistID=#{playlistID} 
+		set title=#{title}, description=#{description}, endDate=#{endDate} 
 		where id=#{id}
 	</update>
 	
@@ -29,7 +29,7 @@
 	
 	<select id="getAllClassContent" resultType="classContent">
 		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
-		where classID=#{classID} order by days and daySeq
+		where classID=#{classID} order by days, daySeq
 	</select>
 
 </mapper>
