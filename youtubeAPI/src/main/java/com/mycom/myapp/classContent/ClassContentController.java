@@ -54,12 +54,10 @@ public class ClassContentController {
 	public String contentDetail(@PathVariable("id") int id, @PathVariable("daySeq") int daySeq, Model model) {
 		//int classID = Integer.parseInt(request.getParameter("classID"));
 		
-		ClassContentVO vo = classContentService.getOneContent(id);
-		model.addAttribute("vo", vo);
-		System.out.println(vo.getClassID());
-		System.out.println(vo.getClassName());
+		//ClassContentVO vo = classContentService.getOneContent(id);
+		//model.addAttribute("vo", vo);
 		
-//		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
+		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
 		model.addAttribute("classInfo", classService.getClass(0)); //여기도 임의로 classID 0 넣어두었다.
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(0))); //classID 임의로 0 넣어두었다.
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
@@ -113,9 +111,17 @@ public class ClassContentController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/changeID", method = RequestMethod.POST)
+	public ClassContentVO changeID(HttpServletRequest request, Model model) throws Exception {
+		ClassContentVO vo = classContentService.getOneContent(Integer.parseInt(request.getParameter("id")));
+	    
+	    return vo;
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/updateClassContents", method = RequestMethod.POST)
 	public int updateClassContents(HttpServletRequest request, Model model) throws Exception {
-		System.out.println("className : " + request.getParameter("className") + "classDescription : " + request.getParameter("classDescription") + "endDate : " + request.getParameter("endDate") + "id: " +request.getParameter("id"));
+		System.out.println("className : " + request.getParameter("className") + "classDescription : " + request.getParameter("classDescription") + "endDate : " + request.getParameter("endDate") + "id: " + Integer.parseInt(request.getParameter("classContentID")));
 		//잘 넘어오는 중! 마감일만 잘 받아서 db에 update하면 된다 //마감일도 잘 받음!
 		
 		SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -125,7 +131,7 @@ public class ClassContentController {
 		ccvo.setTitle(request.getParameter("className"));
 		ccvo.setDescription(request.getParameter("classDescription"));
 		ccvo.setEndDate(endDate);
-		ccvo.setId(Integer.parseInt(request.getParameter("id")));
+		ccvo.setId(Integer.parseInt(request.getParameter("classContentID")));
 		
 		
 		if( classContentService.updateContent(ccvo) == 0) {
@@ -137,6 +143,16 @@ public class ClassContentController {
 		}
 	   
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteClassContents", method = RequestMethod.POST)
+	public void deleteClassContents(HttpServletRequest request, Model model) throws Exception {
+		
+		if( classContentService.deleteContent(Integer.parseInt(request.getParameter("classContentID"))) == 0) {
+			System.out.println("modal을 통한 classcontent 삭제 실패");
+		}
+	}
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateDays", method = RequestMethod.POST)
@@ -167,7 +183,7 @@ public class ClassContentController {
 	
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
 	public String addContentOK(ClassContentVO vo) {
-		System.out.println("addContentOK!!??");
+		System.out.println("addContentOK!!??");//
 		int classID = vo.getClassID();
 		vo.setDaySeq(classContentService.getDaySeq(vo));
 		

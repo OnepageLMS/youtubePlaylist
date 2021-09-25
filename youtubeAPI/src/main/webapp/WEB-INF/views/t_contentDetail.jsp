@@ -33,9 +33,8 @@
 <script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <script>
 
-var studentEmail = 1; //우선 임의로 넣기
 //var classPlaylistID = 0;
-var classID =  1;
+var classID =  0;
 //var playlistSameCheck = ${playlistSameCheck};
 var ori_index =0;
 //var classPlaylistID = ${classPlaylistID};
@@ -43,7 +42,7 @@ var classContentID = 1;
 var information;
 var videoIdx;
 var playlist; 
-var id = 0;
+var ccID = ${id};
 
 $(document).ready(function(){
 	$.ajax({ 
@@ -82,9 +81,27 @@ $(document).ready(function(){
 		  }
 	})
 	
+	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+		url : "../../changeID",
+		type : "post",
+		async : false,
+		data : {	
+			id: ${id}
+		},
+		success : function(data) {
+			console.log("changeID 성공!");
+			console.log(data.title);
+			var element = document.getElementById("contentsTitle");
+			element.innerText = data.title;
+			var elementD = document.getElementById("contentsDescription");
+			elementD.innerText = data.description;
+		},
+		error : function() {
+			alert("error");
+		}
+	})
+	
 	var weekContents = JSON.parse('${allContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
-
-	//var playlistLen = JSON.parse('${playlist}'); //total 시간을 위해
 	
 	for(var i=0; i<weekContents.length; i++){
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
@@ -99,12 +116,10 @@ $(document).ready(function(){
 		classContentID = weekContents[i].id; // classContent의 id //여기 수정
 		
 		if(i == videoIdx){
-			console.log("i / videoIdx" + i + " " + videoIdx);
 			var area_expanded = true;
 			var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
 			var showing = 'class="collapse show"';
 			id = weekContents[i].id;
-			console.log(weekContents[i].id + " //////// " + id);
 		}
 		else{
 			var area_expanded = false;
@@ -131,10 +146,7 @@ $(document).ready(function(){
 				playlist[j].newTitle = (playlist[j].newTitle).substring(0, 30) + " ..."; 
 			}
 			
-			var completed ='';
-			if(playlist[j].watched == 1 && playlist[j].classContentID == classContentID){
-				completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
-			}
+			
 			
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg">';
@@ -144,11 +156,10 @@ $(document).ready(function(){
 						+ '<div class="post-thumbnail col-xs-4 col-lg-5"> ' + thumbnail + ' </div>' 
 						+ '<div class="post-content col-xs-7 col-lg-5" onclick="viewVideo(\'' 
 							+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
-							+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ', this)" >' 
+							+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ','  + j + ', this)" >' 
 							+ 	'<h6 class="post-title videoNewTitle">' + playlist[j].newTitle + '</h6>' 
 							+	'<div class="">'+  convertTotalLength(playlist[j].duration) +'</div>' +
 							'</div>' 
-							+ 	completed 
 					+ '</div>'
 		}
 		
@@ -220,7 +231,7 @@ var playlistVideo;
 function showLecture(playlistID, id, classInfo, idx){
 	n = idx;
 	//playlistSameCheck = JSON.parse('${playlistSameCheck}');
-	console.log("showLecture인데 playlistID는 " +playlistID);
+	console.log("showLecture인데 playlistID는 " +playlistID +' id는 ' + classID);
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
 		  url : "../../forVideoInformation",
 		  type : "post",
@@ -242,13 +253,34 @@ function showLecture(playlistID, id, classInfo, idx){
 		  }
 	})
 	
+	 $.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			  url : "../../changeID",
+			  type : "post",
+			  async : false,
+			  data : {	
+				  id: id
+			  },
+			  success : function(data) {
+				 console.log("changeID 성공!!!!");
+				 console.log(data);
+
+				var element = document.getElementById("contentsTitle");
+				element.innerText = data.title;
+				var elementD = document.getElementById("contentsDescription");
+				elementD.innerText = data.description;
+			  },
+			  error : function() {
+			  	alert("error");
+			  }
+		})
+	
 	lastVideo = playlist[0].id;
 	myThumbnail(id, idx);
-	id = id;
+	ccID = id;
+	console.log("id라고!! " + ccID);
 }
 
 function myThumbnail(classContentID, idx){
-	console.log("myThumbnail입니다");
 	var className = '#get_view' + idx;
 	$(className).empty();
 	
@@ -293,29 +325,27 @@ function myThumbnail(classContentID, idx){
 }
 
 function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
+	console.log("viewVideo");
+	console.log("ccID " + ccID);
 	start_s = startTime;
 	$(".video").css({'background-color' : 'unset'});
 	item.style.background = "lightgrey";
-	$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
-
+	$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기
 	if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
 		flag = 0;
 		time = 0;
-		
 		
 		player.loadVideoById({'videoId': videoID,
              'startSeconds': startTime,
              'endSeconds': endTime,
              'suggestedQuality': 'default'})
-    
-	
-	//이 영상을 처음보는 것이 아니라면 이전에 보던 시간부터 startTime을 설정해두기
-		
+             
 	}
 
 	else{   //취소
 		return;
 	}
+	
 }
 
 //youtube 영상 띄울것입니다.
@@ -350,13 +380,12 @@ function onPlayerReady(event) {
   console.log('onPlayerReady 실행');
 
   console.log('onPlayerReady 마감');
-  console.log("endDate : " + endDate+ " id: " +id);
   
 }
 
 function submitContent(){
 	var endDate = ($("#endDate").val() + " " + ("00"+$("#endDate_h").val()).slice(-2) + ":" + ("00"+$("#endDate_m").val()).slice(-2) + ":00") ;
-	console.log("endDate : " + endDate+ " id: " +id);
+	console.log("endDate : " + endDate+ " id: " +ccID);
 	$.ajax({ 
 		  url : "../../updateClassContents",
 		  type : "post",
@@ -365,7 +394,7 @@ function submitContent(){
 			className : $("#editContentName").val(),
 			classDescription : $("#editContentDescription").val(),
 			endDate : endDate,
-			id : id
+			classContentID : ccID
 		  },
 		  dataType : "json",
 		  success : function(data) {
@@ -375,6 +404,28 @@ function submitContent(){
 		  	location.reload();
 		  }
 	})
+}
+
+
+function deleteContent(){
+	
+	if (confirm("페이지를 정말 삭제하시겠습니까? ") == true){
+		$.ajax({ 
+			  url : "../../deleteClassContents",
+			  type : "post",
+			  async : false,
+			  data : {	
+				classContentID : ccID
+			  },
+			  complete : function(data) {
+			  	location.reload();
+			  }
+		})
+	}
+	
+	else{
+		return;
+	}
 }
 
 	
@@ -402,17 +453,21 @@ function submitContent(){
                     	<div class="main-card mb-3 card card col-8 col-md-8 col-lg-8">
 							<div class="card-body" style="margin : 0px; padding:0px; height:auto">
 								<div class="card-header">
-									<h3 >${vo.title }</h3>
+									<div id="contentsTitle" style="font-size : 20px" > </div>
 									<div class="float-right">
                                         
-                                        <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#editContentModal">
+                                       <!--  <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#editContentModal">
                                         	컨텐츠 수정
-                                        </button>
+                                        </button>--> 
+                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#editContentModal" class="nav-link editPlaylistBtn" style="display:inline;">
+                                        <i class="nav-link-icon fa fa-cog"></i></a>
                                     </div>
 								</div>
                             	<div id = "onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
 								</div>
-								<div class="card-footer"><h5>${vo.description}</h5></div>
+								<div class="card-footer">
+									<div id="contentsDescription" style="font-size : 15px" > </div>
+								</div>
                             </div>
                         </div>
                                     
@@ -497,6 +552,7 @@ function submitContent(){
 	               </div>
 	            </div>
 	            <div class="modal-footer">
+	            	<div style="float: left;"><button class="btn btn-danger" onclick="deleteContent()">페이지 삭제</button></div>
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
 	                <button id="modalSubmit" type="button" class="btn btn-primary" onclick="submitContent()">수정완료</button>
 	            </div>
