@@ -35,66 +35,67 @@
        <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
            <div class="app-sidebar__inner">
                <ul class="vertical-nav-menu">
+               		
                    <li class="app-sidebar__heading">활성화된 강의실</li>
-                   <c:forEach var="v" items="${allMyClass}">
-				 		<li>
-                           <a href="#">
-                               <i class="metismenu-icon pe-7s-notebook"></i>
-                               ${v.className}
-                               <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                           	</a>
-                           	<ul class="mm-collapse">
-								<li>
-									<a href="#">
-                                   		<i class="metismenu-icon"></i>
-                                   		공지
-                              		</a>
-                               	</li>
-                               	<li>
-                                	<a href="${pageContext.request.contextPath}/class/contentList/${v.id}">
-                                       <i class="metismenu-icon"></i>
-                                       	학습컨텐츠
-                                   	</a>
-                               	</li>
-                               	<li>
-                                   <a href="#">
-                                       <i class="metismenu-icon"></i>
-                                      	출결/학습 현황
-                                   </a>
-                               	</li>
-                           	</ul>
-                       	</li>
-					</c:forEach>
-					
-					<li class="app-sidebar__heading">비활성화된 강의실</li>
-					<c:forEach var="u" items="${allMyInactiveClass}">
-				 		<li>
-                           <a href="#">
-                               <i class="metismenu-icon pe-7s-notebook"></i>
-                               ${u.className}
-                               <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                           	</a>
-                           	<ul class="mm-collapse">
-								<li>
-									<a href="#">
-                                   		<i class="metismenu-icon"></i>
-                                   		공지
-                              		</a>
-                               	</li>
-                               	<li>
-                                	<a href="${pageContext.request.contextPath}/class/contentList/${u.id}">
-                                       <i class="metismenu-icon"></i>
-                                       	학습컨텐츠
-                                   	</a>
-                               	</li>
-                               	<li>
-                                   <a href="#">
-                                       <i class="metismenu-icon"></i>
-                                      	출결/학습 현황
-                                   </a>
-                               	</li>
-                           	</ul>
-                       	</li>
+                   		<c:forEach var="v" items="${allMyClass}">
+							<li>
+	                           <a href="#">
+	                               <i class="metismenu-icon pe-7s-notebook"></i>
+	                               ${v.className}
+	                               <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+	                           	</a>
+	                           	<ul class="mm-collapse">
+									<li>
+										<a href="#">
+	                                   		<i class="metismenu-icon"></i>
+	                                   		공지
+	                              		</a>
+	                               	</li>
+	                               	<li>
+	                                	<a href="${pageContext.request.contextPath}/class/contentList/${v.id}">
+	                                       <i class="metismenu-icon"></i>
+	                                       	학습컨텐츠
+	                                   	</a>
+	                               	</li>
+	                               	<li>
+	                                   <a href="#">
+	                                       <i class="metismenu-icon"></i>
+	                                      	출결/학습 현황
+	                                   </a>
+	                               	</li>
+	                           	</ul>
+	                       	</li>
+						</c:forEach>
+				 		
+						<li class="app-sidebar__heading">비활성화된 강의실</li>
+						<c:forEach var="u" items="${allMyInactiveClass}">
+							<li>
+	                           <a href="#">
+	                               <i class="metismenu-icon pe-7s-notebook"></i>
+	                               ${u.className}
+	                               <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+	                           	</a>
+	                           	<ul class="mm-collapse">
+									<li>
+										<a href="#">
+	                                   		<i class="metismenu-icon"></i>
+	                                   		공지
+	                              		</a>
+	                               	</li>
+	                               	<li>
+	                                	<a href="${pageContext.request.contextPath}/class/contentList/${u.id}">
+	                                       <i class="metismenu-icon"></i>
+	                                       	학습컨텐츠
+	                                   	</a>
+	                               	</li>
+	                               	<li>
+	                                   <a href="#">
+	                                       <i class="metismenu-icon"></i>
+	                                      	출결/학습 현황
+	                                   </a>
+	                               	</li>
+	                           	</ul>
+	                       	</li>
 					</c:forEach>
                </ul>
            </div>
