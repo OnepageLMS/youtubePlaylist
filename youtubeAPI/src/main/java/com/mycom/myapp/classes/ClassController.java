@@ -1,11 +1,5 @@
 package com.mycom.myapp.classes;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,12 +23,12 @@ public class ClassController {
 	
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String dashboard(Model model) {
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
-		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		return "class/dashboard";
 	}	
 	
-	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//기존 내 class list 가져오기
+	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//기존 내 class list 가져오기 --> 나중에 지우기
 	public void getAllMyClass(Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 	}
@@ -46,18 +40,7 @@ public class ClassController {
 		return vo;
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/allMyClassMap", method = RequestMethod.GET) //outer.jsp에서 ajax로 왼쪽 class list 가져오기
-	public Object getAllMyClass_Map(Model model) {
-		List<ClassesVO> classes = new ArrayList<ClassesVO>();
-		classes = classService.getAllMyClass(instructorID);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("allMyClass", classes);
-		return map;
-	}
-	
-	@RequestMapping(value = "/addDays", method = RequestMethod.POST) //class contents 추가
+	@RequestMapping(value = "/addDays", method = RequestMethod.POST) //class days 추가
 	public String addContent(ClassesVO vo) {
 		if (classService.updateDays(vo) != 0)
 			System.out.println("addDays 성공");
@@ -70,7 +53,6 @@ public class ClassController {
 	@ResponseBody
 	@RequestMapping(value="/insertClassroom", method = RequestMethod.POST)
 	public String insertClassroom(@ModelAttribute ClassesVO vo) {
-		System.out.println("controller here!!");
 		vo.setInstructorID(instructorID);//임의로 instructorID 설정 
 		
 		if (classService.insertClassroom(vo) != 0) {
@@ -84,20 +66,15 @@ public class ClassController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="/insertName", method = RequestMethod.POST)	//classroom 생성 처리
-	public String insertName(@RequestParam(value = "name") String name) {
-		System.out.println("controller here!!");
-		
-		ClassesVO vo = new ClassesVO();
-		vo.setInstructorID(instructorID);//임의로 instructorID 설정 
-		vo.setClassName(name);
-		
-		if (classService.insertClassroom(vo) != 0) {
-			System.out.println("controller 강의실 생성 성공");
+	@RequestMapping(value="/editClassroom", method = RequestMethod.POST)	//classroom 생성 처리
+	public String editClassroom(@ModelAttribute ClassesVO vo) {
+		System.out.println(vo.getTag());
+		if (classService.updateClassroom(vo) != 0) {
+			System.out.println("controller 강의실 수정 성공");
 			return "ok";
 		}
 		else {
-			System.out.println("controller 강의실 생성 실패");
+			System.out.println("controller 강의실 수정 실패");
 			return "error";
 		}
 		
