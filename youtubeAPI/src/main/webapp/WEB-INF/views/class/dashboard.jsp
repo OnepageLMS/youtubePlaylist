@@ -37,78 +37,88 @@ var inactive_colors = ["border-primary", "border-warning", "border-success", "bo
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate", ];
 
 $(document).ready(function(){
-	var allMyClass = JSON.parse('${allMyClass}');
+	var activeClass = JSON.parse('${allMyClass}');
+	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 
-	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
-		//var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
-		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+	for(var i=0; i<activeClass.length; i++){	//active classroom card
+		var name = activeClass[i].className;
 		var classNoticeURL = '#';
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + allMyClass[i].id + "'";
-		//var classContentURL = "'${pageContext.request.contextPath}/class/contentList/1'";
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + activeClass[i].id + "'";
 		var classAttendanceURL = '#';
+		var cardColor = active_colors[i%(active_colors.length)]; 
 
-		if(allMyClass[i].active == 1)
-			var cardColor = active_colors[i%(active_colors.length)];
-		else
-			var cardColor = inactive_colors[i%(inactive_colors.length)];
-		
 		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  name + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + allMyClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn"><i class="nav-link-icon fa fa-cog"></i></a>'
-										//+ '<a href="javascript:openEditClassModal(' + allMyClass[i].id + ');" class="nav-link openEditClassModal"><i class="nav-link-icon fa fa-cog"></i></a>'
+										+ '<div class="col-sm-10">' +  name + ' (' + activeClass[i].days + ' 차시)' + '</div>'
+										+ '<a href="void(0);" classID="' + activeClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        		+ '</div>'
-	                        	'</div>'
+	                        		+ '<div class="divider"></div>'
+		                        	+ '<div class="card-body">'
+										+ '<div class="row">'
+											+ '<div class="widget-subheading col-7">종료일 ' + activeClass[i].closeDate + ' </div>'
+											+ '<div class="widget-subheading col-5">참여 **명</div>'
+											+ '<div class="col-12">'
+												+ '<div class="mb-3 progress">'
+								                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+								                + '</div>'
+											+ '</div>'
+										+ '</div>'
+									 '</div>'
+	                        	+ '</div>'
 	                        + '</div>';
-
-	    if(allMyClass[i].active == 1){
+							
 			$('.classActive').append(dashboardCard);
-			var footer = '<div class="card-footer">'
-									+ '<div class="row col footer-content">'
-									+ '<div class="widget-subheading col-6">종료일</div>'
-									+ '<div class="widget-subheading col-6">참여자 **명</div>'
-									+ '<div class="col-12">'
-										+ '<div class="mb-3 progress">'
-						                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
-						                + '</div>'
+	}
+
+	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
+		var name = inactiveClass[i].className;
+		var classNoticeURL = '#';
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + inactiveClass[i].id + "'";
+		var classAttendanceURL = '#';
+		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
+
+		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
+								+ '<div class="mb-3 card classCard">'
+									+ '<div class="card-header ' + cardColor + '">' 
+										+ '<div class="col-sm-10">' +  name + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
+										+ '<a href="void(0);" classID="' + inactiveClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn"><i class="nav-link-icon fa fa-cog"></i></a>'
 									+ '</div>'
+									+ '<div class="card-body">'
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+	                        		+ '</div>'
 								+ '</div>'
-							+ '</div>';
-			$('.classCard').append(footer);
-	    }
-	    else 
-			$('.classInactive').append(dashboardCard);	
+	                        	+ '</div>'
+	                        + '</div>';
+							
+			$('.classInactive').append(dashboardCard);
 	}
 });
 
 $(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn 눌렀을 때 modal에 데이터 전송
 	var classID = $(this).attr('classID');
+	$('#setClassID').val(classID);
+
+	$('#formAddClassroom')[0].reset();
 
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/getClassInfo',
 		data: { 'classID' : classID },
-		datatype: 'json',
 		success: function(data){
-			var className = data.className;
-			var description = data.description;
-			var days = data.days;
-			var tag = data.tag;
-			var closeDate = data.closeDate;
-			var active = data.active;
 
-			$('#editClassName').val(className);
-			$('#editDescription').val(description);
-			$('#editClassDays').val(days);
-			$('#editClassTag').val(tag);
-			$('#editCloseClassDate').val(closeDate);	//이부분 나중에 다시 수정하기! date type or string type으로!
+			$('#editClassName').val(data.className);
+			$('#editDescription').val(data.description);
+			$('#editClassDays').val(data.days);
+			$('#editClassTag').val(data.tag);
+			$('#editCloseDate').val(data.closeDate);
 
 			if(active == 0)
 				$('#customSwitch2').removeAttr('checked');
@@ -121,49 +131,75 @@ $(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn
 	});
 });
 
-function initForm(){	//강의실 생성 및 수정 form 내용 초기화
-	$('#formAddClassroom')[0].reset();
-	$('#formEditClassroom')[0].reset();
-}
-
-function submitAddClassroom(){	//add classroom form 전송
-	event.preventDefault();
+function submitAddClassroom(){	//check the add classroom form 
+	if($('#inputClassDays').val() == '')	//int type은 null이 될 수 없어 미리 방지
+		$('#inputClassDays').val(0);
 	
-	var inputClassName = $('#inputClassName').val();
-	var inputDescription = $('#inputDescription').val();
-	var inputDays = $('#inputDays').val();
-	var inputTag = $('#inputTag').val();
-	var inputCloseDate = $('#inputCloseDate').val();
-	var inputActive = $('#inputActivate').val();
+	if($('#customSwitch1').val() == 'on')
+		$('#customSwitch1').val(1);
+	else
+		$('#customSwitch1').val(0);
 
-	if(inputDays == null)
-		inputDays = 0;
-		
+	if($('#inputCloseDate').val() == '')
+		$('#inputCloseDate').val('9999-12-31');	//null이나 '' 가 들어가면 에러난다. 
+
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/insertClassroom',
-		data: {'className': inputClassName,
-				'description' : inputDescription,
-				'days' : inputDays,
-				'tag' : inputTag,
-				'closeDate' : inputCloseDate,
-				'active' : inputActive
-			},
+		data: $('#formAddClassroom').serialize(),
+		datatype: 'json',
 		success: function(data){
 			if(data == 'ok')
-				alert('강의실 생성 완료!');
+				console.log('강의실 생성 완료!');
 			else
-				alert('강의실 생성 실패! ');
+				console.log('강의실 생성 실패! ');
 		},
 		error: function(data, status,error){
-			alert('controller 강의실 생성 실패! ');
+			alert('강의실 생성 실패! ');
 		}
 	});
 }
 
-
-function submitEditClassroom(){
+function submitEditClassroom(){	//미완성
+	// classDays 현재 강의컨텐츠의 갯수 넘지 않도록 체크
+	// closeDate를 현재 이전으로 하면 학생들 어떻게?
 	
+	$('#formEditClassroom')[0].reset();
+	
+	if($('#customSwitch2').val() == 'on')
+		var active = 1;
+	else
+		var active = 0;
+	console.log($('#editClassTag').val());
+	
+	//data: $('#formEditClassroom').serialize() 으로 바꾸기!!
+	//mapper 파일에서도 수정하기
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/editClassroom',
+		data: {
+				'id' : $('#setClassID').val(),
+				'className' : $('#editClassName').val(),
+				'description' : $('#editDescription').val(),
+				'tag' : $('#editClassTag').val(),
+				'active' : active
+			},
+		datatype: 'json',
+		success: function(data){
+			if(data == 'ok')
+				console.log('강의실 수정 완료!');
+			else
+				console.log('강의실 수정 실패! ');
+		},
+		error: function(data, status,error){
+			alert('강의실 수정 실패! ');
+		}
+	});
+	
+}
+
+function deleteClassroom(){
+	//강의실 삭제할 때 같이 처리해야 할 일들 생각해보기!!
 }
 </script>
 <body>
@@ -244,7 +280,7 @@ function submitEditClassroom(){
 		               		<div class="col-md-3">
 			                   <div class="position-relative form-group">
 			                   		<label for="inputClassDays" class="">강의 횟수</label>
-				               		<input name="days" placeholder="ex)12" id="inputClassDays" type="text" class="form-control">
+				               		<input name="days" placeholder="ex)12" id="inputClassDays" type="number" class="form-control">
 			                   </div>
 		                   	</div>
 		                   	
@@ -256,8 +292,8 @@ function submitEditClassroom(){
 			               	</div>
 	                   </div>
 	                   <div class="form-group"> 
-			        		<label for="inputCloseClassroom">강의실 게시 종료일</label>
-			        		<input type="date" name="closeDate" class="form-control" id="inputCloseClassroom"/>
+			        		<label for="inputCloseDate">강의실 게시 종료일</label>
+			        		<input type="date" name="closeDate" class="form-control" id="inputCloseDate"/>
 			        	</div> 
 	                   <div class="form-group custom-control custom-switch">
 				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
@@ -266,7 +302,7 @@ function submitEditClassroom(){
 		            </div>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="initForm();">취소</button>
-		                <button type="button" class="btn btn-primary" onclick="submitAddClassroom();">생성</button>
+		                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="submitAddClassroom();">생성</button>
 		            </div>
 	            </form>
 	            <script>
@@ -304,6 +340,7 @@ function submitEditClassroom(){
 	                </button>
 	            </div>
 	            <form class="needs-validation" id="formEditClassroom" method="post" novalidate>
+		            <input id="setClassID" name="id" type="hidden" value="">
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
 		               		<label for="editClassName" class="">강의실 이름</label> 
@@ -317,7 +354,7 @@ function submitEditClassroom(){
 		               		<div class="col-md-3">
 			                   <div class="position-relative form-group">
 			                   		<label for="editClassDays" class="">강의 횟수</label>
-				               		<input name="days" id="editClassDays" type="text" class="form-control">
+				               		<input name="days" id="editClassDays" type="number" class="form-control">
 			                   </div>
 		                   	</div>
 		                   	
@@ -330,7 +367,7 @@ function submitEditClassroom(){
 	                   </div>
 	                    <div class="form-group"> 
 			        		<label for="inputCloseClassroom">강의실 게시 종료일</label>
-			        		<input type="date" name="closeDate" class="form-control" id="editCloseClassroom"/>
+			        		<input type="date" name="closeDate" class="form-control" id="editCloseDate"/>
 			        	</div> 
 	                    <div class="custom-control custom-switch">
 				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
@@ -341,7 +378,7 @@ function submitEditClassroom(){
 	            <div class="modal-footer">
 	            	<button type="button" class="btn btn-danger">강의실 삭제</button>
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="initForm();">취소</button>
-	                <button type="submit" class="btn btn-primary" onclick="submitEditClassroom();">수정완료</button>
+	                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditClassroom();">수정완료</button>
 	            </div>
 	        </div>
 	    </div>

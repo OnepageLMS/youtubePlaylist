@@ -10,7 +10,8 @@ public class ClassesVO {
 	private int days = 0;
 	private String tag;
 	private Date startDate;	//string 변환
-	private Date closeDate;	//string 변환
+	//private Date closeDate;	//string 변환
+	private String closeDate;
 	private boolean active;
 	
 	public int getId() {
@@ -55,10 +56,10 @@ public class ClassesVO {
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-	public Date getCloseDate() {
+	public String getCloseDate() {
 		return closeDate;
 	}
-	public void setCloseDate(Date closeDate) {
+	public void setCloseDate(String closeDate) {
 		this.closeDate = closeDate;
 	}
 	public boolean isActive() {
