@@ -111,9 +111,9 @@ $(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn
 			$('#editCloseClassDate').val(closeDate);	//이부분 나중에 다시 수정하기! date type or string type으로!
 
 			if(active == 0)
-				$('#editClassActive').prop('checked', false);
+				$('#customSwitch2').removeAttr('checked');
 			else
-				$('#editClassActive').prop('checked', true);
+				$('#customSwitch2').attr('checked', "");
 		},
 		error: function(data, status,error){
 			console.log('ajax class 정보 가져오기 실패!');
@@ -333,7 +333,7 @@ function submitEditClassroom(){
 			        		<input type="date" name="closeDate" class="form-control" id="editCloseClassroom"/>
 			        	</div> 
 	                    <div class="custom-control custom-switch">
-				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="editClassActive">
+				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
 				            <label class="custom-control-label" for="customSwitch2">강의실 활성화</label>
 				        </div>
 		            </div>

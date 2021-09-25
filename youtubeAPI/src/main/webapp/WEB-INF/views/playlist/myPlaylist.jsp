@@ -425,9 +425,9 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 	$('#editPlaylistDescription').val(description);
 
 	if(exposed == '비공개')
-		$('#editPlaylistExposed').prop('checked', false);
+		$('#customSwitch2').removeAttr('checked');
 	else
-		$('#editPlaylistExposed').prop('checked', true);
+		$('#customSwitch2').attr('checked', "");
 
 });
 
@@ -519,7 +519,7 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 	               		<input name="tag" id="inputPlaylistTag" placeholder="ex) spring, 웹개발초보" type="text" class="form-control">
 	               </div>
                    <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="inputPlaylistExposed">
+			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch1">
 			            <label class="custom-control-label" for="customSwitch1">LMS내 공개</label>
 			       </div>
 	            </div>
@@ -555,7 +555,7 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 	               		<input name="tag" id="editPlaylistTag" type="text" class="form-control">
 	               </div>
                    <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="editPlaylistExposed">
+			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch2">
 			            <label class="custom-control-label" for="customSwitch2">LMS내 공개</label>
 			       </div>
 	            </div>
