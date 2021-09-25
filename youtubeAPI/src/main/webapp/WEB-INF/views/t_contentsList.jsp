@@ -36,7 +36,7 @@ $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
 	setAllMyClass();	//왼쪽 내 class 목록 띄우기
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
-
+	
 	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈
 		var instructorID = 1;	//임의로 설정
 		
@@ -85,7 +85,7 @@ $(document).ready(function(){
 	                	$('.allPlaylist').append(contentHtml);
 					});
 				}
-				$('#selectPlaylistModal').modal('show');
+				//$('#selectPlaylistModal').modal('show');
 				
 			}, error:function(request,status,error){
 				console.log(error);
@@ -234,7 +234,7 @@ $(document).ready(function(){
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
 									
 										//data-toggle="modal" data-target=".selectPlaylistModal"
-									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn mr-2 mb-2 btn-primary float-right">Playlist 가져오기</button>'
+									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target="#selectPlaylistModal">Playlist 가져오기</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
 								+ '</div>'
 								+ '<div class="inputTitle input-group col">'
@@ -325,6 +325,7 @@ $(document).ready(function(){
 	} 
 
 	function checkForm(item){
+		console.log("!!");
 		 console.log(item);
 	        var date = $('#startDate').val().split("-");
 	        var hour = $('.start_h').val();
@@ -403,7 +404,7 @@ $(document).ready(function(){
 					$('#inputThumbnailID').val(thumbnailID);
 					$('#selectPlaylistBtn').text('playlist 다시선택');
 
-					$('#selectPlaylistModal').modal('hide');
+					//$('#selectPlaylistModal').modal('hide');
 				}
 			});
 		}
@@ -513,9 +514,32 @@ $(document).ready(function(){
 	   		</div>
 	   	</div>
    	</div>
+   	
+   	<div class="modal fade" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            
+	            <div class="modal-body">
+	               Playlist를 선택해주세요
+	               <div class="myPlaylist"></div>
+	               
+	            </div>
+	            <div class="modal-footer">
+	            	 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="button" class="btn btn-primary" onclick="selectOK();">선택완료</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 </body>
 
-	<div class="modal" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<!-- <div class="modal" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
@@ -534,7 +558,8 @@ $(document).ready(function(){
 	            </div>
 	        </div>
 	    </div>
-	</div>
+	</div>-->
+	
 	
 </html>
 
