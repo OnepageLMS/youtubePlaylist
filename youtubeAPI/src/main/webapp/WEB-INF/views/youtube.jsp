@@ -31,15 +31,14 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	
-	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css" integrity="sha512-SZgE3m1he0aEF3tIxxnz/3mXu/u/wlMNxQSnE0Cni9j/O8Gs+TjM9tm1NX34nRQ7GiLwUEzwuE3Wv2FLz2667w==" crossorigin="anonymous" />
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css" integrity="sha512-SZgE3m1he0aEF3tIxxnz/3mXu/u/wlMNxQSnE0Cni9j/O8Gs+TjM9tm1NX34nRQ7GiLwUEzwuE3Wv2FLz2667w==" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous"></script>
 	
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="/resources/demos/style.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-		
-	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+		<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	
 	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
 
@@ -90,16 +89,17 @@ img {
 .card {
 	border-radius: 5px;
 }
+
 </style>
 
 </head>
 <script>
 var email;
 $(document).ready(function(){
-	//email = '${email}'; 
 	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
 	console.log(email);
-
+	console.log('${allMyClass}');
+	console.log('${allMyInactiveClass}');
 	// 좌측 사이드 바 어떻게 할건지 알고 작업하기 (jw: 2021/09/14)
 	
 	//getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
@@ -282,11 +282,11 @@ $(document).ready(function(){
 							+ thumbnail
 							+ '<span>' + title + '</span>'
 							+ '<div>'
-							+ '<p class="info m-0"> published: <b>' + dateList[i]
+							+ '<span class="info m-0"> published: <b>' + dateList[i]
 							+ '</b> view: <b>' + view
 							+ '</b> like: <b>' + likeCount[i]
 							+ '</b> dislike: <b>' + dislikeCount[i]
-							+ '</b> </p>'
+							+ '</b> </span>'
 							+ '</div></div>');
 							/* + '<div style="display:none">'
 							+ '<div id="player_info"></div>'
@@ -391,8 +391,8 @@ $(document).ready(function(){
 			console.log(id, title, duration, index);
 			
 			// 클릭한 영상 밑에 player 띄우기
-			var $div = $('<div id="playerBox" class="bg-success bg-opacity-10 d-flex flex-column align-items-center"> <div id="player"></div> </div>'); 
-			$div.append('<div class="p-1 m-1 bg-white text-dark">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
+			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div id="player"></div> </div>'); 
+			$div.append('<div class="p-1 m-1 bg-white text-dark" style="width: 700px;">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
 			$div.append('<div id="player_info"></div>');
 
 			// 영상 구간 설정 (jw 아래에서 코드 가져와서 적용되게 함 )
@@ -449,10 +449,7 @@ $(document).ready(function(){
 
 			prev_index = index;		
 
-		}
-
-		
-		
+		}		
 
 		function showYoutubePlayer(id, title, index){
 			//$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
@@ -697,10 +694,10 @@ $(document).ready(function(){
 				+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
 				+ '<div class="col-lg-7">'
 				+ '<div id="title" style="font-weight: bold;">' + title + '</div>'
-				+ '<div id="start_s" class="d-inline"> start ' + start_time + '   </div>'
-				+ '<div id="end_s" class="d-inline"> end ' + end_time + '</div>' 
+				+ '<div id="start_s" style="display:inline"> start ' + start_time + '   </div>'
+				+ '<div id="end_s" style="display:inline""> end ' + end_time + '</div>' 
 				+ '<div id="duration_s" style="display: none"> duration:' + $('#duration').val() + '</div>'
-				+ '<div id="running_time" class="d-inline" > duration ' + running_time + '</div>'
+				+ '<div id="running_time" style="display:inline" > duration ' + running_time + '</div>'
 				+ '</div> </div>'; 
 
 			//3. var html = $('#setVideosInCart').html();

@@ -99,7 +99,6 @@ $(document).ready(function(){
 		else {
 			var li = '<li>';
 			var contentMenu = '<a href="' + classContentURL + '">';
-				
 		}
 
 		var html = '<li>'
