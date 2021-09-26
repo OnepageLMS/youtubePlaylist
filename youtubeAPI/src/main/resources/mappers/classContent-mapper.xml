@@ -17,6 +17,12 @@
 		where id=#{id}
 	</update>
 	
+	<update id="updatePublished">
+		update lms_classContent
+		set published=#{published}
+		where id=#{id}
+	</update>
+	
 	<delete id="deleteContent">
 		delete from lms_classContent where classID=#{classID} and days=#{days}
 	</delete>

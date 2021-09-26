@@ -10,7 +10,7 @@ public class ClassContentVO {
 	private int playlistID; //null값은 int에 저장안됨
 	private int days;
 	private int daySeq;
-	private boolean published;
+	private int published;
 	private Date startDate;
 	private Date endDate;
 	private Date modDate;
@@ -62,10 +62,10 @@ public class ClassContentVO {
 	public void setDaySeq(int daySeq) {
 		this.daySeq = daySeq;
 	}
-	public boolean isPublished() {
+	public int getPublished() {
 		return published;
 	}
-	public void setPublished(boolean published) {
+	public void setPublished(int published) {
 		this.published = published;
 	}
 	public Date getStartDate() {
