@@ -22,7 +22,6 @@ import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.video.VideoService;
 import com.mycom.myapp.youtube.GoogleOAuthRequest;
 import com.mycom.myapp.youtube.GoogleOAuthResponse;
-import com.mycom.myapp.youtube.youtubeProvider;
 
 import net.sf.json.JSONArray;
 
@@ -61,6 +60,7 @@ public class HomeController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		
 		return "t_example";
+		//return "outer";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -125,14 +125,6 @@ public class HomeController {
 
 		return "main";
 	}
-	
-	// (jw) 2021/08/16 : 일단 access Token 을 사용해야하니 이건 여기에 냅두고 그 이후에는 PlaylistController 에서 처리하도록 
-	@RequestMapping(value = "/youtube", method = RequestMethod.GET)
-	public String youtube(Model model, String keyword) {
-		model.addAttribute("accessToken", accessToken);														
-		return "youtube";
-	}
-	
 	
 	
 //	@RequestMapping(value = "/deletePlaylist", method = RequestMethod.POST)

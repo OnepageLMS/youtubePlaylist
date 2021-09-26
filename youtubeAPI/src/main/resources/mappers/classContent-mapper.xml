@@ -2,34 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ClassContent">
 	<insert id="insertContent">
-		insert into lms_classContent (title, description, classID, playlistID, day, daySeq, startDate, endDate)
-		values (#{title}, #{description}, #{classID}, #{playlistID}, #{day}, #{daySeq}, #{startDate}, #{endDate})
+		insert into lms_classContent (title, description, classID, playlistID, days, daySeq, startDate, endDate)
+		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}, #{startDate}, #{endDate})
 	</insert>
 	
 	<select id="getDaySeq" resultType="int">
 		select count(*) from lms_classContent
-		where classID=#{classID} and day=#{day}
+		where classID=#{classID} and days=#{days}
 	</select>
 	
 	<update id="updateContent">
 		update lms_classContent
-		set title=#{title}, description=#{description}, startDate=#{startDate}, endDate=#{endDate}, playlistID=#{playlistID} 
+		set title=#{title}, description=#{description}, endDate=#{endDate} 
 		where id=#{id}
 	</update>
 	
 	<delete id="deleteContent">
-		delete from lms_classContent where id=#{id}
+		delete from lms_classContent where classID=#{classID} and days=#{days}
 	</delete>
 	
 	<select id="getOneContent" resultType="classContent">
-		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.playlistID 
+		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
 		inner join lms_class on lms_class.id = lms_classContent.classID
 		where lms_classContent.id=#{id}
 	</select>
 	
-	<select id="getAllClassContents" resultType="classContent">
-		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.playlistID
-		where classID=#{classID} order by day and daySeq
+	<select id="getAllClassContent" resultType="classContent">
+		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
+		where classID=#{classID} order by days, daySeq
 	</select>
 
 </mapper>

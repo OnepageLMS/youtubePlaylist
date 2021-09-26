@@ -13,7 +13,7 @@ public class VideoVO {
 	private int playlistID;
 	private int seq;
 	private String tag;
-	private Date regdate;
+	private String regdate;
 	private List<Integer> playlistArr;
 	private double maxLength;
 	private float duration;
@@ -78,10 +78,10 @@ public class VideoVO {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-	public Date getRegdate() {
+	public String getRegdate() {
 		return regdate;
 	}
-	public void setRegdate(Date regdate) {
+	public void setRegdate(String regdate) {
 		this.regdate = regdate;
 	}
 	public List<Integer> getPlaylistArr() {

@@ -8,7 +8,7 @@ public class ClassContentVO {
 	private String description;
 	private int classID;
 	private int playlistID; //null값은 int에 저장안됨
-	private int day;
+	private int days;
 	private int daySeq;
 	private boolean published;
 	private Date startDate;
@@ -50,11 +50,11 @@ public class ClassContentVO {
 	public void setPlaylistID(int playlistID) {
 		this.playlistID = playlistID;
 	}
-	public int getDay() {
-		return day;
+	public int getDays() {
+		return days;
 	}
-	public void setDay(int day) {
-		this.day = day;
+	public void setDays(int days) {
+		this.days = days;
 	}
 	public int getDaySeq() {
 		return daySeq;

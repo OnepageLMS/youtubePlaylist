@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.PlaylistVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.playlist.PlaylistService;
-
-import com.mycom.myapp.commons.PlaylistVO;
 
 import net.sf.json.JSONArray;
 
@@ -36,15 +36,24 @@ public class VideoController {
 	@Autowired
 	private ClassesService classService;
 	
-	private String email = "yewon.lee@onepage.edu";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 	private int instructorID = 1;
+	
+	@RequestMapping(value = "/youtube", method = RequestMethod.GET)
+	public String youtube(Model model, String keyword) {
+		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		
+		return "youtube";
+	}
 	
 	//video 수정/재생page 이동
 	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
 	public String getSelectedPlaylistVideos(@PathVariable("playlistID") int playlistID, @PathVariable("videoID") int videoID, Model model) {
 		model.addAttribute("videoID", videoID);
 		model.addAttribute("playlistID", playlistID);
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		return "selectedPlaylist";
 	}
 
@@ -130,9 +139,13 @@ public class VideoController {
 	}
 	
 	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
-	public String addVideo(@ModelAttribute VideoVO vo) {
+	public String addVideo(Model model) {
+		VideoVO vo = new VideoVO();
 		List<Integer> playlistArr = vo.getPlaylistArr();
 		System.out.println("controller: maxLength!!->" + vo.getmaxLength());
+		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 
 		// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
 		double length = vo.getDuration();

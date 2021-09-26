@@ -6,9 +6,13 @@ public class ClassesVO {
 	private int id;
 	private int instructorID;
 	private String className;
-	private int days;
-	private Date startDate;
-	private boolean active;
+	private String description;
+	private int days = 0;
+	private String tag;
+	private Date startDate;	//string 변환
+	//private Date closeDate;	//string 변환
+	private String closeDate;
+	private int active;
 	
 	public int getId() {
 		return id;
@@ -28,11 +32,23 @@ public class ClassesVO {
 	public void setClassName(String className) {
 		this.className = className;
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public int getDays() {
 		return days;
 	}
 	public void setDays(int days) {
 		this.days = days;
+	}
+	public String getTag() {
+		return tag;
+	}
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	public Date getStartDate() {
 		return startDate;
@@ -40,10 +56,16 @@ public class ClassesVO {
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-	public boolean isActive() {
+	public String getCloseDate() {
+		return closeDate;
+	}
+	public void setCloseDate(String closeDate) {
+		this.closeDate = closeDate;
+	}
+	public int getActive() {
 		return active;
 	}
-	public void setActive(boolean active) {
+	public void setActive(int active) {
 		this.active = active;
 	}
 }

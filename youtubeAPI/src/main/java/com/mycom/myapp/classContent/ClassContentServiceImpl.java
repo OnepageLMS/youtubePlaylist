@@ -24,8 +24,8 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
-	public int deleteContent(int id) {
-		return ClassContentDAO.deleteContent(id);
+	public int deleteContent(ClassContentVO vo) {
+		return ClassContentDAO.deleteContent(vo); //int id => ClassContentVO vo 수정
 	}
 	
 	@Override

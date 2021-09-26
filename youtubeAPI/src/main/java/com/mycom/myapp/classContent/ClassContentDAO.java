@@ -23,8 +23,8 @@ public class ClassContentDAO {
 		return result;
 	}
 	
-	public int deleteContent(int id) {
-		int result = sqlSession.delete("ClassContent.deleteContent", id);
+	public int deleteContent(ClassContentVO vo) { //int id => ClassContentVO vo 수정
+		int result = sqlSession.delete("ClassContent.deleteContent", vo);
 		return result;
 	}
 	
