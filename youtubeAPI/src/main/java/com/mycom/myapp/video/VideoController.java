@@ -38,6 +38,15 @@ public class VideoController {
 	
 	private int instructorID = 1;
 	
+	@RequestMapping(value = "/youtube", method = RequestMethod.GET)
+	public String youtube(Model model, String keyword) {
+		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		
+		return "youtube";
+	}
+	
 	//video 수정/재생page 이동
 	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
 	public String getSelectedPlaylistVideos(@PathVariable("playlistID") int playlistID, @PathVariable("videoID") int videoID, Model model) {
@@ -129,7 +138,7 @@ public class VideoController {
 	}
 	
 	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
-	public String addVideo(ModelMap model) {
+	public String addVideo(Model model) {
 		VideoVO vo = new VideoVO();
 		List<Integer> playlistArr = vo.getPlaylistArr();
 		System.out.println("controller: maxLength!!->" + vo.getmaxLength());
@@ -175,9 +184,6 @@ public class VideoController {
 			else 
 				System.out.println("비디오 추가 실패 ");
 		}
-
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
 		return "youtube";
 	}
