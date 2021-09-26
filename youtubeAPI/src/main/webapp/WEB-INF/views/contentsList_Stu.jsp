@@ -60,8 +60,8 @@
 				
 				content.append(
 						
-						 "<div class='list-group-item' seq='" + weekContents[i].daySeq + ">"
-									+ '<div class="row">'
+						 "<div class='row list-group-item-action list-group-item' seq='" + weekContents[i].daySeq + ">"
+									+ '<div class="row d-flex justify-content-between align-items-center">'
 										+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
 										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
 										+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
@@ -98,17 +98,17 @@
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="outer_top.jsp" flush="false"/>
+		<jsp:include page="outer_top_stu_temp.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="outer_left.jsp" flush="false"/>
+		 	<jsp:include page="outer_left_stu.jsp" flush="false"/>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	${classInfo.className}	<!-- 이부분 이름 바꾸기!! -->
+                            	<span class="text-primary">${classInfo.className} </span>  - 강의컨텐츠<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
                     </div>    
@@ -153,9 +153,7 @@
                                 <div class="main-card mb-3 card">
                                     <div class="card-body">
 										<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
-	                                    <div class="list-group day" day="${status.index}">
-	                                        	
-	                                    </div>
+	                                    <div class="list-group day" day="${status.index}"></div>
                                    </div>
                                </div>
                                         

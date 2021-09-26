@@ -13,7 +13,7 @@ public class PlaylistVO {
 	private int totalVideoLength;
 	private int seq;	//playlist seq
 	private int exposed;
-	private Date modDate;
+	private String modDate;
 	
 	private String youtubeID; //이거 영상재생할 때 진짜 필요하다
 	private String title;
@@ -82,10 +82,10 @@ public class PlaylistVO {
 	public void setTotalVideoLength(int totalVideoLength) {
 		this.totalVideoLength = totalVideoLength;
 	}
-	public Date getModDate() {
+	public String getModDate() {
 		return modDate;
 	}
-	public void setModDate(Date modDate) {
+	public void setModDate(String modDate) {
 		this.modDate = modDate;
 	}
 	

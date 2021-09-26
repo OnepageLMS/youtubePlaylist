@@ -730,8 +730,7 @@ $(document).ready(function(){
 		}
 				
 	</script>
-	<div
-		class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
 		<jsp:include page="outer_top.jsp" flush="false" />
 
 		<div class="app-main">

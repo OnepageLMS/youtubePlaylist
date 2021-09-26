@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Example</title>
+    <title>강의컨텐츠</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -125,8 +125,8 @@ $(document).ready(function(){
 			
 								
 			content.append(
-				"<div class='content card col list-group-item' seq='" + allContents[i].daySeq + "'>"
-						+ '<div class="row">'
+				"<div class='content list-group-item-action list-group-item' seq='" + allContents[i].daySeq + "'>"
+						+ '<div class="row col d-flex justify-content-between align-items-center">'
 							+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
 							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
 							+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
@@ -201,8 +201,7 @@ $(document).ready(function(){
 				console.log("success!");
 			}
 		});
-		
-		
+
 	}
 	
 
@@ -457,7 +456,7 @@ $(document).ready(function(){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	${classInfo.className} - 강의컨텐츠<!-- 이부분 이름 바꾸기!! -->
+                            	<span class="text-primary">${classInfo.className}</span>  - 강의컨텐츠<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
                     </div>    
@@ -545,7 +544,7 @@ $(document).ready(function(){
 	            </div>
 	            <div class="modal-footer">
 	            	 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary" onclick="selectOK();">선택완료</button>
+	                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="selectOK();">선택완료</button>
 	            </div>
 	        </div>
 	    </div>

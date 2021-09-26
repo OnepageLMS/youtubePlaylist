@@ -135,7 +135,7 @@ function getAllMyPlaylist(){
 						
 					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' 
 												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
-										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength)
+										+ value.playlistName + ' <i class="pe-7s-stopwatch"></i>' + convertTotalLength(value.totalVideoLength)
 										+ exposed
 										+ '</button>'
 
@@ -164,8 +164,8 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 		datatype : 'json',
 		success : function(result){
 			var lastIdx = $('#playlistInfo').attr('displayIdx'); //새로운 결과 출력 위해 이전 저장된 정보 비우기
-		    //$('.playlist:eq(' + lastIdx + ')').css("background-color", "unset");
-		    //$(".playlist:eq(" + displayIdx + ")").css("background-color", " #F0F0F0;"); //클릭한 playlist 표시
+		    $('.playlist:eq(' + lastIdx + ')').css("background-color", "#fff");
+		    $(".playlist:eq(" + displayIdx + ")").css("background-color", " #F0F0F0;"); //클릭한 playlist 표시
 		    $('#playlistInfo').empty(); 
 		    $('.playlistName').empty();
 
@@ -176,7 +176,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 				    				+ '<img src="https://img.youtube.com/vi/' + result.thumbnailID + '/0.jpg" class="playlistPic">'
 				    			+ '</div>'
 				    			+ '<div class="col-sm-12 text-center">'
-				    				+ '<button id="playAllVideo" onclick="" class="btn btn-primary btn-sm">playlist 전체재생</button>'
+				    				+ '<button id="playAllVideo" onclick="" class="btn btn-transition btn-outline-success btn-sm mt-1">playlist 전체재생</button>'
 				    			+ '</div>'
 			    			+ '</div>';
 		    $('#playlistInfo').append(thumbnail);
@@ -193,7 +193,8 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 					+ '</h4>';
 		    $('.playlistName').append(name); //중간영역 
 		    
-			var modDate = convertTime(result.modDate);
+			//var modDate = convertTime(result.modDate);
+			var modDate = result.modDate;
 			var totalVideoLength = convertTotalLength(result.totalVideoLength);
 			var description = result.description;
 			if (result.description == null)
@@ -235,62 +236,65 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 		    videos = result.allVideo;
 		    
 		    $('#allVideo').empty();
-		        
-		    $.each(videos, function( index, value ){
-			    
-		    	var newTitle = value.newTitle;
-		    	var title = value.title;
-		    	//if (title.length > 45
-					//title = title.substring(0, 45) + " ..."; 
-				
-		    	if (newTitle == null || newTitle == ''){
-		    		newTitle = title;
-					title = '';
-			    }
-
-		    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic img-fluid">';
-
-		    	if (value.tag != null && value.tag.length > 0){
-			    	var tags = value.tag.replace(', ', ' #');
-		    		tags = '#'+ tags;
-		    	}
-		    	else 
-			    	var tags = ' ';
-
-		    	var address = "'${pageContext.request.contextPath}/video/watch/" + value.playlistID + '/' + value.id + "'";
-		    	
-		    	if (index == 0){
-			    	var forButton = 'location.href=' + address + '';
-					$("#playAllVideo").attr("onclick", forButton);
-				} 
-				
-				var html = '<div class="row list-group-item">'
-								+ '<div class="video col-sm-12" videoID="' + value.id + '">'
-									+ '<div class="videoIndex col-sm-1 d-sm-inline-block align-middle">  <p>' + (value.seq+1) + '</p></div>'
-									+ '<div class="videoContent col-sm-10 p-0 d-sm-inline-block" onclick="location.href=' + address + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
-										+ '<div class="row">'
-											+ '<div class="thumbnailBox col-sm-3 row">' 
-												+ thumbnail 
-												+ '<p class="duration col-sm-12"> ' + convertTotalLength(value.duration) + '</p>'
-											+ '</div>'
-											+ '<div class="titles col-sm-9">'
-												+ '<div class="row">'
-													+ '<p class="col-sm-12 text-primary">' + tags + '</p>'
-													+ '<p class="videoNewTitle col-sm-12">' + newTitle + '</p>'
-													+ '<p class="videoOriTitle col-sm-12">' + title + '</p>'
+			
+		   	if(videos.length == 0)
+				$('#allVideo').append('<div><p>현재 저장된 영상이 없습니다. 영상을 추가해주세요!</p></div>');
+			
+		   	else {
+			    $.each(videos, function( index, value ){
+			    	var newTitle = value.newTitle;
+			    	var title = value.title;
+			    	//if (title.length > 45
+						//title = title.substring(0, 45) + " ..."; 
+					
+			    	if (newTitle == null || newTitle == ''){
+			    		newTitle = title;
+						title = '';
+				    }
+	
+			    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic img-fluid">';
+	
+			    	if (value.tag != null && value.tag.length > 0){
+				    	var tags = value.tag.replace(', ', ' #');
+			    		tags = '#'+ tags;
+			    	}
+			    	else 
+				    	var tags = ' ';
+	
+			    	var address = "'${pageContext.request.contextPath}/video/watch/" + value.playlistID + '/' + value.id + "'";
+			    	
+			    	if (index == 0){
+				    	var forButton = 'location.href=' + address + '';
+						$("#playAllVideo").attr("onclick", forButton);
+					} 
+					
+					var html = '<div class="row list-group-item-action list-group-item">'
+									+ '<div class="video col row d-flex justify-content-between align-items-center" videoID="' + value.id + '">'
+										+ '<div class="videoIndex col-sm-1 d-sm-inline-block"> <i class="fa fa-fw" aria-hidden="true"></i></p></div>'
+										+ '<div class="videoContent col-sm-10 p-0 d-sm-inline-block" onclick="location.href=' + address + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
+											+ '<div class="row">'
+												+ '<div class="thumbnailBox col-sm-3 row">' 
+													+ thumbnail 
+													+ '<p class="duration col-sm-12"> ' + convertTotalLength(value.duration) + '</p>'
+												+ '</div>'
+												+ '<div class="titles col-sm-9">'
+													+ '<div class="row">'
+														+ '<p class="col-sm-12 text-primary">' + tags + '</p>'
+														+ '<p class="videoNewTitle col-sm-12">' + newTitle + '</p>'
+														+ '<p class="videoOriTitle col-sm-12">' + title + '</p>'
+													+ '</div>'
 												+ '</div>'
 											+ '</div>'
 										+ '</div>'
-									+ '</div>'
-									+ '<div class="videoEditBtn col-sm-1 d-sm-inline-block">'
-										+ '<a href="#" class="aDeleteVideo col-lg-1 badge badge-danger" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-									+ '</div>'
-									+ '</div>'
-								+ '<div class="videoLine"></div>'
-							+ '</div>';
-
-				$('#allVideo').append(html); 
-			});
+										+ '<div class="videoEditBtn col-sm-1 d-sm-inline-block">'
+											+ '<a href="#" class="aDeleteVideo badge badge-danger" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
+										+ '</div>'
+										+ '</div>'
+								+ '</div>';
+	
+					$('#allVideo').append(html); 
+				});
+		   	}
 		}
 	});
 }
@@ -370,37 +374,6 @@ function deleteVideo(videoID){ // video 삭제
 	else false;
 }
 
-function convertTime(timestamp){ //timestamp형식을 사용자에게 보여주기
-	var date = new Date(timestamp- 540*60*1000); //GMT로 돼서 강제로 바꿔주기.. 이렇게 안하면 db설정을 바꿔야하는데 우리는 불가함.
-	var dd_mm_yyyy = date.toLocaleDateString();
-	var yyyy_mm_dd = dd_mm_yyyy.replace(/(\d+)\/(\d+)\/(\d+)/g, "$3-$2-$1");
-	/*
-	var d = new Date(timestamp), // Convert the passed timestamp to milliseconds
-        yyyy = d.getFullYear(),
-        mm = ('0' + (d.getMonth() + 1)).slice(-2),  // Months are zero based. Add leading 0.
-        dd = ('0' + d.getDate()).slice(-2),         // Add leading 0.
-        hh = d.getHours(),
-        h = hh,
-        min = ('0' + d.getMinutes()).slice(-2),     // Add leading 0.
-        ampm = 'AM',
-        time;
-        
-    if (hh > 12) {
-        h = hh - 12;
-        ampm = 'PM';
-    } else if (hh === 12) {
-        h = 12;
-        ampm = 'PM';
-    } else if (hh == 0) {
-        h = 12;
-    }
-    
-    // ie: 2013-02-18, 8:35 AM  
-    time = yyyy + '년' + mm + '월' + dd + '일' + h + ':' + min + ' ' + ampm;
-        */
-    return yyyy_mm_dd;
-}
-
 function convertTotalLength(seconds){ //duration 변환
 	var seconds_hh = Math.floor(seconds / 3600);
 	var seconds_mm = Math.floor(seconds % 3600 / 60);
@@ -435,6 +408,9 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 });
 
 function submitAddPlaylist(){	//submit the add playlist form
+	if($('#inputPlaylistName').val() == '')
+		return false;
+	
 	if($('#customSwitch1').is(':checked'))
 		$('#customSwitch1').val(1);
 	else
@@ -457,6 +433,9 @@ function submitAddPlaylist(){	//submit the add playlist form
 }
 
 function submitEditPlaylist(){
+	if($('#editPlaylistName').val() == '')
+		return false;
+	
 	if($('#customSwitch2').is(':checked'))
 		$('#customSwitch2').val(1);
 	else
@@ -491,16 +470,18 @@ function submitEditPlaylist(){
                 <div class="app-main__inner">
 					<div class="app-page-title">
 		 				<div class="page-title-wrapper">
-                            <div class="page-title-heading"></div>
+                            <div class="page-title-heading">
+                            	<h4 style="padding-bottom: 2%;">내 학습컨텐츠</h4>
+                            </div>
                             <div class="page-title-actions"></div>
                 		</div>
 
                     	<div class="row">
-			                <div class="col-lg-3">
+			                <div class="col-md-4 col-lg-3">
 								<div class="myPlaylist"></div>
 							</div>
 			
-							<div class="selectedPlaylist col-lg-9 card">
+							<div class="selectedPlaylist col-md-8 col-lg-9 card">
 								<div class="card-body">
 									<div class="row">
 										<div class="col-lg-9 card-title playlistName">										
@@ -611,12 +592,12 @@ function submitEditPlaylist(){
 				            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch2">
 				            <label class="custom-control-label" for="customSwitch2">LMS내 공개</label>
 				       </div>
-				       <div class="modal-footer">
-			            	<button type="button" class="btn btn-danger" data-dismiss="modal">Playlist 삭제</button>
-			                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-			                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditPlaylist();">수정완료</button>
-			            </div>
 			       </form>
+	            </div>
+	            <div class="modal-footer">
+	            	<button type="button" class="btn btn-danger" data-dismiss="modal">Playlist 삭제</button>
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditPlaylist();">수정완료</button>
 	            </div>
 	        </div>
 	    </div>
