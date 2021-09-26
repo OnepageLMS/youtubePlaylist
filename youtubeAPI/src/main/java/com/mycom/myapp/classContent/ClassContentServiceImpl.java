@@ -24,6 +24,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public int updatePublished(ClassContentVO vo) {
+		return ClassContentDAO.updatePublished(vo);
+	}
+	
+	@Override
 	public int deleteContent(ClassContentVO vo) {
 		return ClassContentDAO.deleteContent(vo); //int id => ClassContentVO vo 수정
 	}

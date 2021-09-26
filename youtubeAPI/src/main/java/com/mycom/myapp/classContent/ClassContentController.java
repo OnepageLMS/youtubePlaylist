@@ -44,11 +44,12 @@ public class ClassContentController {
 	public String contentList(@PathVariable("classID") int classID, Model model) {
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
+		//System.out.println(classContentService.getAllClassContent(classID).get(0).getpu)
 		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		//return "t_contentsList";
-		return "contentsList";
+		return "class/contentsList";
 	}
 
 	@RequestMapping(value = "/contentDetail/{id}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
@@ -79,7 +80,7 @@ public class ClassContentController {
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); */
 		//return "t_contentsList_Stu2";
-		return "contentDetail";
+		return "class/contentDetail";
 	}
 	
 	@ResponseBody
@@ -207,9 +208,15 @@ public class ClassContentController {
 		
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setId(Integer.parseInt(request.getParameter("id")));
-		ccvo.setPublished(false); // db에는 tinyint로 되어있음.. VO 수정하기
+		ccvo.setPublished(Integer.parseInt(request.getParameter("published"))); // db에는 tinyint로 되어있음.. VO 수정하기
 		
-		return 0;
+		if( classContentService.updatePublished(ccvo) == 0) {
+			System.out.println("publish 업데이트 실패!");
+			return 0;
+		}
+		else {
+			return 1;
+		}
 	   
 	}
 	

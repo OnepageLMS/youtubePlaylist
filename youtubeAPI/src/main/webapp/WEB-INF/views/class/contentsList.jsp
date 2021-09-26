@@ -109,7 +109,26 @@ $(document).ready(function(){
 			// (jw) endDate 넘겨주기 
 			//console.log("check here", endDate);
 			localStorage.setItem("endDate", endDate);
-
+			var publishedCheck = allContents[i].published;
+			//var nameCheck = "'#exampleCustomCheckbox"+(i+1)+"'";
+			var nameCheck = "#exampleCustomCheckbox"+(i+1);
+			console.log("nameCheck : " +nameCheck+ "/ publishedCheck:" + publishedCheck);
+			if(publishedCheck == 1){
+				console.log("1이야" + nameCheck);
+				//document.getElementById("'" +nameCheck+ "'").setAttribute("checked", true);
+				//eval("'"+optionElement[0]+"'")
+				//document.getElementById("exampleCustomCheckbox1").setAttribute("checked", true);
+				//document.getElementById(nameCheck).setAttribute("checked", true);
+				//$("'" +nameCheck+ "'").prop("checked", true);
+				$("#exampleCustomCheckbox"+(i+1)).prop("checked", true);
+				console.log("#exampleCustomCheckbox"+(i+1));
+			}
+			else{
+				console.log("0이야");
+				//document.getElementById(nameCheck).setAttribute("checked", false);
+				//document.getElementById(eval("'"+nameCheck+"'")).setAttribute("checked", false);
+				$(nameCheck).prop("checked", false);
+			}
 			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
 			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "/" + i + "'";
@@ -447,10 +466,10 @@ $(document).ready(function(){
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="outer_top.jsp" flush="false"/>
+		<jsp:include page="../outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="outer_left.jsp" flush="false"/>
+		 	<jsp:include page="../outer_left.jsp" flush="false"/>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
@@ -523,7 +542,7 @@ $(document).ready(function(){
                     	<!-- 여기 기존 jsp파일 내용 넣기 -->
                     </div>	
         		</div>
-        		<jsp:include page="outer_bottom.jsp" flush="false"/>
+        		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
    	</div>
