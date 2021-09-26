@@ -565,10 +565,10 @@ function collectPlayCount(data) {
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="outer_top_stu_temp.jsp" flush="false"/>
+		<jsp:include page="outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="outer_left_stu.jsp" flush="false"/>
+		 	<jsp:include page="outer_left.jsp" flush="false"/>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
@@ -632,7 +632,7 @@ function collectPlayCount(data) {
                     	<!-- 여기 기존 jsp파일 내용 넣기 -->
                     </div>	
         		</div>
-        		<jsp:include page="outer_bottom.jsp" flush="false"/>
+        		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
    	</div>

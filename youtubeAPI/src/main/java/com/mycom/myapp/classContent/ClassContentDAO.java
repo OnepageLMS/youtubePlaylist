@@ -23,6 +23,11 @@ public class ClassContentDAO {
 		return result;
 	}
 	
+	public int updatePublished(ClassContentVO vo) {
+		int result = sqlSession.update("ClassContent.updatePublished", vo);
+		return result;
+	}
+	
 	public int deleteContent(ClassContentVO vo) { //int id => ClassContentVO vo 수정
 		int result = sqlSession.delete("ClassContent.deleteContent", vo);
 		return result;
