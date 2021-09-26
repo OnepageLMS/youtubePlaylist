@@ -36,7 +36,6 @@ public class VideoController {
 	@Autowired
 	private ClassesService classService;
 	
-	private String email = "yewon.lee@onepage.edu";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 	private int instructorID = 1;
 	
 	//video 수정/재생page 이동
@@ -130,7 +129,7 @@ public class VideoController {
 	}
 	
 	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
-	public String addVideo(@ModelAttribute VideoVO vo) {
+	public String addVideo(@ModelAttribute VideoVO vo, Model model) {
 		List<Integer> playlistArr = vo.getPlaylistArr();
 		System.out.println("controller: maxLength!!->" + vo.getmaxLength());
 
@@ -172,6 +171,9 @@ public class VideoController {
 			else 
 				System.out.println("비디오 추가 실패 ");
 		}
+		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
 		return "youtube";
 	}

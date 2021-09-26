@@ -81,7 +81,6 @@ var email;
 $(document).ready(function(){
 	//email = '${email}'; 
 	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-	console.log(email);
 
 	// 좌측 사이드 바 어떻게 할건지 알고 작업하기 (jw: 2021/09/14)
 	
