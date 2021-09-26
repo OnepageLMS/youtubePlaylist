@@ -18,6 +18,11 @@ public class PlaylistServiceImpl implements PlaylistService{
 	}
 	
 	@Override
+	public int updatePlaylist(PlaylistVO vo) {
+		return playlistDAO.updatePlaylist(vo);
+	}
+	
+	@Override
 	public int updateThumbnailID(PlaylistVO vo) {
 		return playlistDAO.updateThumbnailID(vo);
 	}
@@ -25,16 +30,6 @@ public class PlaylistServiceImpl implements PlaylistService{
 	@Override
 	public int changeSeq(PlaylistVO vo) {
 		return playlistDAO.changeSeq(vo);
-	}
-	
-	@Override
-	public int updatePlaylistName(PlaylistVO vo) {
-		return playlistDAO.updatePlaylistName(vo);
-	}
-	
-	@Override
-	public int updateDescription(PlaylistVO vo) {
-		return playlistDAO.updateDescription(vo);
 	}
 	
 	@Override

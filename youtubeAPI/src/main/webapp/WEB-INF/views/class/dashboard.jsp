@@ -28,7 +28,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
 <script>
@@ -102,11 +102,15 @@ $(document).ready(function(){
 	}
 });
 
+$(document).on("click", ".addClassroomBtn", function () {
+	$('#formAddClassroom')[0].reset();
+});
+
 $(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn 눌렀을 때 modal에 데이터 전송
+	$('#formEditClassroom')[0].reset();
+
 	var classID = $(this).attr('classID');
 	$('#setClassID').val(classID);
-
-	$('#formAddClassroom')[0].reset();
 
 	$.ajax({
 		type: 'post',
@@ -120,7 +124,7 @@ $(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn
 			$('#editClassTag').val(data.tag);
 			$('#editCloseDate').val(data.closeDate);
 
-			if(active == 0)
+			if(data.active == 0)
 				$('#customSwitch2').removeAttr('checked');
 			else
 				$('#customSwitch2').attr('checked', "");
@@ -131,11 +135,11 @@ $(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn
 	});
 });
 
-function submitAddClassroom(){	//check the add classroom form 
+function submitAddClassroom(){	//submit the add classroom form 
 	if($('#inputClassDays').val() == '')	//int type은 null이 될 수 없어 미리 방지
 		$('#inputClassDays').val(0);
 	
-	if($('#customSwitch1').val() == 'on')
+	if($('#customSwitch1').is(':checked'))
 		$('#customSwitch1').val(1);
 	else
 		$('#customSwitch1').val(0);
@@ -158,22 +162,27 @@ function submitAddClassroom(){	//check the add classroom form
 			alert('강의실 생성 실패! ');
 		}
 	});
+
+	location.reload();
 }
 
 function submitEditClassroom(){	//미완성
 	// classDays 현재 강의컨텐츠의 갯수 넘지 않도록 체크
 	// closeDate를 현재 이전으로 하면 학생들 어떻게?
 	
-	$('#formEditClassroom')[0].reset();
+	if($('#editClassDays').val() == '')	//int type은 null이 될 수 없어 미리 방지
+		$('#editClassDays').val(0);
 	
-	if($('#customSwitch2').val() == 'on')
-		var active = 1;
+	if($('#customSwitch2').is(':checked'))
+		$('#customSwitch2').val(1);
 	else
-		var active = 0;
-	console.log($('#editClassTag').val());
+		$('#customSwitch2').val(0);
+
+	if($('#editCloseDate').val() == '')
+		$('#editCloseDate').val('9999-12-31');
 	
 	//data: $('#formEditClassroom').serialize() 으로 바꾸기!!
-	//mapper 파일에서도 수정하기
+	//mapper 파일에서도 나머지 변수 추가하기
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/editClassroom',
@@ -182,7 +191,7 @@ function submitEditClassroom(){	//미완성
 				'className' : $('#editClassName').val(),
 				'description' : $('#editDescription').val(),
 				'tag' : $('#editClassTag').val(),
-				'active' : active
+				'active' : $('#customSwitch2').val()
 			},
 		datatype: 'json',
 		success: function(data){
@@ -195,6 +204,8 @@ function submitEditClassroom(){	//미완성
 			alert('강의실 수정 실패! ');
 		}
 	});
+
+	location.reload();
 	
 }
 
@@ -213,7 +224,7 @@ function deleteClassroom(){
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading col-sm-12">
                                   	<h2 class="col-sm-10">내 강의실</h2>
-                                  	<button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassroomModal">
+                                  	<button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
                                   		<b>+</b> 강의실 생성
                                   	</button>
                                 </div>
@@ -261,11 +272,11 @@ function deleteClassroom(){
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 생성</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="initForm();">
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
-	            <form class="needs-validation" id="formAddClassroom" method="post" novalidate>
+	            <form class="needs-validation was-validated" id="formAddClassroom" method="post" novalidate>
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
 		               		<label for="inputClassName" class="">강의실 이름</label>
@@ -301,30 +312,11 @@ function deleteClassroom(){
 				        </div>
 		            </div>
 		            <div class="modal-footer">
-		                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="initForm();">취소</button>
-		                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="submitAddClassroom();">생성</button>
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+		                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitAddClassroom();">생성</button>
 		            </div>
 	            </form>
-	            <script>
-	               // Example starter JavaScript for disabling form submissions if there are invalid fields
-	               (function() {
-	                   'use strict';
-	                   window.addEventListener('load', function() {
-	                       // Fetch all the forms we want to apply custom Bootstrap validation styles to
-	                       var forms = document.getElementsByClassName('needs-validation');
-	                       // Loop over them and prevent submission
-	                       var validation = Array.prototype.filter.call(forms, function(form) {
-	                           form.addEventListener('submit', function(event) {
-	                               if (form.checkValidity() === false) {
-	                                   event.preventDefault();
-	                                   event.stopPropagation();
-	                               }
-	                               form.classList.add('was-validated');
-	                           }, false);
-	                       });
-	                   }, false);
-	               })();
-	           </script>
+	            
 	        </div>
 	    </div>
 	</div>
@@ -335,16 +327,17 @@ function deleteClassroom(){
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 재설정</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="initForm();">
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
-	            <form class="needs-validation" id="formEditClassroom" method="post" novalidate>
+	            <form class="needs-validation was-validated" id="formEditClassroom" method="post" novalidate>
 		            <input id="setClassID" name="id" type="hidden" value="">
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
 		               		<label for="editClassName" class="">강의실 이름</label> 
-		               		<input name="className" id="editClassName" type="text" class="form-control">
+		               		<input name="className" id="editClassName" type="text" class="form-control" required>
+		               		<div class="invalid-feedback">강의실 이름을 입력해주세요</div>	
 		               </div>
 		               <div class="position-relative form-group">
 		               		<label for="editDescription" class="">강의실 설명</label>
@@ -374,14 +367,35 @@ function deleteClassroom(){
 				            <label class="custom-control-label" for="customSwitch2">강의실 활성화</label>
 				        </div>
 		            </div>
+		            <div class="modal-footer">
+		            	<button type="button" class="btn btn-danger">강의실 삭제</button>
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+		                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditClassroom();">수정완료</button>
+		            </div>
 	            </form>
-	            <div class="modal-footer">
-	            	<button type="button" class="btn btn-danger">강의실 삭제</button>
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="initForm();">취소</button>
-	                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditClassroom();">수정완료</button>
-	            </div>
+				
 	        </div>
 	    </div>
 	</div>
+	<script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+	</script>
 </body>
 </html>

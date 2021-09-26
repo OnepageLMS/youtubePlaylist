@@ -12,7 +12,7 @@ public class ClassesVO {
 	private Date startDate;	//string 변환
 	//private Date closeDate;	//string 변환
 	private String closeDate;
-	private boolean active;
+	private int active;
 	
 	public int getId() {
 		return id;
@@ -62,10 +62,10 @@ public class ClassesVO {
 	public void setCloseDate(String closeDate) {
 		this.closeDate = closeDate;
 	}
-	public boolean isActive() {
+	public int getActive() {
 		return active;
 	}
-	public void setActive(boolean active) {
+	public void setActive(int active) {
 		this.active = active;
 	}
 }

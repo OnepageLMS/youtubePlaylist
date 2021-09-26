@@ -6,12 +6,12 @@ public class PlaylistVO {
 	private int id;
 	private String playlistName;
 	private String description;
+	private String tag;
 	private String thumbnailID;
 	private int instructorID;	//새로추가
-	
 	private int totalVideo;
 	private int totalVideoLength;
-	private int seq;
+	private int seq;	//playlist seq
 	private int exposed;
 	private Date modDate;
 	
@@ -22,12 +22,6 @@ public class PlaylistVO {
 	private double end_s;
 	private double duration;
 	
-	public String getThumbnailID() {
-		return thumbnailID;
-	}
-	public void setThumbnailID(String thumbnailID) {
-		this.thumbnailID = thumbnailID;
-	}
 	public int getId() { 
 		return id;
 	}
@@ -45,6 +39,18 @@ public class PlaylistVO {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getTag() {
+		return tag;
+	}
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	public String getThumbnailID() {
+		return thumbnailID;
+	}
+	public void setThumbnailID(String thumbnailID) {
+		this.thumbnailID = thumbnailID;
 	}
 	public int getInstructorID() {
 		return instructorID;
@@ -76,16 +82,14 @@ public class PlaylistVO {
 	public void setTotalVideoLength(int totalVideoLength) {
 		this.totalVideoLength = totalVideoLength;
 	}
-	public int isExposed() {
-		return exposed;
-	}
-
 	public Date getModDate() {
 		return modDate;
 	}
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
 	}
+	
+	
 	public String getYoutubeID() {
 		return youtubeID;
 	}
