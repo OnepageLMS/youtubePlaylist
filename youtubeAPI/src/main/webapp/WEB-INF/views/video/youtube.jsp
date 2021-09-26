@@ -31,14 +31,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css" integrity="sha512-SZgE3m1he0aEF3tIxxnz/3mXu/u/wlMNxQSnE0Cni9j/O8Gs+TjM9tm1NX34nRQ7GiLwUEzwuE3Wv2FLz2667w==" crossorigin="anonymous" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous"></script>
-	
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="/resources/demos/style.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-		<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+
+	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	
 	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
 
@@ -158,7 +156,7 @@ $(document).ready(function(){
 		$("#get_view").empty();
 		$("#nav_view").empty();
 		var key = "AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c
-		var accessToken = "${accessToken}";
+		//var accessToken = "${accessToken}";
 		var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order="
 				+ $getorder
 				+ "&q="
@@ -236,10 +234,12 @@ $(document).ready(function(){
 				});
 	}
 	
-	// 카트에 영상 담기 할 시에 player 새로고침 되는거 방지하는 코드인데, 작동이 안됨. (21/09/05) 
+	/* // 카트에 영상 담기 할 시에 player 새로고침 되는거 방지하는 코드인데, 작동이 안됨. (21/09/05) 
+	이제 이 코드 없애도 될듯. (jw 21/09/26)
 	$(".searchedVideo fas").click(function(e){
 		e.stopPropagation();
-	});
+	}); */
+	
 	function displayResultList() { //페이지별로 video 정보가 다 가져와지면 이 함수를 통해 결과 list 출력
 		for (var i = 0; i < maxResults; i++) {
 			var id = idList[i];
@@ -358,7 +358,7 @@ $(document).ready(function(){
 			
 			// 클릭한 영상 밑에 player 띄우기
 			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div id="player"></div> </div>'); 
-			$div.append('<div class="p-1 m-1 bg-white text-dark" style="width: 700px;">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
+			$div.append('<div class="p-1 m-1 bg-white text-dark">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
 			$div.append('<div id="player_info"></div>');
 			// 영상 구간 설정 (jw 아래에서 코드 가져와서 적용되게 함 )
 			$div.append($('#setVideoInfo').html());
@@ -621,7 +621,7 @@ $(document).ready(function(){
 				
 			var html = '<div class="videoSeq">' 
 				+ '<div class="row" videoID="' + id + '" videoTitle="' + title + '">' 
-				+ '<div class="custom-control checkbox col-lg-1"> <input type="checkbox" class="custom-control-input" id="selectToSave"></div>'
+				+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave"></div>'
 				+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
 				+ '<div class="col-lg-7">'
 				+ '<div id="title" style="font-weight: bold;">' + title + '</div>'
@@ -662,10 +662,10 @@ $(document).ready(function(){
 	</script>
 	<div
 		class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="outer_top.jsp" flush="false" />
+		<jsp:include page="../outer_top.jsp" flush="false" />
 
 		<div class="app-main">
-			<jsp:include page="outer_left.jsp" flush="true" />
+			<jsp:include page="../outer_left.jsp" flush="true" />
 
 			<div class="app-main__outer">
 				<div class="app-main__inner">
@@ -721,9 +721,13 @@ $(document).ready(function(){
 
 						<div class="col-lg-4">
 							<div class="main-card card sticky-top" id="rightCard">
-								<div class="card-header">선택된 비디오 리스트</div>
-								<div class="card-body">
-									<div class="scroll-area-sm">
+								<div class="card-title m-0"> 
+									<h6 style="font-weight: bold; margin: 10px 20px;"> 선택된 비디오 리스트 </h6>
+									<input type="checkbox" style="margin-left: 20px;"> <label class="form-check-label"> 전체 선택 </label>  
+									<button onclick='deleteDay()' class="mr-2 btn-transition btn btn-danger float-right" style="float-right;">선택 항목 삭제</button>
+								</div>
+								<div class="card-footer">
+									<div style="overflow: auto; height: 700px;">
 										<div id="videosInCart"
 											class="scrollbar-container ps--active-y ps"></div>
 									</div>
@@ -780,7 +784,7 @@ $(document).ready(function(){
 					</div>
 
 				</div>
-				<jsp:include page="outer_bottom.jsp" flush="false" />
+				<jsp:include page="../outer_bottom.jsp" flush="false" />
 			</div>
 		</div>
 	</div>

@@ -43,7 +43,7 @@ public class VideoController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
-		return "youtube";
+		return "video/youtube";
 	}
 	
 	//video 수정/재생page 이동
