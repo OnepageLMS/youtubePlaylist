@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +35,16 @@ public class VideoController {
 	@Autowired
 	private ClassesService classService;
 	
-	private String email = "yewon.lee@onepage.edu";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 	private int instructorID = 1;
+	
+	@RequestMapping(value = "/youtube", method = RequestMethod.GET)
+	public String youtube(Model model, String keyword) {
+		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		
+		return "youtube";
+	}
 	
 	//video 수정/재생page 이동
 	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
@@ -130,8 +137,7 @@ public class VideoController {
 	}
 	
 	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
-	public String addVideo(ModelMap model) {
-		
+	public String addVideo(Model model) {
 		VideoVO vo = new VideoVO();
 		List<Integer> playlistArr = vo.getPlaylistArr();
 		System.out.println("controller: maxLength!!->" + vo.getmaxLength());
@@ -177,7 +183,6 @@ public class VideoController {
 			else 
 				System.out.println("비디오 추가 실패 ");
 		}
-		
 		
 		return "youtube";
 	}
