@@ -28,6 +28,11 @@ public class ClassesDAO {
 		return result;
 	}
 	
+	public int deleteDay(int id){
+		int result = sqlSession.update("Classes.deleteDay", id);
+		return result;
+	}
+	
 	public ClassesVO getClass(int id) {
 		ClassesVO vo = sqlSession.selectOne("Classes.getClass", id);
 		return vo;

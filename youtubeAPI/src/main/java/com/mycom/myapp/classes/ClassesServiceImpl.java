@@ -28,6 +28,11 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
+	public int deleteDay(int id) {
+		return classesDAO.deleteDay(id);
+	}
+	
+	@Override
 	public ClassesVO getClass(int id) {
 		return classesDAO.getClass(id);
 	}
