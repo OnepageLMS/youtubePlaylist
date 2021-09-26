@@ -8,7 +8,7 @@
 	
 	<update id="updateClassroom">
 		update lms_class 
-		set className=#{className}, description=#{description}, tag=#{tag}
+		set className=#{className}, description=#{description}, tag=#{tag}, active=#{active}
 		where id=#{id}
 	</update>
 	

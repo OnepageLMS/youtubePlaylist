@@ -2,9 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Playlist">
 	<insert id="addPlaylist">
-		insert into lms_playlist (playlistName, instructorID, seq, totalVideoLength, description)
-		values (#{playlistName}, #{instructorID}, #{seq}, #{totalVideoLength}, #{description})
+		insert into lms_playlist (playlistName, description, tag, instructorID, exposed, seq)
+		values (#{playlistName}, #{description}, #{tag}, #{instructorID}, #{exposed}, #{seq})
 	</insert>
+	
+	<update id="updatePlaylist">
+		update lms_playlist
+		set playlistName=#{playlistName}, description=#{description}, tag=#{tag}, exposed=#{exposed} 
+		where id=#{id}
+	</update>
 	
 	<insert id="updateThumbnailID">
 		update lms_playlist 
@@ -12,23 +18,13 @@
 		where id=#{playlistID}
 	</insert>
 	
-	<delete id="deletePlaylist">
+	<delete id="deletePlaylist">	<!-- playlist 내의 video들도 지우도록 변경필요!! -->
 		delete from lms_playlist where id=#{playlistID}
 	</delete>
 	
 	<update id="changeSeq">
 		update lms_playlist
 		set seq=#{seq} where id=#{playlistID}
-	</update>
-	
-	<update id="updatePlaylistName">
-		update lms_playlist
-		set playlistName=#{playlistName} where id=#{playlistID}
-	</update>
-	
-	<update id="updateDescription">
-		update lms_playlist
-		set description=#{description} where id=#{playlistID}
 	</update>
 	
 	<select id="getPlaylist" resultType="playlist"> <!-- playlist info 가져올때 사용 -->

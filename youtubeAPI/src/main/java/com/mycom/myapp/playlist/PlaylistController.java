@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,17 +55,23 @@ public class PlaylistController {
 	
 	@RequestMapping(value = "/addPlaylist", method = RequestMethod.POST)
 	@ResponseBody
-	public void addPlaylist(HttpServletRequest request) {
-		PlaylistVO vo = new PlaylistVO();
-		vo.setInstructorID(Integer.parseInt(request.getParameter("creator")));	//이부분 creator->instructorID로 변환하기!! (9/15)
-		vo.setPlaylistName(request.getParameter("name"));
-		vo.setDescription(request.getParameter("description"));
-		vo.setSeq(playlistService.getCount()); //새로운 playlist의 seq가 될 숫자 구하기
+	public void addPlaylist(@ModelAttribute PlaylistVO vo) {
+		vo.setInstructorID(instructorID);
 
 		if(playlistService.addPlaylist(vo) != 0) 
 			System.out.println("playlist 추가 성공! ");
 		else
 			System.out.println("playlist 추가 실패! ");
+	}
+	
+	@RequestMapping(value = "/updatePlaylist", method = RequestMethod.POST)
+	@ResponseBody
+	public void updatePlaylist(@ModelAttribute PlaylistVO vo) {
+
+		if(playlistService.updatePlaylist(vo) != 0) 
+			System.out.println("playlist 수정 성공! ");
+		else
+			System.out.println("playlist 수정 실패! ");
 	}
 	
 
@@ -100,40 +107,6 @@ public class PlaylistController {
 	public PlaylistVO getPlaylistInfo(@RequestParam(value = "playlistID") String playlistID) {
 		PlaylistVO vo = playlistService.getPlaylist(Integer.parseInt(playlistID));
 		return vo;
-	}
-	
-	//playlist 이름수정
-	@RequestMapping(value = "/updatePlaylistName", method = RequestMethod.POST)
-	@ResponseBody
-	public String updatePlaylistName(@RequestParam(value = "playlistID") String playlistID, 
-												@RequestParam(value = "name") String name) {
-		PlaylistVO vo = new PlaylistVO();
-		vo.setId(Integer.parseInt(playlistID));
-		vo.setPlaylistName(name);
-		
-		if (playlistService.updatePlaylistName(vo) == 0)
-			System.out.println("playlistname 수정 실패!");
-		else
-			System.out.println("playlistname 수정 성공!");
-		
-		return name;
-	}
-	
-	//playlist 설명 수정
-	@RequestMapping(value = "/updatePlaylistDesciption", method = RequestMethod.POST)
-	@ResponseBody
-	public String updatePlaylistDesciption(@RequestParam(value = "playlistID") String playlistID, 
-												@RequestParam(value = "description") String description) {
-		PlaylistVO vo = new PlaylistVO();
-		vo.setId(Integer.parseInt(playlistID));
-		vo.setDescription(description);
-		
-		if (playlistService.updateDescription(vo) == 0)
-			System.out.println("description 수정 실패!");
-		else
-			System.out.println("description 수정 성공!");
-		
-		return description;
 	}
 	
 	@RequestMapping(value = "/player", method = RequestMethod.POST)

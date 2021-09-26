@@ -346,6 +346,7 @@ function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 �
 }
 
 function deleteVideo(videoID){ // video 삭제
+	//이부분 수정필요!!! --> 학습자료로 사용중인 비디오 있을때 체크!!!!
 	if (confirm("정말 삭제하시겠습니까?")){
 		var playlistID = $('.selectedPlaylist').attr('playlistID');
 		changeAllVideo(videoID);
@@ -414,14 +415,15 @@ function convertTotalLength(seconds){ //duration 변환
 }
 
 $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn 눌렀을 때 modal에 데이터 전송
-	//var playlistID = $(this).attr('playlistID');
+	var playlistID = $('.selectedPlaylist').attr('playlistID');
 
 	//아래 내용은 이미 화면에 표시되어있기 때문에 db에서 다시 가져오지 않는다.
 	var playlistName = $('#displayPlaylistName').text();
 	var description = $('#displayDescription').text();
 	//var tag = $('').text();
 	var exposed = $('#displayExposed').text();
-	
+
+	$('#setPlaylistID').val(playlistID);
 	$('#editPlaylistName').val(playlistName);
 	$('#editPlaylistDescription').val(description);
 
@@ -431,6 +433,50 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 		$('#customSwitch2').attr('checked', "");
 
 });
+
+function submitAddPlaylist(){	//submit the add playlist form
+	if($('#customSwitch1').is(':checked'))
+		$('#customSwitch1').val(1);
+	else
+		$('#customSwitch1').val(0);
+
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/playlist/addPlaylist',
+		data: $('#formAddPlaylist').serialize(),
+		datatype: 'json',
+		success: function(data){
+			console.log('playlist 생성 완료!');
+		},
+		error: function(data, status,error){
+			alert('playlist 생성 실패! ');
+		}
+	});
+
+	location.reload();
+}
+
+function submitEditPlaylist(){
+	if($('#customSwitch2').is(':checked'))
+		$('#customSwitch2').val(1);
+	else
+		$('#customSwitch2').val(0);
+
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/playlist/updatePlaylist',
+		data: $('#formEditPlaylist').serialize(),
+		datatype: 'json',
+		success: function(data){
+			console.log('playlist 수정 완료!');
+		},
+		error: function(data, status,error){
+			alert('playlist 수정 실패! ');
+		}
+	});
+
+	location.reload();
+}
 
 
 </script>
@@ -507,27 +553,30 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	               <div class="position-relative form-group">
-	               		<label for="inputPlaylistName" class="">Playlist 이름</label>
-	               		<input name="playlistName" id="inputPlaylistName" type="text" class="form-control">
-	               </div>
-	               <div class="position-relative form-group">
-	               		<label for="inputPlaylistDescription" class="">설명</label>
-	               		<textarea name="description" id="inputPlaylistDescription" class="form-control"></textarea>
-	               </div>
-                   <div class="position-relative form-group">
-	               		<label for="inputPlaylistTag" class="">태그</label>
-	               		<input name="tag" id="inputPlaylistTag" placeholder="ex) spring, 웹개발초보" type="text" class="form-control">
-	               </div>
-                   <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch1">
-			            <label class="custom-control-label" for="customSwitch1">LMS내 공개</label>
-			       </div>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary">생성</button>
-	            </div>
+            		<form class="needs-validation was-validated" id="formAddPlaylist" method="post" novalidate>
+		               	<div class="position-relative form-group">
+		               		<label for="inputPlaylistName" class="">Playlist 이름</label>
+		               		<input name="playlistName" id="inputPlaylistName" type="text" class="form-control" required>
+		               		<div class="invalid-feedback">Playlist 이름을 입력해주세요</div>	
+		               	</div>
+		               	<div class="position-relative form-group">
+		               		<label for="inputPlaylistDescription" class="">설명</label>
+		               		<textarea name="description" id="inputPlaylistDescription" class="form-control"></textarea>
+		               	</div>
+	                   	<div class="position-relative form-group">
+		               		<label for="inputPlaylistTag" class="">태그</label>
+		               		<input name="tag" id="inputPlaylistTag" placeholder="ex) spring, 웹개발초보" type="text" class="form-control">
+		               	</div>
+	                   	<div class="custom-control custom-switch">
+				            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch1">
+				            <label class="custom-control-label" for="customSwitch1">LMS내 공개</label>
+				       	</div>
+						<div class="modal-footer">
+			                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+			                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitAddPlaylist();">생성</button>
+		            	</div>
+					</form>
+				</div>
 	        </div>
 	    </div>
 	</div>
@@ -543,29 +592,54 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	               <div class="position-relative form-group">
-	               		<label for="editPlaylistName" class="">Playlist 이름</label>
-	               		<input name="playlistName" id="editPlaylistName" type="text" class="form-control">
-	               </div>
-	               <div class="position-relative form-group">
-	               		<label for="editPlaylistDescription" class="">설명</label>
-	               		<textarea name="description" id="editPlaylistDescription" class="form-control"></textarea>
-	               </div>
-                   <div class="position-relative form-group">
-	               		<label for="editPlaylistTag" class="">태그</label>
-	               		<input name="tag" id="editPlaylistTag" type="text" class="form-control">
-	               </div>
-                   <div class="custom-control custom-switch">
-			            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch2">
-			            <label class="custom-control-label" for="customSwitch2">LMS내 공개</label>
-			       </div>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary">수정완료</button>
+	            <form class="needs-validation was-validated" id="formEditPlaylist" method="post" novalidate>
+	            		<input name="id" type="hidden" id="setPlaylistID">
+		               <div class="position-relative form-group">
+		               		<label for="editPlaylistName" class="">Playlist 이름</label>
+		               		<input name="playlistName" id="editPlaylistName" type="text" class="form-control" required>
+		               		<div class="invalid-feedback">Playlist 이름을 입력해주세요</div>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<label for="editPlaylistDescription" class="">설명</label>
+		               		<textarea name="description" id="editPlaylistDescription" class="form-control"></textarea>
+		               </div>
+	                   <div class="position-relative form-group">
+		               		<label for="editPlaylistTag" class="">태그</label>
+		               		<input name="tag" id="editPlaylistTag" type="text" class="form-control">
+		               </div>
+	                   <div class="custom-control custom-switch">
+				            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch2">
+				            <label class="custom-control-label" for="customSwitch2">LMS내 공개</label>
+				       </div>
+				       <div class="modal-footer">
+			            	<button type="button" class="btn btn-danger" data-dismiss="modal">Playlist 삭제</button>
+			                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+			                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditPlaylist();">수정완료</button>
+			            </div>
+			       </form>
 	            </div>
 	        </div>
 	    </div>
 	</div>
+	<script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+	</script>
 </body>
 </html>

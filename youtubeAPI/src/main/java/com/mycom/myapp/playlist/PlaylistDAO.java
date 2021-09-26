@@ -19,6 +19,11 @@ public class PlaylistDAO {
 		return result;
 	}
 	
+	public int updatePlaylist(PlaylistVO vo) {
+		int result = sqlSession.update("Playlist.updatePlaylist", vo);
+		return result;
+	}
+	
 	public int updateThumbnailID(PlaylistVO vo) {
 		int result = sqlSession.update("Playlist.updateThumbnailID", vo);
 		return result;
@@ -26,16 +31,6 @@ public class PlaylistDAO {
 	
 	public int changeSeq(PlaylistVO vo) {
 		int result = sqlSession.update("Playlist.changeSeq", vo);
-		return result;
-	}
-	
-	public int updatePlaylistName(PlaylistVO vo) {
-		int result = sqlSession.update("Playlist.updatePlaylistName", vo);
-		return result;
-	}
-	
-	public int updateDescription(PlaylistVO vo) {
-		int result = sqlSession.update("Playlist.updateDescription", vo);
 		return result;
 	}
 	

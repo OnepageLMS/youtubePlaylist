@@ -68,7 +68,6 @@ public class ClassController {
 	@ResponseBody
 	@RequestMapping(value="/editClassroom", method = RequestMethod.POST)	//classroom 생성 처리
 	public String editClassroom(@ModelAttribute ClassesVO vo) {
-		System.out.println(vo.getTag());
 		if (classService.updateClassroom(vo) != 0) {
 			System.out.println("controller 강의실 수정 성공");
 			return "ok";
