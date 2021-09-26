@@ -8,7 +8,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta http-equiv="Content-Language" content="en">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Dashboard</title>
+	<title>Youtube 영상 추가</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
 	<meta name="description" content="This is an example dashboard created using build-in elements and components.">
 	<meta name="msapplication-tap-highlight" content="no">
@@ -97,7 +97,7 @@ img {
 var email;
 $(document).ready(function(){
 	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-  
+	
 	// 좌측 사이드 바 어떻게 할건지 알고 작업하기 (jw: 2021/09/14)
 	
 	//getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
@@ -735,7 +735,7 @@ $(document).ready(function(){
 		<jsp:include page="outer_top.jsp" flush="false" />
 
 		<div class="app-main">
-			<jsp:include page="outer_left.jsp" flush="false" />
+			<jsp:include page="outer_left.jsp" flush="true" />
 
 			<div class="app-main__outer">
 				<div class="app-main__inner">
