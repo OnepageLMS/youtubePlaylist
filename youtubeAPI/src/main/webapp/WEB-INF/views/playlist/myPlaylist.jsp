@@ -468,7 +468,7 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 					                             		<input type="hidden" name="playlistName" id="playlistName">
 					                             		<button type="submit" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
 					                             	</form> --%>
-					                             	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/youtube" data-target="#" aria-selected="false">
+					                             	<a role="tab" class="nav-link show" id="tab-1" href="${pageContext.request.contextPath}/video/youtube" data-target="#" aria-selected="false">
 					                                   	<button type="button" tabindex="0" class="dropdown-item">Youtube 영상검색 </button>
 					                               	</a>	                   
 					                                	<a role="tab" class="nav-link show" id="tab-2" href="${pageContext.request.contextPath}/playlist/searchLms" data-target="#" aria-selected="false">
