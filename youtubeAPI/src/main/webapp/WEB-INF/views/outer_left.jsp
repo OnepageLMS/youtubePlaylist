@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<script>
+	console.log('${allMyClass}');
+	console.log('${allMyInactiveClass}');
+</script>
 	<div class="app-sidebar sidebar-shadow">
        <div class="app-header__logo">
            <div class="header__pane ml-auto">
