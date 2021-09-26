@@ -44,13 +44,13 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
 	
-	private int studentID = 1;
+	private int studentId;
 	
 	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)
 	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
 		//int studentID = 1;	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
-		
+		studentId = studentID;
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
@@ -60,7 +60,7 @@ public class Stu_ClassController{
 	
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)	// 9/24 studentID url에서 지운 버전(yewon)
 	public String dashboard (Model model) {
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
 		
 		return "class/dashboard_Stu";
 	}
@@ -75,7 +75,7 @@ public class Stu_ClassController{
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));  //객체 아니고 그냥 classID보내면 안되나 ..?
 		//classContents테이블에서 가져온다. 해당 classID의 특정 playlistID를 가진 것을 가져온다. (주차별로 가져오는 느낌) - allContents있는데 이게 굳이 필요..?
 		// 아니,, allContents가 아니라 weekContents를 가져와야한다
-		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
 		//VideoVO pvo = new VideoVO();
 		//model.addAttribute("list", videoCheckService.getTime(176)); //studentID가 1로 설정되어있음
 	    //model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
@@ -99,7 +99,7 @@ public class Stu_ClassController{
 		ccvo.setId(id);
 		ccvo.setClassID(classID); //임의로 1번 class 설정
 		
-
+		model.addAttribute("allMyClass", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
 		model.addAttribute("classInfo", classesService.getClass(classID)); 
 		//model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classInfo)));
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
