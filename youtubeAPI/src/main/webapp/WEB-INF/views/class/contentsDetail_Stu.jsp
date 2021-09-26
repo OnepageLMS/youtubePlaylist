@@ -565,17 +565,17 @@ function collectPlayCount(data) {
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="outer_top.jsp" flush="false"/>
+		<jsp:include page="../outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="outer_left.jsp" flush="false"/>
+		 	<jsp:include page="../outer_left.jsp" flush="false"/>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	${classInfo.className}	<!-- 이부분 이름 바꾸기!! -->
+                            	<span class="text-primary">${classInfo.className}</span>  - 강의컨텐츠	<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
                     </div>    
