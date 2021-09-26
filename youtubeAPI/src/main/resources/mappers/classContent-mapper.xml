@@ -18,7 +18,7 @@
 	</update>
 	
 	<delete id="deleteContent">
-		delete from lms_classContent where id=#{id}
+		delete from lms_classContent where classID=#{classID} and days=#{days}
 	</delete>
 	
 	<select id="getOneContent" resultType="classContent">

@@ -44,10 +44,11 @@ public class ClassContentController {
 	public String contentList(@PathVariable("classID") int classID, Model model) {
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
-		
-		return "t_contentsList";
-		//return "contentsList";
+		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		//return "t_contentsList";
+		return "contentsList";
 	}
 
 	@RequestMapping(value = "/contentDetail/{id}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
@@ -60,8 +61,9 @@ public class ClassContentController {
 		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
 		model.addAttribute("classInfo", classService.getClass(0)); //여기도 임의로 classID 0 넣어두었다.
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(0))); //classID 임의로 0 넣어두었다.
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
-		
+		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
 		/*VideoVO pvo = new VideoVO();
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
@@ -77,7 +79,7 @@ public class ClassContentController {
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); */
 		//return "t_contentsList_Stu2";
-		return "t_contentDetail";
+		return "contentDetail";
 	}
 	
 	@ResponseBody
@@ -144,14 +146,14 @@ public class ClassContentController {
 	   
 	}
 	
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/deleteClassContents", method = RequestMethod.POST)
 	public void deleteClassContents(HttpServletRequest request, Model model) throws Exception {
 		
 		if( classContentService.deleteContent(Integer.parseInt(request.getParameter("classContentID"))) == 0) {
 			System.out.println("modal을 통한 classcontent 삭제 실패");
 		}
-	}
+	}*/
 	
 	
 	@ResponseBody
@@ -169,6 +171,48 @@ public class ClassContentController {
 		}
 	   
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteDay", method = RequestMethod.POST)
+	public int deleteDay(HttpServletRequest request, Model model) throws Exception {
+		
+		System.out.println("?? day " + Integer.parseInt(request.getParameter("days")));
+		ClassContentVO ccvo = new ClassContentVO();
+		ccvo.setClassID(Integer.parseInt(request.getParameter("classID")));
+		ccvo.setDays(Integer.parseInt(request.getParameter("days"))-1);
+		
+		if( classContentService.deleteContent(ccvo) == 0) { //강의 컨텐츠가 없는 차시를 지울때
+			if(classService.deleteDay(Integer.parseInt(request.getParameter("classID"))) == 0) { 
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		else { //강의 컨텐츠가 있는 차시 지울 
+			if(classService.deleteDay(Integer.parseInt(request.getParameter("classID"))) == 0) { 
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+	   
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/updatePublished", method = RequestMethod.POST)
+	public int updatePublished(HttpServletRequest request, Model model) throws Exception {
+		
+		ClassContentVO ccvo = new ClassContentVO();
+		ccvo.setId(Integer.parseInt(request.getParameter("id")));
+		ccvo.setPublished(false); // db에는 tinyint로 되어있음.. VO 수정하기
+		
+		return 0;
+	   
+	}
+	
 	
 	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //사용안함
 	public String addContent(@PathVariable("classID") int classID, @PathVariable("day") int day, Model model) {
@@ -214,7 +258,7 @@ public class ClassContentController {
 		return "redirect:contentList/" + classID;
 	}
 	
-	@RequestMapping(value = "/deleteContent/{classID}/{id}", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/deleteContent/{classID}/{id}", method = RequestMethod.GET)
 	public String deleteContent(@PathVariable("classID") int classID, @PathVariable("id") int id) {
 		if (classContentService.deleteContent(id) == 0)
 			System.out.println("classContent 삭제 실패!");
@@ -222,5 +266,5 @@ public class ClassContentController {
 			System.out.println("classContent 삭제 성공!");
 		
 		return "redirect:../../contentList/" + classID;
-	}
+	}*/
 }

@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>학습 컨텐츠</title>
+    <title>Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -22,7 +22,8 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+    
+    <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
@@ -33,9 +34,9 @@
 <script>
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
-	setAllMyClass();	//왼쪽 내 class 목록 띄우기
+	//setAllMyClass();	//왼쪽 내 class 목록 띄우기
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
-
+	
 	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈
 		var instructorID = 1;	//임의로 설정
 		
@@ -84,7 +85,7 @@ $(document).ready(function(){
 	                	$('.allPlaylist').append(contentHtml);
 					});
 				}
-				$('#selectPlaylistModal').modal('show');
+				//$('#selectPlaylistModal').modal('show');
 				
 			}, error:function(request,status,error){
 				console.log(error);
@@ -93,69 +94,25 @@ $(document).ready(function(){
 	})
 	
 });
-	function setAllMyClass(){	//이 함수는 왼쪽 side menu 가져오는데 사용. outer_left.jsp로 대체하면 지우기!!
-		var allMyClass = JSON.parse('${allMyClass}');
-
-		for(var i=0; i<allMyClass.length; i++){
-			var name = allMyClass[i].className;
-			var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
-
-			if ('${classInfo.className}' == name){
-				var li = '<li class="mm-active">'
-				var contentMenu = '<a href="' + classContentURL + '" class="mm-active">';
-			}
-			else {
-				var li = '<li>';
-				var contentMenu = '<a href="' + classContentURL + '">';
-					
-			}
-			var html = '<li>'
-							+ '<a href="#">'
-								+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-								+ name
-								+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-							+ '</a>'
-							+ '<ul>'
-								+ '<li>'
-									+ '<a href="#">'
-										+ '<i class="metismenu-icon"></i>'
-										+ '공지'
-									+ '</a>'
-								+ '</li>'
-								+ '<li>'
-									+ contentMenu
-										+ '<i class="metismenu-icon"></i>'
-										+ '학습 컨텐츠'
-									+ '</a>'
-								+ '</li>'
-								+ '<li>'
-									+ '<a href="#">'
-										+ '<i class="metismenu-icon"></i>'
-										+ '출결 / 학습현황'
-									+ '</a>'
-								+ '</li>'
-							+ '</ul>'
-						+ '</li>';
-					
-			$('.sideClassList').append(html);
-		}
-	}
+	
 	
 	function setAllContents(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
+		console.log("길이 : " + allContents.length);
 		for(var i=0; i<allContents.length; i++){
 			var day = allContents[i].days;
 			var date = new Date(allContents[i].endDate.time); //timestamp -> actural time
-			//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
-			var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
-
+			//var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+			
+			var endDate = date.getFullYear() + "-" + ("00"+(date.getMonth()+1).toString()).slice(-2) + "-" + ("00"+(date.getDate()).toString()).slice(-2) + " " 
+					+ ("00"+(date.getHours()).toString()).slice(-2) + ":" + ("00"+(date.getMinutes()).toString()).slice(-2);
 			// (jw) endDate 넘겨주기 
 			//console.log("check here", endDate);
 			localStorage.setItem("endDate", endDate);
 
 			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
-			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "'";
+			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "/" + i + "'";
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 			var published;
 
@@ -165,27 +122,35 @@ $(document).ready(function(){
 			else
 				published = '<label class="custom-control-label" for="switch">비공개</label>'
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
+			
+								
 			content.append(
-						"<div class='content card col list-group-item' seq='" + allContents[i].daySeq + "'>"
-								+ '<div class="row">'
-									+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
-									+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
-									+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-										+ "<div class='col-sm-12 card-title'>"
-											+ allContents[i].title  + '  [' + allContents[i].totalVideo + ']' 
-										+ '</div>'
-										+ '<div class="col-sm-12">'
-												+ '<div class="contentInfoBorder"></div>'
-												+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
-												+ '<div class="contentInfoBorder"></div>'
-												+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
-										+ '</div>' 
+				"<div class='content card col list-group-item' seq='" + allContents[i].daySeq + "'>"
+						+ '<div class="row">'
+							+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
+							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
+							+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-6 card-title inline-block' style=' height: 50%; font-size: 15px'>"
+										+ allContents[i].title + "  [" +convertTotalLength(allContents[i].totalVideoLength) + "]"
 									+ '</div>'
-									+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
-										+ published
-									+ '</div>'
+													
+													
+									+ '<div class="col-sm-12">'
+										+ '<div class="contentInfoBorder"></div>'
+										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+									+ '</div>' 
+							+ '</div>'
+							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
+									//+ published
+								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
+									+ '<input type="checkbox" id="exampleCustomCheckbox' +(i+1) + '" class="custom-control-input" onchange="YNCheck(this, '+allContents[i].id +')">'
+										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +(i+1) + '"></label>'
 								+ '</div>'
-							 + "</div>");
+							//+ '</div>'
+						+ '</div>'
+				+ "</div>");
 						/*
 						"<div class='content card' seq='" + allContents[i].daySeq + "'>"
 						+ '<div class="row mb-3 card-header">'
@@ -212,9 +177,38 @@ $(document).ready(function(){
 		}
 	}
 	
+	function YNCheck(obj, id){
+		console.log("id : "+ id);
+		var checked = obj.checked;
+		var published;
+		if(checked){
+			obj.value = "Y";
+			published = 1;
+			console.log("Y" + published);
+		}
+		else{
+			obj.value = "N";
+			published = 0;
+			console.log("N" + published);
+		}
+		
+		$.ajax({
+			type : 'post',
+			url : '../updatePublished',
+			data : {id : id, published : published}, //id도 같이 보내야함..
+			datatype : 'json',
+			success : function(result){
+				console.log("success!");
+			}
+		});
+		
+		
+	}
+	
 
 	function showAddContentForm(day){
 		day -= 1; //임의로 조절... 
+		console.log('day :' + day);
 		
 		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
 		
@@ -224,12 +218,13 @@ $(document).ready(function(){
 							+ '</div>'
 							+ '<form id="addContent" class="form-group card-body" action="${pageContext.request.contextPath}/class/addContentOK" onsubmit="return checkForm(this);" method="post">' 
 								+ '<input type="hidden" name="classID" value="${classInfo.id}">'
-								+ '<input type="hidden" name="day" value="' + day + '"/>'
+								+ '<input type="hidden" name="days" value=""/>'
+								+ '<input type ="hidden" id="inputPlaylistID" name="playlistID">'
 								+ '<div class="selectContent m-3">'
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
 									
 										//data-toggle="modal" data-target=".selectPlaylistModal"
-									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn mr-2 mb-2 btn-primary float-right">Playlist 가져오기</button>'
+									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target="#selectPlaylistModal">Playlist 가져오기</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
 								+ '</div>'
 								+ '<div class="inputTitle input-group col">'
@@ -268,7 +263,7 @@ $(document).ready(function(){
 								+ '</div>'
 							+ '</form>'
 									
-
+		$('input[name=days]').attr('value', day);
 		$('.day:eq(' + day + ')').append(addFormHtml);
 
 		//아래부분 마감일 설정때 나오도록...?
@@ -320,6 +315,7 @@ $(document).ready(function(){
 	} 
 
 	function checkForm(item){
+		console.log("!!");
 		 console.log(item);
 	        var date = $('#startDate').val().split("-");
 	        var hour = $('.start_h').val();
@@ -398,7 +394,7 @@ $(document).ready(function(){
 					$('#inputThumbnailID').val(thumbnailID);
 					$('#selectPlaylistBtn').text('playlist 다시선택');
 
-					$('#selectPlaylistModal').modal('hide');
+					//$('#selectPlaylistModal').modal('hide');
 				}
 			});
 		}
@@ -407,153 +403,82 @@ $(document).ready(function(){
 			return false;
 		}
 	}
-
+	
+	/*function addDays(){
+		var days = ${classInfo.days};
+		days += 1;
+		return days;
+	}*/
+	
+	function updateDays(classID){
+		$.ajax({
+			type : 'post',
+			url : '../updateDays',
+			data : {classID : classID},
+			datatype : 'json',
+			success : function(result){
+				console.log("성공!");
+				location.reload();
+			},
+			error : function() {
+			  	alert("updateDays error");
+			}
+		});
+	}
+	
+	
+	function deleteDay(classID, day){
+		console.log("classID는? " + classID);
+		$.ajax({
+			type : 'post',
+			url : '../deleteDay',
+			data : {classID : classID,
+				days : day},
+			datatype : 'json',
+			success : function(result){
+				console.log("성공!" +result);
+				location.reload();
+			},
+			error : function() {
+			  	alert("updateDays error");
+			}
+		});
+	}
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-        <div class="app-header header-shadow">
-            <div class="app-header__logo">
-                <div class="logo-src"></div>
-                <div class="header__pane ml-auto">
-                    <div>
-                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="app-header__mobile-menu">
-                <div>
-                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <div class="app-header__menu">
-                <span>
-                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                        <span class="btn-icon-wrapper">
-                            <i class="fa fa-ellipsis-v fa-w-6"></i>
-                        </span>
-                    </button>
-                </span>
-            </div>    <div class="app-header__content">
-                <div class="app-header-left">
-                    <div class="search-wrapper">
-                        <div class="input-holder">
-                            <input type="text" class="search-input" placeholder="Type to search">
-                            <button class="search-icon"><span></span></button>
-                        </div>
-                        <button class="close"></button>
-                    </div>
-                    <ul class="header-menu nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
-                                <i class="nav-link-icon fa fa-home"> </i>
-                                대시보드
-                            </a>
-                        </li>
-                       
-                        <li class="dropdown nav-item">
-                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/1" class="nav-link">
-                                <i class="nav-link-icon fa fa-archive"></i>
-                                학습컨텐츠 보관함
-                            </a>
-                        </li>
-                    </ul>        
-                </div>
-                <div class="app-header-right">
-                    <div class="header-btn-lg pr-0">
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left">
-                                    <div class="btn-group">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <i class="fa fa-angle-down ml-2 opacity-8"></i>
-                                        </a>
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <button type="button" tabindex="0" class="dropdown-item">User Account</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
-                                        홍길동
-                                    </div>
-                                    <div class="widget-subheading">
-                                        교수
-                                    </div>
-                                </div>
+	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+		<jsp:include page="outer_top.jsp" flush="false"/>
+
+		<div class="app-main">
+		 	<jsp:include page="outer_left.jsp" flush="false"/>
+		 	
+        	<div class="app-main__outer">
+        		 <div class="app-main__inner">
+        			<div class="app-page-title">
+                    	<div class="page-title-wrapper">
+                        	<div class="page-title-heading">
+                            	${classInfo.className} - 강의컨텐츠<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
-                    </div>        
-                </div>
-            </div>
-        </div>              
-        <div class="app-main">
-                <div class="app-sidebar sidebar-shadow">
-                    <div class="app-header__logo">
-                        <div class="logo-src"></div>
-                        <div class="header__pane ml-auto">
-                            <div>
-                                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                                    <span class="hamburger-box">
-                                        <span class="hamburger-inner"></span>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="app-header__mobile-menu">
-                        <div>
-                            <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                                <span class="hamburger-box">
-                                    <span class="hamburger-inner"></span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="app-header__menu">
-                        <span>
-                            <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                                <span class="btn-icon-wrapper">
-                                    <i class="fa fa-ellipsis-v fa-w-6"></i>
-                                </span>
-                            </button>
-                        </span>
                     </div>    
-                    <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
-                        <div class="app-sidebar__inner">
-                            <ul class="vertical-nav-menu sideClassList">
-                                <li class="app-sidebar__heading">내 수업</li>
-                                <!-- 로그인한 사용자의 class 이자리에 추가됨 !! -->
-                            </ul>
-                        </div>
-                    </div>
-                </div>   
-                 <div class="app-main__outer">
-                    <div class="app-main__inner">	
-                        <div class="app-page-title">
-                            <div class="page-title-wrapper">
-                                <div class="page-title-heading">
-                                  	<h4><span class="text-primary">${classInfo.className}</span> - 학습 컨텐츠</h4>
-                                </div>
-                          </div>
-                        </div>            
-                        <!-- 여기 안에 각자 만든 내용 넣기! -->
-                        <div class="row">
-							<div class="contents col-sm-12" classID="${classInfo.id}">
-								<button onclick="#" class="btn btn-primary">차시 추가</button>
+                            
+                    <div class="row">
+                    	
+                    	<div class="col-sm-12">
+                           <nav class="" aria-label="Page navigation example">
+                           	   <button onclick='updateDays(${classInfo.id})' class="float-right mb-2 mr-2 btn btn-primary">차시 추가</button>
 								
-								<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+                               <ul class="pagination">
+                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+										<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
+									</c:forEach>
+                              	</ul>
+                            </nav>
+                       	</div>
+                       	
+                    	<div class="contents col-sm-12" classID="${classInfo.id}">
+								
+								<!--<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 									<div class="day main-card mb-3 card" day="${status.index}">
 										<div class="card-body">
 											<div>
@@ -566,40 +491,68 @@ $(document).ready(function(){
 											</div>
 										</div>
 									</div>
+								</c:forEach>-->
+								
+								<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+								
+                                
+	                                <div class="main-card mb-3 card">
+	                                    <div class="card-body">
+	                                    	<div class="card-title" style="display: inline;" >
+	                                    		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
+												 <h5 style="display: inline; ">${j} 차시</h5>
+												
+												</a> 
+												 <button onclick='showAddContentForm(${status.index})' class="mb-2 mr-2 btn-transition btn btn-outline-primary">+페이지추가</button>
+												 <button onclick='deleteDay(${classInfo.id}, ${status.index})' class="mb-2 mr-2 btn-transition btn btn-danger float-right" style="float-right;">차시삭제</button>
+												 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(-207px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
+	                                                <button type="button" tabindex="-1" class="dropdown-item" onclick='showAddContentForm(${status.index})'>+페이지추가</button>
+	                                                <button type="button" tabindex="-1" class="dropdown-item">-페이지삭제</button>
+	                                            </div> 
+	                                    	</div>
+
+		                                    <div class="list-group accordion-wrapper day" day="${status.index}">
+		                                        	
+		                                    </div>
+	                                   </div>
+	                               </div>
+                                        
+                                        
 								</c:forEach>
-							</div>
-                        </div>	<!-- 여기 안에 각자 만든 내용 끝 !! -->
-        
-                    </div>
-                    <div class="app-wrapper-footer">
-                        <div class="app-footer">
-                            <div class="app-footer__inner">
-                                <div class="app-footer-left">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 1
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="app-footer-right">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 3
-                                            </a>
-                                        </li>  
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
-              </div>
-        </div>
-    </div>
+						</div>
+                    	<!-- 여기 기존 jsp파일 내용 넣기 -->
+                    </div>	
+        		</div>
+        		<jsp:include page="outer_bottom.jsp" flush="false"/>
+	   		</div>
+	   	</div>
+   	</div>
+   	
+   	<div class="modal fade" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            
+	            <div class="modal-body">
+	               Playlist를 선택해주세요
+	               <div class="myPlaylist"></div>
+	               
+	            </div>
+	            <div class="modal-footer">
+	            	 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="button" class="btn btn-primary" onclick="selectOK();">선택완료</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 </body>
-	<div class="modal" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+	<!-- <div class="modal" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
@@ -618,9 +571,11 @@ $(document).ready(function(){
 	            </div>
 	        </div>
 	    </div>
-	</div>
-
+	</div>-->
+	
+	
 </html>
+
 
 
 
