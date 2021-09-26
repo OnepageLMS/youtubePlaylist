@@ -8,7 +8,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta http-equiv="Content-Language" content="en">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Dashboard</title>
+	<title>Youtube 영상 추가</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
 	<meta name="description" content="This is an example dashboard created using build-in elements and components.">
 	<meta name="msapplication-tap-highlight" content="no">
@@ -46,27 +46,22 @@
 .video {
 	padding: 7px;
 }
-
 .info {
 	font-size: 12px;
 }
-
 img {
 	width: 128px;
 	height: 80px;
 	padding: 5px;
 }
-
 .playlistSeq {
 	background-color: #cecece;
 	padding: 10px;
 	margin: 5px;
 }
-
 .container {
 	margin-left: 15px !important;
 }
-
 .container-fluid {
 	margin: 7px;
 	width: 500px;
@@ -85,11 +80,9 @@ img {
 .card:not(.no-move) .card-header {
 	cursor: pointer;
 }
-
 .card {
 	border-radius: 5px;
 }
-
 </style>
 
 </head>
@@ -97,19 +90,15 @@ img {
 var email;
 $(document).ready(function(){
 	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-	console.log(email);
-	console.log('${allMyClass}');
-	console.log('${allMyInactiveClass}');
+	
 	// 좌측 사이드 바 어떻게 할건지 알고 작업하기 (jw: 2021/09/14)
 	
 	//getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
 	
 	//var allMyClass = JSON.parse('${allMyClass}');
-
 	/* for(var i=0; i<allMyClass.length; i++){
 		var name = allMyClass[i].className;
 		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
-
 		var html = '<li>'
 						+ '<a href="#">'
 							+ '<i class="metismenu-icon pe-7s-notebook"></i>'
@@ -145,8 +134,6 @@ $(document).ready(function(){
 	console.log(localStorage.getItem("selectedPlaylistName"));
 	$("#playlistName").before('<h4 style="color: blue; display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');	
 });
-
-
 </script>
 
 <script>
@@ -159,7 +146,6 @@ $(document).ready(function(){
 	var dislikeCount = [ maxResults ];
 	var durationCount = [ maxResults ];
 	var count = 0;
-
 	function fnGetList(sGetToken) { // youtube api로 검색결과 가져오기 
 		count = 0;
 		var $getval = $("#search_box").val();
@@ -171,7 +157,6 @@ $(document).ready(function(){
 		}
 		$("#get_view").empty();
 		$("#nav_view").empty();
-
 		var key = "AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c
 		var accessToken = "${accessToken}";
 		var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order="
@@ -184,7 +169,6 @@ $(document).ready(function(){
 				+ "&maxResults="
 				+ maxResults
 				+ "&type=video";
-
 		if (sGetToken != null) { //이전 or 다음페이지 이동할때 해당 페이지 token
 			sTargetUrl += "&pageToken=" + sGetToken + "";
 		}
@@ -237,16 +221,13 @@ $(document).ready(function(){
 	
 												})
 									}));
-
 						if (jdata.prevPageToken) {
 							lastAndNext(jdata.prevPageToken, " <-이전 ");
 						}
 						if (jdata.nextPageToken) {
 							lastAndNext(jdata.nextPageToken, " 다음-> ");
 						}
-
 					},
-
 					error : function(xhr, textStatus) {
 						console.log(xhr.responseText);
 						alert("an error occured for searching");
@@ -254,13 +235,11 @@ $(document).ready(function(){
 					}
 				});
 	}
-
 	
 	// 카트에 영상 담기 할 시에 player 새로고침 되는거 방지하는 코드인데, 작동이 안됨. (21/09/05) 
 	$(".searchedVideo fas").click(function(e){
 		e.stopPropagation();
 	});
-
 	function displayResultList() { //페이지별로 video 정보가 다 가져와지면 이 함수를 통해 결과 list 출력
 		for (var i = 0; i < maxResults; i++) {
 			var id = idList[i];
@@ -273,7 +252,6 @@ $(document).ready(function(){
 			link = link + "?id=" + id.toString();
 			link = link + "?title=" + title;
 			link = link + "?duration=" + durationCount[i] + "'";
-
 			$("#get_view").append(					
 					/* '<div class="searchedVideo" onclick="$(#form2).submit();">' */
 					'<div class="searchedVideo" onclick="viewVideo(\'' + id.toString()
@@ -301,14 +279,12 @@ $(document).ready(function(){
 				'<a href="javascript:fnGetList(\'' + token + '\');"> '
 						+ direction + ' </a>');
 	}
-
 	function setAPIResultToList(i, id, title, date) { // search api사용할 때 데이터 저장
 		idList[i] = id;
 		titleList[i] = title.replace("'", "\\'").replace("\"","\\\""); // 싱글따옴표나 슬래시 들어갼것 따로 처리해줘야함!
 		console.log(titleList[i]);
 		dateList[i] = date.substring(0, 10);
 	}
-
 	function setAPIResultDetails(i, view, like, dislike, duration) { // videos api 사용할 때 디테일 데이터 저장 
 		viewCount[i] = convertNotation(view);
 		likeCount[i] = convertNotation(like);
@@ -317,10 +293,8 @@ $(document).ready(function(){
 		count += 1;
 		if (count == 20) displayResultList();
 	}
-
 	function convertNotation(value) { //조회수 등 단위 변환
 		var num = parseInt(value);
-
 		if (num >= 1000000)
 			return (parseInt(num / 1000000) + "m");
 		else if (num >= 1000)
@@ -330,7 +304,6 @@ $(document).ready(function(){
 		else
 			return value;
 	}
-
 	function moveToMyPlaylist(){
 		var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
 		location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/' + myEmail;
@@ -359,34 +332,27 @@ $(document).ready(function(){
 		var videoId;
 		var videoTitle;
 		var videoDuration;
-
 		// player api 사용 변수 
 		var tag;
 		var firstScriptTag;
 		var player;
-
 		// (jw) 구간 설정: 유효성 검사시 필요 
 		var limit;
 		var start_s;
 		var end_s;
 		var youtubeID;
-
 		// 이전 index 존재 유무 확인
 		var prev_index=null;
-
 		//아래는 youtube-API 공식 문서에서 iframe 사용방법으로 나온 코드.
 		tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/iframe_api";
 		firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
 		
-
 		function viewVideo(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
 			//$('.videos').css({'fontWeight' : 'normal'});
 			//$('input:checkbox').prop("checked", false); //youtube 검색결과에서 비디오 선택하면 playlist 체크된것 다 초기화 
 			//$('.submitBtn').html('추가');
-
 			
 			console.log(id, title, duration, index);
 			
@@ -394,11 +360,9 @@ $(document).ready(function(){
 			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div id="player"></div> </div>'); 
 			$div.append('<div class="p-1 m-1 bg-white text-dark" style="width: 700px;">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
 			$div.append('<div id="player_info"></div>');
-
 			// 영상 구간 설정 (jw 아래에서 코드 가져와서 적용되게 함 )
 			$div.append($('#setVideoInfo').html());
 			$div.append('<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>');
-
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
 				var hours = parseInt(regex_result[1] || 0);
@@ -432,7 +396,6 @@ $(document).ready(function(){
 				//$("#get_view").children().eq(prev_index).children().eq(0).text() = ""; 
 				/* $("#get_view").children().eq(prev_index).children().eq(1).text() = "";
 				$("#get_view").children().eq(prev_index).children().eq(2).text() = ""; */
-
 				/* $('#player_info').remove();
 				$('#player').remove();
 				$('.fa-plus-square').remove(); */
@@ -444,19 +407,13 @@ $(document).ready(function(){
 			//console.log($("#get_view").children().eq(index).children().eq(2).html());
 			
 			$("#get_view").children().eq(index).after($div);
-
 			showYoutubePlayer(id, title, index);	
-
 			prev_index = index;		
-
 		}		
-
 		function showYoutubePlayer(id, title, index){
 			//$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
-
 			videoId = id;
 			videoTitle = title;
-
 			if(prev_index != null){
 				$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: inline-block');
 				$("#get_view").children().eq(prev_index).children().eq(1).attr('style', 'display: inline-block');
@@ -468,20 +425,16 @@ $(document).ready(function(){
 			$("#get_view").children().eq(index).children().eq(0).attr('style', 'display: none');
 			$("#get_view").children().eq(index).children().eq(1).attr('style', 'display: none');
 			$("#get_view").children().eq(index).children().eq(2).attr('style', 'display: none');
-
 			console.log("check videoTitle here", videoTitle);
 			
 			document.getElementById("player_info").innerHTML = '<p class="m-0"> <span style="font-weight: bold"> 제목: </span> <textarea id="newName" class="videoTitle bg-white p-1" style="border: 1px solid black" name="newName" cols="80" rows="1">' + videoTitle + '</textarea></p>';
-
 			/* <span class="videoTitle bg-white p-1" style="border: 1px solid black"> </span>
 			<div>
 				<textarea id="newName" name="newName" cols="62" rows="2"> </textarea>
 			</div> */
-
 			onYouTubeIframeAPIReady();
 			
 		}
-
 		// 3. This function creates an <iframe> (and YouTube player)
 		//    after the API code downloads. 
 		function onYouTubeIframeAPIReady() {
@@ -514,7 +467,6 @@ $(document).ready(function(){
 				});
 			}
 		}
-
 		// (jw) player가 끝시간을 넘지 못하게 만들기 : 일단 임의로 시작 시간으로 되돌리기 했는데, 하영이거에서 마지막 재생 위치에서 부터 다시 재생되게 하면 될듯. 
 		function onPlayerStateChange(state) {
 		    if (player.getCurrentTime() >= end_s) {
@@ -527,14 +479,12 @@ $(document).ready(function(){
 				});
 		    }
 		  }
-
 		function selectVideoForm(id, title, duration){
 			console.log("check here!!", id);
 			
 			document.getElementById('playerId').value = id;
 			document.getElementById('playerTitle').value = title;
 			document.getElementById('playerDuration').value = duration;
-
 			/* $(#videoId).val(id);
 			$(#videoTitle).val(title);
 			$(#videoDuration).val(duration); */
@@ -542,13 +492,10 @@ $(document).ready(function(){
 			var playerForm = document.getElementById('form2');
 			playerForm.submit();
 		}
-
 		function resizeRightCard(){
 			$('#rightCard').css('height', '800px');
 		}
-
 		// (jw) 여기서 부터 구간 설정 자바스크립트 
-
 		// Youtube player 특정 위치로 재생 위치 이동 : 
 		function seekTo1() {
 			// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
@@ -563,7 +510,6 @@ $(document).ready(function(){
 			var end_hh = $('#end_hh').val();
 			var end_mm = $('#end_mm').val();
 			var end_ss = $('#end_ss').val();
-
 			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
 			player.seekTo(end_time);
 		}
@@ -573,7 +519,6 @@ $(document).ready(function(){
 			var h = Math.floor(d / 3600);
 			var m = Math.floor(d % 3600 / 60);
 			var s = d % 3600 % 60;
-
 			document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
 			document.getElementById("start_hh").value = h;/* .toFixed(2); */
 			document.getElementById("start_mm").value = m;/* .toFixed(2); */
@@ -587,7 +532,6 @@ $(document).ready(function(){
 			var h = Math.floor(d / 3600);
 			var m = Math.floor(d % 3600 / 60);
 			var s = d % 3600 % 60;
-
 			document.getElementById("end_ss").value = parseFloat(s).toFixed(2);
 			document.getElementById("end_hh").value = h;/* .toFixed(2); */
 			document.getElementById("end_mm").value = m;/* .toFixed(2); */
@@ -596,7 +540,6 @@ $(document).ready(function(){
 			end_time *= 1.00;
 			//console.log("check", typeof end_time);
 		}
-
 		// 재생 구간 유효성 검사: 
 		function validation() { //video 추가 form 제출하면 실행되는 함수
 			document.getElementById("warning1").innerHTML = "";
@@ -611,11 +554,9 @@ $(document).ready(function(){
 			var end_hh = $('#end_hh').val();
 			var end_mm = $('#end_mm').val();
 			var end_ss = $('#end_ss').val();
-
 			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
 			
 			const totalSeconds = end_time - start_time;
-
 			const hours = Math.floor(totalSeconds / 3600);
 		    const minutes = Math.floor(totalSeconds % 3600 / 60);
 		    const seconds = totalSeconds % 60;
@@ -625,12 +566,10 @@ $(document).ready(function(){
 		    else {
 		    	hhmmss = minutes + ':' + seconds;
 		    }
-
 		  	console.log("check hhmmss ==>" , hhmmss);
 			//console.log(limit);
 			//console.log(end_time - start_time);
 			$('#duration').val(end_time - start_time);
-
 			if (start_time > end_time) {
 				document.getElementById("warning1").innerHTML = "start time cannot exceed end time";
 				document.getElementById("start_ss").focus();
@@ -648,36 +587,28 @@ $(document).ready(function(){
 				// 우측 카트에 hidden tag로 start_s, end_s 넣기 
 				/* $('#start_s').val(start_time);
 				$('#end_s').val(end_time); */
-
 				$('#start_s').attr("value", start_time);
 				/* $('#running_time').append('<span>' + hhmmss + '</span>'); */
 				//document.getElementById('running_time').innerHTML += hhmmss; 
-
 				//$('#running_time').html("duration: "+ hhmmss);
 				//document.getElementById('running_time').innerHTML = "duration: " + hhmmss; 
-
 				// 아직 카트 element가 생성되기 전이라서 이렇게 변수에 저장해놓은 뒤에 사용할 수 밖에 없음. 
 				running_time = hhmmss;
-
 				return true;
 			}
 		}
-
 		function addToCart(id, title){
 			console.log(id, title);
 			var thumbnail2 = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="img-fluid">';
 			if (title.length > 40) {
 				title = title.substring(0,40) + " ...";
 			}
-
 			if(!validation()){
 				return;
 			};
-
 			//1. 
 			//var content = thumbnail2 + title;
 			//$("#videosInCart").append(content);
-
 			//2.
 			if( $('#start_hh').is(':empty') ) {
 				var start_time =  $('#start_mm').val() + ":" + $('#start_ss').val();
@@ -699,11 +630,8 @@ $(document).ready(function(){
 				+ '<div id="duration_s" style="display: none"> duration:' + $('#duration').val() + '</div>'
 				+ '<div id="running_time" style="display:inline" > duration ' + running_time + '</div>'
 				+ '</div> </div>'; 
-
 			//3. var html = $('#setVideosInCart').html();
 			$("#videosInCart").append(html); 
-
-
 			/* <input type="hidden" name="youtubeID" id="inputYoutubeID"> 
 			<input type="hidden" name="start_s" id="start_s"> 
 			<input type="hidden" name="end_s" id="end_s"> 
@@ -737,7 +665,7 @@ $(document).ready(function(){
 		<jsp:include page="outer_top.jsp" flush="false" />
 
 		<div class="app-main">
-			<jsp:include page="outer_left.jsp" flush="false" />
+			<jsp:include page="outer_left.jsp" flush="true" />
 
 			<div class="app-main__outer">
 				<div class="app-main__inner">
