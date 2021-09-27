@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,12 +20,13 @@ public class ClassController {
 	@Autowired
 	private ClassesService classService;
 	
-	private int instructorID = 1;
+	private int instructorID;
 	
-	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-	public String dashboard(Model model) {
+	@RequestMapping(value = "/dashboard/{instructorId}", method = RequestMethod.GET)
+	public String dashboard(@PathVariable("instructorId") int instructorId, Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		instructorID = instructorId;
 		return "class/dashboard";
 	}	
 	
