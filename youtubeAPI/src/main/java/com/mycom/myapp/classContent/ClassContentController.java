@@ -39,9 +39,11 @@ public class ClassContentController {
   
 	private String email = "yewon@gmail.com";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 	private int instructorID = 1;
+	private int classID;
 	
-	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
-	public String contentList(@PathVariable("classID") int classID, Model model) {
+	@RequestMapping(value = "/contentList/{classId}", method = RequestMethod.GET)
+	public String contentList(@PathVariable("classId") int classId, Model model) {
+		classID = classId;
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
 		//System.out.println(classContentService.getAllClassContent(classID).get(0).getpu)
@@ -60,8 +62,8 @@ public class ClassContentController {
 		//model.addAttribute("vo", vo);
 		
 		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
-		model.addAttribute("classInfo", classService.getClass(0)); //여기도 임의로 classID 0 넣어두었다.
-		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(0))); //classID 임의로 0 넣어두었다.
+		model.addAttribute("classInfo", classService.getClass(classID)); //여기도 임의로 classID 0 넣어두었다.
+		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
 		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
