@@ -97,7 +97,7 @@
 	
 </script>
 <body>
-	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+	<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
 		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
 
 		<div class="app-main">
