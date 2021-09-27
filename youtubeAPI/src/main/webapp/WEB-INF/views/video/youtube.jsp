@@ -492,9 +492,6 @@ $(document).ready(function(){
 			var playerForm = document.getElementById('form2');
 			playerForm.submit();
 		}
-		function resizeRightCard(){
-			$('#rightCard').css('height', '800px');
-		}
 		// (jw) 여기서 부터 구간 설정 자바스크립트 
 		// Youtube player 특정 위치로 재생 위치 이동 : 
 		function seekTo1() {
@@ -621,7 +618,7 @@ $(document).ready(function(){
 				
 			var html = '<div class="videoSeq">' 
 				+ '<div class="row" videoID="' + id + '" videoTitle="' + title + '">' 
-				+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave"></div>'
+				+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave" name="chk"></div>'
 				+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
 				+ '<div class="col-lg-7">'
 				+ '<div id="title" style="font-weight: bold;">' + title + '</div>'
@@ -632,33 +629,26 @@ $(document).ready(function(){
 				+ '</div> </div>'; 
 			//3. var html = $('#setVideosInCart').html();
 			$("#videosInCart").append(html); 
-			/* <input type="hidden" name="youtubeID" id="inputYoutubeID"> 
-			<input type="hidden" name="start_s" id="start_s"> 
-			<input type="hidden" name="end_s" id="end_s"> 
-			<input type="hidden" name="title" id="inputYoutubeTitle">
-			<input type="hidden" name="maxLength" id="maxLength"> 
-			<input type="hidden" name="duration" id="duration"> */
-			
-			/* <div id="setVideosInCart" style="display: block;">
-				<div class="row" videoID="" videoTitle="">
-					<div class="col-lg-1">
-						<input type="checkbox">
-					</div>
-					<div class="col-lg-5">
-						<img>
-					</div>
-					<div class="col-lg-6">
-						<div class="row-fluid">
-							<div class="start"></div>
-							<div class="end"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			 */
+		}
+		function deleteFromCart(){
+
+			$('input:checkbox:checked').each(function(i){
+				console.log($(this).parent().closest('.videoSeq').remove());
+			});
+			// 전체 선택 체크 해제 
+			$("input:checkbox[id='checkAll']").prop("checked", false); /* by ID */ 
 			
 		}
-				
+		function selectAll(selectAll) {
+			const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+			
+			// selectAll 버튼이 눌린 순간, 다른 체크박스들도 다 모두 선택체크 박스와 같은 값을 가지도록 만든다.(on/off);  
+			checkboxes.forEach((checkbox) => {
+				checkbox.checked = selectAll.checked;
+			})
+		}
+		
+		
 	</script>
 	<div
 		class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -669,8 +659,7 @@ $(document).ready(function(){
 
 			<div class="app-main__outer">
 				<div class="app-main__inner">
-					<h4 id="playlistName" style="display: inline-block">- Youtube
-						영상 추가</h4>
+					<h4 id="playlistName" style="display: inline-block">- Youtube 영상 추가</h4>
 					<div class="row">
 						<div class="selectedPlaylist col-lg-8 card">
 							<!-- <div class="card-header"> -->
@@ -689,7 +678,7 @@ $(document).ready(function(){
 												<option value="rating">평가순</option>
 											</select> <input type="text" id="search_box"
 												class="form-control col-lg-8 mr-2">
-											<button onclick="fnGetList(); resizeRightCard()"
+											<button onclick="fnGetList();"
 												class="btn btn-primary btn-lg">검색</button>
 										</form>
 									</div>
@@ -723,8 +712,8 @@ $(document).ready(function(){
 							<div class="main-card card sticky-top" id="rightCard">
 								<div class="card-title m-0"> 
 									<h6 style="font-weight: bold; margin: 10px 20px;"> 선택된 비디오 리스트 </h6>
-									<input type="checkbox" style="margin-left: 20px;"> <label class="form-check-label"> 전체 선택 </label>  
-									<button onclick='deleteDay()' class="mr-2 btn-transition btn btn-danger float-right" style="float-right;">선택 항목 삭제</button>
+									<input type="checkbox" style="margin-left: 20px;" id="checkAll" onclick="selectAll(this)"> <label class="form-check-label"> 전체 선택 </label>  
+									<button onclick='deleteFromCart()' class="mr-2 btn-transition btn btn-danger float-right" style="float-right;">선택 항목 삭제</button>
 								</div>
 								<div class="card-footer">
 									<div style="overflow: auto; height: 700px;">
