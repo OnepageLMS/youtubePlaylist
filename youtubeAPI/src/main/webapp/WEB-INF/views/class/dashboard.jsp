@@ -34,10 +34,11 @@
 <script>
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
-var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate", ];
+var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
 
 $(document).ready(function(){
 	var activeClass = JSON.parse('${allMyClass}');
+	console.log(activeClass);
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
