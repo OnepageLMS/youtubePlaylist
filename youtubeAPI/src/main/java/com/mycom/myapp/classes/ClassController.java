@@ -20,7 +20,7 @@ public class ClassController {
 	@Autowired
 	private ClassesService classService;
 	
-	private int instructorID;
+	private int instructorID = 1;
 	
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String dashboard(Model model) {
