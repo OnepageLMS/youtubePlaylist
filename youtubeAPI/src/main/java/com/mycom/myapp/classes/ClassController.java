@@ -22,11 +22,10 @@ public class ClassController {
 	
 	private int instructorID;
 	
-	@RequestMapping(value = "/dashboard/{instructorId}", method = RequestMethod.GET)
-	public String dashboard(@PathVariable("instructorId") int instructorId, Model model) {
+	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+	public String dashboard(Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		instructorID = instructorId;
 		return "class/dashboard";
 	}	
 	
