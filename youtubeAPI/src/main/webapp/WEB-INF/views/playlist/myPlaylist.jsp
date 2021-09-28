@@ -106,7 +106,7 @@ function getAllMyPlaylist(){
 
 			else{
 				var setFormat = '<div class="card">'
-									+ '<div class="card-body">'
+									+ '<div class="card-body" style="min-height: 600px; overflow:auto;">'
 									+ '<div class="card-title input-group">'
 										+ '<div class="input-group-prepend">'
 											+ '<button class="btn btn-outline-secondary">전체</button>'
@@ -176,7 +176,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 				    				+ '<img src="https://img.youtube.com/vi/' + result.thumbnailID + '/0.jpg" class="playlistPic">'
 				    			+ '</div>'
 				    			+ '<div class="col-sm-12 text-center">'
-				    				+ '<button id="playAllVideo" onclick="" class="btn btn-transition btn-outline-success btn-sm mt-1">playlist 전체재생</button>'
+				    				+ '<button id="playAllVideo" onclick="" class="btn btn-transition btn-outline-success btn-sm mt-1 mb-2 ">playlist 전체재생</button>'
 				    			+ '</div>'
 			    			+ '</div>';
 		    $('#playlistInfo').append(thumbnail);
@@ -194,18 +194,24 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 		    $('.playlistName').append(name); //중간영역 
 		    
 			//var modDate = convertTime(result.modDate);
-			var modDate = result.modDate;
 			var totalVideoLength = convertTotalLength(result.totalVideoLength);
 			var description = result.description;
 			if (result.description == null)
 				description = "설명 없음";
+			if (result.tag != null && result.tag.length > 0){
+		    	var tags = result.tag.replace(', ', ' #');
+	    		tags = '#'+ tags;
+	    	}
+	    	else 
+		    	var tags = ' ';
 
 			var info = '<div class="info">' 
 							+ '<div>'
 								+ '<p class="totalInfo"> 총 영상 <b>' + result.totalVideo + '개</b></p>'
 								+ '<p class="totalInfo"> 총 재생시간 <b>' + totalVideoLength + '</b></p>'
 							+ '</div>'
-							+ '<p> 업데이트 <b>' + modDate + '</b> </p>'
+							+ '<p> 업데이트 <b>' + result.modDate + '</b> </p>'
+							+ '<p class="text-primary">' + tags + '</p>'
 							+ '<div class="description card-border card card-body border-secondary">'
 								+ '<p id="displayDescription">' + description + '</p>'
 							+ '</div>'
@@ -473,7 +479,7 @@ function submitEditPlaylist(){
                             <div class="page-title-heading">
                             	<h4 style="padding-bottom: 2%;">내 학습컨텐츠</h4>
                             </div>
-                            <div class="page-title-actions"></div>
+                            
                 		</div>
 
                     	<div class="row">
@@ -481,7 +487,7 @@ function submitEditPlaylist(){
 								<div class="myPlaylist"></div>
 							</div>
 			
-							<div class="selectedPlaylist col-md-8 col-lg-9 card">
+							<div class="selectedPlaylist col-md-8 col-lg-9 card" style="min-height: 600px;">
 								<div class="card-body">
 									<div class="row">
 										<div class="col-lg-9 card-title playlistName">										

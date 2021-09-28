@@ -87,7 +87,7 @@ public class PlaylistController {
 		return map;
 	}
 	
-	// getAllMyPlaylist랑 다른거임. Don't erase (2021/08/19)
+	// LMS내 영상 검색에 사용. 모든 playlist 가져오기
 	@RequestMapping(value = "/getAllPlaylist", method = RequestMethod.POST)
 	@ResponseBody
 	public Object getAllPlaylist() {

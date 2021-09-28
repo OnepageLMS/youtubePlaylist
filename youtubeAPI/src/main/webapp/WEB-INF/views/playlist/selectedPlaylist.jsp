@@ -85,6 +85,9 @@ var title;
 var newTitle;
 var videoTag;
 $(document).ready(function(){
+
+	$('.myplaylistLink').addClass('text-primary');
+	
 	var allMyClass = JSON.parse('${allMyClass}');
 
 	for(var i=0; i<allMyClass.length; i++){
@@ -268,19 +271,18 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 
 function setDisplayVideoInfo(index){ //비디오 플레이어가 뜰 때 같이 사용자에게 나타내야 할 부분 설정
 
-	if (newTitle == null || newTitle == '' || newTitle == title){
+	if (newTitle == null || newTitle == '')
 		newTitle = title;
-		title = '';
-	}
-	$('.videoTitle').empty();
-	var html =  '<input type="text" name="newTitle" class="form-control" id="inputNewTitle" value="' + newTitle+ '">'
-				+ '<p class="originalTitle">' + title + '</p>';
-	$('.videoTitle').append(html);
-	
-	showForm();
+
+	$('#displayVideoTitle').empty();
+	$('#displayVideoTitle').append('<b>' + title + '</b>');
+	$('#inputNewTitle').val(newTitle);
+
+	$('#inputTag').val(tag);
 
 	$('.numOfNow').text(Number(index)+1); //클릭한 video순서 상단에 표시
-			
+
+	/*	
 	var start_hh = Math.floor(start_s / 3600);
 	var start_mm = Math.floor(start_s % 3600 / 60);
 	var start_ss = start_s % 3600 % 60;
@@ -296,6 +298,7 @@ function setDisplayVideoInfo(index){ //비디오 플레이어가 뜰 때 같이 
 	document.getElementById("end_hh").value = end_hh;
 	document.getElementById("end_mm").value = end_mm;
 	document.getElementById("end_ss").value = end_ss;
+	*/
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
 	$("#inputVideoID").val( tmp_videoID *= 1 );
@@ -352,13 +355,6 @@ function onPlayerStateChange(state) {
 			'endSeconds' : end_s
 		});
 	}
-}
-
-// 구간 설정 자바스크립트 
-// 영상 검색과 함께 영상 구간 설정을 위한 form (원래 숨겨있던 것) 보여주기:
-function showForm() {
-	var saveForm = document.getElementById("videoForm");
-	saveForm.style.display = "block";
 }
 
 // Youtube player 특정 위치로 재생 위치 이동 : 
@@ -500,142 +496,24 @@ function updateVideo(){ // video 정보 수정
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-        <div class="app-header header-shadow">
-            <div class="app-header__logo">
-                <div class="logo-src"></div>
-                <div class="header__pane ml-auto">
-                    <div>
-                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="app-header__mobile-menu">
-                <div>
-                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <div class="app-header__menu">
-                <span>
-                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                        <span class="btn-icon-wrapper">
-                            <i class="fa fa-ellipsis-v fa-w-6"></i>
-                        </span>
-                    </button>
-                </span>
-            </div>    <div class="app-header__content">
-                <div class="app-header-left">
-                    <div class="search-wrapper">
-                        <div class="input-holder">
-                            <input type="text" class="search-input" placeholder="Type to search">
-                            <button class="search-icon"><span></span></button>
-                        </div>
-                        <button class="close"></button>
-                    </div>
-                    <ul class="header-menu nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
-                                <i class="nav-link-icon fa fa-home"> </i>
-                                대시보드
-                            </a>
-                        </li>
-                       
-                        <li class="dropdown nav-item">
-                            <a href="${pageContext.request.contextPath}/playlist/myPlaylist/yewon.lee@onepage.edu" class="nav-link">
-                                <i class="nav-link-icon fa fa-archive"></i>
-                                학습컨텐츠 보관함
-                            </a>
-                        </li>
-                    </ul>        
-                </div>
-                <div class="app-header-right">
-                    <div class="header-btn-lg pr-0">
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left">
-                                    <div class="btn-group">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
-                                            <i class="fa fa-angle-down ml-2 opacity-8"></i>
-                                        </a>
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <button type="button" tabindex="0" class="dropdown-item">User Account</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Settings</button>
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
-                                        홍길동
-                                    </div>
-                                    <div class="widget-subheading">
-                                        교수
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>        
-                </div>
-            </div>
-        </div>              
+    	<jsp:include page="../outer_top.jsp" flush="true"/>      
+              
         <div class="app-main">
-                <div class="app-sidebar sidebar-shadow">
-                    <div class="app-header__logo">
-                        <div class="logo-src"></div>
-                        <div class="header__pane ml-auto">
-                            <div>
-                                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                                    <span class="hamburger-box">
-                                        <span class="hamburger-inner"></span>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="app-header__mobile-menu">
-                        <div>
-                            <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                                <span class="hamburger-box">
-                                    <span class="hamburger-inner"></span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="app-header__menu">
-                        <span>
-                            <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                                <span class="btn-icon-wrapper">
-                                    <i class="fa fa-ellipsis-v fa-w-6"></i>
-                                </span>
-                            </button>
-                        </span>
-                    </div>    
-                    <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
-                        <div class="app-sidebar__inner">
-                            <ul class="vertical-nav-menu sideClassList">
-                                <li class="app-sidebar__heading">내 수업</li>
-                                <!-- 로그인한 사용자의 class 이자리에 추가됨 !! -->
-                            </ul>
-                        </div>
-                    </div>
-                </div>   
+        	<jsp:include page="../outer_left.jsp" flush="true"/>
+                 
                  <div class="app-main__outer">
                     <div class="app-main__inner">
-                        <div class="app-page-title">
-                            <div class="page-title-wrapper">
+                    
+                        <div class="app-page-title" style="padding: 0; margin: -20px -20px 20px;">
+                            <div class="page-title-wrapper" >
                                 <div class="page-title-heading">
-                                	<button class="btn" onclick="history.back();"><i class="pe-7s-left-arrow"></i> <-이전</button>
-                                	<h3 class="displayPlaylistName"></h3>
+                                	<div class="row mr-3 ml-1">
+                                		<button class="btn row"  onclick="history.back();"> 
+                                			<i class="pe-7s-left-arrow h3 col-12"></i>
+                                			<p class="col-12" style="font-size:12px; text-align: center;">이전</p>
+                                		</button>
+                                	</div>
+                                	<h4 class="displayPlaylistName text-primary"></h4> <h4> - 비디오</h4>
                                 </div>
                           </div>
                         </div>            
@@ -652,101 +530,83 @@ function updateVideo(){ // video 정보 수정
 					        	 </div>
 								
 								<div class="card main-card">
-									<form id="videoForm" onsubmit="return validation(event)" style="display: none">
-										<div id="timeSetting" class="col-12 col-md-12 col-lg-12">
+									<div class="card-header">
+										<h4 id="displayVideoTitle" class="m-2"></h4>
+									</div>
+									<form id="videoForm" onsubmit="return validation(event);">
+										<div id="timeSetting">
 											<input type="hidden" name="start_s" id="start_s">
 											<input type="hidden" name="end_s" id="end_s">
 										 	<input type="hidden" name="duration" id="duration">
 										 	<input type="hidden" name="id" id="inputVideoID">
 										 	<input type="hidden" name="playlistID" id="inputPlaylistID">
 										 </div>
-									</form>
-										 	
-									<div class="card-body">
-										<div class="card-title">
-											<h5>저장된 비디오 수정</h5>
-										</div>
-										
-										<div class="divider"></div>
-										
-										<div class="videoTitle"></div>
-										
-										<div class="setTimeRange col row input-group">
-											<div class="col-2 input-group-prepend">
-												<button class="btn btn-outline-secondary">시작</button>
-											</div>
-											<div class="col-8">
-												<div id="slider-range"></div>
-											</div>
-											<div class="col-2 input-group-append">
-												<button class="btn btn-outline-secondary">끝</button>
-											</div>
+										 
+										<div class="card-body">
+											<div class="form-row">
+                                                <div class="col-md-8">
+                                                    <div class="position-relative form-group"><label for="inputNewTitle" class="">영상 제목</label><input name="newTitle" id="exampleCity" type="text" class="form-control"></div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="position-relative form-group"><label for="inputTag" class="">태그</label><input name="tag" id="inputTag" type="text" class="form-control"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-row">
+                                                <div class="setTimeRange input-group">
+													<div class="col-md-2 input-group-prepend">
+														<button class="btn btn-outline-secondary">시작</button>
+													</div>
+													<div class="col-md-8">
+														<div id="slider-range"></div>
+													</div>
+													<div class="col-md-2 input-group-append">
+														<button class="btn btn-outline-secondary">끝</button>
+													</div>
+													<div class="col">
+														<label for="amount"><b>설정된 시간</b></label>
+														<input type="text" id="amount" readonly style="border:0;">
+													</div>
+												</div>
+                                            </div>
+                                            
 											<div class="col">
-												<label for="amount"><b>설정된 시간</b></label>
-												<input type="text" id="amount" readonly style="border:0;">
+												<div class="divider"></div>
+												<button form="videoForm" type="submit" class="btn btn-sm btn-primary float-right mb-3">업데이트</button>
 											</div>
+											
+											<!-- 
+											<div>
+												<button onclick="getCurrentPlayTime1()" type="button" class="btn btn-sm btn-light"> start time </button> : 
+												<input type="text" id="start_hh" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
+												<input type="text" id="start_mm" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
+												<input type="text" id="start_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초 
+												<button onclick="seekTo1()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button>
+												<span id=warning1 style="color:red;"></span> <br>
+											</div>
+													
+											<div>
+												<button onclick="getCurrentPlayTime2()" type="button" class="btn btn-sm btn-light"> end time </button> : 
+												<input type="text" id="end_hh" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
+												<input type="text" id="end_mm" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
+												<input type="text" id="end_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초     
+												<button onclick="seekTo2()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button> 
+												<span id=warning2 style="color:red;"></span> <br>
+											</div>
+											 -->
 										</div>
-										
-										<div class="col">
-											태그추가<input type="text" id="inputTag" class="form-control" name="tag">
-											<button form="videoForm" type="submit" class="btn btn-sm btn-primary">업데이트</button>
-										</div>
-										
-										<div>
-											<button onclick="getCurrentPlayTime1()" type="button" class="btn btn-sm btn-light"> start time </button> : 
-											<input type="text" id="start_hh" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
-											<input type="text" id="start_mm" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
-											<input type="text" id="start_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초 
-											<button onclick="seekTo1()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button>
-											<span id=warning1 style="color:red;"></span> <br>
-										</div>
-												
-										<div>
-											<button onclick="getCurrentPlayTime2()" type="button" class="btn btn-sm btn-light"> end time </button> : 
-											<input type="text" id="end_hh" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
-											<input type="text" id="end_mm" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
-											<input type="text" id="end_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초     
-											<button onclick="seekTo2()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button> 
-											<span id=warning2 style="color:red;"></span> <br>
-										</div>
-									</div>
-									
+									</form>
+								</div>
+	                        </div>
+	                        <div id="allVideo" class="col-lg-4 card">
+	                        	<div class="card-body">
+									<div class="playlistInfo"></div>
+									<div class="videos"></div>
+								</div>
 							</div>
-							
-                        </div>
-                        
-                        <div id="allVideo" class="col-lg-4 card">
-                        	<div class="card-body">
-								<div class="playlistInfo"></div>
-								<div class="videos"></div>
-							</div>
-						</div>
- 
-                    </div><!-- 대시보드 안 box 끝 !! -->
-                    <div class="app-wrapper-footer">
-                        <div class="app-footer">
-                            <div class="app-footer__inner">
-                                <div class="app-footer-left">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 1
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="app-footer-right">
-                                    <ul class="nav">
-                                        <li class="nav-item">
-                                            <a href="javascript:void(0);" class="nav-link">
-                                                Footer Link 3
-                                            </a>
-                                        </li>  
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
+	                    </div><!-- 대시보드 안 box 끝 !! -->
+	                    <jsp:include page="../outer_bottom.jsp" flush="true"/>
+	              </div>
               </div>
         </div>
     </div>

@@ -1,6 +1,5 @@
 package com.mycom.myapp.commons;
 
-import java.util.Date;
 import java.util.List;
 
 public class VideoVO {

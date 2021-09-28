@@ -37,6 +37,16 @@ public class VideoController {
 	
 	private int instructorID = 1;
 	
+	//video 수정/재생page 이동
+	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
+	public String getSelectedPlaylistVideos(@PathVariable("playlistID") int playlistID, @PathVariable("videoID") int videoID, Model model) {
+		model.addAttribute("videoID", videoID);	//가장 먼저 플레이어에 띄워지는 비디오
+		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		return "playlist/selectedPlaylist";
+	}
+		
 	@RequestMapping(value = "/youtube", method = RequestMethod.GET)
 	public String youtube(Model model, String keyword) {
 		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
@@ -46,22 +56,12 @@ public class VideoController {
 		return "video/youtube";
 	}
 	
-	//video 수정/재생page 이동
-	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
-	public String getSelectedPlaylistVideos(@PathVariable("playlistID") int playlistID, @PathVariable("videoID") int videoID, Model model) {
-		model.addAttribute("videoID", videoID);
-		model.addAttribute("playlistID", playlistID);
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		return "selectedPlaylist";
-	}
-
 	//선택한 playlist에 속한 video list 가져오기
-	@RequestMapping(value = "/getOnePlaylistVideos", method = RequestMethod.POST) //homecontroller에 있는것. 
+	@RequestMapping(value = "/getOnePlaylistVideos", method = RequestMethod.POST)
 	@ResponseBody
 	public Object getOnePlaylist(@RequestParam(value = "id") String playlistID) {
 		List<VideoVO> videos = new ArrayList<VideoVO>();
-		videos = videoService.getVideoList(Integer.parseInt(playlistID)); //playlist의 모든 video 가져오기
+		videos = videoService.getVideoList(Integer.parseInt(playlistID));
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("allVideo", videos);
@@ -130,7 +130,7 @@ public class VideoController {
 	}
 	
 	public void updateTotalLength (int playlistID) {
-		if (playlistService.updateTotalVideoLength(playlistID) != 0)  //이거 진우오빠에서 이 함수 이렇게 바꿔야함... 
+		if (playlistService.updateTotalVideoLength(playlistID) != 0)
 			System.out.println(playlistID + " : totalVideoLength 업데이트 성공! ");
 		else
 			System.out.println("totalVideoLength 업데이트 실패! ");
