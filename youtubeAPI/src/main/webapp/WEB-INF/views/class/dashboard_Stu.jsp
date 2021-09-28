@@ -105,6 +105,14 @@ $(document).ready(function(){
 			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
 			                           </div>
 			                       </div>
+			                       <h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
+			                       <div class="dropdown d-inline-block">
+			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
+			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+			                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
+			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
+			                           </div>
+			                       </div>
                         		</div>
                         	</div>
                             	<!-- 대시보드 안 box 끝 !! -->

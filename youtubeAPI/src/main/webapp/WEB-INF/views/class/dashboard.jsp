@@ -12,16 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
     
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
@@ -48,7 +38,7 @@ $(document).ready(function(){
 		var classAttendanceURL = '#';
 		var cardColor = active_colors[i%(active_colors.length)]; 
 
-		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
+		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + activeClass[i].days + ' 차시)' + '</div>'
@@ -86,7 +76,7 @@ $(document).ready(function(){
 		var classAttendanceURL = '#';
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 
-		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
+		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
@@ -161,13 +151,12 @@ function submitAddClassroom(){	//submit the add classroom form
 				console.log('강의실 생성 완료!');
 			else
 				console.log('강의실 생성 실패! ');
+			location.reload();
 		},
 		error: function(data, status,error){
 			alert('강의실 생성 실패! ');
 		}
-	});
-
-	location.reload();
+	});	
 }
 
 function submitEditClassroom(){	//미완성
@@ -203,14 +192,12 @@ function submitEditClassroom(){	//미완성
 				console.log('강의실 수정 완료!');
 			else
 				console.log('강의실 수정 실패! ');
+			location.reload();
 		},
 		error: function(data, status,error){
 			alert('강의실 수정 실패! ');
 		}
 	});
-
-	location.reload();
-	
 }
 
 function deleteClassroom(){
