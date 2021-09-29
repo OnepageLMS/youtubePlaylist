@@ -213,7 +213,7 @@ function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당�
 		    	else 
 		    		var addStyle = '';
 			    
-		    	var html = '<button class="video list-group-action list-group-item row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
+		    	var html = '<button class="video list-group-action list-group-item row d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
 								+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 								+ '" videoID="' + value.id 
 								+ '" youtubeID="' + value.youtubeID 
@@ -305,7 +305,6 @@ function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설
 	
 	if (videoTag != null && videoTag != ''){
 		$("#inputTag").val(videoTag);
-		console.log("not null");
 	}
 	else
 		$("#inputTag").val('');

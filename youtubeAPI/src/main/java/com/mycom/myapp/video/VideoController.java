@@ -38,7 +38,7 @@ public class VideoController {
 	private int instructorID = 1;
 	
 	//video 수정/재생page 이동
-	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
+	@RequestMapping(value = "/{playlistID}/{videoID}", method = RequestMethod.GET) 
 	public String getSelectedPlaylistVideos(@PathVariable("playlistID") int playlistID, @PathVariable("videoID") int videoID, Model model) {
 		model.addAttribute("videoID", videoID);	//가장 먼저 플레이어에 띄워지는 비디오
 		
