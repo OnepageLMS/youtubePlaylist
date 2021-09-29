@@ -267,7 +267,8 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 			    	else 
 				    	var tags = ' ';
 	
-			    	var address = "'${pageContext.request.contextPath}/video/watch/" + value.playlistID + '/' + value.id + "'";
+			    	var address = "'${pageContext.request.contextPath}/video/" + value.playlistID + '/' + value.id + "'";
+			    	var passData = 'moveToVideoDetail(' + value.playlistID + ', ' + value.id + ');';
 			    	
 			    	if (index == 0){
 				    	var forButton = 'location.href=' + address + '';
@@ -277,7 +278,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 					var html = '<div class="row list-group-item-action list-group-item">'
 									+ '<div class="video col row d-flex justify-content-between align-items-center" videoID="' + value.id + '">'
 										+ '<div class="videoIndex col-sm-1 d-sm-inline-block"> <i class="fa fa-fw" aria-hidden="true"></i></p></div>'
-										+ '<div class="videoContent col-sm-10 p-0 d-sm-inline-block" onclick="location.href=' + address + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
+										+ '<div class="videoContent col-sm-10 p-0 d-sm-inline-block" onclick="' + passData + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
 											+ '<div class="row">'
 												+ '<div class="thumbnailBox col-sm-3 row">' 
 													+ thumbnail 
@@ -303,6 +304,13 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 		   	}
 		}
 	});
+}
+
+function moveToVideoDetail(playlistID, videoID){	//playlist의 비디오 detail page로 이동
+	/*$.ajax({
+		type: 'post',
+		url: 
+	});*/
 }
 
 $(function() { // video 순서 drag&drop으로 순서변경
