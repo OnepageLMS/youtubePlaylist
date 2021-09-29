@@ -208,12 +208,12 @@ function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당�
 					setYouTubePlayer();
 			    	setDisplayVideoInfo(index); //player 제외 선택한 video 표시 설정
 				
-					var addStyle = ' style="background-color:lightgrey;" ';
+					var addStyle = ' style="background-color:#F0F0F0;" ';
 			    }
 		    	else 
 		    		var addStyle = '';
 			    
-		    	var html = '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
+		    	var html = '<button class="video list-group-action list-group-item row post-content single-blog-post style-2 d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
 								+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 								+ '" videoID="' + value.id 
 								+ '" youtubeID="' + value.youtubeID 
@@ -225,16 +225,16 @@ function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당�
 							//+ '<div class="videoSeq ">' + (index+1) + '</div>'
 							+ '<div class="post-thumbnail col-lg-4">'
 							+ 	'<div class="videoSeq ">' + (index+1) + thumbnail + '</div>'
-							+ 	'<div class="tag" tag="' + value.tag + '">' + tmp_tags + '</div>'
+							+ 	'<div class="tag text-primary" tag="' + value.tag + '">' + tmp_tags + '</div>'
 							+'</div>'
 							+ '<div class="col-lg-7">' 
-							+ 	'<h6 class="post-title ">' + tmp_newTitle + '</h6>'
+							+ 	'<h6 class="post-title list-group-item-heading">' + tmp_newTitle + '</h6>'
 							+ 	'<div class="videoOriTitle" style = "color :#a6a6a6; font-size: 0.1em;">' + tmp_title + '</div>'
 							+ 	'<div class="duration"> ' + convertTotalLength(value.duration) + '</div>'
 							+'</div>'
 							+ '<a href="#" class="aDeleteVideo col-lg-1 badge badge-danger" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-						+ '</div>'
-						+ '<div class="videoLine"></div>';
+						+ '</button>';
+						//+ '<div class="videoLine"></div>';
 				$('.videos').append(html); 
 			});
 		}
@@ -246,8 +246,8 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 	$('.displayVideo').attr('videoID', item.getAttribute('videoID'));
 	
 	$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동 
-	$('.video').css({'background-color' : 'unset'});
-	item.style.background = "lightgrey"; //클릭한 video 표시
+	$('.video').css({'background-color' : '#fff'});
+	item.style.background = "#F0F0F0"; //클릭한 video 표시
 
 	youtubeID = item.getAttribute('youtubeID');
 	start_s = item.getAttribute('start_s');
@@ -269,7 +269,7 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 	});
 }
 
-function setDisplayVideoInfo(index){ //비디오 플레이어가 뜰 때 같이 사용자에게 나타내야 할 부분 설정
+function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설정하기
 
 	if (newTitle == null || newTitle == '')
 		newTitle = title;
@@ -475,7 +475,6 @@ function updateVideo(){ // video 정보 수정
 			//getAllPlaylist(videoID); 
 			console.log("ajax video 수정 실패!" + error);
 		}
-
 	});
 }
 
@@ -520,7 +519,7 @@ function updateVideo(){ // video 정보 수정
                        
                        
                         <div class="row">
-                            <div class="displayVideo col-lg-8">
+                            <div class="displayVideo col-lg-8 col-md-8">
 								<div id="player" class="embed-responsive embed-responsive-4by3 card">
 									<div class="tab-content">
 					        	 		<div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
@@ -545,7 +544,7 @@ function updateVideo(){ // video 정보 수정
 										<div class="card-body">
 											<div class="form-row">
                                                 <div class="col-md-8">
-                                                    <div class="position-relative form-group"><label for="inputNewTitle" class="">영상 제목</label><input name="newTitle" id="exampleCity" type="text" class="form-control"></div>
+                                                    <div class="position-relative form-group"><label for="inputNewTitle" class="">영상 제목</label><input name="newTitle" id="inputNewTitle" type="text" class="form-control"></div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="position-relative form-group"><label for="inputTag" class="">태그</label><input name="tag" id="inputTag" type="text" class="form-control"></div>
@@ -598,10 +597,10 @@ function updateVideo(){ // video 정보 수정
 									</form>
 								</div>
 	                        </div>
-	                        <div id="allVideo" class="col-lg-4 card">
+	                        <div id="allVideo" class="col-lg-4 col-md-4 card">
 	                        	<div class="card-body">
-									<div class="playlistInfo"></div>
-									<div class="videos"></div>
+	                        		<h5 class="card-title playlistInfo"></h5>
+									<div class="videos list-group"></div>
 								</div>
 							</div>
 	                    </div><!-- 대시보드 안 box 끝 !! -->

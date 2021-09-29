@@ -165,7 +165,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 		success : function(result){
 			var lastIdx = $('#playlistInfo').attr('displayIdx'); //새로운 결과 출력 위해 이전 저장된 정보 비우기
 		    $('.playlist:eq(' + lastIdx + ')').css("background-color", "#fff");
-		    $(".playlist:eq(" + displayIdx + ")").css("background-color", " #F0F0F0;"); //클릭한 playlist 표시
+		    $(".playlist:eq(" + displayIdx + ")").css("background-color", "#F0F0F0;"); //클릭한 playlist 표시
 		    $('#playlistInfo').empty(); 
 		    $('.playlistName').empty();
 
@@ -211,7 +211,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 								+ '<p class="totalInfo"> 총 재생시간 <b>' + totalVideoLength + '</b></p>'
 							+ '</div>'
 							+ '<p> 업데이트 <b>' + result.modDate + '</b> </p>'
-							+ '<p class="text-primary">' + tags + '</p>'
+							+ '<p id="displayTag" class="text-primary">' + tags + '</p>'
 							+ '<div class="description card-border card card-body border-secondary">'
 								+ '<p id="displayDescription">' + description + '</p>'
 							+ '</div>'
@@ -399,11 +399,18 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 	//아래 내용은 이미 화면에 표시되어있기 때문에 db에서 다시 가져오지 않는다.
 	var playlistName = $('#displayPlaylistName').text();
 	var description = $('#displayDescription').text();
-	//var tag = $('').text();
+	var tags = $('#displayTag').text();
 	var exposed = $('#displayExposed').text();
 
+	while(tags){
+		if (tags.indexOf('#') == -1) break;
+		tags = tags.replace('#', '');
+		//tags = tags.replace(' ', ', ');
+	}
+	
 	$('#setPlaylistID').val(playlistID);
 	$('#editPlaylistName').val(playlistName);
+	$('#editTag').val(tags);
 	$('#editPlaylistDescription').val(description);
 
 	if(exposed == '비공개')
@@ -429,13 +436,12 @@ function submitAddPlaylist(){	//submit the add playlist form
 		datatype: 'json',
 		success: function(data){
 			console.log('playlist 생성 완료!');
+			location.reload();
 		},
 		error: function(data, status,error){
 			alert('playlist 생성 실패! ');
 		}
 	});
-
-	location.reload();
 }
 
 function submitEditPlaylist(){
@@ -454,15 +460,13 @@ function submitEditPlaylist(){
 		datatype: 'json',
 		success: function(data){
 			console.log('playlist 수정 완료!');
+			location.reload();
 		},
 		error: function(data, status,error){
 			alert('playlist 수정 실패! ');
 		}
 	});
-
-	location.reload();
 }
-
 
 </script>
 <body>
@@ -579,7 +583,7 @@ function submitEditPlaylist(){
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	            <form class="needs-validation was-validated" id="formEditPlaylist" method="post" novalidate>
+	            	<form class="needs-validation was-validated" id="formEditPlaylist" method="post" novalidate>
 	            		<input name="id" type="hidden" id="setPlaylistID">
 		               <div class="position-relative form-group">
 		               		<label for="editPlaylistName" class="">Playlist 이름</label>
@@ -591,8 +595,8 @@ function submitEditPlaylist(){
 		               		<textarea name="description" id="editPlaylistDescription" class="form-control"></textarea>
 		               </div>
 	                   <div class="position-relative form-group">
-		               		<label for="editPlaylistTag" class="">태그</label>
-		               		<input name="tag" id="editPlaylistTag" type="text" class="form-control">
+		               		<label for="editTag" class="">태그</label>
+		               		<input name="tag" id="editTag" type="text" class="form-control">
 		               </div>
 	                   <div class="custom-control custom-switch">
 				            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch2">
