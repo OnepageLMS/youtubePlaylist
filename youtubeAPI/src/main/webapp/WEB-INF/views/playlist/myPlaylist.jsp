@@ -307,10 +307,17 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 }
 
 function moveToVideoDetail(playlistID, videoID){	//playlist의 비디오 detail page로 이동
-	/*$.ajax({
-		type: 'post',
-		url: 
-	});*/
+	var html = '<input type="hidden" name="playlistID"  value="' + playlistID + '">'
+				+ '<input type="hidden" name="videoID" value="' + videoID + '">'
+
+	var goForm = $('<form>', {
+			method: 'post',
+			action: '${pageContext.request.contextPath}/video/detail',
+			html: html
+		}).appendTo('body'); 
+
+	goForm.submit();
+
 }
 
 $(function() { // video 순서 drag&drop으로 순서변경
