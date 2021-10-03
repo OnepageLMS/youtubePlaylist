@@ -18,5 +18,7 @@ public class MemberDAO {
 		String result = sqlSession.selectOne("Member.getStudentName", id);
 		return result;
 	}
+	
+	
 
 }

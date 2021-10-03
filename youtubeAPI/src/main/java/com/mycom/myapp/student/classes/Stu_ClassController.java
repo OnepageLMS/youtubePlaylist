@@ -13,12 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.student.video.Stu_VideoService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 import com.mycom.myapp.commons.ClassContentVO;
+import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
@@ -53,6 +55,7 @@ public class Stu_ClassController{
 	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)
 	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		studentId = studentID;
 		
 		model.addAttribute("myName", memberService.getStudentName(studentId));
@@ -67,15 +70,35 @@ public class Stu_ClassController{
 	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)	// 9/24 studentID url에서 지운 버전(yewon)
 	public String dashboard (Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
-		
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
 		model.addAttribute("myName", memberService.getStudentName(studentId));
 		
 		return "class/dashboard_Stu";
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
+	public ClassesVO getClassInfo(@RequestParam(value = "classID") int classID) {	
+		//학생의 강의실 상세보기 modal에 띄어질 내용 가져오기
+		ClassesVO vo = classesService.getClassInfo(classID);
+		return vo;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteClassroom", method = RequestMethod.POST)
+	public void deleteClassroom(@RequestParam(value = "id") int id) {	
+		ClassesVO vo = new ClassesVO();
+		vo.setId(id);
+		vo.setStudentID(studentId);
+		
+		if(classesService.deleteClassroom(vo) != 0)
+			System.out.println("강의실 나가기 성공!");
+		else
+			System.out.println("강의실 나가기 실패!");
+	}
+	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classID") int classID, Model model) {
-		/*classID = 1;//임의로 1번 class 설정
 		
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(classID); //임의로 1번 class 설정*/

@@ -34,23 +34,24 @@
 <script>
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate", ];
+var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 
 $(document).ready(function(){
 	var allMyClass = JSON.parse('${allMyClass}');
+	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 	
 	for(var i=0; i<allMyClass.length; i++){
 		//var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
-		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + allMyClass[i].id + "'";
 		var classAttendanceURL = '#';
 		var cardColor = active_colors[i%(active_colors.length)];
 		
-		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
+		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  allMyClass[i].className + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + allMyClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn">'
+										+ '<a href="void(0);" classID="' + allMyClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
@@ -75,7 +76,74 @@ $(document).ready(function(){
 		$('.classActive').append(dashboardCard);
 	}
 
+
+	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
+		var classNoticeURL = '#';
+		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + inactiveClass[i].id + "'";
+		var classAttendanceURL = '#';
+		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
+
+		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+								+ '<div class="mb-3 card">'
+									+ '<div class="card-header ' + cardColor + '">' 
+										+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
+										+ '<a href="void(0);" classID="' + inactiveClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+									+ '</div>'
+									+ '<div class="card-body">'
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>' 
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+					        		+ '</div>'
+					        	+ '</div>'
+					        + '</div>';
+							
+			$('.classInactive').append(dashboardCard);
+	}
 });
+
+$(document).on("click", ".setClassroomBtn", function () {	// set classroom btn 눌렀을 때 modal에 데이터 전송
+
+	var classID = $(this).attr('classID');
+	$('#setClassID').val(classID);
+
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/student/class/getClassInfo',
+		data: { 'classID' : classID },
+		success: function(data){
+			console.log(data);
+			$('#displayInstructor').text(data.name);
+			$('#displayClassName').text(data.className);
+			$('#displayDescription').text(data.description);
+
+		},
+		error: function(data, status,error){
+			console.log('ajax class 정보 가져오기 실패!');
+		}
+	});
+});
+
+function submitDeleteClassroom(){
+	if(confirm('강의실에서 나가시겠습니까? \n다시 복구될 수 없습니다.')){
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/student/class/deleteClassroom',
+			data: {'id' : $('#setClassID').val()},
+			datatype: 'json',
+			success: function(data){
+				console.log('강의실 나가기 성공');
+			},
+			complete: function(data){
+				location.reload();
+			},
+			error: function(data, status,error){
+				alert('강의실 나가기 실패! ');
+			}
+		});
+	}
+}
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow">
@@ -105,7 +173,7 @@ $(document).ready(function(){
 			                       </div>
                         		</div>
                         	</div>
-                        	<div class="classInActive row col">
+                        	<div class="classInactive row col">
                         		<div class="col-12 row">
                         			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
 	                        		<div class="dropdown d-inline-block">
@@ -138,6 +206,7 @@ $(document).ready(function(){
 	            </div>
 	           
 				<div class="modal-body">
+					<input type="hidden" id="setClassID" value="">
 					<div class="">
 						<div class="position-relative form-group">
 		               		<label for="editClassName" class="">강의실 이름</label> 
