@@ -24,6 +24,7 @@ import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
 import com.mycom.myapp.commons.PlaylistVO;
 import com.mycom.myapp.commons.VideoVO;
+import com.mycom.myapp.member.MemberService;
 
 import net.sf.json.JSONArray;
 
@@ -36,8 +37,9 @@ public class ClassContentController {
 	private ClassContentService classContentService;
 	@Autowired
 	private PlaylistService playlistService;
+	@Autowired
+	private MemberService memberService;
   
-	private String email = "yewon@gmail.com";	//임시 이메일. 나중에 로그인한 정보에서 이메일 가져와야 함
 	private int instructorID = 1;
 	private int classID;
 	
@@ -50,6 +52,7 @@ public class ClassContentController {
 		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		//return "t_contentsList";
 		return "class/contentsList";
 	}

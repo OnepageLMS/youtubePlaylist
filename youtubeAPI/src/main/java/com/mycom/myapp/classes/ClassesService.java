@@ -9,6 +9,9 @@ public interface ClassesService {
 	public int updateClassroom(ClassesVO vo);
 	public int updateDays(ClassesVO vo);
 	public int deleteDay(int id);
+	public int updateInstructorNull(int id);
+	public int updateActive(int id);
+	public int deleteClassroom(int id);
 	public ClassesVO getClass(int id);
 	public List<ClassesVO> getAllMyActiveClass(int instructorID);
 	public List<ClassesVO> getAllMyInactiveClass(int instructorID);

@@ -33,6 +33,21 @@ public class ClassesDAO {
 		return result;
 	}
 	
+	public int updateInstructorNull(int id) {
+		int result = sqlSession.update("Classes.updateInstructorNull", id);
+		return result;
+	}
+	
+	public int updateActive(int id) {
+		int result = sqlSession.update("Classes.updateActive", id);
+		return result;
+	}
+	
+	public int deleteClassroom(int id) {
+		int result = sqlSession.delete("Classes.deleteClassroom", id);
+		return result;
+	}
+	
 	public ClassesVO getClass(int id) {
 		ClassesVO vo = sqlSession.selectOne("Classes.getClass", id);
 		return vo;

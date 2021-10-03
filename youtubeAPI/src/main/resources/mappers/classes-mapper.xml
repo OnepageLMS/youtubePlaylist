@@ -22,6 +22,20 @@
 		where id=#{id}
 	</update>
 	
+	<update id="updateInstructorNull">
+		update lms_class set instructorID=NULL
+		where id=#{id}
+	</update>
+	
+	<update id="updateActive">
+		update lms_class set active=0
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteClassroom">
+		delete from lms_class where id=#{id}
+	</delete>
+	
 	<select id="getClass" resultType="classes">
 		select * from lms_class where id=#{id}
 	</select>
@@ -37,4 +51,5 @@
 	<select id="getAllMyClass" resultType="classes">
 		select * from lms_class where instructorID=#{instructorID}
 	</select>
+	
 </mapper>

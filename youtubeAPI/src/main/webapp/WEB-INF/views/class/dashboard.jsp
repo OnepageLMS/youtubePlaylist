@@ -28,7 +28,6 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
 
 $(document).ready(function(){
 	var activeClass = JSON.parse('${allMyClass}');
-	console.log(activeClass);
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
@@ -200,8 +199,53 @@ function submitEditClassroom(){	//미완성
 	});
 }
 
-function deleteClassroom(){
-	//강의실 삭제할 때 같이 처리해야 할 일들 생각해보기!!
+function submitDeleteClassroom(){
+	var opt = $('input[name=deleteOpt]:checked').val();
+
+	if(opt == null){
+		alert('강의실 삭제 옵션을 선택해 주세요.');
+		return false;
+	}
+
+	if(opt == 'forMe'){
+		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 비공개 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
+			$.ajax({
+				type: 'post',
+				url: '${pageContext.request.contextPath}/deleteForMe',
+				data: {'id' : $('#setClassID').val()},
+				datatype: 'json',
+				success: function(data){
+					console.log('나에게만 강의실 삭제 성공');
+				},
+				complete: function(data){
+					location.reload();
+				},
+				error: function(data, status,error){
+					alert('강의실 수정 실패! ');
+				}
+			});
+		}
+	}
+	else if(opt == 'forAll'){
+		if(confirm('강의실의 모든 데이터가 삭제되어 학생들에게도 강의실이 삭제됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
+			$.ajax({
+				type: 'post',
+				url: '${pageContext.request.contextPath}/deleteForAll',
+				data: {'id' : $('#setClassID').val()},
+				datatype: 'json',
+				success: function(data){
+					console.log('강의실 데이터 전체 삭제 성공');
+				},
+				complete: function(data){
+					location.reload();
+				},
+				error: function(data, status,error){
+					alert('강의실 데이터 전체 삭제 실패! ');
+				}
+			});
+		}
+	}
+	
 }
 </script>
 <body>
@@ -304,7 +348,7 @@ function deleteClassroom(){
 		            </div>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-		                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitAddClassroom();">생성</button>
+		                <button type="submit" class="btn btn-primary" onclick="submitAddClassroom();">생성</button>
 		            </div>
 	            </form>
 	            
@@ -349,25 +393,49 @@ function deleteClassroom(){
 				               </div>
 			               	</div>
 	                   </div>
-	                    <div class="form-group"> 
+	                   
+	                   <div class="form-group"> 
 			        		<label for="inputCloseClassroom">강의실 게시 종료일</label>
 			        		<input type="date" name="closeDate" class="form-control" id="editCloseDate"/>
 			        	</div> 
-	                    <div class="custom-control custom-switch">
+			        	<div class="custom-control custom-switch">
 				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
 				            <label class="custom-control-label" for="customSwitch2">강의실 활성화</label>
 				        </div>
-		            </div>
-		            <div class="modal-footer">
-		            	<button type="button" class="btn btn-danger">강의실 삭제</button>
+				    </div>
+				    <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
 		                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditClassroom();">수정완료</button>
 		            </div>
 	            </form>
+	            
+                   <div class="modal-body">
+			        	<div class=""><h6 class="text-danger">Danger Zone - 강의실 삭제</h6></div>
+			        	<div class="border border-danger p-3">
+			        		<div class="position-relative form-group">
+                                 <div>
+                                     <div class="custom-radio custom-control">
+                                     	<input type="radio" id="exampleCustomRadio" name="deleteOpt" class="custom-control-input" value="forMe">
+                                     	<label class="custom-control-label" for="exampleCustomRadio">나에게만 삭제 - 학생들에게는 비공개 강의실로 보여집니다.</label>
+                                     </div>
+                                     <div class="custom-radio custom-control">
+                                     	<input type="radio" id="exampleCustomRadio2" name="deleteOpt" class="custom-control-input" value="forAll">
+                                     	<label class="custom-control-label" for="exampleCustomRadio2">모든 데이터 삭제 - 학생들에게도 강의실이 보이지 않습니다.</label>
+                                     </div>
+                                 </div>
+                             </div>
 				
+                             <div class="row">
+                             	<div class="col-12">
+						        	<button type="button" class="btn btn-danger" onclick="submitDeleteClassroom();">강의실 삭제</button>
+						        </div>
+				        	</div>
+                        </div>  
+		            </div>
+		         </div>
 	        </div>
 	    </div>
-	</div>
+
 	<script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (function() {
@@ -381,7 +449,7 @@ function deleteClassroom(){
                         if (form.checkValidity() === false) {
                             event.preventDefault();
                             event.stopPropagation();
-                        }
+                        } 
                         form.classList.add('was-validated');
                     }, false);
                 });

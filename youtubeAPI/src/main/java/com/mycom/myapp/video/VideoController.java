@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.PlaylistVO;
 import com.mycom.myapp.commons.VideoVO;
+import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.playlist.PlaylistService;
 
 import net.sf.json.JSONArray;
@@ -38,6 +39,8 @@ public class VideoController {
 	private PlaylistService playlistService;
 	@Autowired
 	private ClassesService classService;
+	@Autowired
+	private MemberService memberService;
 	
 	private int instructorID = 1;
 	
@@ -49,6 +52,7 @@ public class VideoController {
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "playlist/selectedPlaylist";
 	}
 		
@@ -57,7 +61,7 @@ public class VideoController {
 		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "video/youtube";
 	}
 	
@@ -189,6 +193,8 @@ public class VideoController {
 			else 
 				System.out.println("비디오 추가 실패 ");
 		}
+		
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		
 		return "youtube";
 	}

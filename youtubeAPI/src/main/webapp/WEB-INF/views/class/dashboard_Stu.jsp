@@ -37,22 +37,21 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate", ];
 
 $(document).ready(function(){
 	var allMyClass = JSON.parse('${allMyClass}');
-	console.log(allMyClass);
 	
 	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
 		//var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
 		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + allMyClass[i].id + "'";
-		//var classContentURL = "'${pageContext.request.contextPath}/class/contentList/1'";
 		var classAttendanceURL = '#';
 		var cardColor = active_colors[i%(active_colors.length)];
 		
 		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  name + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
+										+ '<div class="col-sm-10">' +  allMyClass[i].className + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
+										+ '<a href="void(0);" classID="' + allMyClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn">'
+											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지' 
@@ -90,7 +89,6 @@ $(document).ready(function(){
                                 <div class="page-title-heading col-sm-12">
                                   	<h2 class="col-sm-10">내 강의실</h2>
                                 </div>
-                                
                           </div>
                         </div>            
                        
@@ -105,8 +103,12 @@ $(document).ready(function(){
 			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
 			                           </div>
 			                       </div>
-			                       <h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
-			                       <div class="dropdown d-inline-block">
+                        		</div>
+                        	</div>
+                        	<div class="classInActive row col">
+                        		<div class="col-12 row">
+                        			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
+	                        		<div class="dropdown d-inline-block">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
 			                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
@@ -123,6 +125,47 @@ $(document).ready(function(){
         </div>
     </div>
     </div>
+    
+    <!-- set classroom modal-->
+    <div class="modal fade" id="setClassroomModal" tabindex="-1" role="dialog" aria-labelledby="setClassroomModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 정보</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	           
+				<div class="modal-body">
+					<div class="">
+						<div class="position-relative form-group">
+		               		<label for="editClassName" class="">강의실 이름</label> 
+		               		<p id="displayClassName" class="form-control"></p>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<label for="editClassName" class="">강사</label> 
+		               		<p id="displayInstructor" class="form-control"></p>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<label for="editClassName" class="">강의실 설명</label> 
+		               		<p id="displayDescription" class="form-control"></p>
+		               </div>
+					</div>
+					<div class="divider"></div>
+					<div class="row border border-danger m-2 p-4">
+						<div class="col-md-8"><h6 class="text-danger">Danger Zone</h6></div>
+						<div class=" col-md-4">
+							<button type="button" class="btn btn-danger" onclick="submitDeleteClassroom();">강의실 나가기</button>
+                     	</div>  
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
    
 </body>
 </html>
