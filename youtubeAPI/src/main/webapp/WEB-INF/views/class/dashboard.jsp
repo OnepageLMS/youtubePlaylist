@@ -12,8 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    
-	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
     <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
@@ -37,15 +35,20 @@ $(document).ready(function(){
 		var classAttendanceURL = '#';
 		var cardColor = active_colors[i%(active_colors.length)]; 
 
-		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + activeClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + activeClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn"><i class="nav-link-icon fa fa-cog"></i></a>'
+										+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + activeClass[i].id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+											+ '<i class="nav-link-icon fa fa-share"></i>'
+										+ '</a>'
+										+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + activeClass[i].id + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+											+ '<i class="nav-link-icon fa fa-cog"></i>'
+										+ '</a>'
 									+ '</div>'
 									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지 작성</button>'
+										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 		                        	+ '</div>'
@@ -75,15 +78,19 @@ $(document).ready(function(){
 		var classAttendanceURL = '#';
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 
-		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + inactiveClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link editClassroomBtn"><i class="nav-link-icon fa fa-cog"></i></a>'
+											+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' +inactiveClass[i].id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+											+ '<i class="nav-link-icon fa fa-share"></i>'
+										+ '</a>'
+										+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + inactiveClass[i].id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+											+ '<i class="nav-link-icon fa fa-cog"></i>'
+										+ '</a>'
 									+ '</div>'
 									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지 작성</button>'
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        		+ '</div>'
@@ -95,22 +102,23 @@ $(document).ready(function(){
 	}
 });
 
-$(document).on("click", ".addClassroomBtn", function () {
+$(".addClassroomBtn").click(function () {
 	$('#formAddClassroom')[0].reset();
 });
 
-$(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn 눌렀을 때 modal에 데이터 전송
-	$('#formEditClassroom')[0].reset();
+function shareClassroomFn(id){	//set the share classroom modal
+	$('#shareClassroomID').val(id);
+}
 
-	var classID = $(this).attr('classID');
-	$('#setClassID').val(classID);
+function editClassroomFn(id){	//set the edit classroom modal
+	$('#formEditClassroom')[0].reset();
 
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/getClassInfo',
-		data: { 'classID' : classID },
+		data: { 'classID' : id },
 		success: function(data){
-
+			console.log(data);
 			$('#editClassName').val(data.className);
 			$('#editDescription').val(data.description);
 			$('#editClassDays').val(data.days);
@@ -126,7 +134,7 @@ $(document).on("click", ".editClassroomBtn", function () {	// edit classroom btn
 			console.log('ajax class 정보 가져오기 실패!');
 		}
 	});
-});
+}
 
 function submitAddClassroom(){	//submit the add classroom form 
 	if($('#inputClassDays').val() == '')	//int type은 null이 될 수 없어 미리 방지
@@ -245,7 +253,10 @@ function submitDeleteClassroom(){
 			});
 		}
 	}
-	
+}
+
+function submitShareClassroom(){
+	alert($('#shareClassroomID').val());
 }
 </script>
 <body>
@@ -300,6 +311,44 @@ function submitDeleteClassroom(){
         </div>
     </div>
    </div>
+   
+   <div class="modal fade bd-example-modal-sm" id="shareClassroomModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog modal-sm">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle">강의실 복제</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	               <input id="shareClassroomID" type="hidden" value="">
+                        <h6 class="title">복제 데이터 선택</h6>
+                        <div class="col">                
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input id="closeButton" type="checkbox" value="checked" class="form-check-input">
+                                    <label class="form-check-label" for="closeButton">
+                                        공지
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="addBehaviorOnToastClick" type="checkbox" value="checked" class="form-check-input">
+                                    <label class="form-check-label" for="addBehaviorOnToastClick">
+                                        강의 컨텐츠
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                   
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+	                <button type="button" class="btn btn-primary" onclick="submitShareClassroom();">복제</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
 	<!-- modal for add classroom -->    
 	<div class="modal fade" id="addClassroomModal" tabindex="-1" role="dialog" aria-labelledby="addClassroomModalLabel" aria-hidden="true" style="display: none;">
@@ -361,7 +410,7 @@ function submitDeleteClassroom(){
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 재설정</h5>
+	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 설정</h5>
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                    <span aria-hidden="true">×</span>
 	                </button>

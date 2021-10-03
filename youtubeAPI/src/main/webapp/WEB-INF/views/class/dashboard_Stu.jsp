@@ -91,7 +91,7 @@ $(document).ready(function(){
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지</button>' 
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 					        		+ '</div>'

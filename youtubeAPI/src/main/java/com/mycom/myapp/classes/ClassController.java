@@ -47,7 +47,7 @@ public class ClassController {
 		return vo;
 	}
 	
-	@RequestMapping(value = "/addDays", method = RequestMethod.POST) //class days 추가
+	@RequestMapping(value = "/addDays", method = RequestMethod.POST) 
 	public String addContent(ClassesVO vo) {
 		if (classService.updateDays(vo) != 0)
 			System.out.println("addDays 성공");
@@ -106,6 +106,12 @@ public class ClassController {
 			System.out.println("controller delete classroom 성공");
 		else
 			System.out.println("controller delete classroom 실패");
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/copyClassroom", method = RequestMethod.POST)
+	public void copyClassroom(@RequestParam(value = "id") int classID) {
+		
 		
 	}
 

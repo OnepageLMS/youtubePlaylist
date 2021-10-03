@@ -48,12 +48,10 @@ public class ClassContentController {
 		classID = classId;
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
-		//System.out.println(classContentService.getAllClassContent(classID).get(0).getpu)
-		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
-		//return "t_contentsList";
 		return "class/contentsList";
 	}
 
@@ -166,16 +164,11 @@ public class ClassContentController {
 	@RequestMapping(value = "/updateDays", method = RequestMethod.POST)
 	public int updateDays(HttpServletRequest request, Model model) throws Exception {
 		int classID = Integer.parseInt(request.getParameter("classID"));
-		//System.out.println("??");
 		ClassesVO cvo = new ClassesVO();
 		cvo.setId(classID);
-		if( classService.updateDays(cvo) == 0) {
-			return 0;
-		}
-		else {
-			return 1;
-		}
-	   
+		
+		if (classService.updateDays(cvo) == 0) return 0;
+		else return 1;
 	}
 	
 	@ResponseBody
@@ -221,10 +214,8 @@ public class ClassContentController {
 		}
 		else {
 			return 1;
-		}
-	   
+		}  
 	}
-	
 	
 	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //사용안함
 	public String addContent(@PathVariable("classID") int classID, @PathVariable("day") int day, Model model) {
