@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.PlaylistVO;
+import com.mycom.myapp.member.MemberService;
 
 import net.sf.json.JSONArray;
 
@@ -30,6 +31,8 @@ public class PlaylistController {
 	private PlaylistService playlistService;
 	@Autowired
 	private ClassesService classService;
+	@Autowired
+	private MemberService memberService;
 	
 	private int instructorID = 1;
 	
@@ -38,6 +41,7 @@ public class PlaylistController {
 		model.addAttribute("instructorID", instructorID);	//이거 지우기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "playlist/myPlaylist";
 	}
 	

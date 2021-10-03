@@ -20,6 +20,7 @@ import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.VideoVO;
+import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
@@ -44,13 +45,18 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
 	
+	@Autowired
+	private MemberService memberService;
+	
 	private int studentId;
 	
 	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)
 	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
-		//int studentID = 1;	//이부분 나중에 학생걸로 가져오기	 --> mapper 새로 만들기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
 		studentId = studentID;
+		
+		model.addAttribute("myName", memberService.getStudentName(studentId));
+		
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
@@ -58,9 +64,11 @@ public class Stu_ClassController{
 		return "class/dashboard_Stu";
 	}
 	
-	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)	// 9/24 studentID url에서 지운 버전(yewon)
+	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)	// 9/24 studentID url에서 지운 버전(yewon)
 	public String dashboard (Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
+		
+		model.addAttribute("myName", memberService.getStudentName(studentId));
 		
 		return "class/dashboard_Stu";
 	}
