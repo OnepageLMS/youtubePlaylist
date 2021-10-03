@@ -10,9 +10,11 @@ public class ClassesVO {
 	private int days = 0;
 	private String tag;
 	private Date startDate;	//string 변환
-	//private Date closeDate;	//string 변환
 	private String closeDate;
 	private int active;
+	
+	private String name;	//instructorName
+	private int studentID;
 	
 	public int getId() {
 		return id;
@@ -67,5 +69,17 @@ public class ClassesVO {
 	}
 	public void setActive(int active) {
 		this.active = active;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
 	}
 }

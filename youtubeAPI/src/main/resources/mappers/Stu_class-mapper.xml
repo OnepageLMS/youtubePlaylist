@@ -5,16 +5,31 @@
 		select * from lms_class where id=#{id}
 	</select>
 	
+	<select id="getClassInfo" resultType="classes">
+		select className, description, I.name 
+		from lms_class C join lms_instructor I on C.instructorID = I.id 
+		where C.id=#{id}
+	</select>
+	
 	<select id="getAllMyClass" resultType="classes">
 		select *
 		from lms_class C join lms_takes T on C.id = T.classID
 		where studentID=#{studentID} and active=1
 	</select>
 	
-	<select id="getMyName" resultType="String">
-		select name
-		from lms_student
-		where id=#{id}
+	<select id="getAllMyInactiveClass" resultType="classes">
+		select *
+		from lms_class C join lms_takes T on C.id = T.classID
+		where studentID=#{studentID} and active=0
 	</select>
+	
+	<select id="getMyName" resultType="String">
+		select name from lms_student where id=#{id}
+	</select>
+	
+	<delete id="deleteClassroom">
+		delete from lms_takes 
+		where studentID=#{studentID} and classID=#{id}
+	</delete>
 	
 </mapper>

@@ -18,8 +18,22 @@ public class Stu_ClassesServiceImpl implements Stu_ClassesService{
 	}
 	
 	@Override
+	public ClassesVO getClassInfo(int id) {
+		return classesDAO.getClassInfo(id);
+	}
+	
+	@Override
 	public List<ClassesVO> getAllMyClass(int id){
 		return classesDAO.getAllMyClass(id);
 	}
 	
+	@Override
+	public List<ClassesVO> getAllMyInactiveClass(int id){
+		return classesDAO.getAllMyInactiveClass(id);
+	}
+	
+	@Override
+	public int deleteClassroom(ClassesVO vo) {
+		return classesDAO.deleteClassroom(vo);
+	}
 }
