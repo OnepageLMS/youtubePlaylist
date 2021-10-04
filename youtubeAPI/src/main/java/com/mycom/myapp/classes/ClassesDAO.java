@@ -33,10 +33,6 @@ public class ClassesDAO {
 		return sqlSession.update("Classes.deleteDay", id);
 	}
 	
-	public int updateInstructor(int id) {
-		return sqlSession.update("Classes.updateInstructor", id);
-	}
-	
 	public int updateInstructorNull(int id) {	//선생님이 강의실 나갔을 때
 		return sqlSession.update("Classes.updateInstructorNull", id);
 	}
@@ -47,10 +43,6 @@ public class ClassesDAO {
 	
 	public int deleteClassroom(int id) {
 		return sqlSession.delete("Classes.deleteClassroom", id);
-	}
-	
-	public int getNextClassID() {
-		return sqlSession.selectOne("Classes.getNextClassID");
 	}
 	
 	public ClassesVO getClass(int id) {

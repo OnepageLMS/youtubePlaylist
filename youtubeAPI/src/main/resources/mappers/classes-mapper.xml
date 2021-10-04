@@ -22,11 +22,6 @@
 		where id=#{id}
 	</update>
 	
-	<update id="updateInstructor">
-		update lms_class set instructorID=#{instructorID}
-		where id=#{id}
-	</update>
-	
 	<update id="updateInstructorNull">
 		update lms_class set instructorID=NULL
 		where id=#{id}
@@ -40,10 +35,6 @@
 	<delete id="deleteClassroom">
 		delete from lms_class where id=#{id}
 	</delete>
-	
-	<select id="getNextClassID" resultType="int">
-		select Auto_increment from information_schema.tables where table_schema = 'yewonlee' and table_name = 'lms_class'
-	</select>
 	
 	<select id="getClass" resultType="classes">
 		select * from lms_class where id=#{id}

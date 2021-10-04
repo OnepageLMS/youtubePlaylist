@@ -29,16 +29,16 @@ $(document).ready(function(){
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
-		var name = activeClass[i].className;
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + activeClass[i].id + "'";
-		var classAttendanceURL = '#';
+		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
+		var regDate = activeClass[i].regDate.split(' ')[0];
 		var cardColor = active_colors[i%(active_colors.length)]; 
 
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  name + ' (' + activeClass[i].days + ' 차시)' + '</div>'
+										+ '<div class="col-sm-10">' +  activeClass[i].className + ' (' + activeClass[i].days + ' 차시)' + '</div>'
 										+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + activeClass[i].id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 											+ '<i class="nav-link-icon fa fa-share"></i>'
 										+ '</a>'
@@ -55,7 +55,7 @@ $(document).ready(function(){
 	                        		+ '<div class="divider m-0 p-0"></div>'
 		                        	+ '<div class="card-body">'
 										+ '<div class="row">'
-											+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + activeClass[i].regDate + ' </div>'
+											+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
 											+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + activeClass[i].closeDate + ' </div>'
 											+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
 											+ '<div class="col-12">'
@@ -76,6 +76,7 @@ $(document).ready(function(){
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + inactiveClass[i].id + "'";
 		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
+		var regDate = inactiveClass[i].regDate.split(' ')[0];
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
@@ -98,7 +99,7 @@ $(document).ready(function(){
 	                        		+ '<div class="divider m-0 p-0"></div>'
 		                        	+ '<div class="card-body">'
 										+ '<div class="row">'
-											+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + inactiveClass[i].regDate + ' </div>'
+											+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
 											+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + inactiveClass[i].closeDate + ' </div>'
 										+ '</div>'
 									 + '</div>'
