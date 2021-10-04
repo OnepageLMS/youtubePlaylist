@@ -7,7 +7,7 @@ public class Stu_PlaylistCheckVO  {
 	private int id;
 	private int studentID;
 	private int playlistID;
-	private int classPlaylistID;
+	private int classContentID;
 	private int classID;
 	private int totalVideo;
 	private double totalWatched;
@@ -34,11 +34,11 @@ public class Stu_PlaylistCheckVO  {
 	public void setPlaylistID(int playlistID) {
 		this.playlistID = playlistID;
 	}	
-	public int getClassPlaylistID() {
-		return classPlaylistID;
+	public int getClassContentID() {
+		return classContentID;
 	}
-	public void setClassPlaylistID(int classPlaylistID) {
-		this.classPlaylistID = classPlaylistID;
+	public void setClassContentID(int classContentID) {
+		this.classContentID = classContentID;
 	}
 	public int getClassID() {
 		return classID;

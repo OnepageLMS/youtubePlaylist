@@ -75,10 +75,11 @@ $(document).ready(function(){
 		var name = inactiveClass[i].className;
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + inactiveClass[i].id + "'";
-		var classAttendanceURL = '#';
+		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
+
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
