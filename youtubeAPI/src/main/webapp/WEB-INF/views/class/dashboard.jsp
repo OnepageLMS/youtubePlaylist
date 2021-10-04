@@ -52,19 +52,19 @@ $(document).ready(function(){
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 		                        	+ '</div>'
-	                        		+ '<div class="divider"></div>'
+	                        		+ '<div class="divider m-0 p-0"></div>'
 		                        	+ '<div class="card-body">'
 										+ '<div class="row">'
-											+ '<div class="widget-subheading col-7">종료일 ' + activeClass[i].closeDate + ' </div>'
-											+ '<div class="widget-subheading col-5">참여 **명</div>'
+											+ '<div class="widget-subheading col-12 pb-2"><b>개설일(or공개일)</b> ' + activeClass[i].regDate + ' </div>'
+											+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + activeClass[i].closeDate + ' </div>'
+											+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
 											+ '<div class="col-12">'
 												+ '<div class="mb-3 progress">'
 								                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
 								                + '</div>'
 											+ '</div>'
-											
 										+ '</div>'
-									 '</div>'
+									 + '</div>'
 	                        	+ '</div>'
 	                        + '</div>';
 							
@@ -94,6 +94,18 @@ $(document).ready(function(){
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        		+ '</div>'
+	                        		+ '<div class="divider m-0 p-0"></div>'
+		                        	+ '<div class="card-body">'
+										+ '<div class="row">'
+											+ '<div class="widget-subheading col-12 pb-2"><b>개설일(or공개일)</b> ' + inactiveClass[i].regDate + ' </div>'
+											+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + inactiveClass[i].closeDate + ' </div>'
+											+ '<div class="col-12">'
+												+ '<div class="mb-3 progress">'
+								                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+								                + '</div>'
+											+ '</div>'
+										+ '</div>'
+									 + '</div>'
 								+ '</div>'
 	                        	+ '</div>'
 	                        + '</div>';
@@ -118,7 +130,7 @@ function editClassroomFn(id){	//set the edit classroom modal
 		url: '${pageContext.request.contextPath}/getClassInfo',
 		data: { 'classID' : id },
 		success: function(data){
-			console.log(data);
+			$('#setClassID').val(id);
 			$('#editClassName').val(data.className);
 			$('#editDescription').val(data.description);
 			$('#editClassDays').val(data.days);
@@ -146,7 +158,7 @@ function submitAddClassroom(){	//submit the add classroom form
 		$('#customSwitch1').val(0);
 
 	if($('#inputCloseDate').val() == '')
-		$('#inputCloseDate').val('9999-12-31');	//null이나 '' 가 들어가면 에러난다. 
+		$('#inputCloseDate').val('9999-12-31');	//null이나 '' 가 들어가면 에러난다. --> 이부분 수정하기
 
 	$.ajax({
 		type: 'post',
@@ -214,6 +226,7 @@ function submitDeleteClassroom(){
 		alert('강의실 삭제 옵션을 선택해 주세요.');
 		return false;
 	}
+	console.log($('#setClassID').val());
 
 	if(opt == 'forMe'){
 		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 비공개 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
@@ -256,7 +269,22 @@ function submitDeleteClassroom(){
 }
 
 function submitShareClassroom(){
-	alert($('#shareClassroomID').val());
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/copyClassroom',
+		data: {'id' : $('#shareClassroomID').val()},
+		datatype: 'json',
+		success: function(data){
+			if(data == 1)
+				console.log('강의실 복사 성공');
+		},
+		complete: function(data){
+			location.reload();
+		},
+		error: function(data, status,error){
+			alert('강의실 복사 실패! ');
+		}
+	});
 }
 </script>
 <body>

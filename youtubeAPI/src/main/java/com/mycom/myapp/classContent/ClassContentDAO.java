@@ -43,8 +43,16 @@ public class ClassContentDAO {
 		return result;
 	}
 	
-	public int getDaySeq(ClassContentVO vo) {
-		int result = sqlSession.selectOne("ClassContent.getDaySeq", vo);
+	public List<ClassContentVO> getAllClassContentForCopy(int classID){
+		List<ClassContentVO> result = sqlSession.selectList("ClassContent.getAllClassContentForCopy", classID);
 		return result;
+	}
+	
+	public int insertCopiedClassContents(List<ClassContentVO> list) {
+		return sqlSession.insert("ClassContent.insertCopiedClassContents", list);
+	}
+	
+	public int getDaySeq(ClassContentVO vo) {
+		return sqlSession.selectOne("ClassContent.getDaySeq", vo);
 	}
 }

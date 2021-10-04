@@ -11,5 +11,7 @@ public interface ClassContentService {
 	public int deleteContent(ClassContentVO vo); //int id -> ClassContentVO vo수정
 	public ClassContentVO getOneContent(int id);
 	public List<ClassContentVO> getAllClassContent(int classID);
+	public List<ClassContentVO> getAllClassContentForCopy(int classID);
+	public int insertCopiedClassContents(List<ClassContentVO> list);
 	public int getDaySeq(ClassContentVO vo);
 }

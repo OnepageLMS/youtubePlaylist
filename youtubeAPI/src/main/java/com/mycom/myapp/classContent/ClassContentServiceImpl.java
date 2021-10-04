@@ -37,9 +37,20 @@ public class ClassContentServiceImpl implements ClassContentService{
 	public ClassContentVO getOneContent(int id) {
 		return ClassContentDAO.getOneContent(id);
 	}
+	
 	@Override
 	public List<ClassContentVO> getAllClassContent(int classID){
 		return ClassContentDAO.getAllClassContent(classID);
+	}
+	
+	@Override
+	public List<ClassContentVO> getAllClassContentForCopy(int classID){
+		return ClassContentDAO.getAllClassContentForCopy(classID);
+	}
+	
+	@Override
+	public int insertCopiedClassContents(List<ClassContentVO> list){
+		return ClassContentDAO.insertCopiedClassContents(list);
 	}
 	
 	@Override

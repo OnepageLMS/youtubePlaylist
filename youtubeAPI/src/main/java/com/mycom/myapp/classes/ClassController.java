@@ -1,5 +1,9 @@
 package com.mycom.myapp.classes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.classContent.ClassContentService;
+import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.member.MemberService;
 
@@ -20,6 +26,9 @@ public class ClassController {
 	
 	@Autowired
 	private ClassesService classService;
+	
+	@Autowired
+	private ClassContentService classContentService;
 	
 	@Autowired
 	private MemberService memberService;
@@ -57,19 +66,16 @@ public class ClassController {
 		return "ok";
 	}
 	
-	@ResponseBody
 	@RequestMapping(value="/insertClassroom", method = RequestMethod.POST)
 	public String insertClassroom(@ModelAttribute ClassesVO vo) {
-		vo.setInstructorID(instructorID);//임의로 instructorID 설정 
-		
-		if (classService.insertClassroom(vo) != 0) {
-			System.out.println("controller 강의실 생성 성공");
-			return "ok";
-		}
-		else {
+		vo.setInstructorID(instructorID);
+
+		if (classService.insertClassroom(vo) >= 0) 
+			System.out.println("controller 강의실 생성 성공"); 
+		else 
 			System.out.println("controller 강의실 생성 실패");
-			return "error";
-		}
+		return "class/dashboard";
+		
 	}
 	
 	@ResponseBody
@@ -110,9 +116,37 @@ public class ClassController {
 	
 	@ResponseBody
 	@RequestMapping(value="/copyClassroom", method = RequestMethod.POST)
-	public void copyClassroom(@RequestParam(value = "id") int classID) {
+	public int copyClassroom(@RequestParam(value = "id") int classID) {
+		//int nextClassID = classService.getNextClassID();	//새로 생성될 classID 데이터 저장해두기 
 		
+		ClassesVO vo = classService.getClassInfoForCopy(classID);	//Copy할 기존 강의실 데이터 가져오기
+		vo.setInstructorID(instructorID);
 		
+		int newClassID = classService.insertClassroom(vo); //새로 생성된 classID 저장
+		if(newClassID >= 0)	//복사한 classContents 각 row에 설정된 nextClassID와 같은지 check
+			System.out.println("Class 생성 성공");
+		else {
+			System.out.println("Class 생성 실패");
+			return 0;
+		}
+	
+		// lms_classContent에 기존 classID의 내용 가져오기
+			// days, daySeq, title, description, playlistID만 가져오기
+		List<ClassContentVO> original = classContentService.getAllClassContentForCopy(classID);
+		for (int i=0; i<original.size(); i++) {	
+			original.get(i).setClassID(newClassID);	//newClassID 로 설정
+			System.out.println(i + " : " + original.get(i).getClassID());
+		}	
+	
+		// 새로 생성된 classID에 다 넣기
+		if(classContentService.insertCopiedClassContents(original) != 0) //transaction 필요
+			System.out.println("class contents 복사 완료!");
+		else {
+			System.out.println("class contents 복사 실패!");
+			return 0;
+		}
+		
+		return 1;
 	}
 
 }
