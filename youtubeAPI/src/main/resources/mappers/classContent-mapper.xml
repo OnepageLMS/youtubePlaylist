@@ -37,5 +37,20 @@
 		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
 		where classID=#{classID} order by days, daySeq
 	</select>
+	
+	<select id="getAllClassContentForCopy" resultType="classContent">
+		select days, daySeq, title, description, playlistID, startDate, endDate
+		from lms_classContent
+		where classID=#{classID}
+	</select>
+	
+	<insert id="insertCopiedClassContents" parameterType="java.util.List">
+		insert into lms_classContent (classID, days, daySeq, title, description, playlistID)
+		values 
+				<foreach collection="list" item="item" separator=",">
+					("${item.classID}","${item.days}","${item.daySeq}","${item.title}","${item.description}","${item.playlistID}")
+				</foreach>
+				
+	</insert>
 
 </mapper>

@@ -34,25 +34,25 @@
 <script>
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate", ];
+var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 
 $(document).ready(function(){
 	var allMyClass = JSON.parse('${allMyClass}');
-	console.log(allMyClass);
+	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 	
 	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
 		//var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
-		//var startDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + allMyClass[i].id + "'";
-		//var classContentURL = "'${pageContext.request.contextPath}/class/contentList/1'";
 		var classAttendanceURL = '#';
 		var cardColor = active_colors[i%(active_colors.length)];
 		
-		var dashboardCard = '<div class="col-sm-6 col-md-4 col-lg-3">'
+		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  name + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
+										+ '<div class="col-sm-10">' +  allMyClass[i].className + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
+										+ '<a href="void(0);" classID="' + allMyClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지' 
@@ -76,7 +76,74 @@ $(document).ready(function(){
 		$('.classActive').append(dashboardCard);
 	}
 
+
+	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
+		var classNoticeURL = '#';
+		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + inactiveClass[i].id + "'";
+		var classAttendanceURL = '#';
+		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
+
+		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+								+ '<div class="mb-3 card">'
+									+ '<div class="card-header ' + cardColor + '">' 
+										+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
+										+ '<a href="void(0);" classID="' + inactiveClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+									+ '</div>'
+									+ '<div class="card-body">'
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+					        		+ '</div>'
+					        	+ '</div>'
+					        + '</div>';
+							
+			$('.classInactive').append(dashboardCard);
+	}
 });
+
+$(document).on("click", ".setClassroomBtn", function () {	// set classroom btn 눌렀을 때 modal에 데이터 전송
+
+	var classID = $(this).attr('classID');
+	$('#setClassID').val(classID);
+
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/student/class/getClassInfo',
+		data: { 'classID' : classID },
+		success: function(data){
+			console.log(data);
+			$('#displayInstructor').text(data.name);
+			$('#displayClassName').text(data.className);
+			$('#displayDescription').text(data.description);
+
+		},
+		error: function(data, status,error){
+			console.log('ajax class 정보 가져오기 실패!');
+		}
+	});
+});
+
+function submitDeleteClassroom(){
+	if(confirm('강의실에서 나가시겠습니까? \n다시 복구될 수 없습니다.')){
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/student/class/deleteClassroom',
+			data: {'id' : $('#setClassID').val()},
+			datatype: 'json',
+			success: function(data){
+				console.log('강의실 나가기 성공');
+			},
+			complete: function(data){
+				location.reload();
+			},
+			error: function(data, status,error){
+				alert('강의실 나가기 실패! ');
+			}
+		});
+	}
+}
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow">
@@ -90,7 +157,6 @@ $(document).ready(function(){
                                 <div class="page-title-heading col-sm-12">
                                   	<h2 class="col-sm-10">내 강의실</h2>
                                 </div>
-                                
                           </div>
                         </div>            
                        
@@ -105,8 +171,12 @@ $(document).ready(function(){
 			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
 			                           </div>
 			                       </div>
-			                       <h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
-			                       <div class="dropdown d-inline-block">
+                        		</div>
+                        	</div>
+                        	<div class="classInactive row col">
+                        		<div class="col-12 row">
+                        			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
+	                        		<div class="dropdown d-inline-block">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
 			                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
@@ -123,6 +193,48 @@ $(document).ready(function(){
         </div>
     </div>
     </div>
+    
+    <!-- set classroom modal-->
+    <div class="modal fade" id="setClassroomModal" tabindex="-1" role="dialog" aria-labelledby="setClassroomModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="setClassroomModalLabel">강의실 정보</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	           
+				<div class="modal-body">
+					<input type="hidden" id="setClassID" value="">
+					<div class="">
+						<div class="position-relative form-group">
+		               		<label for="editClassName" class="">강의실 이름</label> 
+		               		<p id="displayClassName" class="form-control"></p>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<label for="editClassName" class="">강사</label> 
+		               		<p id="displayInstructor" class="form-control"></p>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<label for="editClassName" class="">강의실 설명</label> 
+		               		<p id="displayDescription" class="form-control"></p>
+		               </div>
+					</div>
+					<div class="divider"></div>
+					<div class="row border border-danger m-2 p-4">
+						<div class="col-md-8"><h6 class="text-danger">Danger Zone</h6></div>
+						<div class=" col-md-4">
+							<button type="button" class="btn btn-danger" onclick="submitDeleteClassroom();">강의실 나가기</button>
+                     	</div>  
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
    
 </body>
 </html>
