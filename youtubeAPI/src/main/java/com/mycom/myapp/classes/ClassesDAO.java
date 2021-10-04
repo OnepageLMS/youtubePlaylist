@@ -15,57 +15,62 @@ public class ClassesDAO {
 	
 	public int insertClassroom(ClassesVO vo) {
 		int result = sqlSession.insert("Classes.insertClassroom", vo);
-		return result;
+		if (result != 0) {
+			return vo.getId();	//새로 생성된 classID 
+		}
+		return -1;
 	}
 	
 	public int updateClassroom(ClassesVO vo) {
-		int result = sqlSession.update("Classes.updateClassroom", vo);
-		return result;
+		return sqlSession.update("Classes.updateClassroom", vo);
 	}
 	
 	public int updateDays(ClassesVO vo){
-		int result = sqlSession.update("Classes.updateDays", vo);
-		return result;
+		return sqlSession.update("Classes.updateDays", vo);
 	}
 	
 	public int deleteDay(int id){
-		int result = sqlSession.update("Classes.deleteDay", id);
-		return result;
+		return sqlSession.update("Classes.deleteDay", id);
 	}
 	
-	public int updateInstructorNull(int id) {
-		int result = sqlSession.update("Classes.updateInstructorNull", id);
-		return result;
+	public int updateInstructor(int id) {
+		return sqlSession.update("Classes.updateInstructor", id);
+	}
+	
+	public int updateInstructorNull(int id) {	//선생님이 강의실 나갔을 때
+		return sqlSession.update("Classes.updateInstructorNull", id);
 	}
 	
 	public int updateActive(int id) {
-		int result = sqlSession.update("Classes.updateActive", id);
-		return result;
+		return sqlSession.update("Classes.updateActive", id);
 	}
 	
 	public int deleteClassroom(int id) {
-		int result = sqlSession.delete("Classes.deleteClassroom", id);
-		return result;
+		return sqlSession.delete("Classes.deleteClassroom", id);
+	}
+	
+	public int getNextClassID() {
+		return sqlSession.selectOne("Classes.getNextClassID");
 	}
 	
 	public ClassesVO getClass(int id) {
-		ClassesVO vo = sqlSession.selectOne("Classes.getClass", id);
-		return vo;
+		return sqlSession.selectOne("Classes.getClass", id);
+	}
+	
+	public ClassesVO getClassInfoForCopy(int id) {
+		return sqlSession.selectOne("Classes.getClassInfoForCopy", id);
 	}
 	
 	public List<ClassesVO> getAllMyActiveClass(int instructorID){
-		List<ClassesVO> result = sqlSession.selectList("Classes.getAllMyActiveClass", instructorID);
-		return result;
+		return sqlSession.selectList("Classes.getAllMyActiveClass", instructorID);
 	}
 	
 	public List<ClassesVO> getAllMyInactiveClass(int instructorID){
-		List<ClassesVO> result = sqlSession.selectList("Classes.getAllMyInactiveClass", instructorID);
-		return result;
+		return sqlSession.selectList("Classes.getAllMyInactiveClass", instructorID);
 	}
 	
 	public List<ClassesVO> getAllMyClass(int instructorID){
-		List<ClassesVO> result = sqlSession.selectList("Classes.getAllMyClass", instructorID);
-		return result;
+		return sqlSession.selectList("Classes.getAllMyClass", instructorID);
 	}
 }
 

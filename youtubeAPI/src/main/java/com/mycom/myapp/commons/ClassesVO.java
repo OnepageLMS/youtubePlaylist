@@ -1,7 +1,5 @@
 package com.mycom.myapp.commons;
 
-import java.util.Date;
-
 public class ClassesVO {
 	private int id;
 	private int instructorID;
@@ -9,9 +7,10 @@ public class ClassesVO {
 	private String description;
 	private int days = 0;
 	private String tag;
-	private Date startDate;	//string 변환
+	private String startDate;
 	private String closeDate;
 	private int active;
+	private String regDate;
 	
 	private String name;	//instructorName
 	private int studentID;
@@ -52,10 +51,10 @@ public class ClassesVO {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 	public String getCloseDate() {
@@ -70,6 +69,14 @@ public class ClassesVO {
 	public void setActive(int active) {
 		this.active = active;
 	}
+	public String getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+	
+	
 	public String getName() {
 		return name;
 	}
