@@ -121,6 +121,7 @@ $(document).ready(function(){
 				//document.getElementById(nameCheck).setAttribute("checked", true);
 				//$("'" +nameCheck+ "'").prop("checked", true);
 				$("#exampleCustomCheckbox"+(i+1)).prop("checked", true);
+				$('.className:eq('+(i+1)+')').prop("checked", true);
 				console.log("#exampleCustomCheckbox"+(i+1));
 			}
 			else{
@@ -164,7 +165,7 @@ $(document).ready(function(){
 							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
 									//+ published
 								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
-									+ '<input type="checkbox" id="exampleCustomCheckbox' +(i+1) + '" class="custom-control-input" onchange="YNCheck(this, '+allContents[i].id +')">'
+									+ '<input type="checkbox" id="exampleCustomCheckbox' +(i+1) + '" class="custom-control-input exampleCustomCheckbox" onchange="YNCheck(this, '+allContents[i].id +')">'
 										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +(i+1) + '"></label>'
 								+ '</div>'
 							//+ '</div>'

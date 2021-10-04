@@ -171,7 +171,7 @@ public class Stu_ClassController{
 		
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 		pcvo.setPlaylistID(playlistID);
-		pcvo.setClassPlaylistID(classPlaylistID);
+		pcvo.setClassContentID(classPlaylistID);
 	   
 	  if(playlistcheckService.getPlaylistByPlaylistID(pcvo) != null) {
 		  System.out.println("null아니니까");
@@ -195,7 +195,7 @@ public class Stu_ClassController{
 		
 		pcvo.setStudentID(studentID);
 		pcvo.setPlaylistID(playlistID);
-		pcvo.setClassPlaylistID(classPlaylistID);
+		pcvo.setClassContentID(classPlaylistID);
 		pcvo.setClassID(classID);
 		pcvo.setTotalVideo(totalVideo);
 		pcvo.setTotalWatched(totalWatched);
@@ -250,8 +250,8 @@ public class Stu_ClassController{
 		vo.setTimer(timer);
 		vo.setPlaylistID(playlistID);
 		vo.setClassID(classID);
-		vo.setClassPlaylistID(classPlaylistID);
-		System.out.println(vo.getClassID() + " " + vo.getClassPlaylistID());
+		vo.setClassContentID(classPlaylistID);
+		//System.out.println(vo.getClassID() + " " + vo.getClassPlaylistID());
 		if (videoCheckService.updateTime(vo) == 0) {
 			System.out.println("데이터 업데이트 실패 ");
 			videoCheckService.insertTime(vo);
@@ -282,7 +282,7 @@ public class Stu_ClassController{
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
 		vo.setClassID(classID);
-		vo.setClassPlaylistID(classPlaylistID);
+		vo.setClassContentID(classPlaylistID);
 		
 		Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
 		vo.setWatched(watch);
@@ -292,7 +292,7 @@ public class Stu_ClassController{
 		pcvo.setStudentID(studentID);
 		pcvo.setPlaylistID(playlistID);
 		pcvo.setVideoID(videoID);
-		pcvo.setClassPlaylistID(classPlaylistID);
+		pcvo.setClassContentID(classPlaylistID);
 		
 		//우선 현재 db테이블의 getWatched를 가져온다. 이때 가져온 값이 0이다
 		//vo.setWatched를 한다.

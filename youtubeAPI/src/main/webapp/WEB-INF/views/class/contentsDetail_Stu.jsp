@@ -43,8 +43,8 @@ var information;
 var videoIdx;
 var playlist; 
 
+
 $(document).ready(function(){
-	console.log("학생페이지입니ㅏㄷ!");
 	$.ajax({ 
 		  url : "../../../../forStudentContentDetail",
 		  type : "post",
@@ -313,11 +313,10 @@ function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 
 	$(".video").css({'background-color' : 'unset'});
 	item.style.background = "lightgrey";
 	$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기\
-
+	var lastID = id;
 	if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
 		flag = 0;
 		time = 0;
-		//console.log("getCurrentTime : " + player.getCurrentTime());
 		//clearInterval(timer); //현재 재생중인 timer를 중지하지 않고, 새로운 youtube를 실행해서 timer 두개가 실행되는 현상으로, 새로운 유튜브를 실행할 때 타이머 중지!
 		
 		//ytplayer.getCurrentTime();
@@ -325,16 +324,16 @@ function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 
 			'type' : "post",
 			'url' : "../../../../changevideo",
 			'data' : {
-						lastTime : 30, //player.getCurrentTime(),
+						lastTime : player.getCurrentTime(),
 						studentID : studentEmail, //studentEmail
-						videoID : lastVideo, //playlist[0].id; 원래 비디오 id
+						videoID : lastID, //playlist[0].id, // 원래 비디오 id
 						classID : classID, //classID
 						playlistID : playlist[ori_index].playlistID,
 						classPlaylistID : classContentID,
 						timer : 0
 			},
 			success : function(data){
-				lastVideo = id; // 보던 비디오 ID에 id를 넣는다
+				lastID = id; // 보던 비디오 ID에 id를 넣는다
 				ori_index = index; // 원래 인덱스에 index를 넣는다.
 			}, 
 			error : function(err){

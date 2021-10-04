@@ -9,7 +9,7 @@ public class Stu_VideoCheckVO {
 	private int videoID;
 	private int classID;
 	private int playlistID;
-	private int classPlaylistID;
+	private int classContentID;
 	private int studentID;	//새로추가
 	private double lastTime;
 	private double timer;
@@ -46,11 +46,11 @@ public class Stu_VideoCheckVO {
 		this.playlistID = playlistID;
 	}
 	
-	public int getClassPlaylistID() {
-		return classPlaylistID;
+	public int getClassContentID() {
+		return classContentID;
 	}
-	public void setClassPlaylistID(int classPlaylistID) {
-		this.classPlaylistID = classPlaylistID;
+	public void setClassContentID(int classContentID) {
+		this.classContentID = classContentID;
 	}
 	public int getStudentID() {
 		return studentID;

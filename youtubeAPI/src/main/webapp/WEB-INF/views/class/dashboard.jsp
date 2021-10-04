@@ -73,9 +73,9 @@ $(document).ready(function(){
 		var name = inactiveClass[i].className;
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + inactiveClass[i].id + "'";
-		var classAttendanceURL = '#';
+		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-
+	
 		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
