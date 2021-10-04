@@ -1,7 +1,5 @@
 package com.mycom.myapp.commons;
 
-import java.util.Date;
-
 public class ClassContentVO {
 	private int id;
 	private String title;
@@ -11,9 +9,9 @@ public class ClassContentVO {
 	private int days;
 	private int daySeq;
 	private int published;
-	private Date startDate;	//String
-	private Date endDate;	//String
-	private Date modDate;	//String으로 변환 
+	private String startDate;	
+	private String endDate;
+	private String modDate;
 	
 	private String thumbnailID; //join attributes
 	private int totalVideo;
@@ -68,22 +66,22 @@ public class ClassContentVO {
 	public void setPublished(int published) {
 		this.published = published;
 	}
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public Date getModDate() {
+	public String getModDate() {
 		return modDate;
 	}
-	public void setModDate(Date modDate) {
+	public void setModDate(String modDate) {
 		this.modDate = modDate;
 	}
 	public String getThumbnailID() {

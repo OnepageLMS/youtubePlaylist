@@ -127,10 +127,6 @@ $(document).ready(function(){
 			var showing = 'class="collapse"';
 		}
 		
-		//weekContents는 하나의 playlistID를 가지고 있는거니까 당연히 이렇게 나오지...
-		
-		
-		
 		var innerText ='';
 		for(var j=0; j<playlist_length; j++){
 			
@@ -371,7 +367,6 @@ function onYouTubeIframeAPIReady() {
 	           
 	       }
 	   });
-	    
 }
 
 
