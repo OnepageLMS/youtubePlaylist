@@ -11,9 +11,9 @@ public class ClassContentVO {
 	private int days;
 	private int daySeq;
 	private int published;
-	private Date startDate;
-	private Date endDate;
-	private Date modDate;
+	private Date startDate;	//String
+	private Date endDate;	//String
+	private Date modDate;	//String으로 변환 
 	
 	private String thumbnailID; //join attributes
 	private int totalVideo;

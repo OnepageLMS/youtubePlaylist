@@ -100,12 +100,20 @@ $(document).ready(function(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
 		console.log("길이 : " + allContents.length);
 		for(var i=0; i<allContents.length; i++){
-			var day = allContents[i].days;
-			var date = new Date(allContents[i].endDate.time); //timestamp -> actural time
+			var day = allContents[i].days;	
+			var date, endDate;
+			if (allContents[i].endDate == null){
+				date = '';
+				endDate = '없음';
+			}
+			else {
+				date = new Date(allContents[i].endDate.time); //timestamp -> actural time
+				endDate = date.getFullYear() + "-" + ("00"+(date.getMonth()+1).toString()).slice(-2) + "-" + ("00"+(date.getDate()).toString()).slice(-2) + " " 
+								+ ("00"+(date.getHours()).toString()).slice(-2) + ":" + ("00"+(date.getMinutes()).toString()).slice(-2);
+			}
+				
 			//var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 			
-			var endDate = date.getFullYear() + "-" + ("00"+(date.getMonth()+1).toString()).slice(-2) + "-" + ("00"+(date.getDate()).toString()).slice(-2) + " " 
-					+ ("00"+(date.getHours()).toString()).slice(-2) + ":" + ("00"+(date.getMinutes()).toString()).slice(-2);
 			// (jw) endDate 넘겨주기 
 			//console.log("check here", endDate);
 			localStorage.setItem("endDate", endDate);

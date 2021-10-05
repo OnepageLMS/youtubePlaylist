@@ -101,7 +101,7 @@
 		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="../outer_left.jsp" flush="false"/>
+		 	<jsp:include page="../outer_left_stu.jsp" flush="false"/>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
@@ -114,24 +114,17 @@
                     </div>    
                             
                     <div class="row">
-                    
-                    	
-                       <div class="col-md-12">
-	                      
-		                       	 
-		                           <nav class="" aria-label="Page navigation example"> 
-		                              	 <ul class="pagination">
-		                              	 	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-												<li class="page-item"><a href="#target${j}" class="page-link"> ${j} </a></li>
-											</c:forEach>
-		                              	 </ul>
-		                            </nav>
-		                 
-	                  
+                       <div class="col-md-12">	 
+                          <nav class="" aria-label="Page navigation example"> 
+                             	 <ul class="pagination">
+                             	 	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+									<li class="page-item"><a href="#target${j}" class="page-link"> ${j} </a></li>
+								</c:forEach>
+                             	 </ul>
+                           </nav>
                        	</div>
                         
                        	<div class="contents col-sm-12" classID="${classInfo.id}">
-				
 							<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 								<!-- <div class="day card list-group list-group-flush" day="${status.index}">
 									 <div class="card-header lecture">

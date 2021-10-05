@@ -33,8 +33,37 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
+	public int updateInstructor(int id) {
+		return classesDAO.updateInstructor(id);
+	}
+	
+	@Override
+	public int updateInstructorNull(int id) {
+		return classesDAO.updateInstructorNull(id);
+	}
+	
+	@Override
+	public int updateActive(int active) {
+		return classesDAO.updateActive(active);
+	}
+	
+	@Override
+	public int deleteClassroom(int id) {
+		return classesDAO.deleteClassroom(id);
+	}
+	
+	@Override
+	public int getNextClassID() {
+		return classesDAO.getNextClassID();
+	}
+	@Override
 	public ClassesVO getClass(int id) {
 		return classesDAO.getClass(id);
+	}
+	
+	@Override
+	public ClassesVO getClassInfoForCopy(int id) {
+		return classesDAO.getClassInfoForCopy(id);
 	}
 	
 	@Override

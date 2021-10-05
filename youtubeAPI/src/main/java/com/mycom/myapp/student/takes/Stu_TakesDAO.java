@@ -32,5 +32,10 @@ public class Stu_TakesDAO {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("Takes.getTakes", id);
 	}
+	
+	public Stu_TakesVO getStudentNum(int classID) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("Takes.getTakesNum", classID);
+	}
 
 }

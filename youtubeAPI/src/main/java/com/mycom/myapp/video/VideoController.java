@@ -1,17 +1,21 @@
 package com.mycom.myapp.video;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.PlaylistVO;
 import com.mycom.myapp.commons.VideoVO;
+import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.playlist.PlaylistService;
 
 import net.sf.json.JSONArray;
@@ -34,16 +39,20 @@ public class VideoController {
 	private PlaylistService playlistService;
 	@Autowired
 	private ClassesService classService;
+	@Autowired
+	private MemberService memberService;
 	
 	private int instructorID = 1;
 	
 	//video 수정/재생page 이동
-	@RequestMapping(value = "/watch/{playlistID}/{videoID}", method = RequestMethod.GET) 
-	public String getSelectedPlaylistVideos(@PathVariable("playlistID") int playlistID, @PathVariable("videoID") int videoID, Model model) {
+	@RequestMapping(value = "/detail", method = RequestMethod.POST)
+	public String getSelectedPlaylistVideos(@RequestParam("playlistID") int playlistID, 
+			@RequestParam("videoID") int videoID, Model model){
 		model.addAttribute("videoID", videoID);	//가장 먼저 플레이어에 띄워지는 비디오
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "playlist/selectedPlaylist";
 	}
 		
@@ -52,7 +61,7 @@ public class VideoController {
 		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "video/youtube";
 	}
 	
@@ -184,6 +193,8 @@ public class VideoController {
 			else 
 				System.out.println("비디오 추가 실패 ");
 		}
+		
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		
 		return "youtube";
 	}

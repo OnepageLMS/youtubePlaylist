@@ -34,5 +34,10 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 		// TODO Auto-generated method stub
 		return stu_TakesDAO.getStudent(id);
 	}
+	
+	@Override
+	public Stu_TakesVO getStudentNum(int classID) {
+		return stu_TakesDAO.getStudentNum(classID);
+	}
 
 }

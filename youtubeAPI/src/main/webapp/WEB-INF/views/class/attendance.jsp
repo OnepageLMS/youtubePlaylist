@@ -59,10 +59,53 @@ $(document).ready(function(){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<span class="text-primary">${classInfo.className}</span> <!-- 이부분 이름 바꾸기!! -->
+                            	<span class="text-primary">${classInfo.className}</span> - 출석/학습현황 <!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
-                    </div>    
+                    </div>  
+                    
+                    <div class="row">
+                    	<div class="col-lg-12">
+                         	<div class="main-card mb-3 card">
+                                    <div class="card-body"><h5 class="card-title">Table bordered</h5>
+                                        <table class="mb-0 table table-bordered">
+                                            <thead>   
+                                            <tr>
+                                            	<th> # </th>
+	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+	                                                <th>${j} 차시 </th>
+	                                            </c:forEach>
+                                            </tr>
+                                            </thead>
+                                            
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>@mdo</td>
+                                                
+	                                            
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>Jacob</td>
+                                                <td>Thornton</td>
+                                                <td>@fat</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>Larry</td>
+                                                <td>the Bird</td>
+                                                <td>@twitter</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                        	</div>
+                    	</div>
+                    
+                    </div>  
                             
                  <!--   <div class="row">
                     	
@@ -116,28 +159,6 @@ $(document).ready(function(){
 	   	</div>
    	</div>
    	
-   	<div class="modal fade" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            
-	            <div class="modal-body">
-	               Playlist를 선택해주세요
-	               <div class="myPlaylist"></div>
-	               
-	            </div>
-	            <div class="modal-footer">
-	            	 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="selectOK();">선택완료</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
 </body>
 
 	

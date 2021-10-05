@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Classes">
-	<insert id="insertClassroom">
+	<insert id="insertClassroom" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into lms_class (instructorID, active, className, description, days, tag, closeDate)
 		values (#{instructorID}, #{active}, #{className}, #{description}, #{days}, #{tag}, #{closeDate})
 	</insert>
@@ -22,8 +22,35 @@
 		where id=#{id}
 	</update>
 	
+	<update id="updateInstructor">
+		update lms_class set instructorID=#{instructorID}
+		where id=#{id}
+	</update>
+	
+	<update id="updateInstructorNull">
+		update lms_class set instructorID=NULL
+		where id=#{id}
+	</update>
+	
+	<update id="updateActive">
+		update lms_class set active=0
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteClassroom">
+		delete from lms_class where id=#{id}
+	</delete>
+	
+	<select id="getNextClassID" resultType="int">
+		select Auto_increment from information_schema.tables where table_schema = 'yewonlee' and table_name = 'lms_class'
+	</select>
+	
 	<select id="getClass" resultType="classes">
 		select * from lms_class where id=#{id}
+	</select>
+	
+	<select id="getClassInfoForCopy" resultType="classes">
+		select className, description, days, tag from lms_class where id=#{id}
 	</select>
 	
 	<select id="getAllMyActiveClass" resultType="classes">
@@ -37,4 +64,5 @@
 	<select id="getAllMyClass" resultType="classes">
 		select * from lms_class where instructorID=#{instructorID}
 	</select>
+	
 </mapper>
