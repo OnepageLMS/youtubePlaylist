@@ -23,18 +23,15 @@
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
-
 $(document).ready(function(){
 	var activeClass = JSON.parse('${allMyClass}');
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
-
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + activeClass[i].id + "'";
 		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var regDate = activeClass[i].regDate.split(' ')[0];
 		var cardColor = active_colors[i%(active_colors.length)]; 
-
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
@@ -70,7 +67,6 @@ $(document).ready(function(){
 							
 			$('.classActive').append(dashboardCard);
 	}
-
 	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
 		var name = inactiveClass[i].className;
 		var classNoticeURL = '#';
@@ -78,9 +74,7 @@ $(document).ready(function(){
 		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var regDate = inactiveClass[i].regDate.split(' ')[0];
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
-
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  name + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
@@ -110,18 +104,14 @@ $(document).ready(function(){
 			$('.classInactive').append(dashboardCard);
 	}
 });
-
 $(".addClassroomBtn").click(function () {
 	$('#formAddClassroom')[0].reset();
 });
-
 function shareClassroomFn(id){	//set the share classroom modal
 	$('#shareClassroomID').val(id);
 }
-
 function editClassroomFn(id){	//set the edit classroom modal
 	$('#formEditClassroom')[0].reset();
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/getClassInfo',
@@ -133,7 +123,6 @@ function editClassroomFn(id){	//set the edit classroom modal
 			$('#editClassDays').val(data.days);
 			$('#editClassTag').val(data.tag);
 			$('#editCloseDate').val(data.closeDate);
-
 			if(data.active == 0)
 				$('#customSwitch2').removeAttr('checked');
 			else
@@ -144,7 +133,6 @@ function editClassroomFn(id){	//set the edit classroom modal
 		}
 	});
 }
-
 function submitAddClassroom(){	//submit the add classroom form 
 	if($('#inputClassDays').val() == '')	//int type은 null이 될 수 없어 미리 방지
 		$('#inputClassDays').val(0);
@@ -153,10 +141,8 @@ function submitAddClassroom(){	//submit the add classroom form
 		$('#customSwitch1').val(1);
 	else
 		$('#customSwitch1').val(0);
-
 	if($('#inputCloseDate').val() == '')
 		$('#inputCloseDate').val('9999-12-31');	//null이나 '' 가 들어가면 에러난다. --> 이부분 수정하기
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/insertClassroom',
@@ -174,7 +160,6 @@ function submitAddClassroom(){	//submit the add classroom form
 		}
 	});	
 }
-
 function submitEditClassroom(){	//미완성
 	// classDays 현재 강의컨텐츠의 갯수 넘지 않도록 체크
 	// closeDate를 현재 이전으로 하면 학생들 어떻게?
@@ -186,7 +171,6 @@ function submitEditClassroom(){	//미완성
 		$('#customSwitch2').val(1);
 	else
 		$('#customSwitch2').val(0);
-
 	if($('#editCloseDate').val() == '')
 		$('#editCloseDate').val('9999-12-31');
 	
@@ -215,16 +199,13 @@ function submitEditClassroom(){	//미완성
 		}
 	});
 }
-
 function submitDeleteClassroom(){
 	var opt = $('input[name=deleteOpt]:checked').val();
-
 	if(opt == null){
 		alert('강의실 삭제 옵션을 선택해 주세요.');
 		return false;
 	}
 	console.log($('#setClassID').val());
-
 	if(opt == 'forMe'){
 		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 비공개 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
 			$.ajax({
@@ -264,7 +245,6 @@ function submitDeleteClassroom(){
 		}
 	}
 }
-
 function submitShareClassroom(){
 	$.ajax({
 		type: 'post',

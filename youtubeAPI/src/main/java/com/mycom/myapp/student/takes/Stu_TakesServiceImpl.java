@@ -1,5 +1,7 @@
 package com.mycom.myapp.student.takes;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,11 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 	public Stu_TakesVO getStudent(int id) {
 		// TODO Auto-generated method stub
 		return stu_TakesDAO.getStudent(id);
+	}
+	
+	@Override
+	public List<Stu_TakesVO> getStudentNum(int classID) {
+		return stu_TakesDAO.getStudentNum(classID);
 	}
 
 }
