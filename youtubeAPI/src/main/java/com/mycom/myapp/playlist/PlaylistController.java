@@ -45,18 +45,6 @@ public class PlaylistController {
 		return "playlist/myPlaylist";
 	}
 	
-//	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
-//	@ResponseBody
-//	public Object getAllPlaylist(@RequestParam(value = "email") String creatorEmail) {
-//		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
-//		playlists = playlistService.getAllMyPlaylist(creatorEmail); //playlist의 모든 video 가져오기
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("allPlaylist", playlists);
-//		
-//		return map;
-//	}
-	
 	@RequestMapping(value = "/addPlaylist", method = RequestMethod.POST)
 	@ResponseBody
 	public void addPlaylist(@ModelAttribute PlaylistVO vo) {

@@ -1,7 +1,5 @@
 package com.mycom.myapp.classes;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,10 +115,11 @@ public class ClassController {
 	@ResponseBody
 	@RequestMapping(value="/copyClassroom", method = RequestMethod.POST)
 	public int copyClassroom(@RequestParam(value = "id") int classID) {
-		//int nextClassID = classService.getNextClassID();	//새로 생성될 classID 데이터 저장해두기 
 		
 		ClassesVO vo = classService.getClassInfoForCopy(classID);	//Copy할 기존 강의실 데이터 가져오기
 		vo.setInstructorID(instructorID);
+		String name = vo.getClassName() + "-1";
+		vo.setClassName(name);
 		
 		int newClassID = classService.insertClassroom(vo); //새로 생성된 classID 저장
 		if(newClassID >= 0)	//복사한 classContents 각 row에 설정된 nextClassID와 같은지 check

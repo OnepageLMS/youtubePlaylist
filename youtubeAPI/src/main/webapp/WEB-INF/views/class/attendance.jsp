@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>강의컨텐츠</title>
+    <title>출결/학습 현황</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -31,19 +31,33 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 
+<style>
+
+
+
+</style>
+
 <script>
+var takes;
+var takesStudentNum = 0;
 $(document).ready(function(){
-	
-	
+	/*$.ajax({ 
+		'type' : "post",
+		'url' : "${pageContext.request.contextPath}/attendance/takes",
+		'data' : {
+			classID : ${classInfo.id}
+		},
+		success : function(data){
+			takes = data;
+			takesStudentNum = data.length;
+			console.log("성공");
+			console.log(data.length);
+		}, 
+		error : function(err){
+			alert("실패");
+		}
+	}); */
 });
-	
-	
-	
-	
-	
-
-	
-
 	
 	
 </script>
@@ -68,37 +82,30 @@ $(document).ready(function(){
                     	<div class="col-lg-12">
                          	<div class="main-card mb-3 card">
                                     <div class="card-body"><h5 class="card-title">Table bordered</h5>
-                                        <table class="mb-0 table table-bordered">
+                                        <table class="mb-0 table table-bordered takes">
                                             <thead>   
                                             <tr>
-                                            	<th> # </th>
+                                            	<!-- <th colspan="2"> # </th>-->
+                                            	<th width = "10%"> 수강생 </th>
 	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-	                                                <th>${j} 차시 </th>
+	                                                <th style="text-align:center" >${j} 차시 </th>
 	                                            </c:forEach>
                                             </tr>
                                             </thead>
                                             
                                             <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                                
-	                                            
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td>@twitter</td>
-                                            </tr>
+                                            
+	                                             <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
+		                                            <tr>
+		                                                <th scope="row${status.index}">${status.index+1}. ${takes[status.index].studentName}</th>
+		                                                
+		                                                <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
+		                                                	<td id = "take${status2.index}" style="text-align:center"> 0% </td>
+		                                                </c:forEach>
+			                                            
+		                                            </tr>
+	                                            </c:forEach>
+                                            
                                             </tbody>
                                         </table>
                                     </div>

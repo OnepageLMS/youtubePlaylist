@@ -34,16 +34,12 @@
 <script>
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
-	//setAllMyClass();	//왼쪽 내 class 목록 띄우기
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
 	
-	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈
-		var instructorID = 1;	//임의로 설정
-		
+	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈	
 		$.ajax({
 			type : 'post',
 			url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
-			data : {instructorID : instructorID},
 			success : function(result){
 				playlists = result.allMyPlaylist;
 				
@@ -76,7 +72,7 @@ $(document).ready(function(){
 							
 					$.each(playlists, function( index, value ){
 						var contentHtml = '<div class="playlist list-group-item-action list-group-item position-relative form-check">'
-											+ '<label class="form-check-label">' 
+											+ '<label class="form-check-label pl-3">' 
 												+ '<input name="playlist" type="radio" class="form-check-input" value="' + value.id + '">'
 												+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength) 
 											+ '</label>'
@@ -98,29 +94,16 @@ $(document).ready(function(){
 	
 	function setAllContents(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
-		console.log("길이 : " + allContents.length);
 		for(var i=0; i<allContents.length; i++){
-			var day = allContents[i].days;	
-			var date, endDate;
-			if (allContents[i].endDate == null){
-				date = '';
-				endDate = '없음';
-			}
-			else {
-				date = new Date(allContents[i].endDate.time); //timestamp -> actural time
-				endDate = date.getFullYear() + "-" + ("00"+(date.getMonth()+1).toString()).slice(-2) + "-" + ("00"+(date.getDate()).toString()).slice(-2) + " " 
-								+ ("00"+(date.getHours()).toString()).slice(-2) + ":" + ("00"+(date.getMinutes()).toString()).slice(-2);
-			}
-				
-			//var endDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
-			
+			var day = allContents[i].days;
+			var endDate = allContents[i].endDate.split(":");
+			endDate = endDate[0] + ":" + endDate[1];	
+	
 			// (jw) endDate 넘겨주기 
-			//console.log("check here", endDate);
 			localStorage.setItem("endDate", endDate);
 			var publishedCheck = allContents[i].published;
 			//var nameCheck = "'#exampleCustomCheckbox"+(i+1)+"'";
 			var nameCheck = "#exampleCustomCheckbox"+(i+1);
-			console.log("nameCheck : " +nameCheck+ "/ publishedCheck:" + publishedCheck);
 			if(publishedCheck == 1){
 				console.log("1이야" + nameCheck);
 				//document.getElementById("'" +nameCheck+ "'").setAttribute("checked", true);
@@ -150,7 +133,6 @@ $(document).ready(function(){
 			else
 				published = '<label class="custom-control-label" for="switch">비공개</label>'
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
-			
 								
 			content.append(
 				"<div class='content list-group-item-action list-group-item' seq='" + allContents[i].daySeq + "'>"
@@ -160,9 +142,7 @@ $(document).ready(function(){
 							+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
 									+ "<div class='col-sm-6 card-title inline-block' style=' height: 50%; font-size: 15px'>"
 										+ allContents[i].title + "  [" +convertTotalLength(allContents[i].totalVideoLength) + "]"
-									+ '</div>'
-													
-													
+									+ '</div>'		
 									+ '<div class="col-sm-12">'
 										+ '<div class="contentInfoBorder"></div>'
 										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
@@ -231,7 +211,6 @@ $(document).ready(function(){
 		});
 
 	}
-	
 
 	function showAddContentForm(day){
 		day -= 1; //임의로 조절... 
@@ -243,14 +222,12 @@ $(document).ready(function(){
 							+ '<div class="card-header">'
 								+ '<h5> 학습페이지 추가 </h5>'
 							+ '</div>'
-							+ '<form id="addContent" class="form-group card-body" action="${pageContext.request.contextPath}/class/addContentOK" onsubmit="return checkForm(this);" method="post">' 
-								+ '<input type="hidden" name="classID" value="${classInfo.id}">'
-								+ '<input type="hidden" name="days" value=""/>'
+							+ '<form id="addContent" class="form-group card-body needs-validation was-validated" method="post" novalidate>' 
+								+ '<input type="hidden" name="classID" id="inputClassID" value="${classInfo.id}">'
+								+ '<input type="hidden" name="days" id="inputDays" value=""/>'
 								+ '<input type ="hidden" id="inputPlaylistID" name="playlistID">'
 								+ '<div class="selectContent m-3">'
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
-									
-										//data-toggle="modal" data-target=".selectPlaylistModal"
 									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target="#selectPlaylistModal">Playlist 가져오기</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
 								+ '</div>'
@@ -258,10 +235,11 @@ $(document).ready(function(){
 									+ '<div class="input-group-prepend">'
 										+ '<label for="title" class="input-group-text">제목</label>'
 									+ '</div>'
-									+ '<input class="form-control d-sm-inline-block" type="text" name="title">'
+									+ '<input class="form-control d-sm-inline-block" id="inputTitle" type="text" name="title" required />'
+									+ '<div class="invalid-feedback">게시글 제목을 입력해주세요</div>'
 								+ '</div>'
 								+ '<div class="inputDescription m-3">'
-									+ '<textarea name="description" class="form-control" rows="10" id="comment" placeholder="이곳에 내용을 작성해 주세요."></textarea>'
+									+ '<textarea name="description" id="inputDescription" class="form-control" rows="10" id="comment" placeholder="이곳에 내용을 작성해 주세요."></textarea>'
 								+ '</div>'
 								+ '<div class="m-3">'
 									+ '<div class="setEndDate input-group">'
@@ -286,9 +264,9 @@ $(document).ready(function(){
 								+ '</div>'
 								+ '<div class="text-center m-3">'
 									+ '<button type="button" class="btn btn-sm btn-warning" onclick="cancelForm();" >취소</button>'
-									+ '<button type="submit" class="btn btn-sm btn-primary">저장</button>'
+									+ '<button type="button" class="btn btn-sm btn-primary" onclick="submitAddContentForm();">저장</button>'
 								+ '</div>'
-							+ '</form>'
+							+ '</form>';
 									
 		$('input[name=days]').attr('value', day);
 		$('.day:eq(' + day + ')').append(addFormHtml);
@@ -336,45 +314,59 @@ $(document).ready(function(){
 			}
 		}
 		
-		var myEmail = "yewon.lee@onepage.edu"; //이부분 나중에 로그인 구현하면 로그인한 정보 가져오기
-		
 		p.focus();
 	} 
 
-	function checkForm(item){
-		console.log("!!");
-		 console.log(item);
-	        var date = $('#startDate').val().split("-");
-	        var hour = $('.start_h').val();
-	        var min = $('.start_m').val();
-	        var startDate = new Date(date[0], date[1]-1, date[2], hour, min, 00);
-
-	        if ($('#endDate').val() == null){
-				alert("마감일을 설정해주세요!");
-				$('#endDate').focus();
-		    }
-
-	        var e_date = $('#endDate').val().split("-");
+	function submitAddContentForm(){
+		var date = $('#startDate').val(); 
+		var hour = $('.start_h').val();
+        var min = $('.start_m').val();
+		var startDate = date + " " + hour + ":" + min + ":00";
+		$('input[name=endDate]').val(endDate);
+        
+		var endDate = $('#endDate').val();
+		if(endDate != null){
+			var e_date = $('#endDate').val();
 	        var e_hour = $('.end_h').val();
 	        var e_min = $('.end_m').val();
-	        var endDate = new Date(e_date[0], e_date[1]-1, e_date[2], e_hour, e_min, 00);
+			endDate = e_date + " " + e_hour + ":" + e_min + ":00";
+			$('input[name=startDate]').val(startDate);
+		}
 
-	        if(startDate.getTime() >= endDate.getTime()) {
-	            alert("컨텐츠 마감일보다 게시일이 빨라야 합니다.");
-		        $('#startDate').focus();
-	            return false;
-	        }
+		/*
+        if(startDate.getTime() >= endDate.getTime()) {
+            alert("컨텐츠 마감일보다 게시일이 빨라야 합니다.");
+	        $('#startDate').focus();
+            return false;
+        }*/
 
-	        if ($('input[name=title]').val() == null){
-				alert("제목을 입력해주세요!");
-				$('input[name=title]').focus();
-				return false;
-		    }
-		        
-	        else{
-				$('input[name=endDate]').val(endDate);
-				$('input[name=startDate]').val(startDate);
-		    }
+        //$('#addContent').serialize()
+
+        $.ajax({
+            type: 'post',
+            url: '${pageContext.request.contextPath}/class/addContentOK',
+            data: {
+                id : $('#inputClassID').val(),
+            	days : $('#inputDays').val(),
+            	title : $("#inputTitle").val(),
+    			description : $("#inputDescription").val(),
+    			playlistID : $("#inputPlaylistID").val(),
+    			startDate : startDate,
+    			endDate : endDate,
+                },
+            datatype: 'json',
+            async : false,
+            success: function(data){
+    			if(data == 'ok')
+    				console.log('컨텐츠 생성 완료!');
+    			else
+    				console.log('컨텐츠 생성 실패! ');
+    			location.reload();
+    		},
+    		error: function(data, status,error){
+    			alert('강의실 생성 실패! ');
+    		}
+        });
 	}
 
 	function convertTotalLength(seconds){
@@ -398,7 +390,6 @@ $(document).ready(function(){
 
 	function selectOK(){	//modal창에서 playlist 선택완료시
 		var playlistID = $('input:radio[name="playlist"]:checked').val();
-		
 		if(playlistID){
 			$.ajax({
 				type : 'post',
@@ -420,8 +411,6 @@ $(document).ready(function(){
 					$('#inputPlaylistID').val(playlistID); //부모페이지에 선택한 playlistID 설정
 					$('#inputThumbnailID').val(thumbnailID);
 					$('#selectPlaylistBtn').text('playlist 다시선택');
-
-					//$('#selectPlaylistModal').modal('hide');
 				}
 			});
 		}
@@ -472,6 +461,26 @@ $(document).ready(function(){
 		});
 	}
 </script>
+<script>
+//Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } 
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
 		<jsp:include page="../outer_top.jsp" flush="false"/>
@@ -488,7 +497,6 @@ $(document).ready(function(){
                             </div>
                         </div>
                     </div>    
-                            
                     <div class="row">
                     	
                     	<div class="col-sm-12">
@@ -504,50 +512,29 @@ $(document).ready(function(){
                        	</div>
                        	
                     	<div class="contents col-sm-12" classID="${classInfo.id}">
-								
-								<!--<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-									<div class="day main-card mb-3 card" day="${status.index}">
-										<div class="card-body">
-											<div>
-												<h3 class="card-title" style="font-size: 20px;">${j} 차시</h3>
-												<button onclick='showAddContentForm(${status.index})' class="btn btn-sm btn-success">+페이지추가</button>
-											</div>
+							<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                    	<div class="card-title" style="display: inline;" >
+                                    		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
+											 <h5 style="display: inline; ">${j} 차시</h5>
+											
+											</a> 
+											 <button onclick='showAddContentForm(${status.index})' class="mb-2 mr-2 btn-transition btn btn-outline-primary">+페이지추가</button>
+											 <button onclick='deleteDay(${classInfo.id}, ${status.index})' class="mb-2 mr-2 btn-transition btn btn-danger float-right" style="float-right;">차시삭제</button>
+											 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(-207px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <button type="button" tabindex="-1" class="dropdown-item" onclick='showAddContentForm(${status.index})'>+페이지추가</button>
+                                                <button type="button" tabindex="-1" class="dropdown-item">-페이지삭제</button>
+                                            </div> 
+                                    	</div>
 
-											<div>
-												<div class="list-group accordion-wrapper"></div>
-											</div>
-										</div>
-									</div>
-								</c:forEach>-->
-								
-								<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-								
-                                
-	                                <div class="main-card mb-3 card">
-	                                    <div class="card-body">
-	                                    	<div class="card-title" style="display: inline;" >
-	                                    		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
-												 <h5 style="display: inline; ">${j} 차시</h5>
-												
-												</a> 
-												 <button onclick='showAddContentForm(${status.index})' class="mb-2 mr-2 btn-transition btn btn-outline-primary">+페이지추가</button>
-												 <button onclick='deleteDay(${classInfo.id}, ${status.index})' class="mb-2 mr-2 btn-transition btn btn-danger float-right" style="float-right;">차시삭제</button>
-												 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(-207px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
-	                                                <button type="button" tabindex="-1" class="dropdown-item" onclick='showAddContentForm(${status.index})'>+페이지추가</button>
-	                                                <button type="button" tabindex="-1" class="dropdown-item">-페이지삭제</button>
-	                                            </div> 
-	                                    	</div>
-
-		                                    <div class="list-group accordion-wrapper day" day="${status.index}">
-		                                        	
-		                                    </div>
-	                                   </div>
-	                               </div>
-                                        
-                                        
-								</c:forEach>
+	                                    <div class="list-group accordion-wrapper day" day="${status.index}">
+	                                        	
+	                                    </div>
+                                   </div>
+                               </div>    
+							</c:forEach>
 						</div>
-                    	<!-- 여기 기존 jsp파일 내용 넣기 -->
                     </div>	
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
@@ -578,28 +565,6 @@ $(document).ready(function(){
 	    </div>
 	</div>
 </body>
-
-	<!-- <div class="modal" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="exampleModalLongTitle">Playlist 선택</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">&times;</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	                Playlist를 선택해주세요
-	                <div class="myPlaylist"></div>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="button" class="btn btn-primary" onclick="selectOK();">선택완료</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>-->
-	
 	
 </html>
 

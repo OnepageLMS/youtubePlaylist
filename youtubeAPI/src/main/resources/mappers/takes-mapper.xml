@@ -23,9 +23,9 @@
 		where id=#{id}
 	</select>
 	
-	<select id="getTakesNum">
-		select COUNT(*) from lms_takes
-		where classID=#{classID}
+	<select id="getTakesNum" resultType="TakesVO">
+		select * from lms_takes
+		where classID=#{classID} order by studentName
 	</select>
 	
 

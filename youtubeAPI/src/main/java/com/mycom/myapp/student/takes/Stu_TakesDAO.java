@@ -1,5 +1,7 @@
 package com.mycom.myapp.student.takes;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,9 +35,9 @@ public class Stu_TakesDAO {
 		return sqlSession.selectOne("Takes.getTakes", id);
 	}
 	
-	public Stu_TakesVO getStudentNum(int classID) {
+	public List<Stu_TakesVO> getStudentNum(int classID) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectOne("Takes.getTakesNum", classID);
+		return sqlSession.selectList("Takes.getTakesNum", classID);
 	}
 
 }

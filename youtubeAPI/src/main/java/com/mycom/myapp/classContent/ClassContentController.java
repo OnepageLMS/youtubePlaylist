@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -124,19 +125,58 @@ public class ClassContentController {
 	    return vo;
 	}
 	
+	/*
+	@ResponseBody
+	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
+	public String addContentOK(@ModelAttribute ClassContentVO vo) {
+		System.out.println("addContentOK!!??");
+		//int classID = vo.getClassID();
+		vo.setDaySeq(classContentService.getDaySeq(vo));
+		
+		if (classContentService.insertContent(vo) == 0) {
+			System.out.println("classContents 추가 실패!");
+			return "ok";
+		}
+		else
+			System.out.println("classContents 추가 성공!");
+		return "false";
+	}*/
+	
+	@ResponseBody
+	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
+	public String addContentOK(HttpServletRequest request, Model model) {
+		ClassContentVO vo = new ClassContentVO();
+		vo.setClassID(Integer.parseInt(request.getParameter("id")));
+		vo.setDays(Integer.parseInt(request.getParameter("days")));
+		vo.setTitle(request.getParameter("title"));
+		vo.setDescription(request.getParameter("description"));
+		vo.setStartDate(request.getParameter("startDate"));
+		
+		String endDate = request.getParameter("endDate");
+		String playlistID = request.getParameter("playlistID");
+		if(endDate != "")
+			vo.setEndDate(endDate);
+		if(playlistID != "")
+			vo.setPlaylistID(Integer.parseInt(playlistID));
+		
+		if(classContentService.insertContent(vo) != 0) {
+			System.out.println("add classcontent 성공");
+			return "ok";
+		}
+		else
+			return "false";
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/updateClassContents", method = RequestMethod.POST)
-	public int updateClassContents(HttpServletRequest request, Model model) throws Exception {
-		System.out.println("className : " + request.getParameter("className") + "classDescription : " + request.getParameter("classDescription") + "endDate : " + request.getParameter("endDate") + "id: " + Integer.parseInt(request.getParameter("classContentID")));
-		//잘 넘어오는 중! 마감일만 잘 받아서 db에 update하면 된다 //마감일도 잘 받음!
-		
-		SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date endDate = fm.parse(request.getParameter("endDate"));
+	public int updateClassContents(HttpServletRequest request, Model model) throws Exception {	
+		//SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//Date endDate = fm.parse(request.getParameter("endDate"));
 		
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setTitle(request.getParameter("className"));
 		ccvo.setDescription(request.getParameter("classDescription"));
-		ccvo.setEndDate(endDate);
+		ccvo.setEndDate(request.getParameter("endDate"));
 		ccvo.setId(Integer.parseInt(request.getParameter("classContentID")));
 		
 		
@@ -174,7 +214,6 @@ public class ClassContentController {
 	@ResponseBody
 	@RequestMapping(value = "/deleteDay", method = RequestMethod.POST)
 	public int deleteDay(HttpServletRequest request, Model model) throws Exception {
-		
 		System.out.println("?? day " + Integer.parseInt(request.getParameter("days")));
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(Integer.parseInt(request.getParameter("classID")));
@@ -196,9 +235,7 @@ public class ClassContentController {
 				return 1;
 			}
 		}
-	   
 	}
-	
 	
 	@ResponseBody
 	@RequestMapping(value = "/updatePublished", method = RequestMethod.POST)
@@ -216,51 +253,7 @@ public class ClassContentController {
 			return 1;
 		}  
 	}
-	
-	@RequestMapping(value = "/addContent/{classID}/{day}", method = RequestMethod.GET) //사용안함
-	public String addContent(@PathVariable("classID") int classID, @PathVariable("day") int day, Model model) {
-		
-		ClassContentVO vo = new ClassContentVO();
-		vo.setClassID(classID);
-		vo.setDays(day);
-		model.addAttribute("content", vo);
-		
-		return "addContent";
-	}
-	
-	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
-	public String addContentOK(ClassContentVO vo) {
-		System.out.println("addContentOK!!??");//
-		int classID = vo.getClassID();
-		vo.setDaySeq(classContentService.getDaySeq(vo));
-		
-		if (classContentService.insertContent(vo) == 0)
-			System.out.println("classContents 추가 실패!");
-		else
-			System.out.println("classContents 추가 성공!");
-		
-		return "redirect:contentList/" + classID;
-	}
-	
-	@RequestMapping(value = "/editContent/{id}", method = RequestMethod.GET)
-	public String editContent(@PathVariable("id") int id, Model model) {
-		ClassContentVO vo = classContentService.getOneContent(id);
-		model.addAttribute("vo", vo);
-		return "editContent";
-	}
-	
-	@RequestMapping(value = "/editContentOK", method = RequestMethod.POST)
-	public String editContentOK(ClassContentVO vo) {
-		int classID = vo.getClassID();
-		
-		if (classContentService.updateContent(vo) == 0)
-			System.out.println("classContent 수정 실패!");
-		else
-			System.out.println("classContent 수정 성공!");
-		
-		return "redirect:contentList/" + classID;
-	}
-	
+
 	/*@RequestMapping(value = "/deleteContent/{classID}/{id}", method = RequestMethod.GET)
 	public String deleteContent(@PathVariable("classID") int classID, @PathVariable("id") int id) {
 		if (classContentService.deleteContent(id) == 0)
