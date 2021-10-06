@@ -46,6 +46,7 @@
 		
 		var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
 		
+		//console.log("몇개냐면,, " + weekContents.length);
 	 		for(var i=0; i<weekContents.length; i++){
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 				var day = weekContents[i].days;
