@@ -24,6 +24,7 @@ var colors = ["text-primary", "text-warning", "text-success", "text-secondary", 
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
 $(document).ready(function(){
+	
 	var activeClass = JSON.parse('${allMyClass}');
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
@@ -69,7 +70,7 @@ $(document).ready(function(){
 	}
 	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
 		var id = inactiveClass[i].id;
-		var classNoticeURL = 'moveToNotice(' + id + ')';
+		var classNoticeURL = 'moveToNotice(' + inactiveClass[i].id + ')';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + id + "'";
 		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var regDate = inactiveClass[i].regDate.split(' ')[0];
@@ -77,11 +78,11 @@ $(document).ready(function(){
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  nactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
+										+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
 											+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 											+ '<i class="nav-link-icon fa fa-share"></i>'
 										+ '</a>'
-										+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + d + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+										+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
 											+ '<i class="nav-link-icon fa fa-cog"></i>'
 										+ '</a>'
 									+ '</div>'
@@ -100,7 +101,6 @@ $(document).ready(function(){
 								+ '</div>'
 	                        	+ '</div>'
 	                        + '</div>';
-							
 			$('.classInactive').append(dashboardCard);
 	}
 });

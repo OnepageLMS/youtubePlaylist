@@ -5,8 +5,10 @@ public class NoticeVO {
 	private int classID;
 	private String title;
 	private String content;
+	private int important;
 	private int view;
 	private String modDate;
+	private String regDate;
 	
 	public int getId() {
 		return id;
@@ -32,6 +34,12 @@ public class NoticeVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	public int getImportant() {
+		return important;
+	}
+	public void setImportant(int important) {
+		this.important = important;
+	}
 	public int getView() {
 		return view;
 	}
@@ -43,6 +51,12 @@ public class NoticeVO {
 	}
 	public void setModDate(String modDate) {
 		this.modDate = modDate;
+	}
+	public String getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
 	
 }

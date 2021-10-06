@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Notice">
 	<insert id="insertNotice">
-		insert into lms_notice (classID, title, content)
-		values (#{classID}, #{title}, #{content})
+		insert into lms_notice (classID, title, content, important)
+		values (#{classID}, #{title}, #{content}, #{important})
 	</insert>
 	
 	<update id="updateNotice">
 		update lms_notice 
-		set title=#{title}, content=#{content}
+		set title=#{title}, content=#{content}, important=#{important}
 		where id=#{id}
 	</update>
 	
@@ -18,6 +18,6 @@
 	
 	<select id="getAllNotice" resultType="notice">
 		select * from lms_notice
-		where classID=#{classID}
+		where classID=#{classID} order by id desc
 	</select>
 </mapper>

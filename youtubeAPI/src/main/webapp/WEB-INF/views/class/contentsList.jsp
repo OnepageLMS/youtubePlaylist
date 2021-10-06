@@ -502,7 +502,7 @@ $(document).ready(function(){
                             </div>
                         </div>
                     </div>    
-                    <div class="row">
+                    <div class="row justify-content-center">
                     	
                     	<div class="col-sm-12">
                            <nav class="" aria-label="Page navigation example">

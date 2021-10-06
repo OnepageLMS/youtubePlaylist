@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,13 +22,132 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 </head>
 <script>
-	$(".addClassroomBtn").click(function () {
-		$('#formAddClassroom')[0].reset();
+	$(document).ready(function(){
+		getAllNotices(${classID});
+		
+		$("#publishNoticeBtn").click(function () {
+			$('#inputNoticeForm')[0].reset();
+		});
 	});
 
-	function publishNotice(){
-		
+	var notices;
+
+	function getAllNotices(classID){
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/getAllNotice',
+			data: {classID: classID},
+			datatype: 'json',
+			success: function(data){
+				notices = data.notices;
+				$('.noticeList').empty();
+
+				var length = notices.length;
+
+				if (length == 0) 
+					$('.noticeList').append('게시된 공지사항이 없습니다.');
+
+				else {
+					$.each(notices, function( index, value){
+						var num = length - index;
+						var collapseID = "collapse" + num;
+						var regDate = value.regDate;
+					
+						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
+							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
+								+ '<div class="card">'
+									+ '<div id="headingOne" class="card-header">'
+										+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
+																														+ 'class="text-left m-0 p-0 btn btn-link btn-block collapsed">'
+											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + value.title + ' </h5>'
+										+ '</button>'
+										+ '<div>작성일 ' + value.regDate + '</div>'
+										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="btn">'
+											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+										+ '</button>'
+										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
+	                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
+	                                        + '<button type="button" class="dropdown-item"><p class="text-danger">삭제</p></button>'
+                                    	+ '</div>'
+									+ '</div>'
+									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+										+ '<div class="card-body">' + value.content + '</div>'
+									+ '</div>'
+								+ '</div>'
+							+ '</div>'
+						+ '</div>';
+
+						$('.noticeList').append(html);
+					});
+				}
+			},
+			error: function(data, status,error){
+				alert('공지 생성 실패!');
+			}
+		});
 	}
+
+	function setEditNotice(index){	//공지수정 modal data 설정
+		var id = notices[index].id;
+		var title = notices[index].title;
+		var content = notices[index].content;
+		var important = notices[index].important;
+		$('#setID').val(id);
+		$('#editTitle').val(title);
+		$('#editContent').val(content);
+
+		if(important == 1)
+			$('#editImportant').attr('checked', '');
+		else
+			$('#editImportant').removeAttr('checked');
+	}
+		
+	function publishNotice(){	//공지등록
+		if($('#inputTitle').val() == '' ) return false;
+
+		if ($('#inputImportant').val() == 'on')
+			$('#inputImportant').val(1);
+
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/addNotice',
+			data: $('#inputNoticeForm').serialize(),
+			datatype: 'json',
+			success: function(data){
+				console.log('공지 생성 성공');
+				location.reload();
+			},
+			error: function(data, status,error){
+				console.log('공지 생성 실패!');
+			}
+		});
+	}
+
+	function editNotice(){	//공지수정
+		if($('#editTitle').val() == '' ) return false;
+
+		if ($('#editImportant').val() == 'on')
+			$('#editImportant').val(1);
+
+		console.log($('#editNoticeForm').serialize());
+/*
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/updateNotice',
+			data: $('#editNoticeForm').serialize(),
+			datatype: 'json',
+			success: function(data){
+				console.log('공지 수정 성공');
+				location.reload();
+			},
+			error: function(data, status,error){
+				console.log('공지 수정 실패!');
+			}
+		});
+		*/
+	}
+
+	
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow">
@@ -47,33 +167,37 @@
                     </div>            
                     <div class="row">
                     	<div class="col-12 row mb-3 ml-5">
-                   			<button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">공지 작성</button>
+                   			<button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">공지 작성</button>
                     	</div>
-                  		<div class="col-md-12">
-                             <div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">
-                                 <div class="card">
-                                     <div id="headingOne" class="card-header">
-                                         <button type="button" data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
-                                             <h5 class="m-0 p-0">Collapsible Group Item #1</h5>
-                                         </button>
-                                     </div>
-                                     <div data-parent="#accordion" id="collapseOne1" aria-labelledby="headingOne" class="collapse" style="">
-                                         <div class="card-body">1. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
-                                             nesciunt
-                                             laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
-                                             sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable
-                                             VHS.
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
+                    	<div class="col-12 row justify-content-center noticeList">
+                    		<!--  
+                    		<c:forEach var="item" items="${allNotices}" varStatus="status">
+                    			<div class="col-md-12 col-lg-10 col-md-12 col-auto ">
+	                             <div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">
+	                                 <div class="card">
+	                                     <div id="headingOne" class="card-header">
+	                                     	<c:set var="num" value="${fn:length(allNotices) - status.index}" />
+	                                         <button type="button" data-toggle="collapse" data-target="#collapse${status.index}" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
+	                                             <h5 class="m-0 p-0"><b>#<c:out value="${num}" /> </b><c:out value="${item.title}" /></h5>
+	                                         </button>
+	                                     </div>
+	                                     <div data-parent="#accordion" id="collapse${status.index}" aria-labelledby="headingOne" class="collapse" style="">
+	                                         <div class="card-body"><c:out value="${item.content}" /></div>
+	                                     </div>
+	                                 </div>
+	                             </div>
+	                         </div>
+                    		</c:forEach>
+                    		-->
+                    	</div>
                     </div>	
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
    	</div>
+   	
+   	<!-- 게시글 작성 modal -->
    	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog modal-lg">
 	        <div class="modal-content">
@@ -86,7 +210,8 @@
 	            <div class="modal-body">  
 	                <div class="main-card">
 						<div class="card-body">
-                            <form class="needs-validation" id="inputNoticeForm" novalidate>
+                            <form class="needs-validation" id="inputNoticeForm" method="post" novalidate>
+                            	<input type="hidden" name="classID" value="${classID}"/>
                                 <div class="position-relative row form-group">
                                 	<label for="inputTitle" class="col-sm-2 col-form-label">제목</label>
                                     <div class="col-sm-10">
@@ -97,12 +222,12 @@
                                 <div class="position-relative row form-group">
                                 	<label for="content" class="col-sm-2 col-form-label">내용</label>
                                     <div class="col-sm-10">
-                                    	<textarea name="text" id="content" name="content" class="form-control"></textarea>
+                                    	<textarea id="inputContent" name="content" class="form-control" rows="7"></textarea>
                                     </div>
                                 </div>
                                 <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">중요 공지</label>
                                     <div class="col-sm-10 mt-2">
-                                        <div class="position-relative form-check"><input id="checkbox2" type="checkbox" class="form-check-input"></div>
+                                        <div class="position-relative form-check"><input id="inputImportant" name="important" type="checkbox" class="form-check-input"></div>
                                     </div>
                                 </div>
                             </form>
@@ -112,6 +237,51 @@
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
 	                <button type="submit" form="inputNoticeForm" class="btn btn-primary" onclick="publishNotice();">등록</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+		<!-- 게시글 수정 modal -->
+   	<div class="modal fade bd-example-modal-lg" id="setNoticeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle">공지 수정</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">  
+	                <div class="main-card">
+						<div class="card-body">
+                            <form class="needs-validation" id="editNoticeForm" method="post" novalidate>
+                            	<input type="hidden" name="id" id="setID" value=""/>
+                                <div class="position-relative row form-group">
+                                	<label for="editTitle" class="col-sm-2 col-form-label">제목</label>
+                                    <div class="col-sm-10">
+                                    	<input name="title" id="editTitle" type="text" class="form-control" required>
+                                    	<div class="invalid-feedback">제목을 입력해 주세요</div>
+                                    </div>
+                                </div>
+                                <div class="position-relative row form-group">
+                                	<label for="content" class="col-sm-2 col-form-label">내용</label>
+                                    <div class="col-sm-10">
+                                    	<textarea id="editContent" name="content" class="form-control" rows="7"></textarea>
+                                    </div>
+                                </div>
+                                <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">중요 공지</label>
+                                    <div class="col-sm-10 mt-2">
+                                        <div class="position-relative form-check"><input id="editImportant" name="important" type="checkbox" class="form-check-input"></div>
+                                    </div>
+                                </div>
+                            </form>
+                          </div>
+                      </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="submit" form="editNoticeForm" class="btn btn-primary" onclick="editNotice();">수정</button>
 	            </div>
 	        </div>
 	    </div>
