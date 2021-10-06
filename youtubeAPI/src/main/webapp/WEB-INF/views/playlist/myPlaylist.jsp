@@ -308,7 +308,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 
 function moveToVideoDetail(playlistID, videoID){	//playlist의 비디오 detail page로 이동
 	var html = '<input type="hidden" name="playlistID"  value="' + playlistID + '">'
-				+ '<input type="hidden" name="videoID" value="' + videoID + '">'
+				+ '<input type="hidden" name="videoID" value="' + videoID + '">';
 
 	var goForm = $('<form>', {
 			method: 'post',
@@ -317,7 +317,6 @@ function moveToVideoDetail(playlistID, videoID){	//playlist의 비디오 detail 
 		}).appendTo('body'); 
 
 	goForm.submit();
-
 }
 
 $(function() { // video 순서 drag&drop으로 순서변경

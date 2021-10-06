@@ -96,9 +96,14 @@ $(document).ready(function(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
 		for(var i=0; i<allContents.length; i++){
 			var day = allContents[i].days;
-			var endDate = allContents[i].endDate.split(":");
-			endDate = endDate[0] + ":" + endDate[1];	
-	
+			if(allContents[i].endDate == null)
+				var endDate = '설정되지 않음';
+			
+			else {
+				var endDate = allContents[i].endDate.split(":");
+				endDate = endDate[0] + ":" + endDate[1];	
+			}
+
 			// (jw) endDate 넘겨주기 
 			localStorage.setItem("endDate", endDate);
 			var publishedCheck = allContents[i].published;

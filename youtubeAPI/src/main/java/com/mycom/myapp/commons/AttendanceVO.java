@@ -50,7 +50,5 @@ public class AttendanceVO {
 	public void setModDate(String modDate) {
 		this.modDate = modDate;
 	}
-	
-	
-	
+		
 }
