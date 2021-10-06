@@ -42,7 +42,7 @@ public class ClassController {
 		return "class/dashboard";
 	}	
 	
-	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//기존 내 class list 가져오기 --> 나중에 지우기
+	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//나중에 지우기
 	public void getAllMyClass(Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 	}

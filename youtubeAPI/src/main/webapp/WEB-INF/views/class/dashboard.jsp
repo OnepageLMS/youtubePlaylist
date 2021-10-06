@@ -27,7 +27,7 @@ $(document).ready(function(){
 	var activeClass = JSON.parse('${allMyClass}');
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
-		var classNoticeURL = '#';
+		var classNoticeURL = 'moveToNotice(' + activeClass[i].id + ')';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + activeClass[i].id + "'";
 		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var regDate = activeClass[i].regDate.split(' ')[0];
@@ -44,7 +44,7 @@ $(document).ready(function(){
 										+ '</a>'
 									+ '</div>'
 									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
@@ -68,20 +68,20 @@ $(document).ready(function(){
 			$('.classActive').append(dashboardCard);
 	}
 	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
-		var name = inactiveClass[i].className;
-		var classNoticeURL = '#';
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + inactiveClass[i].id + "'";
+		var id = inactiveClass[i].id;
+		var classNoticeURL = 'moveToNotice(' + id + ')';
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + id + "'";
 		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var regDate = inactiveClass[i].regDate.split(' ')[0];
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  name + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
-											+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' +inactiveClass[i].id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+										+ '<div class="col-sm-10">' +  nactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
+											+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 											+ '<i class="nav-link-icon fa fa-share"></i>'
 										+ '</a>'
-										+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + inactiveClass[i].id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+										+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + d + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
 											+ '<i class="nav-link-icon fa fa-cog"></i>'
 										+ '</a>'
 									+ '</div>'
@@ -104,6 +104,20 @@ $(document).ready(function(){
 			$('.classInactive').append(dashboardCard);
 	}
 });
+
+function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
+	var html = '<input type="hidden" name="classID"  value="' + id + '">';
+
+	var goForm = $('<form>', {
+			method: 'post',
+			action: '${pageContext.request.contextPath}/notice',
+			html: html
+		}).appendTo('body'); 
+
+	goForm.submit();
+}
+	
+
 $(".addClassroomBtn").click(function () {
 	$('#formAddClassroom')[0].reset();
 });
@@ -420,7 +434,7 @@ function submitShareClassroom(){
 	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
-	            <form class="needs-validation was-validated" id="formEditClassroom" method="post" novalidate>
+	            <form class="needs-validation" id="formEditClassroom" method="post" novalidate>
 		            <input id="setClassID" name="id" type="hidden" value="">
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
@@ -459,29 +473,30 @@ function submitShareClassroom(){
 				    </div>
 				    <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-		                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditClassroom();">수정완료</button>
+		                <button type="submit" form="formEditClassroom" class="btn btn-primary" onclick="submitEditClassroom();">수정완료</button>
 		            </div>
 	            </form>
 	            
                    <div class="modal-body">
 			        	<div class=""><h6 class="text-danger">Danger Zone - 강의실 삭제</h6></div>
 			        	<div class="border border-danger p-3">
-			        		<div class="position-relative form-group">
-                                 <div>
-                                     <div class="custom-radio custom-control">
-                                     	<input type="radio" id="exampleCustomRadio" name="deleteOpt" class="custom-control-input" value="forMe">
-                                     	<label class="custom-control-label" for="exampleCustomRadio">나에게만 삭제 - 학생들에게는 비공개 강의실로 보여집니다.</label>
-                                     </div>
-                                     <div class="custom-radio custom-control">
-                                     	<input type="radio" id="exampleCustomRadio2" name="deleteOpt" class="custom-control-input" value="forAll">
-                                     	<label class="custom-control-label" for="exampleCustomRadio2">모든 데이터 삭제 - 학생들에게도 강의실이 보이지 않습니다.</label>
-                                     </div>
-                                 </div>
-                             </div>
-				
+				        	<form id="deleteForm" class="needs-validation" novalidate>
+					        	<div class="position-relative form-group">
+	                                 <div>
+	                                     <div class="custom-radio custom-control">
+	                                     	<input type="radio" id="exampleCustomRadio" name="deleteOpt" class="custom-control-input" value="forMe" required>
+	                                     	<label class="custom-control-label" for="exampleCustomRadio">나에게만 삭제 - 학생들에게는 비공개 강의실로 보여집니다.</label>
+	                                     </div>
+	                                     <div class="custom-radio custom-control">
+	                                     	<input type="radio" id="exampleCustomRadio2" name="deleteOpt" class="custom-control-input" value="forAll">
+	                                     	<label class="custom-control-label" for="exampleCustomRadio2">모든 데이터 삭제 - 학생들에게도 강의실이 보이지 않습니다.</label>
+	                                     </div>
+	                                 </div>
+	                             </div>
+				        	</form>
                              <div class="row">
                              	<div class="col-12">
-						        	<button type="button" class="btn btn-danger" onclick="submitDeleteClassroom();">강의실 삭제</button>
+						        	<button type="submit" form="formEditClassroom" class="btn btn-danger" onclick="submitDeleteClassroom();">강의실 삭제</button>
 						        </div>
 				        	</div>
                         </div>  

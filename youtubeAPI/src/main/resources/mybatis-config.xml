@@ -8,6 +8,7 @@
 		<typeAlias alias="video" type="com.mycom.myapp.commons.VideoVO" />
 		<typeAlias alias="classes" type="com.mycom.myapp.commons.ClassesVO" />
 		<typeAlias alias="classContent" type="com.mycom.myapp.commons.ClassContentVO" />
+		<typeAlias alias="notice" type="com.mycom.myapp.commons.NoticeVO" />
 		
 		<typeAlias alias="VideoCheckVO" type="com.mycom.myapp.student.videocheck.Stu_VideoCheckVO" />
         <typeAlias alias="PlaylistCheckVO" type="com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO" />
