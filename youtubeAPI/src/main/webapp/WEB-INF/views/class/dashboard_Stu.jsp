@@ -41,7 +41,7 @@ $(document).ready(function(){
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 	
 	for(var i=0; i<allMyClass.length; i++){
-		//var date = new Date(allMyClass[i].startDate.time); //timestamp -> actural time
+		//var date = new Date(allMyClass[i].stajazxartDate.time); //timestamp -> actural time
 		var classNoticeURL = '#';
 		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + allMyClass[i].id + "'";
 		var classAttendanceURL = '#';

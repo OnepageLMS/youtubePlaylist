@@ -83,8 +83,7 @@ public class PlaylistController {
 	@RequestMapping(value = "/getAllPlaylist", method = RequestMethod.POST)
 	@ResponseBody
 	public Object getAllPlaylist() {
-		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
-		playlists = playlistService.getAllPlaylist();
+		List<PlaylistVO> playlists = playlistService.getAllPlaylist();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("allPlaylist", playlists);
