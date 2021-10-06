@@ -159,7 +159,7 @@ $(document).ready(function(){
 		}
 		$("#get_view").empty();
 		$("#nav_view").empty();
-		var key = "AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //"AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //
+		var key = "AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //"AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //
 		//var accessToken = "${accessToken}";
 		var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order="
 				+ $getorder
@@ -322,6 +322,8 @@ $(document).ready(function(){
 </script>
 
 <script>	//시작, 끝 시간 설정 bar
+	var start_hour, start_min, start_sec, end_hour, end_min, end_sec;
+	
 	$( function() {
 		$( "#slider-range" ).slider({
 			range: true,
@@ -329,11 +331,49 @@ $(document).ready(function(){
 			max: 500,
 			/* values: [ 75, 300 ], */
 			slide: function( event, ui ) {
-				$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
+				//$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
+
+				start_hour = Math.floor(ui.values[ 0 ] / 3600);
+			    start_min = Math.floor(ui.values[ 0 ] % 3600 / 60);
+			    start_sec = ui.values[ 0 ] % 60;
+
+			    end_hour = Math.floor(ui.values[ 1 ] / 3600);
+			    end_min = Math.floor(ui.values[ 1 ] % 3600 / 60);
+			    end_sec = ui.values[ 1 ] % 60;
+
+			    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
 			}
-		});
-		$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + " - 끝: " + $( "#slider-range" ).slider( "values", 1 ) );
+		}); 
+		//$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + " - 끝: " + $( "#slider-range" ).slider( "values", 1 ) );
+	    
 	} );
+
+	function setSlider() {
+		console.log("limit값 확인 !! ", limit);
+		/* $("#slider-range").slider("destroy"); */
+		/*var attributes = {
+			max: limit
+		}
+		// update attributes
+		$element.attr(attributes);
+
+		// pass updated attributes to rangeslider.js
+		$element.rangeslider('update', true); */
+		$('#slider-range').slider( "option", "min", 0);
+		$('#slider-range').slider( "option", "max", limit);
+
+		$( "#slider-range" ).slider( "option", "values", [ 0, limit ] );
+		//$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
+		
+		start_hour= start_min = start_sec = 0;
+
+	    end_hour = Math.floor(limit / 3600);
+	    end_min = Math.floor(limit % 3600 / 60);
+	    end_sec = limit % 60;
+
+		
+		$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+	}
 </script>
 
 <body>
@@ -362,24 +402,7 @@ $(document).ready(function(){
 
 		var $element = $('#slider-range');
 		
-		function setSlider() {
-			console.log("limit값 확ㅇ니!! ", limit);
-			/* $("#slider-range").slider("destroy"); */
-			/*var attributes = {
-				max: limit
-			}
-			// update attributes
-			$element.attr(attributes);
 
-			// pass updated attributes to rangeslider.js
-			$element.rangeslider('update', true); */
-			$('#slider-range').slider( "option", "min", 0);
-			$('#slider-range').slider( "option", "max", limit);
-
-			$( "#slider-range" ).slider( "option", "values", [ 0, limit ] );
-			$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
-
-		}
 		
 		function viewVideo(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
 			//$('.videos').css({'fontWeight' : 'normal'});
@@ -388,7 +411,7 @@ $(document).ready(function(){
 			
 			console.log(id, title, duration, index);
 			
-			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div id="player"></div> </div>'); 
+			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div class="iframe-container" id="player"></div> </div>'); 
 			$div.append('<div class="p-1 m-1 bg-white text-dark">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
 			$div.append('<div id="player_info"></div>');
 			
@@ -427,21 +450,12 @@ $(document).ready(function(){
 				document.getElementById("start_ss").value = 0;
 			
 			if(prev_index != null){
-				//$("#get_view").children().eq(prev_index).children().eq(0).text() = ""; 
-				/* $("#get_view").children().eq(prev_index).children().eq(1).text() = "";
-				$("#get_view").children().eq(prev_index).children().eq(2).text() = ""; */
-				/* $('#player_info').remove();
-				$('#player').remove();
-				$('.fa-plus-square').remove(); */
 				$('#playerBox').remove();
 				
 			    //$("#get_view").children().eq(prev_index).attr('style', 'display: block');
 			    //$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: none');
 			}
 			//console.log($("#get_view").children().eq(index).children().eq(2).html());
-			
-			// 클릭한 영상 밑에 player 띄우기
-			//$("#get_view").children().eq(index).after($div);
 			
 			// 오른쪽 카드 안에 player 띄우기
 			$(".playerForm").children().eq(0).after($div);
@@ -451,49 +465,30 @@ $(document).ready(function(){
 		}		
 
 		function viewVideo2(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
-			//$('.videos').css({'fontWeight' : 'normal'});
-			//$('input:checkbox').prop("checked", false); //youtube 검색결과에서 비디오 선택하면 playlist 체크된것 다 초기화 
-			//$('.submitBtn').html('추가');
-			
 			console.log(id, title, duration, index);
-			
-			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div id="player"></div></div>'); 
 
-			
-			
-			$div.append('<div class="p-1 m-1 bg-white text-dark">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
-			$div.append('<div id="player_info"></div>');
-
-			// 아래 코드는 더이상 안씀 
-			// 영상 구간 설정 (jw 아래에서 코드 가져와서 적용되게 함 )
-			//$div.after($('#setVideoInfo').html());
-
-			//이전 jquery ui 삭제:
-			//$('#delete').remove();
-			
+			// (21/10/06) youtube 플레이어 띄워주고, 제목을 띄워준다. 이 부분은 <div> 태그로 감싸져서 초록색이 나타나게 되는데 영상구간 설정 부분까지 태그로 감싸지게 해야 전체가 초록색 배경이 될듯. 
+			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div class="iframe-container" id="player"></div> <div id="player_info"></div> </div>'); 			
 			
 			$div.append('<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>');
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
+
+				// 영상 총길이 계산 
+				// (jw) 만약 Uncaught TypeError: Cannot read properties of null (reading '1') 에러가 뜨면 해당 영상이 실시간 라이브여서 그런거임. 
 				var hours = parseInt(regex_result[1] || 0);
 				var minutes = parseInt(regex_result[2] || 0);
 				var seconds = parseInt(regex_result[3] || 0);
-	
-				/* if(seconds != "00") {
-					seconds = parseInt(seconds) - 1;  // 어떤건 1초 적게 나올 수 있음 이게 영상 마다 정의된 총 길이시간이 1초가 더해지기도 안더해지기도 해서 . 
-				}	  */
-				console.log("check hours here", duration);
-				console.log("check hours here", hours);
-	
+
+				// 슬라이더 완료되면 지울것 
 				$('#end_hh').val(hours);
 				$("#end_mm").val(minutes);
 				$("#end_ss").val(seconds);
 	
 				var total_seconds = hours * 60 * 60 + minutes * 60 + seconds;
 	
-				// for validty check: 이제 sliderbar로 만들거라 상관없음...
+				// (21/10/06) 영상 총길 계산 + slider에서 validity check 을 위해 
 				limit = parseInt(total_seconds);
-				//document.getElementById("maxLength").value = limit;
 	
 				//이미 다른 영상이 player로 띄워져 있을 때 새로운 id로 띄우기
 				//player.loadVideoById(videoId, 0, "large");
@@ -503,12 +498,6 @@ $(document).ready(function(){
 				document.getElementById("start_ss").value = 0;
 			
 			if(prev_index != null){
-				//$("#get_view").children().eq(prev_index).children().eq(0).text() = ""; 
-				/* $("#get_view").children().eq(prev_index).children().eq(1).text() = "";
-				$("#get_view").children().eq(prev_index).children().eq(2).text() = ""; */
-				/* $('#player_info').remove();
-				$('#player').remove();
-				$('.fa-plus-square').remove(); */
 				$('#playerBox').remove();
 				
 			    //$("#get_view").children().eq(prev_index).attr('style', 'display: block');
@@ -548,8 +537,13 @@ $(document).ready(function(){
 			$("#get_view").children().eq(index).css("background-color", "lightgray");
 			
 			console.log("check videoTitle here", videoTitle);
-			
-			document.getElementById("player_info").innerHTML = '<p class="m-0"> <span style="font-weight: bold"> 제목: </span> <textarea id="newName" class="videoTitle bg-white p-1" style="border: 1px solid black" name="newName" cols="80" rows="1">' + videoTitle + '</textarea></p>';
+
+			document.getElementById("player_info").innerHTML =
+				
+				'<div class="position-relative row form-group">'+
+				'<div class="col-sm-1"> 제목 </div>' +
+				'<div class="col-sm-11"> <input name="newName" id="newName" type="text" class="col-sm-11 form-control" value="'+ videoTitle +'"></div></div>';
+					
 			/* <span class="videoTitle bg-white p-1" style="border: 1px solid black"> </span>
 			<div>
 				<textarea id="newName" name="newName" cols="62" rows="2"> </textarea>
@@ -561,12 +555,10 @@ $(document).ready(function(){
 		//    after the API code downloads. 
 		function onYouTubeIframeAPIReady() {
 			player = new YT.Player('player', {
-				height : '360',
-				width : '640',
 				videoId : videoId,
 				playerVars: {
 					origin: 'https://localhost:8080'
-				},
+				}, 
 				events : {
 					'onReady' : onPlayerReady,
 					'onStateChange' : onPlayerStateChange
@@ -628,31 +620,66 @@ $(document).ready(function(){
 		function seekTo2() {
 			var end_hh = $('#end_hh').val();
 			var end_mm = $('#end_mm').val();
-			var end_ss = $('#end_ss').val();
+			var end_ss = $('#end_ss').val(); 
 			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
 			player.seekTo(end_time);
 		}
 		// 현재 재생위치를 시작,끝 시간에 지정 
-		function getCurrentPlayTime1() {
+		function getCurrentPlayTime(obj) {
 			var d = Number(player.getCurrentTime());
-			var h = Math.floor(d / 3600);
+
+			// Getter for slider handles 
+			var values = $( "#slider-range" ).slider( "option", "values" );
+
+			d = parseFloat(d).toFixed(2);
+			console.log(values[0]);
+			console.log("check here!" , d);
+			
+			// Setter 
+			$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
+			
+			
+			
+			/* var h = Math.floor(d / 3600);
 			var m = Math.floor(d % 3600 / 60);
 			var s = d % 3600 % 60;
-			document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
-			document.getElementById("start_hh").value = h;/* .toFixed(2); */
-			document.getElementById("start_mm").value = m;/* .toFixed(2); */
+			
+			// 시작 버튼 클릭시: 
+			if($(obj).text() == "시작"){
+				$( "#amount" ).val( "시작: " + h + "시" + m  + "분" + parseFloat(s).toFixed(2) + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+
+				start_time = parseFloat(d).toFixed(2);
+				start_time *= 1.00;
+			}
+			// 끝 버튼 클릭시: 
+			else{
+				$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + parseFloat(s).toFixed(2) + "초"  );
+
+				end_time = parseFloat(d).toFixed(2);
+				end_time *= 1.00;
+			} */
+
+			
+
+			/* document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
+			document.getElementById("start_hh").value = h;/* .toFixed(2);
+			document.getElementById("start_mm").value = m; .toFixed(2); */
 
 			//(jw) start_s, end_s는 addToCart에서 사용되는것 가튼데 잠시 커멘트 처리 (21/10/04)
 			//document.getElementById("start_s").value = parseFloat(d).toFixed(2);
-			start_time = parseFloat(d).toFixed(2);
-			start_time *= 1.00;
+			//start_time = parseFloat(d).toFixed(2);
+			//start_time *= 1.00;
 			//console.log("check:", typeof start_time);
 		}
+
+		// 코드 하나로 합침. 나중에 지워도 됨. (21/10/06)
 		function getCurrentPlayTime2() {
 			var d = Number(player.getCurrentTime());
 			var h = Math.floor(d / 3600);
 			var m = Math.floor(d % 3600 / 60);
 			var s = d % 3600 % 60;
+
+			// slider 구현 완료시 지우기 
 			document.getElementById("end_ss").value = parseFloat(s).toFixed(2);
 			document.getElementById("end_hh").value = h;/* .toFixed(2); */
 			document.getElementById("end_mm").value = m;/* .toFixed(2); */
@@ -661,6 +688,7 @@ $(document).ready(function(){
 			end_time *= 1.00;
 			//console.log("check", typeof end_time);
 		}
+		
 		// 재생 구간 유효성 검사: 
 		function validation() { //video 추가 form 제출하면 실행되는 함수
 			document.getElementById("warning1").innerHTML = "";
@@ -772,9 +800,12 @@ $(document).ready(function(){
 			})
 		}
 		function changeCardSize(){
-
 			$("#searchArea").children().eq(0).attr('class', 'selectedPlaylist col-lg-6 card');
+		}
 
+		// 오른쪽 sidebar 닫기 버튼 클릭시 (jw) 
+		function closeSidebar(){
+			$('.ui-theme-settings').attr('class', 'ui-theme-settings');
 		}
 		
 	</script>
@@ -791,275 +822,13 @@ $(document).ready(function(){
                 <div class="scrollbar-container ps ps--active-y">
                     <div class="theme-settings__options-wrapper">
                         <h3 class="themeoptions-heading"> 선택된 비디오 플레이리스트 
+	                        <button type="button" class="close ml-auto " aria-label="Close" onclick="closeSidebar();">
+			                    <span aria-hidden="true">×</span>
+			                </button>
                         </h3>
-                        <!-- <div class="p-3">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <div class="widget-content p-0">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left mr-3">
-                                                <div class="switch has-switch switch-container-class" data-class="fixed-header">
-                                                    <div class="switch-animate switch-on">
-                                                        <input type="checkbox" checked="" data-toggle="toggle" data-onstyle="success">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Fixed Header
-                                                </div>
-                                                <div class="widget-subheading">Makes the header top fixed, always visible!
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="widget-content p-0">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left mr-3">
-                                                <div class="switch has-switch switch-container-class" data-class="fixed-sidebar">
-                                                    <div class="switch-animate switch-on">
-                                                        <input type="checkbox" checked="" data-toggle="toggle" data-onstyle="success">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Fixed Sidebar
-                                                </div>
-                                                <div class="widget-subheading">Makes the sidebar left fixed, always visible!
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="widget-content p-0">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left mr-3">
-                                                <div class="switch has-switch switch-container-class" data-class="fixed-footer">
-                                                    <div class="switch-animate switch-off">
-                                                        <input type="checkbox" data-toggle="toggle" data-onstyle="success">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Fixed Footer
-                                                </div>
-                                                <div class="widget-subheading">Makes the app footer bottom fixed, always visible!
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div> -->
-                        
-                        <!-- <h3 class="themeoptions-heading">
-                            <div>
-                                Header Options
-                            </div>
-                            <button type="button" class="btn-pill btn-shadow btn-wide ml-auto btn btn-focus btn-sm switch-header-cs-class" data-class="">
-                                Restore Default
-                            </button>
-                        </h3>
-                        <div class="p-3">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <h5 class="pb-2">Choose Color Scheme
-                                    </h5>
-                                    <div class="theme-settings-swatches">
-                                        <div class="swatch-holder bg-primary switch-header-cs-class" data-class="bg-primary header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-secondary switch-header-cs-class" data-class="bg-secondary header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-success switch-header-cs-class" data-class="bg-success header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-info switch-header-cs-class" data-class="bg-info header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-warning switch-header-cs-class" data-class="bg-warning header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-danger switch-header-cs-class" data-class="bg-danger header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-light switch-header-cs-class" data-class="bg-light header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-dark switch-header-cs-class" data-class="bg-dark header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-focus switch-header-cs-class" data-class="bg-focus header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-alternate switch-header-cs-class" data-class="bg-alternate header-text-light">
-                                        </div>
-                                        <div class="divider">
-                                        </div>
-                                        <div class="swatch-holder bg-vicious-stance switch-header-cs-class" data-class="bg-vicious-stance header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-midnight-bloom switch-header-cs-class" data-class="bg-midnight-bloom header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-night-sky switch-header-cs-class" data-class="bg-night-sky header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-slick-carbon switch-header-cs-class" data-class="bg-slick-carbon header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-asteroid switch-header-cs-class" data-class="bg-asteroid header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-royal switch-header-cs-class" data-class="bg-royal header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-warm-flame switch-header-cs-class" data-class="bg-warm-flame header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-night-fade switch-header-cs-class" data-class="bg-night-fade header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-sunny-morning switch-header-cs-class" data-class="bg-sunny-morning header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-tempting-azure switch-header-cs-class" data-class="bg-tempting-azure header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-amy-crisp switch-header-cs-class" data-class="bg-amy-crisp header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-heavy-rain switch-header-cs-class" data-class="bg-heavy-rain header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-mean-fruit switch-header-cs-class" data-class="bg-mean-fruit header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-malibu-beach switch-header-cs-class" data-class="bg-malibu-beach header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-deep-blue switch-header-cs-class" data-class="bg-deep-blue header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-ripe-malin switch-header-cs-class" data-class="bg-ripe-malin header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-arielle-smile switch-header-cs-class" data-class="bg-arielle-smile header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-plum-plate switch-header-cs-class" data-class="bg-plum-plate header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-happy-fisher switch-header-cs-class" data-class="bg-happy-fisher header-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-happy-itmeo switch-header-cs-class" data-class="bg-happy-itmeo header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-mixed-hopes switch-header-cs-class" data-class="bg-mixed-hopes header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-strong-bliss switch-header-cs-class" data-class="bg-strong-bliss header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-grow-early switch-header-cs-class" data-class="bg-grow-early header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-love-kiss switch-header-cs-class" data-class="bg-love-kiss header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-premium-dark switch-header-cs-class" data-class="bg-premium-dark header-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-happy-green switch-header-cs-class" data-class="bg-happy-green header-text-light">
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <h3 class="themeoptions-heading">
-                            <div>Sidebar Options</div>
-                            <button type="button" class="btn-pill btn-shadow btn-wide ml-auto btn btn-focus btn-sm switch-sidebar-cs-class" data-class="">
-                                Restore Default
-                            </button>
-                        </h3>
-                        <div class="p-3">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <h5 class="pb-2">Choose Color Scheme
-                                    </h5>
-                                    <div class="theme-settings-swatches">
-                                        <div class="swatch-holder bg-primary switch-sidebar-cs-class" data-class="bg-primary sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-secondary switch-sidebar-cs-class" data-class="bg-secondary sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-success switch-sidebar-cs-class" data-class="bg-success sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-info switch-sidebar-cs-class" data-class="bg-info sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-warning switch-sidebar-cs-class" data-class="bg-warning sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-danger switch-sidebar-cs-class" data-class="bg-danger sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-light switch-sidebar-cs-class" data-class="bg-light sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-dark switch-sidebar-cs-class" data-class="bg-dark sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-focus switch-sidebar-cs-class" data-class="bg-focus sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-alternate switch-sidebar-cs-class" data-class="bg-alternate sidebar-text-light">
-                                        </div>
-                                        <div class="divider">
-                                        </div>
-                                        <div class="swatch-holder bg-vicious-stance switch-sidebar-cs-class" data-class="bg-vicious-stance sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-midnight-bloom switch-sidebar-cs-class" data-class="bg-midnight-bloom sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-night-sky switch-sidebar-cs-class" data-class="bg-night-sky sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-slick-carbon switch-sidebar-cs-class" data-class="bg-slick-carbon sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-asteroid switch-sidebar-cs-class" data-class="bg-asteroid sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-royal switch-sidebar-cs-class" data-class="bg-royal sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-warm-flame switch-sidebar-cs-class" data-class="bg-warm-flame sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-night-fade switch-sidebar-cs-class" data-class="bg-night-fade sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-sunny-morning switch-sidebar-cs-class" data-class="bg-sunny-morning sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-tempting-azure switch-sidebar-cs-class" data-class="bg-tempting-azure sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-amy-crisp switch-sidebar-cs-class" data-class="bg-amy-crisp sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-heavy-rain switch-sidebar-cs-class" data-class="bg-heavy-rain sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-mean-fruit switch-sidebar-cs-class" data-class="bg-mean-fruit sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-malibu-beach switch-sidebar-cs-class" data-class="bg-malibu-beach sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-deep-blue switch-sidebar-cs-class" data-class="bg-deep-blue sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-ripe-malin switch-sidebar-cs-class" data-class="bg-ripe-malin sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-arielle-smile switch-sidebar-cs-class" data-class="bg-arielle-smile sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-plum-plate switch-sidebar-cs-class" data-class="bg-plum-plate sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-happy-fisher switch-sidebar-cs-class" data-class="bg-happy-fisher sidebar-text-dark">
-                                        </div>
-                                        <div class="swatch-holder bg-happy-itmeo switch-sidebar-cs-class" data-class="bg-happy-itmeo sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-mixed-hopes switch-sidebar-cs-class" data-class="bg-mixed-hopes sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-strong-bliss switch-sidebar-cs-class" data-class="bg-strong-bliss sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-grow-early switch-sidebar-cs-class" data-class="bg-grow-early sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-love-kiss switch-sidebar-cs-class" data-class="bg-love-kiss sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-premium-dark switch-sidebar-cs-class" data-class="bg-premium-dark sidebar-text-light">
-                                        </div>
-                                        <div class="swatch-holder bg-happy-green switch-sidebar-cs-class" data-class="bg-happy-green sidebar-text-light">
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <h3 class="themeoptions-heading">
-                            <div>Main Content Options</div>
-                            <button type="button" class="btn-pill btn-shadow btn-wide ml-auto active btn btn-focus btn-sm">Restore Default
-                            </button>
-                        </h3>
-                        <div class="p-3">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <h5 class="pb-2">Page Section Tabs
-                                    </h5>
-                                    <div class="theme-settings-swatches">
-                                        <div role="group" class="mt-2 btn-group">
-                                            <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class" data-class="body-tabs-line">
-                                                Line
-                                            </button>
-                                            <button type="button" class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class" data-class="body-tabs-shadow">
-                                                Shadow
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div> -->
-                        <div id="videosInCart" class="scrollbar-container ps--active-y ps"></div>
+                      
+                        <div id="videosInCart"
+											class="scrollbar-container ps--active-y ps"></div>
                     </div>
                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 446px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 151px;"></div></div></div>
             </div>
@@ -1070,6 +839,10 @@ $(document).ready(function(){
 
 			<div class="app-main__outer">
 				<div class="app-main__inner">
+					<button class="btn row" onclick="history.back();"> 
+                    			<i class="pe-7s-left-arrow h3 col-12"></i>
+                    			<p class="col-12 m-0" style="font-size:12px; text-align: center;">이전</p>
+                 		</button>
 					<h4 id="playlistName" style="display: inline-block">- Youtube 영상 추가</h4>
 					<div class="row" id="searchArea">
 						<div class="selectedPlaylist col-lg-12 card">
@@ -1137,11 +910,8 @@ $(document).ready(function(){
 						
 						
 						
-						<div class="playerForm col-lg-6" style="display:none;">
+						<div class="playerForm col-lg-6 form-class" style="display:none;">
 							<div class="main-card " id="rightCard">
-								<!-- <div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> 
-									<div id="player"></div> 
-								</div> -->
 								<!-- form 추가(jw) -->
 								
 								<div id="setVideoInfo">
@@ -1163,26 +933,31 @@ $(document).ready(function(){
 									</div> 
 							</div> -->
 							
-							<div class="form-row" id="delete" >
+							<div id="delete" >
                                <div class="setTimeRange input-group">
 									<div class="col-md-2 input-group-prepend">
-										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime1()">시작</button>
+										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">시작</button>
 									</div>
 									<div class="col-md-8">
 										<div id="slider-range"></div>
 									</div>
 									<div class="col-md-2 input-group-append">
-										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime2()">끝</button>
-									</div>
-									<div class="col">
-										<label for="amount"><b>설정된 시간</b></label>
-										<input type="text" id="amount" readonly style="border:0;">
+										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">끝</button>
 									</div>
 								</div>
+									<div class="position-relative row form-group">
+									 	<div class="col-sm-2 col-form-label d-flex justify-content-center">
+											<label for="amount"><b>설정된 시간</b></label>
+										</div>
+										<div class="col-sm-10">
+											<input type="text" id="amount" class="form-control" readonly style="border:0;">
+										</div>
+									</div>
+									
                             </div>
                                             
 							<div>
-								<button onclick="getCurrentPlayTime1()" type="button">start time</button>
+								<button onclick="getCurrentPlayTime1(this)" type="button">start time</button>
 								: <input type="text" id="start_hh" maxlength="2" size="2">
 								시 <input type="text" id="start_mm" maxlength="2" size="2">
 								분 <input type="text" id="start_ss" maxlength="5" size="5">
