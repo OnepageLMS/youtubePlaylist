@@ -103,15 +103,9 @@ public class Stu_ClassController{
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(classID); //임의로 1번 class 설정*/
 		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));  //객체 아니고 그냥 classID보내면 안되나 ..?
-		//classContents테이블에서 가져온다. 해당 classID의 특정 playlistID를 가진 것을 가져온다. (주차별로 가져오는 느낌) - allContents있는데 이게 굳이 필요..?
-		// 아니,, allContents가 아니라 weekContents를 가져와야한다
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
-		//VideoVO pvo = new VideoVO();
-		//model.addAttribute("list", videoCheckService.getTime(176)); //studentID가 1로 설정되어있음
-	    //model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo))); 
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
-		//model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
 		//return "t_contentsList_Stu";
 		return "class/contentsList_Stu";
 	}
@@ -119,34 +113,31 @@ public class Stu_ClassController{
 	
 	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classID}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
 	public String contentDetail(@PathVariable("playlistID") int playlistID, @PathVariable("id") int id, @PathVariable("classID") int classID, @PathVariable("daySeq") int daySeq, Model model) {
-		//playlistID : playlistID, id : id (classPlaylist테이블의 id/ 혹시 playlistID가 같은 경우를 대비함), classInfo : classID
-		//VideoVO vo = new VideoVO();
+		
 		VideoVO pvo = new VideoVO();
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		ClassContentVO ccvo = new ClassContentVO();
 		
-		//pvo.setPlaylistID(playlistID);
+		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setPlaylistID(playlistID);
 		ccvo.setId(id);
 		ccvo.setClassID(classID); //임의로 1번 class 설정
 		
-		model.addAttribute("allMyClass", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
+		//model.addAttribute("allMyClass", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
 		model.addAttribute("classInfo", classesService.getClass(classID)); 
-		//model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classInfo)));
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
+		//model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
 		model.addAttribute("vo", classContentService.getOneContent(id));
-		//model.addAttribute("playlistID", playlistID);
-		//model.addAttribute("classPlaylistID", id);
-		//model.addAttribute("classID", classInfo);
-		//model.addAttribute("list", videoCheckService.getTime(200)); //studentID가 3으로 설정되어있음
-		//model.addAttribute("playlist", JSONArray.fromObject(playlistcheckService.getVideoList(pvo)));  //Video와 videocheck테이블을 join해서 두 테이블의 정보를 불러오기 위함
-		//System.out.println("~~playlistID : " + pvo.getPlaylistID());
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
-		//model.addAttribute("playlistCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); //선택한 PlaylistID에 맞는 row를 playlistCheck테이블에서 가져오기 위함 , playlistCheck가 아니라 classPlaylistCheck에서 가져와야하거 같은디
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		//return "t_contentsList_Stu2";
+		
 		return "class/contentsDetail_Stu";
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/weekContents", method = RequestMethod.POST)
+	public List<ClassContentVO> weekContents(HttpServletRequest request, Model model) throws Exception {
+		
+	    return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
 	}
 	
 	@ResponseBody
@@ -322,8 +313,11 @@ public class Stu_ClassController{
 		
 		pcvo.setStudentID(studentID);
 		pcvo.setPlaylistID(playlistID);
-		pcvo.setVideoID(videoID);
+		//pcvo.setVideoID(videoID);
+		//pcvo.setClassContentID(classPlaylistID);
 		pcvo.setClassContentID(classPlaylistID);
+		pcvo.setClassID(classID);
+		//pcvo.set
 		
 		//우선 현재 db테이블의 getWatched를 가져온다. 이때 가져온 값이 0이다
 		//vo.setWatched를 한다.
@@ -331,8 +325,7 @@ public class Stu_ClassController{
 		//이럴때 playlistcheck테이블의 totalWatched업데이트 시켜주기
 		
 		
-		if (videoCheckService.updateWatch(vo) == 0) { //하나도 안멈추고 처음부터 끝까지 보는 경우에!!! 업데이ㅡ가 안되자나!!
-			System.out.println("데이터 업데이트 실패 ======= ");
+		if (videoCheckService.updateWatch(vo) == 0) { //하나도 안멈추고 처음부터 끝까지 보는 경우
 			videoCheckService.insertTime(vo);
 			playlistcheckService.updateTotalWatched(pcvo);
 
@@ -340,9 +333,10 @@ public class Stu_ClassController{
 		else { //업데이트가 성공하면 
 			if(checkVO.getWatched() == 0) { //checkVO의정보가 playlistcheck에 업데이트가 되지 않았면 
 				if(vo.getWatched() == 1) { //원래 값은 0이었는데 1로 업뎃된것을 의미
-					System.out.println("값이 뭔데 ? " +vo.getWatchedUpdate());
-					System.out.println("값이 뭔데 ? " +vo.getWatched());
-					System.out.println("값이 뭔디 3 " +pcvo.getStudentID() + " / " + pcvo.getPlaylistID() + " / " + pcvo.getVideoID());
+					//System.out.println("값이 뭔데 ? " +vo.getWatchedUpdate());
+					//System.out.println("값이 뭔데 ? " +vo.getWatched());
+					//System.out.println("값이 뭔디 3 " +pcvo.getStudentID() + " / " + pcvo.getPlaylistID() + " / " + pcvo.getVideoID());
+					//playlistcheckService.insertPlaylist(pcvo);
 					playlistcheckService.updateTotalWatched(pcvo); //
 				}
 			}
