@@ -24,9 +24,10 @@ var colors = ["text-primary", "text-warning", "text-success", "text-secondary", 
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
 $(document).ready(function(){
-	
+	console.log('${allMyClass}');
 	var activeClass = JSON.parse('${allMyClass}');
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
+
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
 		var classNoticeURL = 'moveToNotice(' + activeClass[i].id + ')';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + activeClass[i].id + "'";
