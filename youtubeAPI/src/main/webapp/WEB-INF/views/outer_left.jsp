@@ -1,6 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<script>
+	function moveToNotice(id){
+		var html = '<input type="hidden" name="classID"  value="' + id + '">';
+
+		var goForm = $('<form>', {
+				method: 'post',
+				action: '${pageContext.request.contextPath}/notice',
+				html: html
+			}).appendTo('body'); 
+
+		goForm.submit();
+	}
+</script>
 	<div class="app-sidebar sidebar-shadow">
        <div class="app-header__logo">
            <div class="header__pane ml-auto">
@@ -45,7 +58,7 @@
 	                           	</a>
 	                           	<ul class="mm-collapse">
 									<li>
-										<a href="#">
+										<a href="javascript:moveToNotice(${v.id});">
 	                                   		<i class="metismenu-icon"></i>
 	                                   		공지
 	                              		</a>
