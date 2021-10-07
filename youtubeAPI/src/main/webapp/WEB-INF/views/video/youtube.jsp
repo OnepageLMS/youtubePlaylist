@@ -392,8 +392,12 @@ $(document).ready(function(){
 		var start_s;
 		var end_s;
 		var youtubeID;
+		var values; // slider handles 
+		var d; // var for current playtime
+		
 		// 이전 index 존재 유무 확인
 		var prev_index=null;
+	
 		//아래는 youtube-API 공식 문서에서 iframe 사용방법으로 나온 코드.
 		tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/iframe_api";
@@ -445,9 +449,11 @@ $(document).ready(function(){
 				//이미 다른 영상이 player로 띄워져 있을 때 새로운 id로 띄우기
 				//player.loadVideoById(videoId, 0, "large");
 	
-				document.getElementById("start_hh").value = 0;
+	
+				// (jw) 이제 form 사용안할거라서 지워도 되려나...? 
+				/* document.getElementById("start_hh").value = 0;
 				document.getElementById("start_mm").value = 0;
-				document.getElementById("start_ss").value = 0;
+				document.getElementById("start_ss").value = 0; */
 			
 			if(prev_index != null){
 				$('#playerBox').remove();
@@ -492,10 +498,11 @@ $(document).ready(function(){
 	
 				//이미 다른 영상이 player로 띄워져 있을 때 새로운 id로 띄우기
 				//player.loadVideoById(videoId, 0, "large");
-	
-				document.getElementById("start_hh").value = 0;
+				
+				//(//지워도 되려나..?)
+				/* document.getElementById("start_hh").value = 0;
 				document.getElementById("start_mm").value = 0;
-				document.getElementById("start_ss").value = 0;
+				document.getElementById("start_ss").value = 0; */
 			
 			if(prev_index != null){
 				$('#playerBox').remove();
@@ -626,38 +633,56 @@ $(document).ready(function(){
 		}
 		// 현재 재생위치를 시작,끝 시간에 지정 
 		function getCurrentPlayTime(obj) {
-			var d = Number(player.getCurrentTime());
+			/* var d = Number(player.getCurrentTime());
+			d = parseFloat(d).toFixed(2); */
 
 			// Getter for slider handles 
-			var values = $( "#slider-range" ).slider( "option", "values" );
-
-			d = parseFloat(d).toFixed(2);
+			/* var values = $( "#slider-range" ).slider( "option", "values" );
+			
 			console.log(values[0]);
-			console.log("check here!" , d);
+			console.log("check here!" , d); */
+
+			values = $( "#slider-range" ).slider( "option", "values" );
+			console.log("check initial values =>> ", values[0], values[1]);
 			
-			// Setter 
-			$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
-			
-			
-			
-			/* var h = Math.floor(d / 3600);
+			if(!validation()){
+				return;
+			}
+			var h = Math.floor(d / 3600);
 			var m = Math.floor(d % 3600 / 60);
-			var s = d % 3600 % 60;
-			
+			var s = parseFloat(d % 3600 % 60).toFixed(2);
+
+
 			// 시작 버튼 클릭시: 
 			if($(obj).text() == "시작"){
-				$( "#amount" ).val( "시작: " + h + "시" + m  + "분" + parseFloat(s).toFixed(2) + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+				
+				
+				// Setter 
+				$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
+				start_hour = h;
+				start_min = m;
+				start_sec = s;
 
+				$( "#amount" ).val( "시작: " + h + "시" + m  + "분" + s + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+				
 				start_time = parseFloat(d).toFixed(2);
 				start_time *= 1.00;
 			}
+			
 			// 끝 버튼 클릭시: 
 			else{
-				$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + parseFloat(s).toFixed(2) + "초"  );
+
+				// Setter 
+				$( "#slider-range" ).slider( "option", "values", [ values[0], d ] );
+				end_hour = h;
+				end_min = m;
+				end_sec = s;
+				
+				$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + s + "초"  );
 
 				end_time = parseFloat(d).toFixed(2);
 				end_time *= 1.00;
-			} */
+			}
 
 			
 
@@ -691,11 +716,11 @@ $(document).ready(function(){
 		
 		// 재생 구간 유효성 검사: 
 		function validation() { //video 추가 form 제출하면 실행되는 함수
-			document.getElementById("warning1").innerHTML = "";
-			document.getElementById("warning2").innerHTML = "";
+			/* document.getElementById("warning1").innerHTML = "";
+			document.getElementById("warning2").innerHTML = ""; */
 			
 			// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
-			var start_hh = $('#start_hh').val();
+			/* var start_hh = $('#start_hh').val();
 			var start_mm = $('#start_mm').val();
 			var start_ss = $('#start_ss').val();
 			start_time = start_hh * 3600.00 + start_mm * 60.00 + start_ss* 1.00;
@@ -703,48 +728,87 @@ $(document).ready(function(){
 			var end_hh = $('#end_hh').val();
 			var end_mm = $('#end_mm').val();
 			var end_ss = $('#end_ss').val();
-			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
+			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00; */
+
+			document.getElementById("warning1").innerHTML = "";
+			/* $('#warning1').text("");
+			$('#warning2').text(""); */
+
+			d = Number(player.getCurrentTime());
+			d = parseFloat(d).toFixed(2);
+
+			// Getter for slider handles 
+			values = $( "#slider-range" ).slider( "option", "values" );
+
+			if(d>values[1]){
+				document.getElementById("warning1").innerHTML = "시작시간은 끝시간보다 크지 않아야 합니다.";
+				//document.getElementById("start_ss").focus();
+				return false;
+			}
+			if(d<values[0]){
+				console.log(d+"는 "+values[0]+"보다 작다.. ㅋㅋㅋ 왜 이렇게 나오는데");
+				console.log(d, " vs ", values[0]);
+				document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요.";
+				return false;
+			}
+
+			start_time = start_hour*3600.00 + start_min*60.00 + start_sec*1.00;
+			end_time = end_hour*3600.00 + end_min*60.00 + end_sec*1.00;
 			
 			const totalSeconds = end_time - start_time;
 			const hours = Math.floor(totalSeconds / 3600);
 		    const minutes = Math.floor(totalSeconds % 3600 / 60);
 		    const seconds = totalSeconds % 60;
+
+		    
 		    if(hours!=0){
 		    	hhmmss = hours + ':' + minutes + ':' + seconds;
 		    }
 		    else {
 		    	hhmmss = minutes + ':' + seconds;
 		    }
+
+		    
 		  	console.log("check hhmmss ==>" , hhmmss);
+		  	
 			//console.log(limit);
 			//console.log(end_time - start_time);
-			$('#duration').val(end_time - start_time);
-			if (start_time > end_time) {
+			$('#duration').val(totalSeconds);
+
+
+			// 아래 코드는 없애도 될듯. 
+			/* if (start_time > end_time) {
 				document.getElementById("warning1").innerHTML = "start time cannot exceed end time";
-				document.getElementById("start_ss").focus();
+				//document.getElementById("start_ss").focus();
 				return false;
 			}
+			
 			if (end_time > limit) {
 				//console.log(end_time,"  ", limit);
 				document.getElementById("warning2").innerHTML = "Please insert again";
-				document.getElementById("end_ss").focus();
+				//document.getElementById("end_ss").focus();
 				return false;
-			} else {
+			}  */
+
+			return true;
+			
+			else {
 				/* if ($('#inputVideoID').val() > -1)
 					return updateVideo(event); */
 					
 				// 우측 카트에 hidden tag로 start_s, end_s 넣기 
-				/* $('#start_s').val(start_time);
-				$('#end_s').val(end_time); */
+				$('#start_s').val(start_time);
+				$('#end_s').val(end_time); 
 				$('#start_s').attr("value", start_time);
-				/* $('#running_time').append('<span>' + hhmmss + '</span>'); */
+				$('#running_time').append('<span>' + hhmmss + '</span>'); 
+				
 				//document.getElementById('running_time').innerHTML += hhmmss; 
 				//$('#running_time').html("duration: "+ hhmmss);
 				//document.getElementById('running_time').innerHTML = "duration: " + hhmmss; 
 				// 아직 카트 element가 생성되기 전이라서 이렇게 변수에 저장해놓은 뒤에 사용할 수 밖에 없음. 
 				running_time = hhmmss;
 				return true;
-			}
+			} 
 		}
 		function addToCart(id, title){
 			console.log(id, title);
@@ -752,13 +816,15 @@ $(document).ready(function(){
 			if (title.length > 40) {
 				title = title.substring(0,40) + " ...";
 			}
-			if(!validation()){
+			/* if(!validation()){
 				return;
-			};
+			}; */
+			
 			//1. 
 			//var content = thumbnail2 + title;
 			//$("#videosInCart").append(content);
 			//2.
+			
 			if( $('#start_hh').is(':empty') ) {
 				var start_time =  $('#start_mm').val() + ":" + $('#start_ss').val();
 				var end_time = $('#end_mm').val() + ":" + $('#end_ss').val();
@@ -949,14 +1015,17 @@ $(document).ready(function(){
 									 	<div class="col-sm-2 col-form-label d-flex justify-content-center">
 											<label for="amount"><b>설정된 시간</b></label>
 										</div>
-										<div class="col-sm-10">
+										<div class="col-sm-6">
 											<input type="text" id="amount" class="form-control" readonly style="border:0;">
+										</div>
+										<div class="col-sm-3">
+											<div id="warning1"> </div>
 										</div>
 									</div>
 									
                             </div>
                                             
-							<div>
+							<!-- <div>
 								<button onclick="getCurrentPlayTime1(this)" type="button">start time</button>
 								: <input type="text" id="start_hh" maxlength="2" size="2">
 								시 <input type="text" id="start_mm" maxlength="2" size="2">
@@ -974,7 +1043,7 @@ $(document).ready(function(){
 								초
 								<button onclick="seekTo2()" type="button">위치이동</button>
 								<span id=warning2 style="color: red;"></span> <br>
-							</div> 
+							</div>  -->
 
 
 							<div>
