@@ -94,6 +94,9 @@ $(document).ready(function(){
 	
 	function setAllContents(){
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
+		var allFileContents = JSON.parse('${allFileContents}'); 
+		console.log(allContents);
+		console.log(allFileContents);
 		for(var i=0; i<allContents.length; i++){
 			var day = allContents[i].days;
 			if(allContents[i].endDate == null)
@@ -143,7 +146,7 @@ $(document).ready(function(){
 				"<div class='content list-group-item-action list-group-item' seq='" + allContents[i].daySeq + "'>"
 						+ '<div class="row col d-flex justify-content-between align-items-center">'
 							+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
-							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
+							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
 							+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
 									+ "<div class='col-sm-6 card-title inline-block' style=' height: 50%; font-size: 15px'>"
 										+ allContents[i].title + "  [" +convertTotalLength(allContents[i].totalVideoLength) + "]"
@@ -572,7 +575,6 @@ $(document).ready(function(){
 </body>
 	
 </html>
-
 
 
 
