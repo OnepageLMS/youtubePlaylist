@@ -49,7 +49,9 @@ public class ClassContentController {
 		classID = classId;
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
-
+		model.addAttribute("allFileContents", JSONArray.fromObject(classContentService.getFileClassContent(classID)));
+		System.out.println(classContentService.getFileClassContent(classID).get(0).getTitle());
+		System.out.println("강의 개수 : " + classContentService.getClassNum(classID));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
@@ -64,7 +66,7 @@ public class ClassContentController {
 		//model.addAttribute("vo", vo);
 		
 		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
-		model.addAttribute("classInfo", classService.getClass(classID)); //여기도 임의로 classID 0 넣어두었다.
+		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
 		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));

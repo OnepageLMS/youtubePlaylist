@@ -27,6 +27,12 @@
 		delete from lms_classContent where classID=#{classID} and days=#{days}
 	</delete>
 	
+	<select id="getClassNum" resultType="int">
+		select count(*)
+		from lms_classContent
+		where classID=#{classID}
+	</select>
+	
 	<select id="getOneContent" resultType="classContent">
 		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
 		inner join lms_class on lms_class.id = lms_classContent.classID
@@ -36,6 +42,11 @@
 	<select id="getAllClassContent" resultType="classContent">
 		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
 		where classID=#{classID} order by days, daySeq
+	</select>
+	
+	<select id="getFileClassContent" resultType="classContent">
+		select * from lms_classContent
+		where classID=#{classID} and playlistID is null
 	</select>
 	
 	<select id="getAllClassContentForCopy" resultType="classContent">

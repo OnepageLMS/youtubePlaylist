@@ -50,9 +50,10 @@
 	 		for(var i=0; i<weekContents.length; i++){
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 				var day = weekContents[i].days;
-				var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
-				var result_date = convertTotalLength(date);
-				var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
+				var endDate = weekContents[i].endDate; //timestamp -> actural time
+				console.log("date : " + endDate);
+				//var result_date = convertTotalLength(date);
+				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
 				
 				var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+ "/" + i +  "'";
@@ -60,22 +61,22 @@
 				var content = $('.day:eq(' + day + ')');
 				
 				content.append(
-						
-						 "<div class='list-group-item' seq='" + weekContents[i].daySeq + ">"
-									+ '<div class="row">'
-										+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
-										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>'
-										+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-											+ "<div class='col-sm-12'>"
-												+ weekContents[i].title  + '  [' + weekContents[i].totalVideo + ']' 
+						 "<div class='content list-group-item-action list-group-item' seq='" + weekContents[i].daySeq + "'>"
+									//+ '<div class="row col d-flex justify-content-between align-items-center">'
+									+ '<div class="row col d-flex align-items-center">'
+										+ '<div class="index col-sm-1 ">' + (weekContents[i].daySeq+1) + '. </div>'
+										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
+										+ "<div class='col-sm-8 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
+											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px'>"
+												+ weekContents[i].title + "  [" + convertTotalLength(weekContents[i].totalVideoLength)  + "]"
 											+ '</div>'
-											+ '<div class="col-sm-12">'
-													+ '<p class="contentInfo">' + 'Youtube' + '</p>'
-													+ '<div class="contentInfoBorder"></div>'
-													+ '<p class="videoLength contentInfo"">' + convertTotalLength(weekContents[i].totalVideoLength) + '</p>'
-													+ '<div class="contentInfoBorder"></div>'
-													+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
-											+ '</div>' 
+											
+											+ '<div class="col-sm-12 align-items-center">'
+												+ '<div class="contentInfoBorder"></div>'
+												+ '<div class="contentInfoBorder"></div>'
+												+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+											+ '</div>'
+										
 										+ '</div>'
 									+ '</div>'
 								+ '</div>');
@@ -145,12 +146,27 @@
                                 
                                 
                                 <div class="main-card mb-3 card">
-                                    <div class="card-body">
+                                    <!--  <div class="card-body">
 										<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
 	                                    <div class="list-group day" day="${status.index}">
 	                                        	
 	                                    </div>
+                                   </div> -->
+                                   
+                                   
+                                    <div class="card-body">
+                                    	<div class="card-title" style="display: inline;" >
+                                    		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
+											 <h5 style="display: inline; ">${j} 차시</h5>
+											</a> 
+                                    	</div>
+
+	                                    <div class="list-group accordion-wrapper day" day="${status.index}">
+	                                        	
+	                                    </div>
                                    </div>
+                                   
+                                   
                                </div>
                                         
                                         
