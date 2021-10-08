@@ -48,6 +48,11 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
+	public String getClassName(int id) {
+		return classesDAO.getClassName(id);
+	}
+	
+	@Override
 	public ClassesVO getClass(int id) {
 		return classesDAO.getClass(id);
 	}

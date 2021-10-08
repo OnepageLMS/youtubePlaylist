@@ -23,31 +23,45 @@
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
+
 $(document).ready(function(){
-	console.log('${allMyClass}');
-	var activeClass = JSON.parse('${allMyClass}');
+	
+	$(".publishNotice").click(function () {
+		//var className = $(this).
+		$('#inputNoticeForm')[0].reset();
+
+		//$('#setNoticeClassName').text(className);
+		//$('#setNoticeClassID').val(classID);
+		
+	});
+	
+	var activeClass = JSON.parse('${allMyClass}');	//이부분 수정
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 
 	for(var i=0; i<activeClass.length; i++){	//active classroom card
-		var classNoticeURL = 'moveToNotice(' + activeClass[i].id + ')';
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + activeClass[i].id + "'";
+		var classID = activeClass[i].id;
+		var className = activeClass[i].className;
+		
+		var classNoticeURL = 'moveToNotice(' + classID + ')';
+		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
 		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 		var regDate = activeClass[i].regDate.split(' ')[0];
 		var cardColor = active_colors[i%(active_colors.length)]; 
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 								+ '<div class="mb-3 card classCard">'
 									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  activeClass[i].className + ' (' + activeClass[i].days + ' 차시)' + '</div>'
-										+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + activeClass[i].id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+										+ '<div class="col-sm-10">' +  className + ' (' + activeClass[i].days + ' 차시)' + '</div>'
+										+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 											+ '<i class="nav-link-icon fa fa-share"></i>'
 										+ '</a>'
-										+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + activeClass[i].id + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+										+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
 											+ '<i class="nav-link-icon fa fa-cog"></i>'
 										+ '</a>'
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
+										+ '<button class="publishNotice btn btn-outline-focus col-6 mb-2" className="' + className + '" classID="' + classID + '" data-toggle="modal" data-target=".publishNoticeModal">'
+												+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 		                        	+ '</div>'
@@ -88,7 +102,7 @@ $(document).ready(function(){
 										+ '</a>'
 									+ '</div>'
 									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        		+ '</div>'
@@ -283,6 +297,27 @@ function submitShareClassroom(){
 		},
 		error: function(data, status,error){
 			alert('강의실 복사 실패! ');
+		}
+	});
+}
+
+function publishNotice(){	//공지등록
+	if($('#inputTitle').val() == '' ) return false;
+
+	if ($('#inputImportant').val() == 'on')
+		$('#inputImportant').val(1);
+
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/addNotice',
+		data: $('#inputNoticeForm').serialize(),
+		datatype: 'json',
+		success: function(data){
+			console.log('공지 생성 성공');
+			location.reload();
+		},
+		error: function(data, status,error){
+			console.log('공지 생성 실패!');
 		}
 	});
 }
@@ -513,6 +548,51 @@ function submitShareClassroom(){
 		         </div>
 	        </div>
 	    </div>
+	    
+	   <!-- 공지 게시글 작성 modal -->
+   	<div class="modal fade publishNoticeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle"><span id="setNoticeClassName" class="text-primary"></span>새로운 공지 작성</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">  
+	                <div class="main-card">
+						<div class="card-body">
+                            <form class="needs-validation" id="inputNoticeForm" method="post" novalidate>
+                            	<input type="hidden" name="classID" value="" id="setNoticeClassID"/>
+                                <div class="position-relative row form-group">
+                                	<label for="inputTitle" class="col-sm-2 col-form-label">제목</label>
+                                    <div class="col-sm-10">
+                                    	<input name="title" id="inputTitle" placeholder="제목을 입력하세요" type="text" class="form-control" required>
+                                    	<div class="invalid-feedback">제목을 입력해 주세요</div>
+                                    </div>
+                                </div>
+                                <div class="position-relative row form-group">
+                                	<label for="content" class="col-sm-2 col-form-label">내용</label>
+                                    <div class="col-sm-10">
+                                    	<textarea id="inputContent" name="content" class="form-control" rows="7"></textarea>
+                                    </div>
+                                </div>
+                                <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">중요 공지</label>
+                                    <div class="col-sm-10 mt-2">
+                                        <div class="position-relative form-check"><input id="inputImportant" name="important" type="checkbox" class="form-check-input"></div>
+                                    </div>
+                                </div>
+                            </form>
+                          </div>
+                      </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="submit" form="inputNoticeForm" class="btn btn-primary" onclick="publishNotice();">등록</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
 	<script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields

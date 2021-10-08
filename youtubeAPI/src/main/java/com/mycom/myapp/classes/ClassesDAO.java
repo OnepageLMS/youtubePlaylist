@@ -45,6 +45,10 @@ public class ClassesDAO {
 		return sqlSession.delete("Classes.deleteClassroom", id);
 	}
 	
+	public String getClassName(int id) {
+		return sqlSession.selectOne("Classes.getClassName", id);
+	}
+	
 	public ClassesVO getClass(int id) {
 		return sqlSession.selectOne("Classes.getClass", id);
 	}

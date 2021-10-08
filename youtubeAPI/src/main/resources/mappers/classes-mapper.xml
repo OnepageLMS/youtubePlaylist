@@ -36,6 +36,10 @@
 		delete from lms_class where id=#{id}
 	</delete>
 	
+	<select id="getClassName" resultType="String">
+		select className from lms_class where id=#{id}
+	</select>
+	
 	<select id="getClass" resultType="classes">
 		select * from lms_class where id=#{id}
 	</select>
