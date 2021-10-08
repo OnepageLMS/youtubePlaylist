@@ -149,6 +149,8 @@ function editClassroomFn(id){	//set the edit classroom modal
 	});
 }
 function submitAddClassroom(){	//submit the add classroom form 
+	if ($('#inputClassName').val() == '') return false;
+	
 	if($('#inputClassDays').val() == '')	//int type은 null이 될 수 없어 미리 방지
 		$('#inputClassDays').val(0);
 	
@@ -176,6 +178,8 @@ function submitAddClassroom(){	//submit the add classroom form
 	});	
 }
 function submitEditClassroom(){	//미완성
+	if ($('#editClassName').val() == '') return false;
+	
 	// classDays 현재 강의컨텐츠의 갯수 넘지 않도록 체크
 	// closeDate를 현재 이전으로 하면 학생들 어떻게?
 	
@@ -194,13 +198,17 @@ function submitEditClassroom(){	//미완성
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/editClassroom',
-		data: {
+		data: 
+			//$('#formEditClassroom').serialize(),
+				
+				{
 				'id' : $('#setClassID').val(),
 				'className' : $('#editClassName').val(),
 				'description' : $('#editDescription').val(),
 				'tag' : $('#editClassTag').val(),
 				'active' : $('#customSwitch2').val()
-			},
+				},
+				
 		datatype: 'json',
 		success: function(data){
 			if(data == 'ok')
@@ -210,7 +218,7 @@ function submitEditClassroom(){	//미완성
 			location.reload();
 		},
 		error: function(data, status,error){
-			alert('강의실 수정 실패! ');
+			console.log('강의실 수정 실패! ');
 		}
 	});
 }
@@ -220,7 +228,7 @@ function submitDeleteClassroom(){
 		alert('강의실 삭제 옵션을 선택해 주세요.');
 		return false;
 	}
-	console.log($('#setClassID').val());
+
 	if(opt == 'forMe'){
 		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 비공개 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
 			$.ajax({
@@ -235,7 +243,7 @@ function submitDeleteClassroom(){
 					location.reload();
 				},
 				error: function(data, status,error){
-					alert('강의실 수정 실패! ');
+					console.log('강의실 수정 실패! ');
 				}
 			});
 		}
@@ -380,7 +388,7 @@ function submitShareClassroom(){
 	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
-	            <form class="needs-validation was-validated" id="formAddClassroom" method="post" novalidate>
+	            <form class="needs-validation" id="formAddClassroom" method="post" novalidate>
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
 		               		<label for="inputClassName" class="">강의실 이름</label>
@@ -389,7 +397,7 @@ function submitShareClassroom(){
 		               </div>
 		               <div class="position-relative form-group">
 		               		<label for="inputDescription" class="">강의실 설명</label>
-		               		<textarea name="description" id="inputDescription" class="form-control"></textarea>
+		               		<textarea name="description" id="inputDescription" class="form-control" rows="4"></textarea>
 		               </div>
 		               <div class="form-row">
 		               		<div class="col-md-3">
@@ -417,7 +425,7 @@ function submitShareClassroom(){
 		            </div>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-		                <button type="submit" class="btn btn-primary" onclick="submitAddClassroom();">생성</button>
+		                <button type="submit" form="formAddClassroom" class="btn btn-primary" onclick="submitAddClassroom();">생성</button>
 		            </div>
 	            </form>
 	            
@@ -445,7 +453,7 @@ function submitShareClassroom(){
 		               </div>
 		               <div class="position-relative form-group">
 		               		<label for="editDescription" class="">강의실 설명</label>
-		               		<textarea name="description" id="editDescription" class="form-control"></textarea>
+		               		<textarea name="description" id="editDescription" class="form-control" rows="4"></textarea>
 		               </div>
 		               <div class="form-row">
 		               		<div class="col-md-3">

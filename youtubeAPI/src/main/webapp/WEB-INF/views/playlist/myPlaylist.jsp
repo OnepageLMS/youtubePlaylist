@@ -435,8 +435,7 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 });
 
 function submitAddPlaylist(){	//submit the add playlist form
-	if($('#inputPlaylistName').val() == '')
-		return false;
+	if($('#inputPlaylistName').val() == '') return false;
 	
 	if($('#customSwitch1').is(':checked'))
 		$('#customSwitch1').val(1);
@@ -459,8 +458,7 @@ function submitAddPlaylist(){	//submit the add playlist form
 }
 
 function submitEditPlaylist(){
-	if($('#editPlaylistName').val() == '')
-		return false;
+	if($('#editPlaylistName').val() == '') return false;
 	
 	if($('#customSwitch2').is(':checked'))
 		$('#customSwitch2').val(1);
@@ -558,7 +556,7 @@ function submitEditPlaylist(){
 	                </button>
 	            </div>
 	            <div class="modal-body">
-            		<form class="needs-validation was-validated" id="formAddPlaylist" method="post" novalidate>
+            		<form class="needs-validation" id="formAddPlaylist" method="post" novalidate>
 		               	<div class="position-relative form-group">
 		               		<label for="inputPlaylistName" class="">Playlist 이름</label>
 		               		<input name="playlistName" id="inputPlaylistName" type="text" class="form-control" required>
@@ -576,12 +574,12 @@ function submitEditPlaylist(){
 				            <input type="checkbox" checked="" name="exposed" class="custom-control-input" id="customSwitch1">
 				            <label class="custom-control-label" for="customSwitch1">LMS내 공개</label>
 				       	</div>
-						<div class="modal-footer">
-			                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-			                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitAddPlaylist();">생성</button>
-		            	</div>
 					</form>
 				</div>
+				<div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	                <button type="submit" form="formAddPlaylist" class="btn btn-primary" onclick="submitAddPlaylist();">생성</button>
+            	</div>
 	        </div>
 	    </div>
 	</div>
@@ -597,7 +595,7 @@ function submitEditPlaylist(){
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	            	<form class="needs-validation was-validated" id="formEditPlaylist" method="post" novalidate>
+	            	<form class="needs-validation" id="formEditPlaylist" method="post" novalidate>
 	            		<input name="id" type="hidden" id="setPlaylistID">
 		               <div class="position-relative form-group">
 		               		<label for="editPlaylistName" class="">Playlist 이름</label>
@@ -621,7 +619,7 @@ function submitEditPlaylist(){
 	            <div class="modal-footer">
 	            	<button type="button" class="btn btn-danger" data-dismiss="modal">Playlist 삭제</button>
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="submitEditPlaylist();">수정완료</button>
+	                <button type="submit" form="formEditPlaylist" class="btn btn-primary" onclick="submitEditPlaylist();">수정완료</button>
 	            </div>
 	        </div>
 	    </div>
