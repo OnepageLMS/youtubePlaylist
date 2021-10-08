@@ -67,11 +67,11 @@
 										+ '<div class="index col-sm-1 ">' + (weekContents[i].daySeq+1) + '. </div>'
 										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
 										+ "<div class='col-sm-8 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
-											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px'>"
+											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
 												+ weekContents[i].title + "  [" + convertTotalLength(weekContents[i].totalVideoLength)  + "]"
 											+ '</div>'
 											
-											+ '<div class="col-sm-12 align-items-center">'
+											+ '<div class="col-sm-12 align-items-center" style=" height: 50%; font-size: 15px; padding: 5px 0px 0px;">'
 												+ '<div class="contentInfoBorder"></div>'
 												+ '<div class="contentInfoBorder"></div>'
 												+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
@@ -110,7 +110,7 @@
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	${classInfo.className}	<!-- 이부분 이름 바꾸기!! -->
+                            	${classInfo.className} - 강의컨텐츠<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
                     </div>    
@@ -120,7 +120,7 @@
                           <nav class="" aria-label="Page navigation example"> 
                              	 <ul class="pagination">
                              	 	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-									<li class="page-item"><a href="#target${j}" class="page-link"> ${j} </a></li>
+									<li class="page-item"><a href="#target${j}" class="page-link"> ${j}차시 </a></li>
 								</c:forEach>
                              	 </ul>
                            </nav>

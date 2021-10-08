@@ -34,7 +34,7 @@
 <script>
 
 //var classPlaylistID = 0;
-var classID =  0;
+var classID =  1;
 //var playlistSameCheck = ${playlistSameCheck};
 var ori_index =0;
 //var classPlaylistID = ${classPlaylistID};
@@ -55,7 +55,7 @@ $(document).ready(function(){
 		  dataType : "json",
 		  success : function(data) {
 			information = data;
-			console.log("성공이긴" + information[0].playlistID);
+			console.log("성공이긴" + information[0]);
 			videoIdx = ${daySeq};
 		  },
 		  error : function() {
@@ -102,10 +102,11 @@ $(document).ready(function(){
 	})
 	
 	var weekContents = JSON.parse('${allContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
-	
+	console.log(weekContents);
 	for(var i=0; i<weekContents.length; i++){
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 		var day = weekContents[i].days;
+		console.log("day : " + day);
 		var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
 			
 		var result_date = convertTotalLength(date);
