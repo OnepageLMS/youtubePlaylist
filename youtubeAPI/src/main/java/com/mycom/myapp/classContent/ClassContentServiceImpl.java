@@ -34,6 +34,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public int getClassNum(int classID) {
+		return ClassContentDAO.getClassNum(classID);
+	}
+	
+	@Override
 	public ClassContentVO getOneContent(int id) {
 		return ClassContentDAO.getOneContent(id);
 	}
@@ -41,6 +46,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	@Override
 	public List<ClassContentVO> getAllClassContent(int classID){
 		return ClassContentDAO.getAllClassContent(classID);
+	}
+	
+	@Override
+	public List<ClassContentVO> getFileClassContent(int classID){
+		return ClassContentDAO.getFileClassContent(classID);
 	}
 	
 	@Override

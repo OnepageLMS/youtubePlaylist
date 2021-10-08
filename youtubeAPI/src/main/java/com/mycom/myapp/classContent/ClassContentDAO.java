@@ -33,6 +33,12 @@ public class ClassContentDAO {
 		return result;
 	}
 	
+	public int getClassNum(int classID) {
+		int result = sqlSession.selectOne("ClassContent.getClassNum", classID);
+		System.out.println("여기는DAO, result " + result);
+		return result;
+	}
+	
 	public ClassContentVO getOneContent(int id) {
 		ClassContentVO result = sqlSession.selectOne("ClassContent.getOneContent", id);
 		return result;
@@ -40,6 +46,11 @@ public class ClassContentDAO {
 	
 	public List<ClassContentVO> getAllClassContent(int classID){
 		List<ClassContentVO> result = sqlSession.selectList("ClassContent.getAllClassContent", classID);
+		return result;
+	}
+	
+	public List<ClassContentVO> getFileClassContent(int classID){
+		List<ClassContentVO> result = sqlSession.selectList("ClassContent.getFileClassContent", classID);
 		return result;
 	}
 	
