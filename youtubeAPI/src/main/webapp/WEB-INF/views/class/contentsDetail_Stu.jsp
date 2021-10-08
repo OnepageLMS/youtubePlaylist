@@ -35,9 +35,9 @@
 var studentEmail = 1; //우선 임의로 넣기
 //var classPlaylistID = 0;
 var classID =  ${classInfo.id};
-var playlistSameCheck = ${playlistSameCheck};
+//var playlistSameCheck = ${playlistSameCheck};
 //var classPlaylistID = ${classPlaylistID};
-var classContentID = 1;
+//var classContentID = 1;
 var videoIdx;
 var playlist; 
 
@@ -80,50 +80,42 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			 ori_videoID = playlist[0].id; //첫 videoID는 선택된 classContent의 Playlist의 첫번째 영상
 			 ori_playlistID = weekContents[videoIdx].playlistID;
 			 ori_classContentID = weekContents[videoIdx].id;
-			 console.log("ori_videoID : " + ori_videoID);
-			 console.log("ori_index : " + ori_index);
-			 console.log("ori_playlistID : " + ori_playlistID);
-			 console.log("ori_classContentID : " + ori_classContentID);
 		  },
 		  error : function() {
 		  	alert("error");
 		  }
 	})
 	
-	/*
-	information 배열은 특정 classID를 가진 수업의 classContent의 개수만큼 있다. 각각의 classContent에 대한 정보를 담고 있다.
-	playlist 배열은 특정 playlistID를 가진 playlist내의 비디오의 개수많큰 있다. 각각의 video에 대한 정보를 담고 있다.
+	$.ajax({ //비디오 영상에 대한 제목과 설명가져오기 //weekContent에서 id만 알면 할 수 있다..
+		url : "${pageContext.request.contextPath}/student/class/changeID",
+		type : "post",
+		async : false,
+		data : {	
+			id: ${id}
+		},
+		success : function(data) {
+			console.log(data.title);
+			var element = document.getElementById("contentsTitle");
+			element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
+			//element.innerText = data.title;
+			var elementD = document.getElementById("contentsDescription");
+			elementD.innerText = data.description;
+		},
+		error : function() {
+			alert("error");
+		}
+	})
 	
-	영상 시청 체크를 어떻게 해야할까?
-	
-	영상 시청체크를 하기 위해 필요한 것 : videoID, playlistID .... 등등
-	videoID를 나타내는 배열 : playlist (playlist[0].id 요런식)
-	playiist를 나타내는 배열 : information ,, playlist도 있음!  (playlist[0].playlistID 요런식)
-	
-	근데 내가 지금 보고있는 playlist가 몇번째인지를 모르잖아..
-	첫번째 페이지의 playlist의 첫번째 영상인지,,
-	n번째 페이지의 Playlist의 첫번째 영상인지,,
-	
-	--> 이건 그냥 index넘기면 되긴해
-
-	playlist간의 이동이 있을 때,, 그때엔 어떻게 하지 ? 
-			
-	*/
-	
-	//var weekContents = JSON.parse('${weekContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
-
-	//var playlistLen = JSON.parse('${playlist}'); //total 시간을 위해
-	//ori_playlistID =  weekContents[videoIdx].playlistID ; //초기 playlistID는 선택한 classContent에 담긴 playlistID!
 	
 	for(var i=0; i<weekContents.length; i++){
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 		var day = weekContents[i].days;
-		var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
+		var endDate = weekContents[i].endDate; //timestamp -> actural time
 			
-		var result_date = convertTotalLength(date);
+		//var result_date = convertTotalLength(date);
 			
-		var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." 
-			+ (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
+		//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." 
+			//+ (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 			
 		var onclickDetail = "location.href='../contentDetail/"+ weekContents[i].playlistID +"/"+weekContents[i].id + "/" +classID+"'";
 		classContentID = weekContents[i].id; // classContent의 id //여기 수정
@@ -162,42 +154,45 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			}
 			
 			
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg">';
+			var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
 			
 			innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 						+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-						+ '<div class="post-thumbnail col-xs-4 col-lg-5"> ' + thumbnail + ' </div>' 
-						+ '<div class="post-content col-xs-7 col-lg-5" onclick="viewVideo(\''  //viewVideo호출
-							+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
-							+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ',' + i + ', this)" >' 
-							+ 	'<h6 class="post-title videoNewTitle">' + playlist[j].newTitle + '</h6>' 
-							+	'<div class="">'+  convertTotalLength(playlist[j].duration) +'</div>' +
-							'</div>' 
+							+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+								+ thumbnail 
+								+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
+							+ ' </div>' 
+							+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
+								+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
+								+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ',' + i + ', this)" >' 
+								+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[j].newTitle + '</div>' 
+								+	'<div class=""> start : '+  convertTotalLength(playlist[j].start_s) + '</div>' 
+								+	'<div class=""> end : '+  convertTotalLength(playlist[j].end_s) + '</div>' 
+							+'</div>' 
 							+ 	completed 
 					+ '</div>'
+					
+			
 					
 			//ori_videoID = playlist[0].id;
 		}
 		
 		var content = $('.day:eq(' + day + ')');
-		content.append("<div id=\'heading" +(i+1)+ "\' >"
+		content.append("<div id=\'heading" +(i+1)+ "\'>"
 	               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
 					+ weekContents[i].playlistID + ','   + weekContents[i].id + ',' + classID + ',' + (i+1) +')"'
 	 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-		               + "<div class='content card ' seq='" + weekContents[i].daySeq + ">"
-						+ '<div>'
-							+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
+		               + "<div class='card align-items-center' seq='" + weekContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
+						+ '<div class="row col d-flex align-items-center">'
+							//+ '<div class="index col-1 col-sm-1 ">' + (weekContents[i].daySeq+1) + '.</div>'
 								
-							+ "<div class='col-sm-7' style='cursor: pointer;'>"
-								+ "<div class='col-sm-12'>"
-								+ weekContents[i].title  + '  [' + weekContents[i].totalVideo + ']' 
+							+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
+								+ "<div class='col-12 col-sm-12 card-title'>"
+									+ weekContents[i].title  + '  [' + convertTotalLength(weekContents[i].totalVideoLength) + ']' 
 								+ '</div>'
 								+ '<div class="col-sm-12">'
-									+ '<p style="display:inlne">' + 'Youtube' + '</p>'
 									+ '<div class="contentInfoBorder"></div>'
-									+ '<p class="videoLength contentInfo" style="display:inlne">' + convertTotalLength(weekContents[i].totalVideoLength) + '</p>'
-									+ '<div class="contentInfoBorder"></div>'
-									+ '<p class="endDate contentInfo">' + '마감일: ' + endDate + '</p>'
+									+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
 								+ '</div>' 
 							+ '</div>'
 								
@@ -266,6 +261,27 @@ function showLecture(playlistID, id, classInfo, idx){ //새로운 playlist를 �
 		  }
 	})
 	
+	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			  url : "${pageContext.request.contextPath}/student/class/changeID",
+			  type : "post",
+			  async : false,
+			  data : {	
+				  id: id
+			  },
+			  success : function(data) {
+				 console.log("changeID 성공!!!!");
+				 console.log(data);
+
+				var element = document.getElementById("contentsTitle");
+				element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
+				var elementD = document.getElementById("contentsDescription");
+				elementD.innerText = data.description;
+			  },
+			  error : function() {
+			  	alert("error");
+			  }
+	})
+	
 	myThumbnail(id, idx);
 }
 
@@ -276,7 +292,7 @@ function myThumbnail(classContentID, idx){
 	console.log("이 강의 컨텐츠 내에 동영상은 " + playlist.length+ " 개 ");
 	for(var i=0; i<playlist.length; i++){
 	
-		var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg">';
+		var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
 		
 		var newTitle = playlist[i].newTitle;
 		var title = playlist[i].title;
@@ -296,19 +312,24 @@ function myThumbnail(classContentID, idx){
 		}
 		
 		$(className).append( //stu//stu
-					'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
-					'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
-						'<div class="post-thumbnail col-xs-4 col-lg-5"> ' + thumbnail + ' </div>' +
-						'<div class="post-content col-xs-7 col-lg-5" onclick="viewVideo(\'' 
-							+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-	 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this)" >' 
-	 					+ 	'<h6 class="post-title videoNewTitle">' + playlist[i].newTitle + '</h6>' 
-	 					+	'<div class="">'+  convertTotalLength(playlist[i].duration) +'</div>' +
-	 					'</div>' 
-						+ 	completed 
+						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
+						+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
+							+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+								+ thumbnail 
+								+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[i].duration) +'</div>' 
+							+ ' </div>' 
+							+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center" onclick="viewVideo(\''  //viewVideo호출
+								+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
+								+ 	playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this.parentNode)" >' 
+								+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[i].newTitle + '</div>' 
+								+	'<div class=""> start : '+  convertTotalLength(playlist[i].start_s) + '</div>' 
+								+	'<div class=""> end : '+  convertTotalLength(playlist[i].end_s) + '</div>' 
+							+'</div>' 
+							+ 	completed 
 					+ '</div>'
 					+ '<div class="videoLine"></div>'
 		);
+		
 		//console.log("ori_playlistID가 바뀌는 순간! " + ori_playlistID);
 		//ori_playlistID = playlist[i].playlistID ; //아니 왜.. ㅠ
 		//console.log("ori_playlistID가 바뀐 후 ! " + ori_playlistID);
@@ -317,10 +338,13 @@ function myThumbnail(classContentID, idx){
 	
 }
 
+var visited = 0;
 function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
 	start_s = startTime;
-	$(".video").css({'background-color' : 'unset'});
-	item.style.background = "lightgrey";
+	$(".myLecture").css({'background-color' : 'yellow'});
+	//var ori_item = item;
+	//item.style.background = "lightgrey";
+	//ori_item.style.background = "lightgrey";
 	$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기
 	console.log("ori_idx : " + ori_index+ " ori_videoID : " + ori_videoID + " ori_playlistID : " + ori_playlistID+ " ori_classContentID : " + ori_classContentID);
 	console.log("idx : "+ index + " videoID : "+ id + " playlist : " + playlist[index].playlistID);
@@ -330,6 +354,14 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 		time = 0;
 		//clearInterval(timer); //현재 재생중인 timer를 중지하지 않고, 새로운 youtube를 실행해서 timer 두개가 실행되는 현상으로, 새로운 유튜브를 실행할 때 타이머 중지!
 		
+		//if, else if문은 영상을 변경했을 때, 원래 보던 영상에 대한 표시를 지우기 위한 코드
+		if(visited == 0){
+			item.style.background = "lightgrey";
+		}
+		else if(visited == 1){
+			ori_item.style.background = "transparent";
+			item.style.background = "lightgrey";
+		}
 		
 		$.ajax({ 
 			'type' : "post",
@@ -348,6 +380,8 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 				ori_videoID = id;
 				ori_playlistID = playlist[index].playlistID;
 				ori_classContentID = weekContents[seq].id;
+				ori_item = item;
+				visited = 1;
 			}, 
 			error : function(err){
 				alert("changevideo playlist 추가 실패! : ", err.responseText);
@@ -584,7 +618,7 @@ function collectPlayCount(data) {
 		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="../outer_left.jsp" flush="false"/>
+		 	<jsp:include page="../outer_left_stu.jsp" flush="false"/>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
@@ -600,21 +634,25 @@ function collectPlayCount(data) {
                     
                     
                     	<div class="main-card mb-3 card card col-8 col-md-8 col-lg-8">
-							<div class="card-body" style="margin : 0px; padding:0px; height:auto">
-								<div class="votitle card-header"><h3>${vo.title }</h3> </div>
+							<div class="card-body" style="margin : 0px; padding: 0px; height:auto">
+								<div class="card-header" style="margin: 10px 0px; " >
+									<div id="contentsTitle" style="font-size : 20px" ></div>
+								</div>
                             	<div id = "onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
 								</div>
-								<div class="card-footer vodescription"><h5>${vo.description }</h5>  </div>
+								<div class="card-footer" style="margin: 10px 10px; ">
+									<div id="contentsDescription" style="font-size : 15px" > </div>
+								</div>
                             </div>
                         </div>
                                     
 					        
 						<div class="contents col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
-							<div class="col-sm-12">
-	                           <nav class="" aria-label="Page navigation example">
+							<div class="col-sm-12" style="max-width: 100%; height: auto;" >
+	                           <nav class="" aria-label="Page navigation example" style="max-width: 100%; height: 100%;">
 	                               <ul class="pagination">
 	                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-											<li class="page-item"><a href="#target${j}" class="page-link"> ${j} </a></li>
+											<li class="page-item"><a href="#target${j}" class="page-link"> ${j}차시 </a></li>
 										</c:forEach>
 	                                   
 	                              	</ul>
@@ -622,23 +660,23 @@ function collectPlayCount(data) {
 	                       	</div>
 	                       	
 	                       	<div class="main-card mb-3 card">
-                                    <div class="card-body">
-                                        <div class="scroll-area-lg">
-                                            <div class="scrollbar-container ps--active-y">
+                                    <div class="card-body" style="overflow-y:auto; height:750px;">
+                                       <!--    <div class="scroll-area-lg">   -->
+                                            <div class=" ps--active-y">
                                             	<div id="accordion" class="accordion-wrapper mb-3">
 													<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-														<div class="main-card mb-3 card">
+														<div class="main-card mb-3 card day" day="${status.index}">
 						                                   <!--<div class="card-body">-->
 																<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
-							                                    <div class="list-group day" day="${status.index}">
+							                                  <!--   <div class="list-group day" day="${status.index}">
 							                                        	
-							                                    </div>
+							                                    </div>-->
 						                                  <!-- </div>-->
 						                               </div>
 													</c:forEach>
 												</div>
                                             </div>
-                                        </div>
+                                      <!-- </div>--> 
                                     </div>
                            	</div>
 	                       	

@@ -64,7 +64,7 @@ public class ClassContentController {
 		
 		//ClassContentVO vo = classContentService.getOneContent(id);
 		//model.addAttribute("vo", vo);
-		
+		System.out.println("controller contentDetail인데 " + classID);
 		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
@@ -99,7 +99,7 @@ public class ClassContentController {
 		
 		List<ClassContentVO> VOlist = new ArrayList<ClassContentVO>();
 		VOlist = classContentService.getAllClassContent(classID);
-				
+		//System.out.println(VOlist.get(0).getClassName());
 		for(int i=0; i<VOlist.size(); i++) {
 			map.put(i, VOlist.get(i));
 		}
