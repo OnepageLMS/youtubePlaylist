@@ -21,6 +21,31 @@
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 </head>
+<style>
+	#module {
+	  font-size: 1rem;
+	  line-height: 1.5;
+	}
+	
+	
+	#module #collapseExample.collapse:not(.show) {
+	  display: block;
+	  height: 3rem;
+	  overflow: hidden;
+	}
+	
+	#module #collapseExample.collapsing {
+	  height: 3rem;
+	}
+	
+	#module a.collapsed::after {
+	  content: '+ Show More';
+	}
+	
+	#module a:not(.collapsed)::after {
+	  content: '- Show Less';
+	}
+</style>
 <script>
 	$(document).ready(function(){
 		getAllNotices(${classID});
@@ -52,7 +77,7 @@
 						var num = length - index;
 						var collapseID = "collapse" + num;
 						var regDate = value.regDate;
-					
+
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
 								+ '<div class="card">'
@@ -161,13 +186,13 @@
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<h4>Class이름 - 공지</h4>	
+                            	<h4><span class="text-primary">${className}</span> - 공지</h4>	
                             </div>
                         </div>
                     </div>            
                     <div class="row">
                     	<div class="col-12 row mb-3 ml-5">
-                   			<button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">공지 작성</button>
+                   			<button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
                     	</div>
                     	<div class="col-12 row justify-content-center noticeList">
                     		<!--  
@@ -198,7 +223,7 @@
    	</div>
    	
    	<!-- 게시글 작성 modal -->
-   	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+   	<div class="modal fade publishNoticeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog modal-lg">
 	        <div class="modal-content">
 	            <div class="modal-header">

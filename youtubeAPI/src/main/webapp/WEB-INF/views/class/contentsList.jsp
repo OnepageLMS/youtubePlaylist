@@ -501,7 +501,7 @@ $(document).ready(function(){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<span class="text-primary">${classInfo.className}</span>  - 강의컨텐츠<!-- 이부분 이름 바꾸기!! -->
+                            	<h4><span class="text-primary">${classInfo.className}</span> - 강의컨텐츠</h4><!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
                     </div>    

@@ -35,6 +35,7 @@ public class NoticeController {
 		model.addAttribute("allMyClass", classService.getAllMyActiveClass(instructorID));
 		model.addAttribute("allMyInactiveClass", classService.getAllMyInactiveClass(instructorID));
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
+		model.addAttribute("className", classService.getClassName(id));
 		
 		model.addAttribute("allNotices", noticeService.getAllNotice(id));
 		return "class/notice";
