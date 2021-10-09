@@ -48,6 +48,7 @@ public class VideoController {
 	@RequestMapping(value = "/detail", method = RequestMethod.POST)
 	public String getSelectedPlaylistVideos(@RequestParam("playlistID") int playlistID, 
 			@RequestParam("videoID") int videoID, Model model){
+		model.addAttribute("playlistID", playlistID);
 		model.addAttribute("videoID", videoID);	//가장 먼저 플레이어에 띄워지는 비디오
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));

@@ -25,9 +25,6 @@
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	
@@ -85,65 +82,19 @@ var title;
 var newTitle;
 var videoTag;
 $(document).ready(function(){
-
 	$('.myplaylistLink').addClass('text-primary');
-	
-	var allMyClass = JSON.parse('${allMyClass}');
 
-	for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
-		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
-		
-		//classInfo 가져오려면 controller에서 classID필요한데, 컨트롤러에 classID에 대한 정보가 없음. 추가해주어야함
-		if ('${classInfo.className}' == name){ 
-			var li = '<li class="mm-active">'
-			var contentMenu = '<a href="' + classContentURL + '" class="mm-active">';
-		}
-		else {
-			var li = '<li>';
-			var contentMenu = '<a href="' + classContentURL + '">';
-		}
-
-		var html = '<li>'
-						+ '<a href="#">'
-							+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-							+ name
-							+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-						+ '</a>'
-						+ '<ul>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '공지'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="' + classContentURL + '">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '학습 컨텐츠'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '성적'
-								+ '</a>'
-							+ '</li>'
-						+ '</ul>'
-					+ '</li>';
-				
-		$('.sideClassList').append(html);
-	}
-	getPlaylistInfo(${playlistID});
-	getAllVideo(${playlistID}, ${videoID}); //이전 페이지에서 사용자가 선택한 playlistID 및 처음 띄워야 할 비디오ID
+	getPlaylistInfo();
+	getAllVideo();
 
 });
 
-function getPlaylistInfo(playlistID){
+function getPlaylistInfo(){
+	var playlistID = ${playlistID};
 	$.ajax({
 		type : 'post',
 		url : '${pageContext.request.contextPath}/playlist/getPlaylistInfo',
-		data : {playlistID : playlistID},
+		data : {'playlistID' : playlistID},
 		datatype : 'json',
 		success : function(result){
 			var playlistName = result.playlistName;
@@ -159,14 +110,19 @@ function getPlaylistInfo(playlistID){
 							+ '<p class="numOfNow" style="display:inline"></p>'
 							+ ' / '
 							+ '<p class="numOfTotal" style="display:inline">' + totalVideo + '</p>'
+							+ '<p class="totalVideoLength ml-3" style="display:inline"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>';
 						+ '</div>'
-						+ '<p class="totalVideoLength"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>';
+						
 			$('.playlistInfo').append(html);
+		}, error:function(request,status,error){
+			console.log(request);
 		}
 	});
 }
 
-function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당하는 비디오 list를 가져온다
+function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 가져온다
+	var playlistID = ${playlistID};
+	var defaultVideoID = ${videoID};
 	$.ajax({
 		type : 'post',
 	    url : '${pageContext.request.contextPath}/video/getOnePlaylistVideos',
@@ -179,6 +135,9 @@ function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당�
 		    $.each(videos, function( index, value ){ 
 		    	var tmp_newTitle = value.newTitle;
 		    	var tmp_title = value.title;
+				var tag = value.tag;
+		    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic">';
+		    	
 		    	if (tmp_title.length > 30)
 					tmp_title = tmp_title.substring(0, 30) + " ..."; 
 				
@@ -187,13 +146,7 @@ function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당�
 		    		tmp_title = '';
 			    }
 
-		    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic">';
-
-				var tmp_tags = '';
-		    	if (value.tag != null && value.tag.length > 0){
-			    	tmp_tags = value.tag.replace(', ', ' #');
-		    		tmp_tags = '#'+ tmp_tags;
-		    	}
+			    if (tag == null) tag = '';
 
 		    	if (value.id == defaultVideoID){ //처음으로 띄울 video player설정
 		    		$('.displayVideo').attr('videoID', value.id);
@@ -203,17 +156,18 @@ function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당�
 			    	youtubeID = value.youtubeID;
 			    	newTitle = value.newTitle;
 			    	title = value.title;
-			    	videoTag = value.tag;
+			    	videoTag = tag;
 			    	
 					setYouTubePlayer();
 			    	setDisplayVideoInfo(index); //player 제외 선택한 video 표시 설정
 				
 					var addStyle = ' style="background-color:#F0F0F0;" ';
 			    }
+
 		    	else 
 		    		var addStyle = '';
 			    
-		    	var html = '<button class="video list-group-action list-group-item row d-flex align-items-center" onclick="playVideoFromPlaylist(this)"'
+		    	var html = '<button class="video list-group-action list-group-item row d-flex justify-content-between" onclick="playVideoFromPlaylist(this)"'
 								+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 								+ '" videoID="' + value.id 
 								+ '" youtubeID="' + value.youtubeID 
@@ -223,17 +177,30 @@ function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당�
 								+ addStyle
 							+ '>'
 							//+ '<div class="videoSeq ">' + (index+1) + '</div>'
-							+ '<div class="post-thumbnail col-lg-4">'
-							+ 	'<div class="videoSeq ">' + (index+1) + thumbnail + '</div>'
-							+ 	'<div class="tag text-primary" tag="' + value.tag + '">' + tmp_tags + '</div>'
-							+'</div>'
-							+ '<div class="col-lg-7">' 
-							+ 	'<h6 class="post-title list-group-item-heading">' + tmp_newTitle + '</h6>'
-							+ 	'<div class="videoOriTitle" style = "color :#a6a6a6; font-size: 0.1em;">' + tmp_title + '</div>'
-							+ 	'<div class="duration"> ' + convertTotalLength(value.duration) + '</div>'
-							+'</div>'
-							+ '<a href="#" class="aDeleteVideo col-lg-1 badge badge-danger" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-						+ '</button>';
+							+ '<div class="post-thumbnail col-lg-3">'
+								+ '<div class="videoSeq row">' 
+									+ '<span class="col-1">' + (index+1) + '</span>'
+									+ thumbnail 
+								+ '</div>'
+								+ '<div class="tag" tag="' + tag + '"></div>'
+							+ '</div>'
+							+ '<div class="col-lg-8 justify-content-between">' 
+								+ '<h6 class="post-title list-group-item-heading" style="font-size: 13px;">' + tmp_newTitle + '</h6>'
+								+ '<div class="videoOriTitle" title="' + tmp_title + '"></div>'
+								+ '<p style="font-size: 13px;">' 
+									+ '<span class="mr-2">시작: ' + convertTotalLength(value.start_s) + '</span>'
+									+ '<span class="mr-2"> 끝: ' + convertTotalLength(value.end_s) + '</span>'
+									+ '<br><span>총 길이: ' + convertTotalLength(value.duration) + '</span>'
+								+ '</p>'
+								+ '<button type="button" class="videoEditBtn col-lg-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
+								+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
+							+ '</button>'
+							+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(218px, 96px, 0px);">' 
+								+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
+								+ '<button type="button" onclick="deleteVideo(' + value.id + ')" class="dropdown-item"><p class="text-danger">삭제</p></button></div>'
+							+ '</div>'
+							
+							+ '</div>';
 						//+ '<div class="videoLine"></div>';
 				$('.videos').append(html); 
 			});
@@ -257,7 +224,7 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 	var childs = item.childNodes;
 	
 	newTitle = childs[1].childNodes[0].innerText;
-	title = childs[1].childNodes[1].innerText;
+	title = childs[1].childNodes[1].getAttribute('title');
 	videoTag = childs[0].childNodes[1].attributes[1].value;
 
 	setDisplayVideoInfo(item.getAttribute('seq'));
@@ -543,10 +510,16 @@ function updateVideo(){ // video 정보 수정
 										<div class="card-body">
 											<div class="form-row">
                                                 <div class="col-md-8">
-                                                    <div class="position-relative form-group"><label for="inputNewTitle" class="">영상 제목</label><input name="newTitle" id="inputNewTitle" type="text" class="form-control"></div>
+                                                    <div class="position-relative form-group">
+                                                    	<label for="inputNewTitle" class="">영상 제목 설정</label>
+                                                    	<input name="newTitle" id="inputNewTitle" type="text" class="form-control">
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div class="position-relative form-group"><label for="inputTag" class="">태그</label><input name="tag" id="inputTag" type="text" class="form-control"></div>
+                                                    <div class="position-relative form-group">
+                                                    	<label for="inputTag" class="">태그</label>
+                                                    	<input name="tag" id="inputTag" type="text" class="form-control">
+                                                    </div>
                                                 </div>
                                             </div>
                                             
