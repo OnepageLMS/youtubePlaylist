@@ -163,41 +163,48 @@ function submitDeleteClassroom(){
        <jsp:include page="../outer_top_noHamburgur_stu.jsp" flush="true"/>      
                
        <div class="app-main">  
-                 <div class="app-main__outer">
-                    <div class="app-main__inner">
-                        <div class="app-page-title">
-                            <div class="page-title-wrapper">
-                                <div class="page-title-heading col-sm-12">
-                                  	<h2 class="col-sm-10">내 강의실</h2>
-                                </div>
-                          </div>
-                        </div>            
-                       
-                        <div class="dashboardClass">
-                        	<div class="classActive row col">
-                        		<div class="col-12 row">
-                        			<h4 class="col-sm-5 col-md-2">활성화된 강의실</h4>
-	                        		<div class="dropdown d-inline-block">
-			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
-			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-			                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
-			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
-			                           </div>
-			                       </div>
-                        		</div>
-                        	</div>
-                        	<div class="classInactive row col">
-                        		<div class="col-12 row">
-                        			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
-	                        		<div class="dropdown d-inline-block">
-			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
-			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-			                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
-			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
-			                           </div>
-			                       </div>
-                        		</div>
-                        	</div>
+                <div class="app-main__outer">
+                   <div class="app-main__inner">
+                       <div class="app-page-title">
+                           <div class="page-title-wrapper">
+                               <div class="page-title-heading mr-3">
+                                 	<h3>내 강의실</h3>
+                               </div>
+                               <div class="search-wrapper">
+			                    <div class="input-holder">
+			                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+			                        <button class="search-icon"><span></span></button>
+			                    </div>
+			                    <button class="close"></button>
+			                </div>
+                         </div>
+                       </div>            
+                      
+                       <div class="dashboardClass">
+                       	<div class="classActive row col">
+                       		<div class="col-12 row">
+                       			<h4 class="col-sm-5 col-md-2">활성화된 강의실</h4>
+                        		<div class="dropdown d-inline-block">
+		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
+		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+		                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
+		                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
+		                           </div>
+		                       </div>
+                       		</div>
+                       	</div>
+                       	<div class="classInactive row col">
+                       		<div class="col-12 row">
+                       			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
+                        		<div class="dropdown d-inline-block">
+		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
+		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+		                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
+		                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
+		                           </div>
+		                       </div>
+                       		</div>
+                       	</div>
                             	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
@@ -231,7 +238,7 @@ function submitDeleteClassroom(){
 		               </div>
 		               <div class="position-relative form-group">
 		               		<label for="editClassName" class="">강의실 설명</label> 
-		               		<p id="displayDescription" class="form-control"></p>
+		               		<textarea id="displayDescription" class="form-control" rows="4"></textarea>
 		               </div>
 					</div>
 					<div class="divider"></div>

@@ -42,7 +42,7 @@ public class PlaylistController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
-		return "playlist/myPlaylist";
+		return "playlist/myPlaylist_noShare";
 	}
 	
 	@RequestMapping(value = "/addPlaylist", method = RequestMethod.POST)
