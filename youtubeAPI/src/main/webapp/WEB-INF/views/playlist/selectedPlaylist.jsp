@@ -45,6 +45,10 @@
 			display: inline;
 		}
 		
+		.video:hover{
+			background-color: #F0F0F0;
+		}
+		
 		#slider-div {
 		  display: flex;
 		  flex-direction: row;
@@ -106,12 +110,14 @@ function getPlaylistInfo(){
 			$('#allVideo').attr('playlistID', playlistID);
 
 			$('.playlistInfo').empty();
+			var addVideoURL = "'${pageContext.request.contextPath}/video/youtube'";
 			var html = '<div class="numOfVideos">'
 							+ '<p class="numOfNow" style="display:inline"></p>'
 							+ ' / '
 							+ '<p class="numOfTotal" style="display:inline">' + totalVideo + '</p>'
-							+ '<p class="totalVideoLength ml-3" style="display:inline"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>';
-						+ '</div>'
+							+ '<p class="totalVideoLength ml-3" style="display:inline"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>'
+							+ '<button type="button" class="ml-3 btn btn-transition btn-outline-success btn-sm" onclick="location.href=' + addVideoURL + '">Youtube영상추가</button>'
+						+ '</div>';
 						
 			$('.playlistInfo').append(html);
 		}, error:function(request,status,error){
@@ -161,47 +167,54 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 					setYouTubePlayer();
 			    	setDisplayVideoInfo(index); //player 제외 선택한 video 표시 설정
 				
-					var addStyle = ' style="background-color:#F0F0F0;" ';
+					var addStyle = ' style="background-color:#F0F0F0; padding:5px;"';
 			    }
 
 		    	else 
-		    		var addStyle = '';
-			    
-		    	var html = '<button class="video list-group-action list-group-item row d-flex justify-content-between" onclick="playVideoFromPlaylist(this)"'
-								+ ' seq="' + index //이부분 seq로 바꿔야할듯?
-								+ '" videoID="' + value.id 
-								+ '" youtubeID="' + value.youtubeID 
-								+ '" start_s="' + value.start_s
-								+ '" end_s="' + value.end_s
-								+ '" maxLength="' + value.maxLength + '"'
-								+ addStyle
+		    		var addStyle = 'style="padding:5px;"';
+
+		    	var html = '<div class="video list-group-action list-group-item row d-flex justify-content-between"'
+		    				+ addStyle
 							+ '>'
+								+'<div class="col-lg-11 row" onclick="playVideoFromPlaylist(this)" ' 
+									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
+									+ '" videoID="' + value.id 
+									+ '" youtubeID="' + value.youtubeID 
+									+ '" start_s="' + value.start_s
+									+ '" end_s="' + value.end_s
+									+ '" maxLength="' + value.maxLength + '"'
+								+ '>'
 							//+ '<div class="videoSeq ">' + (index+1) + '</div>'
-							+ '<div class="post-thumbnail col-lg-3">'
-								+ '<div class="videoSeq row">' 
-									+ '<span class="col-1">' + (index+1) + '</span>'
-									+ thumbnail 
+									+ '<div class="post-thumbnail col-lg-3">'
+										+ '<div class="videoSeq row">' 
+											+ '<span class="col-1">' + (index+1) + '</span>'
+											+ thumbnail 
+										+ '</div>'
+										+ '<div class="tag" tag="' + tag + '"></div>'
+									+ '</div>'
+									+ '<div class="col-lg-9 justify-content-between">' 
+										+ '<h6 class="post-title list-group-item-heading" style="font-size: 13px;">' + tmp_newTitle + '</h6>'
+										+ '<div class="videoOriTitle" title="' + tmp_title + '"></div>'
+										+ '<p style="font-size: 13px;">' 
+											+ '<span class="mr-2">시작: ' + convertTotalLength(value.start_s) + '</span>'
+											+ '<span class="mr-2"> 끝: ' + convertTotalLength(value.end_s) + '</span>'
+											+ '<br><span>총 길이: ' + convertTotalLength(value.duration) + '</span>'
+										+ '</p>'
+									+ '</div>'
 								+ '</div>'
-								+ '<div class="tag" tag="' + tag + '"></div>'
-							+ '</div>'
-							+ '<div class="col-lg-8 justify-content-between">' 
-								+ '<h6 class="post-title list-group-item-heading" style="font-size: 13px;">' + tmp_newTitle + '</h6>'
-								+ '<div class="videoOriTitle" title="' + tmp_title + '"></div>'
-								+ '<p style="font-size: 13px;">' 
-									+ '<span class="mr-2">시작: ' + convertTotalLength(value.start_s) + '</span>'
-									+ '<span class="mr-2"> 끝: ' + convertTotalLength(value.end_s) + '</span>'
-									+ '<br><span>총 길이: ' + convertTotalLength(value.duration) + '</span>'
-								+ '</p>'
-								+ '<button type="button" class="videoEditBtn col-lg-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
-								+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
-							+ '</button>'
-							+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(218px, 96px, 0px);">' 
-								+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
-								+ '<button type="button" onclick="deleteVideo(' + value.id + ')" class="dropdown-item"><p class="text-danger">삭제</p></button></div>'
-							+ '</div>'
+								
+									+ '<button type="button" class="videoEditBtn col-lg-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
+		    							+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
+			    					+ '</button>'
+			    					+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-411px, 33px, 0px);">' 
+			    						+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
+			    						+ '<button type="button" onclick="deleteVideo(' + value.id + ')" class="dropdown-item"><p class="text-danger">삭제</p></button>'
+			    					+ '</div>'
 							
 							+ '</div>';
+							
 						//+ '<div class="videoLine"></div>';
+						
 				$('.videos').append(html); 
 			});
 		}
@@ -211,10 +224,11 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클릭했을 때 실행 (처음 이 페이지가 불러와질때 제외)
 //console.log(item);
 	$('.displayVideo').attr('videoID', item.getAttribute('videoID'));
+	var seq = item.getAttribute('seq');
 	
 	$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동 
 	$('.video').css({'background-color' : '#fff'});
-	item.style.background = "#F0F0F0"; //클릭한 video 표시
+	$('.video:eq(' + seq + ')').css("background", "#F0F0F0"); //클릭한 video 표시
 
 	youtubeID = item.getAttribute('youtubeID');
 	start_s = item.getAttribute('start_s');
@@ -227,7 +241,7 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 	title = childs[1].childNodes[1].getAttribute('title');
 	videoTag = childs[0].childNodes[1].attributes[1].value;
 
-	setDisplayVideoInfo(item.getAttribute('seq'));
+	setDisplayVideoInfo(seq);
 	
 	player.loadVideoById({
 		'videoId' : youtubeID,
@@ -444,6 +458,31 @@ function updateVideo(){ // video 정보 수정
 	});
 }
 
+
+function deleteVideo(videoID){ // video 삭제
+	//이부분 수정필요!!! --> 학습자료로 사용중인 비디오 있을때 체크!!!!
+	if (confirm("정말 삭제하시겠습니까?")){
+		var playlistID = $('.selectedPlaylist').attr('playlistID');
+		changeAllVideo(videoID);
+		console.log("deleteVideo: " + videoID + ":" + playlistID);
+		
+		$.ajax({
+			'type' : "post",
+			'url' : "${pageContext.request.contextPath}/video/deleteVideo",
+			'data' : {	videoID : videoID,
+						playlistID : playlistID
+				},
+			success : function(data){
+				changeAllVideo(videoID); //삭제한 videoID 넘겨줘야 함.
+		
+			}, error : function(err){
+				alert("video 삭제 실패! : ", err.responseText);
+			}
+
+		});
+	}
+	else false;
+}
 </script>
 <script>	//시작, 끝 시간 설정 bar
 	$( function() {
@@ -469,7 +508,7 @@ function updateVideo(){ // video 정보 수정
                  <div class="app-main__outer">
                     <div class="app-main__inner">
                     
-                        <div class="app-page-title" style="padding: 0; margin: -20px -20px 20px;">
+                        <div class="app-page-title" style="padding: 0; margin: -20px -20px 10px;">
                             <div class="page-title-wrapper" >
                                 <div class="page-title-heading">
                                 	<div class="row mr-3 ml-1">
@@ -478,7 +517,7 @@ function updateVideo(){ // video 정보 수정
                                 			<p class="col-12" style="font-size:12px; text-align: center;">이전</p>
                                 		</button>
                                 	</div>
-                                	<h4 class="displayPlaylistName text-primary"></h4> <h4> - 비디오</h4>
+                                	<h4 class="displayPlaylistName text-primary" style="padding-bottom: 2%;"></h4> <h4> - 비디오</h4>
                                 </div>
                           </div>
                         </div>            
