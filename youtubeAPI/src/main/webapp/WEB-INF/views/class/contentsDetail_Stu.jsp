@@ -425,7 +425,7 @@ function onYouTubeIframeAPIReady() {
 	player = new YT.Player('onepageLMS', {
 	       height: '480',            // <iframe> 태그 지정시 필요없음
 	       width: '854',             // <iframe> 태그 지정시 필요없음
-	       videoId: weekContents[videoIdx].thumbnailID,
+	       videoId: weekContents[1].thumbnailID,
 	       playerVars: {             // <iframe> 태그 지정시 필요없음
 	           controls: '2'
 	       },

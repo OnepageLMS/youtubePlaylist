@@ -13,6 +13,7 @@ public interface ClassContentService {
 	public ClassContentVO getOneContent(int id);
 	public List<ClassContentVO> getAllClassContent(int classID);
 	public List<ClassContentVO> getFileClassContent(int classID);
+	public List<ClassContentVO> getRealAll(int classID);
 	public List<ClassContentVO> getAllClassContentForCopy(int classID);
 	public int insertCopiedClassContents(List<ClassContentVO> list);
 	public int getDaySeq(ClassContentVO vo);
