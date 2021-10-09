@@ -134,7 +134,7 @@ $(document).ready(function(){
 	// Playlist 이름 보여지게 하기
 	//console.log(JSON.stringify(localStorage.getItem("selectedPlaylist")));
 	console.log(localStorage.getItem("selectedPlaylistName"));
-	$("#playlistName").before('<h4 style="color: blue; display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');	
+	$("#playlistName").before('<h4 class="text-primary" style="display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');	
 });
 </script>
 
