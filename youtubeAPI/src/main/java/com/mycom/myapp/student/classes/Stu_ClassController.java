@@ -105,6 +105,8 @@ public class Stu_ClassController{
 		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		//지금 studentID가 제대로 안들어간다..
+		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(1)));
+		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
@@ -130,7 +132,6 @@ public class Stu_ClassController{
 		model.addAttribute("vo", classContentService.getOneContent(id));
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		System.out.println("detail인데 StudentID : " + studentId);
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
 		return "class/contentsDetail_Stu";
@@ -141,7 +142,8 @@ public class Stu_ClassController{
 	@RequestMapping(value = "/weekContents", method = RequestMethod.POST)
 	public List<ClassContentVO> weekContents(HttpServletRequest request, Model model) throws Exception {
 		
-	    return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
+	   // return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
+		return classContentService.getAllClassContent(Integer.parseInt(request.getParameter("classID")));
 	}
 	
 	@ResponseBody

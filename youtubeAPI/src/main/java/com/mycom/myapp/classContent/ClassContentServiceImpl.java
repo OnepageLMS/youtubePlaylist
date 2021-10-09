@@ -54,6 +54,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public List<ClassContentVO> getRealAll(int classID){
+		return ClassContentDAO.getRealAll(classID);
+	}
+	
+	@Override
 	public List<ClassContentVO> getAllClassContentForCopy(int classID){
 		return ClassContentDAO.getAllClassContentForCopy(classID);
 	}

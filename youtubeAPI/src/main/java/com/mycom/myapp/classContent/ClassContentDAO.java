@@ -54,6 +54,11 @@ public class ClassContentDAO {
 		return result;
 	}
 	
+	public List<ClassContentVO> getRealAll(int classID){
+		List<ClassContentVO> result = sqlSession.selectList("ClassContent.getRealAll", classID);
+		return result;
+	}
+	
 	public List<ClassContentVO> getAllClassContentForCopy(int classID){
 		List<ClassContentVO> result = sqlSession.selectList("ClassContent.getAllClassContentForCopy", classID);
 		return result;

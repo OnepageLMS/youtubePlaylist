@@ -49,6 +49,12 @@
 		where classID=#{classID} and playlistID is null
 	</select>
 	
+	<select id="getRealAll" resultType="classContent">
+		select days, daySeq, title, description, playlistID, startDate, endDate
+		from lms_classContent
+		where classID=#{classID} order by days, daySeq
+	</select>
+	
 	<select id="getAllClassContentForCopy" resultType="classContent">
 		select days, daySeq, title, description, playlistID, startDate, endDate
 		from lms_classContent

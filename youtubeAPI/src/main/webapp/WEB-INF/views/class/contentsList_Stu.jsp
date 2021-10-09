@@ -39,6 +39,7 @@
 	$(document).ready(function(){
 		
 		var weekContents = JSON.parse('${weekContents}');
+		var allMyClass = JSON.parse('${realAllMyClass}');
 		//console.log("weekContents")
 		//playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해 //안쓰고있음
 		//playlist = JSON.parse('${playlist}'); //total 시간을 위해 //playlist테이블에서 직접 가져오면 되지 않을까 ?? //엥,, weekContents로 다 할 수 있는디..? 
@@ -47,7 +48,45 @@
 		var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
 		
 		//console.log("몇개냐면,, " + weekContents.length);
-	 		for(var i=0; i<weekContents.length; i++){
+		console.log("length : " + allMyClass.length);
+			for(var i=0; i<allMyClass.length; i++){
+				//if(allMyClass[i].playist == 0){
+					
+				//}
+				//var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
+				var day = allMyClass[i].days;
+				var endDate = allMyClass[i].endDate; //timestamp -> actural time
+				//var result_date = convertTotalLength(date);
+				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
+				
+				
+				var onclickDetail = "location.href='../contentDetail/" + allMyClass[i].playlistID + "/" + allMyClass[i].id + "/" +classInfo+ "/" + i +  "'";
+				
+				var content = $('.day:eq(' + day + ')');
+				
+				content.append(
+						 "<div class='content list-group-item-action list-group-item' seq='" + allMyClass[i].daySeq + "'>"
+									//+ '<div class="row col d-flex justify-content-between align-items-center">'
+									+ '<div class="row col d-flex align-items-center">'
+										+ '<div class="index col-sm-1 ">' + (allMyClass[i].daySeq+1) + '. </div>'
+										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
+										+ "<div class='col-sm-8 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
+											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
+												+ allMyClass[i].title + "  [" + convertTotalLength(allMyClass[i].totalVideoLength)  + "]"
+											+ '</div>'
+											
+											+ '<div class="col-sm-12 align-items-center" style=" height: 50%; font-size: 15px; padding: 5px 0px 0px;">'
+												+ '<div class="contentInfoBorder"></div>'
+												+ '<div class="contentInfoBorder"></div>'
+												+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+											+ '</div>'
+										
+										+ '</div>'
+									+ '</div>'
+								+ '</div>');
+			}
+
+	 		/*for(var i=0; i<weekContents.length; i++){
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 				var day = weekContents[i].days;
 				var endDate = weekContents[i].endDate; //timestamp -> actural time
@@ -80,7 +119,7 @@
 										+ '</div>'
 									+ '</div>'
 								+ '</div>');
-				}
+				}*/
 	 		
 	});
 	

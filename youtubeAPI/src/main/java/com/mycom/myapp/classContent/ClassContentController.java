@@ -49,7 +49,8 @@ public class ClassContentController {
 		classID = classId;
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
-		model.addAttribute("allFileContents", JSONArray.fromObject(classContentService.getFileClassContent(classID)));
+		//model.addAttribute("allFileContents", JSONArray.fromObject(classContentService.getFileClassContent(classID)));
+		model.addAttribute("realAllContents", JSONArray.fromObject(classContentService.getRealAll(classID))); // 그냥 모든 강의 컨텐츠 우선은 가져오려고,
 		System.out.println(classContentService.getFileClassContent(classID).get(0).getTitle());
 		System.out.println("강의 개수 : " + classContentService.getClassNum(classID));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
