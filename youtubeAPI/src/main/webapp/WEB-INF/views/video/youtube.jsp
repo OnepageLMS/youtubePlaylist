@@ -394,6 +394,9 @@ $(document).ready(function(){
 		var youtubeID;
 		var values; // slider handles 
 		var d; // var for current playtime
+
+		// 카트 
+		var hhmmss; // 카트에서 보여지 시간 
 		
 		// 이전 index 존재 유무 확인
 		var prev_index=null;
@@ -404,79 +407,121 @@ $(document).ready(function(){
 		firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-		var $element = $('#slider-range');
+		//var $element = $('#slider-range');
 		
-
-		
-		function viewVideo(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
-			//$('.videos').css({'fontWeight' : 'normal'});
-			//$('input:checkbox').prop("checked", false); //youtube 검색결과에서 비디오 선택하면 playlist 체크된것 다 초기화 
-			//$('.submitBtn').html('추가');
-			
-			console.log(id, title, duration, index);
-			
-			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div class="iframe-container" id="player"></div> </div>'); 
-			$div.append('<div class="p-1 m-1 bg-white text-dark">'+ $("#get_view").children().eq(index).children().eq(2).html() + '</div>');
-			$div.append('<div id="player_info"></div>');
-			
-			// 영상 구간 설정 (jw 아래에서 코드 가져와서 적용되게 함 )			
-			$div.append($('#setVideoInfo').html());
-			
-			
-			$div.append('<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>');
-				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
-				var hours = parseInt(regex_result[1] || 0);
-				var minutes = parseInt(regex_result[2] || 0);
-				var seconds = parseInt(regex_result[3] || 0);
-	
-				/* if(seconds != "00") {
-					seconds = parseInt(seconds) - 1;  // 어떤건 1초 적게 나올 수 있음 이게 영상 마다 정의된 총 길이시간이 1초가 더해지기도 안더해지기도 해서 . 
-				}	  */
-				console.log("check hours here", duration);
-				console.log("check hours here", hours);
-	
-				$('#end_hh').val(hours);
-				$("#end_mm").val(minutes);
-				$("#end_ss").val(seconds);
-	
-				var total_seconds = hours * 60 * 60 + minutes * 60 + seconds;
-	
-				// for validty check: 이제 sliderbar로 만들거라 상관없음...
-				limit = parseInt(total_seconds);
-				//document.getElementById("maxLength").value = limit;
-	
-				//이미 다른 영상이 player로 띄워져 있을 때 새로운 id로 띄우기
-				//player.loadVideoById(videoId, 0, "large");
-	
-	
-				// (jw) 이제 form 사용안할거라서 지워도 되려나...? 
-				/* document.getElementById("start_hh").value = 0;
-				document.getElementById("start_mm").value = 0;
-				document.getElementById("start_ss").value = 0; */
-			
-			if(prev_index != null){
-				$('#playerBox').remove();
-				
-			    //$("#get_view").children().eq(prev_index).attr('style', 'display: block');
-			    //$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: none');
-			}
-			//console.log($("#get_view").children().eq(index).children().eq(2).html());
-			
-			// 오른쪽 카드 안에 player 띄우기
-			$(".playerForm").children().eq(0).after($div);
-			
-			showYoutubePlayer(id, title, index);	
-			prev_index = index;		
-		}		
-
 		function viewVideo2(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
 			console.log(id, title, duration, index);
 
 			// (21/10/06) youtube 플레이어 띄워주고, 제목을 띄워준다. 이 부분은 <div> 태그로 감싸져서 초록색이 나타나게 되는데 영상구간 설정 부분까지 태그로 감싸지게 해야 전체가 초록색 배경이 될듯. 
-			var $div = $('<div id="playerBox" class="text-center list-group-item-success" style="margin: auto;"> <div class="iframe-container" id="player"></div> <div id="player_info"></div> </div>'); 			
+			var $div = $('<div id="playerBox" class="text-center" style="margin: auto;"> <div class="iframe-container" id="player"></div></div>'
+					+ '<form class>'
+						+ '<div id="player_info">' 
+							+ '<div class="position-relative row form-group">'
+							+ '<div class="col-sm-1"> 제목 </div>'
+							+ '<div class="col-sm-11"> <input name="newName" id="newName" type="text" class="col-sm-11 form-control" value="'+ title +'"></div>'
+						+ '</div>'
+						+ '<div id="setVideoInfo"> <input type="hidden" name="duration" id="duration">'
+							+ '<div id="delete" >'
+								+ '<div class="setTimeRange input-group">'
+									+ '<div class="col-md-2 input-group-prepend">'
+										+ '<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">시작</button>'
+									+ '</div>'
+									+ '<div class="col-md-8"> </div>'
+									+ '<div class="col-md-2 input-group-append">' 
+										+ '<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">끝</button>'
+									+ '</div>' 
+								+ '</div>'
+								+ '<div class="position-relative row form-group">'
+									+ '<div class="col-sm-2 col-form-label d-flex justify-content-center">'
+										+ '<label for="amount"><b>설정된 시간</b></label>'
+									+ '</div>' 
+									+ '<div class="col-sm-6"> <input type="text" id="amount" class="form-control" readonly style="border:0;"> </div>'
+									+ '<div class="col-sm-3"> <div id="warning1"> </div> </div>' 
+								+ '</div>' 
+							+ '</div>'
+							+ '<div> <span style="font-weight: bold"> 태그: </span> <input type="text" id="tag" name="tag"> </div>' 
+						+ '</div>'
+						+ '<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>' 
+					+'</form>'); 		
+					
+					
+
+			/*
+			<div id="setVideoInfo">
+							<input type="hidden" name="duration" id="duration">
+							
+							<!-- <div class="setTimeRange col row input-group">
+									<div class="col-2 input-group-prepend">
+										<button class="btn btn-outline-secondary">시작</button>
+									</div>
+									<div class="col-8">
+										<div id="slider-range"></div>
+									</div>
+									<div class="col-2 input-group-append">
+										<button class="btn btn-outline-secondary">끝</button>
+									</div>
+									<div class="col">
+										<label for="amount"><b>설정된 시간</b></label>
+										<input type="text" id="amount" readonly style="border:0;">
+									</div> 
+							</div> -->
+							
+							<div id="delete" >
+                               <div class="setTimeRange input-group">
+									<div class="col-md-2 input-group-prepend">
+										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">시작</button>
+									</div>
+									<div class="col-md-8">
+										<div id="slider-range"></div>
+									</div>
+									<div class="col-md-2 input-group-append">
+										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">끝</button>
+									</div>
+								</div>
+									<div class="position-relative row form-group">
+									 	<div class="col-sm-2 col-form-label d-flex justify-content-center">
+											<label for="amount"><b>설정된 시간</b></label>
+										</div>
+										<div class="col-sm-6">
+											<input type="text" id="amount" class="form-control" readonly style="border:0;">
+										</div>
+										<div class="col-sm-3">
+											<div id="warning1"> </div>
+										</div>
+									</div>
+									
+                            </div>
+                                            
+							<!-- <div>
+								<button onclick="getCurrentPlayTime1(this)" type="button">start time</button>
+								: <input type="text" id="start_hh" maxlength="2" size="2">
+								시 <input type="text" id="start_mm" maxlength="2" size="2">
+								분 <input type="text" id="start_ss" maxlength="5" size="5">
+								초
+								<button onclick="seekTo1()" type="button">위치이동</button>
+								<span id=warning1 style="color: red;"></span> <br>
+							</div> 
+
+							<div>
+								<button onclick="getCurrentPlayTime2()" type="button">end time</button>
+								: <input type="text" id="end_hh" max="" maxlength="2" size="2">
+								시 <input type="text" id="end_mm" max="" maxlength="2" size="2">
+								분 <input type="text" id="end_ss" maxlength="5" size="5">
+								초
+								<button onclick="seekTo2()" type="button">위치이동</button>
+								<span id=warning2 style="color: red;"></span> <br>
+							</div>  -->
+
+
+							<div>
+								<span style="font-weight: bold"> 태그: </span><input type="text"
+									id="tag" name="tag">
+							</div>
+							
+							<div> <i class="fas fa-plus-square" onclick="addToCart(\''+videoId+ '\'' + ',\'' +videoTitle+'\')"> 리스트에 추가 </i></div>
+						</div>
 			
-			$div.append('<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>');
+			*/
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
 
@@ -517,7 +562,7 @@ $(document).ready(function(){
 			
 			// 오른쪽 카드 안에 player 띄우기
 			console.log("player폼 확인!!=> " , $(".playerForm").children().eq(0));
-			$(".playerForm").children().eq(0).prepend($div);
+			$(".playerForm").children().eq(0).append($div);
 			
 			showYoutubePlayer(id, title, index);	
 			prev_index = index;		
@@ -545,11 +590,7 @@ $(document).ready(function(){
 			
 			console.log("check videoTitle here", videoTitle);
 
-			document.getElementById("player_info").innerHTML =
-				
-				'<div class="position-relative row form-group">'+
-				'<div class="col-sm-1"> 제목 </div>' +
-				'<div class="col-sm-11"> <input name="newName" id="newName" type="text" class="col-sm-11 form-control" value="'+ videoTitle +'"></div></div>';
+			
 					
 			/* <span class="videoTitle bg-white p-1" style="border: 1px solid black"> </span>
 			<div>
@@ -752,6 +793,7 @@ $(document).ready(function(){
 				return false;
 			}
 
+			// running time 구하기 * (다시 하기 ==> 21/10/07)
 			start_time = start_hour*3600.00 + start_min*60.00 + start_sec*1.00;
 			end_time = end_hour*3600.00 + end_min*60.00 + end_sec*1.00;
 			
@@ -760,7 +802,6 @@ $(document).ready(function(){
 		    const minutes = Math.floor(totalSeconds % 3600 / 60);
 		    const seconds = totalSeconds % 60;
 
-		    
 		    if(hours!=0){
 		    	hhmmss = hours + ':' + minutes + ':' + seconds;
 		    }
@@ -768,8 +809,8 @@ $(document).ready(function(){
 		    	hhmmss = minutes + ':' + seconds;
 		    }
 
-		    
-		  	console.log("check hhmmss ==>" , hhmmss);
+		  	console.log("check hhmmss ==>" , hhmmss); // *
+		  	
 		  	
 			//console.log(limit);
 			//console.log(end_time - start_time);
@@ -792,23 +833,6 @@ $(document).ready(function(){
 
 			return true;
 			
-			else {
-				/* if ($('#inputVideoID').val() > -1)
-					return updateVideo(event); */
-					
-				// 우측 카트에 hidden tag로 start_s, end_s 넣기 
-				$('#start_s').val(start_time);
-				$('#end_s').val(end_time); 
-				$('#start_s').attr("value", start_time);
-				$('#running_time').append('<span>' + hhmmss + '</span>'); 
-				
-				//document.getElementById('running_time').innerHTML += hhmmss; 
-				//$('#running_time').html("duration: "+ hhmmss);
-				//document.getElementById('running_time').innerHTML = "duration: " + hhmmss; 
-				// 아직 카트 element가 생성되기 전이라서 이렇게 변수에 저장해놓은 뒤에 사용할 수 밖에 없음. 
-				running_time = hhmmss;
-				return true;
-			} 
 		}
 		function addToCart(id, title){
 			console.log(id, title);
@@ -824,14 +848,26 @@ $(document).ready(function(){
 			//var content = thumbnail2 + title;
 			//$("#videosInCart").append(content);
 			//2.
+	
+				//document.getElementById('running_time').innerHTML += hhmmss; 
+				//$('#running_time').html("duration: "+ hhmmss);
+				//document.getElementById('running_time').innerHTML = "duration: " + hhmmss; 
+				// 아직 카트 element가 생성되기 전이라서 이렇게 변수에 저장해놓은 뒤에 사용할 수 밖에 없음. 
+				
+				//running_time = hhmmss;
+			
+			var cart_start_time;
+			var cart_end_time;
+
+			// 시작, 끝시간을 정할떄 validation을 통과했으면 start_
 			
 			if( $('#start_hh').is(':empty') ) {
-				var start_time =  $('#start_mm').val() + ":" + $('#start_ss').val();
-				var end_time = $('#end_mm').val() + ":" + $('#end_ss').val();
+				cart_start_time =  $('#start_mm').val() + ":" + $('#start_ss').val();
+				cart_end_time = $('#end_mm').val() + ":" + $('#end_ss').val();
 			}
 			else {
-				var start_time = $('#start_hh').val() + ":" + $('#start_mm').val() + ":" + $('#start_ss').val();
-				var end_time = $('#end_hh').val() + ":" + $('#end_mm').val() + ":" + $('#end_ss').val();
+				cart_start_time = $('#start_hh').val() + ":" + $('#start_mm').val() + ":" + $('#start_ss').val();
+				cart_end_time = $('#end_hh').val() + ":" + $('#end_mm').val() + ":" + $('#end_ss').val();
 			}
 				
 			var html = '<div class="videoSeq">' 
@@ -840,13 +876,14 @@ $(document).ready(function(){
 				+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
 				+ '<div class="col-lg-7">'
 				+ '<div id="title" style="font-weight: bold;">' + title + '</div>'
-				+ '<div id="start_s" style="display:inline"> start ' + start_time + '   </div>'
-				+ '<div id="end_s" style="display:inline""> end ' + end_time + '</div>' 
+				+ '<div id="start_s" style="display:inline" value="'+cart_start_time+'"> start ' + cart_start_time + '   </div>'
+				+ '<div id="end_s" style="display:inline" value="'+cart_end_time+'"> end ' + cart_end_time + '</div>' 
 				+ '<div id="duration_s" style="display: none"> duration:' + $('#duration').val() + '</div>'
-				+ '<div id="running_time" style="display:inline" > duration ' + running_time + '</div>'
+				+ '<div id="running_time" style="display:inline" value="'+hhmmss+'"> duration ' + hhmmss + '</div>'
 				+ '</div> </div>'; 
 			//3. var html = $('#setVideosInCart').html();
-			$("#videosInCart").append(html); 
+			$("#videosInCart").append(html); 				
+				
 		}
 		function deleteFromCart(){
 
@@ -953,9 +990,7 @@ $(document).ready(function(){
 										<div id="nav_view"></div>
 									</div>
 								</div>
-							</div>
-
-							<!-- </div> -->
+							</div> 
 						</div>
 
 						<!-- <div class="playerForm col-lg-6" style="display:none;">
@@ -977,84 +1012,13 @@ $(document).ready(function(){
 						
 						
 						<div class="playerForm col-lg-6 form-class" style="display:none;">
-							<div class="main-card " id="rightCard">
+							<div class="main-card card" id="rightCard">
 								<!-- form 추가(jw) -->
 								
-								<div id="setVideoInfo">
-							<input type="hidden" name="duration" id="duration">
-							
-							<!-- <div class="setTimeRange col row input-group">
-									<div class="col-2 input-group-prepend">
-										<button class="btn btn-outline-secondary">시작</button>
-									</div>
-									<div class="col-8">
-										<div id="slider-range"></div>
-									</div>
-									<div class="col-2 input-group-append">
-										<button class="btn btn-outline-secondary">끝</button>
-									</div>
-									<div class="col">
-										<label for="amount"><b>설정된 시간</b></label>
-										<input type="text" id="amount" readonly style="border:0;">
-									</div> 
-							</div> -->
-							
-							<div id="delete" >
-                               <div class="setTimeRange input-group">
-									<div class="col-md-2 input-group-prepend">
-										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">시작</button>
-									</div>
-									<div class="col-md-8">
-										<div id="slider-range"></div>
-									</div>
-									<div class="col-md-2 input-group-append">
-										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">끝</button>
-									</div>
-								</div>
-									<div class="position-relative row form-group">
-									 	<div class="col-sm-2 col-form-label d-flex justify-content-center">
-											<label for="amount"><b>설정된 시간</b></label>
-										</div>
-										<div class="col-sm-6">
-											<input type="text" id="amount" class="form-control" readonly style="border:0;">
-										</div>
-										<div class="col-sm-3">
-											<div id="warning1"> </div>
-										</div>
-									</div>
-									
-                            </div>
-                                            
-							<!-- <div>
-								<button onclick="getCurrentPlayTime1(this)" type="button">start time</button>
-								: <input type="text" id="start_hh" maxlength="2" size="2">
-								시 <input type="text" id="start_mm" maxlength="2" size="2">
-								분 <input type="text" id="start_ss" maxlength="5" size="5">
-								초
-								<button onclick="seekTo1()" type="button">위치이동</button>
-								<span id=warning1 style="color: red;"></span> <br>
-							</div> 
-
-							<div>
-								<button onclick="getCurrentPlayTime2()" type="button">end time</button>
-								: <input type="text" id="end_hh" max="" maxlength="2" size="2">
-								시 <input type="text" id="end_mm" max="" maxlength="2" size="2">
-								분 <input type="text" id="end_ss" maxlength="5" size="5">
-								초
-								<button onclick="seekTo2()" type="button">위치이동</button>
-								<span id=warning2 style="color: red;"></span> <br>
-							</div>  -->
-
-
-							<div>
-								<span style="font-weight: bold"> 태그: </span><input type="text"
-									id="tag" name="tag">
-							</div>
-							
-							<div> <i class="fas fa-plus-square" onclick="addToCart(\''+videoId+ '\'' + ',\'' +videoTitle+'\')"> 리스트에 추가 </i></div>
-						</div>
+								
 								
 							</div>
+							<div id="slider-range"></div> 
 						</div>
 
 						
