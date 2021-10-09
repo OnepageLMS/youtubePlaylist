@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.student.classes.Stu_ClassesService;
+
+import net.sf.json.JSONArray;
 
 
 @Controller
@@ -27,7 +30,11 @@ public class NoticeController {
 	@Autowired
 	private ClassesService classService;
 	@Autowired
+	private Stu_ClassesService classService_stu;
+	@Autowired
 	private MemberService memberService;
+	
+	private int studentId = 1;
 	
 	@RequestMapping(value="/notice", method = RequestMethod.POST)
 	public String notice(@RequestParam(value="classID") int id, Model model) {
@@ -36,9 +43,17 @@ public class NoticeController {
 		model.addAttribute("allMyInactiveClass", classService.getAllMyInactiveClass(instructorID));
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		model.addAttribute("className", classService.getClassName(id));
-		
-		model.addAttribute("allNotices", noticeService.getAllNotice(id));
 		return "class/notice";
+	}
+	
+	@RequestMapping(value="/student/notice", method = RequestMethod.POST)
+	public String studentNotice(@RequestParam(value="classID") int id, Model model) {
+		model.addAttribute("classID", id);
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService_stu.getAllMyClass(studentId)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService_stu.getAllMyInactiveClass(studentId)));
+		model.addAttribute("myName", memberService.getStudentName(studentId));
+		model.addAttribute("className", classService.getClassName(id));
+		return "class/notice_Stu";
 	}
 	
 	@RequestMapping(value = "/addNotice", method = RequestMethod.POST)

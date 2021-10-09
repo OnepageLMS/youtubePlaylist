@@ -56,6 +56,7 @@ public class ClassContentController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
+		model.addAttribute("className", classService.getClassName(classID));
 		return "class/contentsList";
 	}
 

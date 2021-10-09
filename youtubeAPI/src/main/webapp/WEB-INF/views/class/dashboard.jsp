@@ -26,14 +26,7 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
 
 $(document).ready(function(){
 	
-	$(".publishNotice").click(function () {
-		//var className = $(this).
-		$('#inputNoticeForm')[0].reset();
-
-		//$('#setNoticeClassName').text(className);
-		//$('#setNoticeClassID').val(classID);
-		
-	});
+	
 	
 	var activeClass = JSON.parse('${allMyClass}');	//이부분 수정
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
@@ -60,7 +53,7 @@ $(document).ready(function(){
 									+ '</div>'
 									+ '<div class="card-body">'
 										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-										+ '<button class="publishNotice btn btn-outline-focus col-6 mb-2" className="' + className + '" classID="' + classID + '" data-toggle="modal" data-target=".publishNoticeModal">'
+										+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
 												+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
@@ -130,6 +123,16 @@ function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항
 		}).appendTo('body'); 
 
 	goForm.submit();
+}
+
+function setPublishNotice(item){
+	var id = item.getAttribute('classID');
+	var name = item.getAttribute('className');
+	
+	$('#inputNoticeForm')[0].reset();
+
+	$('#setNoticeClassName').text(name);
+	$('#setNoticeClassID').val(id);
 }
 	
 
@@ -554,7 +557,7 @@ function publishNotice(){	//공지등록
 	    <div class="modal-dialog modal-lg">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="exampleModalLongTitle"><span id="setNoticeClassName" class="text-primary"></span>새로운 공지 작성</h5>
+	                <h5 class="modal-title" id="exampleModalLongTitle"><span id="setNoticeClassName" class="text-primary"></span> - 새로운 공지 작성</h5>
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                    <span aria-hidden="true">×</span>
 	                </button>

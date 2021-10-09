@@ -1,7 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<script>
+	function moveToNotice(id){
+		var html = '<input type="hidden" name="classID"  value="' + id + '">';
 
+		var goForm = $('<form>', {
+				method: 'post',
+				action: '${pageContext.request.contextPath}/student/notice',
+				html: html
+			}).appendTo('body'); 
+
+		goForm.submit();
+	}
+</script>
+<%
+	String className = request.getParameter("className");
+	String menu = request.getParameter("menu");
+%>
 	<div class="app-sidebar sidebar-shadow">
        <div class="app-header__logo">
            <div class="header__pane ml-auto">
@@ -37,7 +53,16 @@
                <ul class="vertical-nav-menu">
                    <li class="app-sidebar__heading">활성화된 강의실</li>
                    <c:forEach var="v" items="${allMyClass}">
-				 		<li>
+                   	<c:set var="curr_name" value="${v.className}"/>
+                   			<c:set var="name" value="<%=className%>"/>
+                   			<c:choose>
+	                   			<c:when test="${curr_name eq name}">
+									<li class="mm-active">
+								</c:when>
+								<c:otherwise>
+									<li>
+								</c:otherwise>
+                   			</c:choose>
                            <a href="#">
                                <i class="metismenu-icon pe-7s-notebook"></i>
                                ${v.className}
@@ -45,7 +70,7 @@
                            	</a>
                            	<ul class="mm-collapse">
 								<li>
-									<a href="#">
+									<a href="javascript:moveToNotice(${v.id});">
                                    		<i class="metismenu-icon"></i>
                                    		공지
                               		</a>
@@ -53,7 +78,7 @@
                                	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>
-                                       	학습컨텐츠
+                                       	강의컨텐츠
                                    	</a>
                                	</li>
                                	<li>
@@ -67,7 +92,16 @@
 					</c:forEach>
 					<li class="app-sidebar__heading">비활성화된 강의실</li>
                    <c:forEach var="v" items="${allMyInactiveClass}">
-				 		<li>
+                   <c:set var="curr_name" value="${v.className}"/>
+                   			<c:set var="name" value="<%=className%>"/>
+                   			<c:choose>
+	                   			<c:when test="${curr_name eq name}">
+									<li class="mm-active">
+								</c:when>
+								<c:otherwise>
+									<li>
+								</c:otherwise>
+                   			</c:choose>
                            <a href="#">
                                <i class="metismenu-icon pe-7s-notebook"></i>
                                ${v.className}
@@ -75,7 +109,7 @@
                            	</a>
                            	<ul class="mm-collapse">
 								<li>
-									<a href="#">
+									<a href="javascript:moveToNotice(${v.id});">
                                    		<i class="metismenu-icon"></i>
                                    		공지
                               		</a>
@@ -83,7 +117,7 @@
                                	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>
-                                       	학습컨텐츠
+                                       	강의컨텐츠
                                    	</a>
                                	</li>
                                	<li>

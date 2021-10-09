@@ -179,21 +179,36 @@
 		<jsp:include page="../outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="../outer_left.jsp" flush="false"/>
+			<!-- outer_left.jsp에 데이터 전송 -->
+		 	<jsp:include page="../outer_left.jsp" flush="false">
+		 		<jsp:param name="className" value="${className}"/>	
+		 		<jsp:param name="menu"  value="notice"/>
+		 	</jsp:include>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
         			<div class="app-page-title">
-                    	<div class="page-title-wrapper">
-                        	<div class="page-title-heading">
+                    	<div class="page-title-wrapper align-items-center ">
+                        	<div class="page-title-heading mr-3">
                             	<h4><span class="text-primary">${className}</span> - 공지</h4>	
                             </div>
+                            <div class="search-wrapper">
+			                    <div class="input-holder">
+			                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+			                        <button class="search-icon"><span></span></button>
+			                    </div>
+			                    <button class="close"></button>
+			                </div>
                         </div>
                     </div>            
                     <div class="row">
-                    	<div class="col-12 row mb-3 ml-5">
-                   			<button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
+                    	<div class="col-12">
+                    		<div class="col-10">
+                    			<button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
+                    		</div>
+                    		
                     	</div>
+                    
                     	<div class="col-12 row justify-content-center noticeList">
                     		<!--  
                     		<c:forEach var="item" items="${allNotices}" varStatus="status">
