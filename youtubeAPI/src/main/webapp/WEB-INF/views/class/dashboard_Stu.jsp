@@ -41,9 +41,9 @@ $(document).ready(function(){
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 	
 	for(var i=0; i<allMyClass.length; i++){
-		//var date = new Date(allMyClass[i].stajazxartDate.time); //timestamp -> actural time
-		var classNoticeURL = '#';
-		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + allMyClass[i].id + "'";
+		var classID = allMyClass[i].id;
+		var classNoticeURL = 'moveToNotice(' + classID + ')';
+		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 		var classAttendanceURL = '#';
 		var cardColor = active_colors[i%(active_colors.length)];
 		
@@ -51,11 +51,11 @@ $(document).ready(function(){
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  allMyClass[i].className + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + allMyClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+										+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지' 
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지' 
 											+ '<span class="badge badge-primary">NEW</span>'
 										+ '</button>'
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
@@ -78,8 +78,9 @@ $(document).ready(function(){
 
 
 	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
-		var classNoticeURL = '#';
-		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + inactiveClass[i].id + "'";
+		var classID = inactiveClass[i].id;
+		var classNoticeURL = 'moveToNotice(' + classID + ')';
+		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 		var classAttendanceURL = '#';
 		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 
@@ -87,11 +88,11 @@ $(document).ready(function(){
 								+ '<div class="mb-3 card">'
 									+ '<div class="card-header ' + cardColor + '">' 
 										+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + inactiveClass[i].id + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+										+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 									+ '</div>'
 									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
+										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
 										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 					        		+ '</div>'
@@ -101,6 +102,18 @@ $(document).ready(function(){
 			$('.classInactive').append(dashboardCard);
 	}
 });
+
+function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
+	var html = '<input type="hidden" name="classID"  value="' + id + '">';
+
+	var goForm = $('<form>', {
+			method: 'post',
+			action: '${pageContext.request.contextPath}/student/notice',
+			html: html
+		}).appendTo('body'); 
+
+	goForm.submit();
+}
 
 $(document).on("click", ".setClassroomBtn", function () {	// set classroom btn 눌렀을 때 modal에 데이터 전송
 
