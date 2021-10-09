@@ -150,7 +150,7 @@ $(document).ready(function(){
 	var count = 0;
 	function fnGetList(sGetToken) { // youtube api로 검색결과 가져오기 
 		count = 0;
-		var $getval = $("#search_box").val();
+		var $getval = $("#search_box").val(); 
 		var $getorder = $("#opt").val();
 		if ($getval == "") {
 			alert("검색어를 입력하세요.");
