@@ -334,15 +334,23 @@ function publishNotice(){	//공지등록
                     <div class="app-main__inner">
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
-                                <div class="page-title-heading col-sm-12">
-                                  	<h2 class="col-sm-10">내 강의실</h2>
-                                  	<button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
-                                  		<b>+</b> 강의실 생성
-                                  	</button>
+                                <div class="page-title-heading">
+                                  	<h3 class="">내 강의실</h3>
+                                  	<div class="search-wrapper">
+					                    <div class="input-holder">
+					                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+					                        <button class="search-icon"><span></span></button>
+					                    </div>
+					                    <button class="close"></button>
+					                </div> 
                                 </div>
-                                
                           </div>
-                        </div>            
+                        </div>      
+                       	<div>
+                       		<button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
+                               	<b>+</b> 강의실 생성
+                               </button>
+                       	</div>
                        
                         <div class="dashboardClass">
                         	<div class="classActive row col">

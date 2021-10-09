@@ -179,9 +179,9 @@
         			<div class="app-page-title">
                     	<div class="page-title-wrapper align-items-center ">
                         	<div class="page-title-heading mr-3">
-                            	<h4><span class="text-primary">${className}</span> - 공지</h4>	
+                            	<h3><span class="text-primary">${className}</span> - 내 강의실</h3>	
                             </div>
-                            <div class="search-wrapper">
+                            <div class="search-wrapper ml-3">
 			                    <div class="input-holder">
 			                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
 			                        <button class="search-icon"><span></span></button>
