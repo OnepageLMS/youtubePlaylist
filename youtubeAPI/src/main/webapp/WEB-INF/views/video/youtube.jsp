@@ -455,7 +455,7 @@ $(document).ready(function(){
 
 				// 슬라이더 완료되면 지울것 
 				$('#end_hh').val(hours);
-				$("#end_mm").val(minutes);
+				$("#end_mm").val(minutes); 
 				$("#end_ss").val(seconds);
 	
 				var total_seconds = hours * 60 * 60 + minutes * 60 + seconds;
