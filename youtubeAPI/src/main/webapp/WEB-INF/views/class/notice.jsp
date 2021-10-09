@@ -84,7 +84,7 @@
 									+ '<div id="headingOne" class="card-header">'
 										+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
 																														+ 'class="text-left m-0 p-0 btn btn-link btn-block collapsed">'
-											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + value.title + ' </h5>'
+											+ '<h5 class="m-0 p-0 text-muted"><b>#' + num + '</b> ' + value.title + ' </h5>'
 										+ '</button>'
 										+ '<div>작성일 ' + value.regDate + '</div>'
 										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="btn">'
@@ -96,7 +96,10 @@
                                     	+ '</div>'
 									+ '</div>'
 									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
-										+ '<div class="card-body">' + value.content + '</div>'
+										+ '<div class="card-body">' 
+											+ '<div class="text-success">**명 읽음</div>'
+											+ '<div>' + value.content + '</div>'
+										+ '</div>'
 									+ '</div>'
 								+ '</div>'
 							+ '</div>'
@@ -188,7 +191,7 @@
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
         			<div class="app-page-title">
-                    	<div class="page-title-wrapper align-items-center ">
+                    	<div class="page-title-wrapper align-items-center">
                         	<div class="page-title-heading mr-3">
                             	<h4><span class="text-primary">${className}</span> - 공지</h4>	
                             </div>

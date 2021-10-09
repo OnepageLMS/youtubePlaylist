@@ -431,6 +431,7 @@ $(document).ready(function(){
 										+ '<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">끝</button>'
 									+ '</div>' 
 								+ '</div>'
+								+ '<div id="slider-range"></div>'
 								+ '<div class="position-relative row form-group">'
 									+ '<div class="col-sm-2 col-form-label d-flex justify-content-center">'
 										+ '<label for="amount"><b>설정된 시간</b></label>'
@@ -442,7 +443,8 @@ $(document).ready(function(){
 							+ '<div> <span style="font-weight: bold"> 태그: </span> <input type="text" id="tag" name="tag"> </div>' 
 						+ '</div>'
 						+ '<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>' 
-					+'</form></div>'); 		
+					+'</form>' 
+					+ '</div>'); 		
 					
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
@@ -485,10 +487,71 @@ $(document).ready(function(){
 			// 오른쪽 카드 안에 player 띄우기
 			console.log("player폼 확인!!=> " , $(".playerForm").children().eq(0));
 			$(".playerForm").children().eq(0).append($div);
+			showSlider();
+			
 			
 			showYoutubePlayer(id, title, index);	
 			prev_index = index;		
 		}
+
+
+
+		var start_hour, start_min, start_sec, end_hour, end_min, end_sec;
+		function showSlider(){
+			$( "#slider-range" ).slider({
+				range: true,
+				min: 0,
+				max: 500,
+				/* values: [ 75, 300 ], */
+				slide: function( event, ui ) {
+					//$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
+
+					start_hour = Math.floor(ui.values[ 0 ] / 3600);
+				    start_min = Math.floor(ui.values[ 0 ] % 3600 / 60);
+				    start_sec = ui.values[ 0 ] % 60;
+
+				    end_hour = Math.floor(ui.values[ 1 ] / 3600);
+				    end_min = Math.floor(ui.values[ 1 ] % 3600 / 60);
+				    end_sec = ui.values[ 1 ] % 60;
+
+				    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+				}
+		});
+			//$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + " - 끝: " + $( "#slider-range" ).slider( "values", 1 ) );
+		    
+		}
+
+		function setSlider() {
+			console.log("limit값 확인 !! ", limit);
+			/* $("#slider-range").slider("destroy"); */
+			/*var attributes = {
+				max: limit
+			}
+			// update attributes
+			$element.attr(attributes);
+
+			// pass updated attributes to rangeslider.js
+			$element.rangeslider('update', true); */
+			$('#slider-range').slider( "option", "min", 0);
+			$('#slider-range').slider( "option", "max", limit);
+
+			$( "#slider-range" ).slider( "option", "values", [ 0, limit ] );
+			//$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
+			
+			start_hour= start_min = start_sec = 0;
+
+		    end_hour = Math.floor(limit / 3600);
+		    end_min = Math.floor(limit % 3600 / 60);
+		    end_sec = limit % 60;
+
+			
+			$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+		}
+
+
+
+
+		
 		function showYoutubePlayer(id, title, index){
 			//$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
 			videoId = id;
@@ -940,7 +1003,7 @@ $(document).ready(function(){
 								
 								
 							</div>
-							<div id="slider-range"></div> 
+							
 						</div>
 
 						
