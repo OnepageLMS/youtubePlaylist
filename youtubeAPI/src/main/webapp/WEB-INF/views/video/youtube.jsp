@@ -413,7 +413,7 @@ $(document).ready(function(){
 			console.log(id, title, duration, index);
 
 			// (21/10/06) youtube 플레이어 띄워주고, 제목을 띄워준다. 이 부분은 <div> 태그로 감싸져서 초록색이 나타나게 되는데 영상구간 설정 부분까지 태그로 감싸지게 해야 전체가 초록색 배경이 될듯. 
-			var $div = $('<div id="playerBox" class="text-center" style="margin: auto;"> <div class="iframe-container" id="player"></div></div>'
+			var $div = $('<div id="playerBox" class="text-center" style="margin: auto;"> <div class="iframe-container" id="player"></div>'
 					+ '<form class>'
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative row form-group">'
@@ -442,86 +442,8 @@ $(document).ready(function(){
 							+ '<div> <span style="font-weight: bold"> 태그: </span> <input type="text" id="tag" name="tag"> </div>' 
 						+ '</div>'
 						+ '<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>' 
-					+'</form>'); 		
+					+'</form></div>'); 		
 					
-					
-
-			/*
-			<div id="setVideoInfo">
-							<input type="hidden" name="duration" id="duration">
-							
-							<!-- <div class="setTimeRange col row input-group">
-									<div class="col-2 input-group-prepend">
-										<button class="btn btn-outline-secondary">시작</button>
-									</div>
-									<div class="col-8">
-										<div id="slider-range"></div>
-									</div>
-									<div class="col-2 input-group-append">
-										<button class="btn btn-outline-secondary">끝</button>
-									</div>
-									<div class="col">
-										<label for="amount"><b>설정된 시간</b></label>
-										<input type="text" id="amount" readonly style="border:0;">
-									</div> 
-							</div> -->
-							
-							<div id="delete" >
-                               <div class="setTimeRange input-group">
-									<div class="col-md-2 input-group-prepend">
-										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">시작</button>
-									</div>
-									<div class="col-md-8">
-										<div id="slider-range"></div>
-									</div>
-									<div class="col-md-2 input-group-append">
-										<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">끝</button>
-									</div>
-								</div>
-									<div class="position-relative row form-group">
-									 	<div class="col-sm-2 col-form-label d-flex justify-content-center">
-											<label for="amount"><b>설정된 시간</b></label>
-										</div>
-										<div class="col-sm-6">
-											<input type="text" id="amount" class="form-control" readonly style="border:0;">
-										</div>
-										<div class="col-sm-3">
-											<div id="warning1"> </div>
-										</div>
-									</div>
-									
-                            </div>
-                                            
-							<!-- <div>
-								<button onclick="getCurrentPlayTime1(this)" type="button">start time</button>
-								: <input type="text" id="start_hh" maxlength="2" size="2">
-								시 <input type="text" id="start_mm" maxlength="2" size="2">
-								분 <input type="text" id="start_ss" maxlength="5" size="5">
-								초
-								<button onclick="seekTo1()" type="button">위치이동</button>
-								<span id=warning1 style="color: red;"></span> <br>
-							</div> 
-
-							<div>
-								<button onclick="getCurrentPlayTime2()" type="button">end time</button>
-								: <input type="text" id="end_hh" max="" maxlength="2" size="2">
-								시 <input type="text" id="end_mm" max="" maxlength="2" size="2">
-								분 <input type="text" id="end_ss" maxlength="5" size="5">
-								초
-								<button onclick="seekTo2()" type="button">위치이동</button>
-								<span id=warning2 style="color: red;"></span> <br>
-							</div>  -->
-
-
-							<div>
-								<span style="font-weight: bold"> 태그: </span><input type="text"
-									id="tag" name="tag">
-							</div>
-							
-							<div> <i class="fas fa-plus-square" onclick="addToCart(\''+videoId+ '\'' + ',\'' +videoTitle+'\')"> 리스트에 추가 </i></div>
-						</div>
-			
-			*/
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
 
@@ -533,7 +455,7 @@ $(document).ready(function(){
 
 				// 슬라이더 완료되면 지울것 
 				$('#end_hh').val(hours);
-				$("#end_mm").val(minutes);
+				$("#end_mm").val(minutes); 
 				$("#end_ss").val(seconds);
 	
 				var total_seconds = hours * 60 * 60 + minutes * 60 + seconds;
