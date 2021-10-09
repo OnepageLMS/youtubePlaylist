@@ -117,7 +117,7 @@ function getAllMyPlaylist(){
 												+ '<button type="button" tabindex="0" class="dropdown-item">태그</button>'
 											+ '</div>'
 										+ '</div>'
-										+ '<input placeholder="검색어를 입력하세요" type="text" class="form-control">'
+										+ '<input placeholder="playlist 검색" type="text" class="form-control">'
 										+ ' <div class="input-group-append">'
 											+ '<button class="btn btn-secondary">검색</button>'
 										+ '</div>'
@@ -128,15 +128,11 @@ function getAllMyPlaylist(){
 							+ '</div>';
 				$('.myPlaylist').append(setFormat);
 
-				$.each(playlists, function( index, value ){
-					var exposed = '';
-					if(value.exposed == 0)
-						exposed = '<i class="pe-7s-lock float-right" margin-right: 5px;"></i>';
-						
+				$.each(playlists, function( index, value ){	
 					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' 
 												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
-										+ value.playlistName + ' <i class="pe-7s-stopwatch"></i>' + convertTotalLength(value.totalVideoLength)
-										+ exposed
+											+ value.playlistName 
+											+ '<span class="float-right"><i class="pe-7s-stopwatch"></i>' + convertTotalLength(value.totalVideoLength) + '</span>'
 										+ '</button>'
 
                 	$('.allPlaylist').append(contentHtml);
@@ -181,14 +177,8 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 			    			+ '</div>';
 		    $('#playlistInfo').append(thumbnail);
 
-			if(result.exposed == 0)
-				var displayExposed = '<i class="pe-7s-lock text-focus" style="display:inline; margin-right: 5px; font-size: 13px;"><p id="displayExposed" style="display: inline;">비공개</p></i>';
-			else
-				var displayExposed = '<i class="fa fa-eye text-primary" style="display:inline; margin-right: 5px; font-size: 13px;"><p id="displayExposed" style="display: inline;">공개</p></i>';
-					
 			var name = '<h4>'
-							+ displayExposed
-							+ '<p id="displayPlaylistName" style="display:inline";>' + result.playlistName + '</p>'
+							+ '<p id="displayPlaylistName" style="display:inline";><b>' + result.playlistName + '</b></p>'
 							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link editPlaylistBtn" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
 					+ '</h4>';
 		    $('.playlistName').append(name); //중간영역 
@@ -196,8 +186,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 			//var modDate = convertTime(result.modDate);
 			var totalVideoLength = convertTotalLength(result.totalVideoLength);
 			var description = result.description;
-			if (result.description == null)
-				description = "설명 없음";
+			if (result.description == null || result.description == '') description = "설명 없음";
 			if (result.tag != null && result.tag.length > 0){
 		    	var tags = result.tag.replace(', ', ' #');
 	    		tags = '#'+ tags;
@@ -249,13 +238,11 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 		   	else {
 			    $.each(videos, function( index, value ){
 			    	var newTitle = value.newTitle;
-			    	var title = value.title;
 			    	//if (title.length > 45
 						//title = title.substring(0, 45) + " ..."; 
 					
 			    	if (newTitle == null || newTitle == ''){
-			    		newTitle = title;
-						title = '';
+			    		newTitle = value.title;
 				    }
 	
 			    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic img-fluid">';
@@ -282,20 +269,24 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 											+ '<div class="row">'
 												+ '<div class="thumbnailBox col-sm-3 row">' 
 													+ thumbnail 
-													+ '<p class="duration col-sm-12"> ' + convertTotalLength(value.duration) + '</p>'
 												+ '</div>'
 												+ '<div class="titles col-sm-9">'
 													+ '<div class="row">'
 														+ '<p class="col-sm-12 text-primary">' + tags + '</p>'
 														+ '<p class="videoNewTitle col-sm-12">' + newTitle + '</p>'
-														+ '<p class="videoOriTitle col-sm-12">' + title + '</p>'
+														+ '<p class="videoOriTitle col-sm-12 row">' 
+															+ '<b>시작</b> ' + convertTotalLength(value.start_s) + ' <b class="ml-2">끝</b> ' + convertTotalLength(value.end_s) + ' <b class="ml-2">총 길이</b> ' + convertTotalLength(value.duration)
+														+ '</p>'
 													+ '</div>'
 												+ '</div>'
 											+ '</div>'
 										+ '</div>'
-										+ '<div class="videoEditBtn col-sm-1 d-sm-inline-block">'
-											+ '<a href="#" class="aDeleteVideo badge badge-danger" onclick="deleteVideo(' + value.id + ')"> 삭제</a>'
-										+ '</div>'
+										+ '<button type="button" class="videoEditBtn col-sm-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
+											+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
+										+ '</button>'
+										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(218px, 96px, 0px);">' 
+											+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
+											+ '<button type="button" onclick="deleteVideo(' + value.id + ')" class="dropdown-item"><p class="text-danger">삭제</p></button></div>'
 										+ '</div>'
 								+ '</div>';
 	
@@ -394,7 +385,7 @@ function deleteVideo(videoID){ // video 삭제
 	else false;
 }
 
-function convertTotalLength(seconds){ //duration 변환
+function convertTotalLength(seconds){ //시분초로 시간 변환
 	var seconds_hh = Math.floor(seconds / 3600);
 	var seconds_mm = Math.floor(seconds % 3600 / 60);
 	var seconds_ss = parseInt(seconds % 3600 % 60); //소숫점단위 안보여주기
