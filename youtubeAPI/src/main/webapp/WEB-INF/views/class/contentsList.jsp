@@ -181,8 +181,6 @@ $(document).ready(function(){
 		var videoLength;
 		var symbol;
 		
-		console.log("length : " + realAllContents.length);
-		console.log(realAllContents);
 		for(var i=0; i<realAllContents.length; i++){
 			if(realAllContents[i].playlistID == 0){
 				symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
@@ -208,26 +206,38 @@ $(document).ready(function(){
 
 			// (jw) endDate 넘겨주기 
 			localStorage.setItem("endDate", endDate);
-			var publishedCheck = realAllContents[i].published;
+			/*var publishedCheck = realAllContents[i].published;
 			//var nameCheck = "'#exampleCustomCheckbox"+(i+1)+"'";
-			var nameCheck = "#exampleCustomCheckbox"+(i+1);
+			var nameCheck = "exampleCustomCheckbox" +(i+1);
 			if(publishedCheck == 1){
-				console.log("1이야" + nameCheck);
-				//document.getElementById("'" +nameCheck+ "'").setAttribute("checked", true);
-				//eval("'"+optionElement[0]+"'")
-				//document.getElementById("exampleCustomCheckbox1").setAttribute("checked", true);
-				//document.getElementById(nameCheck).setAttribute("checked", true);
-				//$("'" +nameCheck+ "'").prop("checked", true);
-				$("#exampleCustomCheckbox"+(i+1)).prop("checked", true);
-				$('.className:eq('+(i+1)+')').prop("checked", true);
-				console.log("#exampleCustomCheckbox"+(i+1));
+				console.log("1이야");
+				//$("input[name=" + nameCheck + "]").prop("checked", true);
+					//$("input[type=checkbox][name=exampleCustomCheckbox]").eq("0").prop("checked", true);
+				console.log(i + " " + Number(i));
+				
+				//var videoCheck = '$("input[type=checkbox][name=exampleCustomCheckbox]").eq(' + i + ').prop("checked", true)';
+				//console.log(videoCheck);
+				//videoCheck;
+				var num = parseInt(i);
+				$("input[type=checkbox][name=exampleCustomCheckbox]").eq(num).prop("checked", true);
+				$("input[type=checkbox][name=exampleCustomCheckbox]").eq(0).prop("checked", true);
+				
+				
+				//$("input:checkbox[id='"+ nameCheck +"']").prop("checked", true); 
+				var num2 = i+1;
+				console.log("num2 : " + num2);
+				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", true);  
+				//$('#' + nameCheck).prop("checked", true);
+				//$('.exampleCustomCheckbox:eq('+ i +')').prop("checked", true);
+				console.log(nameCheck + " i " + i);
 			}
 			else{
-				console.log("0이야");
+				console.log("0이야"+ realAllContents[i].published + " i: "+ i);
 				//document.getElementById(nameCheck).setAttribute("checked", false);
 				//document.getElementById(eval("'"+nameCheck+"'")).setAttribute("checked", false);
-				$(nameCheck).prop("checked", false);
-			}
+				//$(nameCheck).prop("checked", false);
+				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", false);  
+			}*/
 			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
 			var onclickDetail = "location.href='../contentDetail/" + realAllContents[i].id + "/" + i + "'";
@@ -260,99 +270,24 @@ $(document).ready(function(){
 							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
 									//+ published
 								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
-									+ '<input type="checkbox" id="exampleCustomCheckbox' +(i+1) + '" class="custom-control-input exampleCustomCheckbox" onchange="YNCheck(this, '+realAllContents[i].id +')">'
-										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +(i+1) + '"></label>'
+									+ '<input type="checkbox" id="exampleCustomCheckbox'+i+'" name= "exampleCustomCheckbox" class="custom-control-input exampleCustomCheckbox" onchange="YNCheck(this, '+realAllContents[i].id +')">'
+										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +i+ '"></label>'
 								+ '</div>'
 							//+ '</div>'
 						+ '</div>'
 				+ "</div>");
-		}
-	}	
-		
-	/*function setAllContents(){
-		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
-		var allFileContents = JSON.parse('${allFileContents}'); 
-		var realAllContents =  JSON.parse('${realAllContents}');
-		console.log(allContents);
-		console.log(allFileContents);
-		console.log(realAllContents);
-		for(var i=0; i<realAllContents.length; i++){
-			//console.log("???? : " + realAllContents[i].playlistID + " - title : "  +  realAllContents[i].title);
-			if(realAllContents[i].playlistID == 0){
-				console.log("i : "  + i+ " - title : "  +  realAllContents[i].title);
-			}
-				
-			var day = allContents[i].days;
-			if(allContents[i].endDate == null)
-				var endDate = '설정되지 않음';
 			
-			else {
-				var endDate = allContents[i].endDate.split(":");
-				endDate = endDate[0] + ":" + endDate[1];	
-			}
-
-			// (jw) endDate 넘겨주기 
-			localStorage.setItem("endDate", endDate);
-			var publishedCheck = allContents[i].published;
-			//var nameCheck = "'#exampleCustomCheckbox"+(i+1)+"'";
-			var nameCheck = "#exampleCustomCheckbox"+(i+1);
+			var publishedCheck = realAllContents[i].published;
 			if(publishedCheck == 1){
-				console.log("1이야" + nameCheck);
-				//document.getElementById("'" +nameCheck+ "'").setAttribute("checked", true);
-				//eval("'"+optionElement[0]+"'")
-				//document.getElementById("exampleCustomCheckbox1").setAttribute("checked", true);
-				//document.getElementById(nameCheck).setAttribute("checked", true);
-				//$("'" +nameCheck+ "'").prop("checked", true);
-				$("#exampleCustomCheckbox"+(i+1)).prop("checked", true);
-				$('.className:eq('+(i+1)+')').prop("checked", true);
-				console.log("#exampleCustomCheckbox"+(i+1));
+				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", true); 
 			}
 			else{
-				console.log("0이야");
-				//document.getElementById(nameCheck).setAttribute("checked", false);
-				//document.getElementById(eval("'"+nameCheck+"'")).setAttribute("checked", false);
-				$(nameCheck).prop("checked", false);
+				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", false);  
 			}
-			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
-			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
-			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "/" + i + "'";
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
-			var published;
-
-			if (allContents[i].published == true)
-				published = '<input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" class="custom-control-input" class="switch" name="published">'
-								+ '<label class="custom-control-label" for="switch">공개</label>';
-			else
-				published = '<label class="custom-control-label" for="switch">비공개</label>'
-								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
-								
-			content.append(
-				"<div class='content list-group-item-action list-group-item' seq='" + allContents[i].daySeq + "'>"
-						+ '<div class="row col d-flex justify-content-between align-items-center">'
-							+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
-							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
-							+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-									+ "<div class='col-sm-6 card-title inline-block' style=' height: 50%; font-size: 15px'>"
-										+ allContents[i].title + "  [" +convertTotalLength(allContents[i].totalVideoLength) + "]"
-									+ '</div>'		
-									+ '<div class="col-sm-12">'
-										+ '<div class="contentInfoBorder"></div>'
-										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
-										+ '<div class="contentInfoBorder"></div>'
-										+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
-									+ '</div>' 
-							+ '</div>'
-							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
-									//+ published
-								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
-									+ '<input type="checkbox" id="exampleCustomCheckbox' +(i+1) + '" class="custom-control-input exampleCustomCheckbox" onchange="YNCheck(this, '+allContents[i].id +')">'
-										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +(i+1) + '"></label>'
-								+ '</div>'
-							//+ '</div>'
-						+ '</div>'
-				+ "</div>");
 		}
-	}*/
+		
+		
+	}	
 	
 	function YNCheck(obj, id){
 		console.log("id : "+ id);
@@ -376,6 +311,7 @@ $(document).ready(function(){
 			datatype : 'json',
 			success : function(result){
 				console.log("success!");
+				location.reload();
 			}
 		});
 

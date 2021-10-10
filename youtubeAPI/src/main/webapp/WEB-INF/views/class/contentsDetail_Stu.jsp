@@ -248,8 +248,8 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 					}
 						
 					var completed ='';
-					if(playlist[j].watched == 1 && playlist[j].classContentID == classContentID){
-						completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+					if(playlist[j].watched == 1 ){
+						completed = '<div class="col-2 col-xs-2 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
 					}
 						
 						
@@ -257,11 +257,11 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 						
 					innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 									+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-										+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+										+ '<div class="post-thumbnail col-4 col-xs-4 col-lg-4"> ' 
 											+ thumbnail 
 											+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
 										+ ' </div>' 
-										+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
+										+ '<div class="post-content col-6 col-xs-6 col-lg-6 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
 											+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
 											+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ',' + i + ', this)" >' 
 											+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[j].newTitle + '</div>' 
@@ -426,18 +426,18 @@ function myThumbnail(classContentID, idx){
 		}
 	
 		var completed ='';
-		if(playlist[i].watched == 1 && playlist[i].classContentID == classContentID){
-			completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+		if(playlist[i].watched == 1 /*&& playlist[i].classContentID == classContentID*/){
+			completed = '<div class="col-2 col-xs-2 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
 		}
 		
 		$(className).append( //stu//stu
 						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 						+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-							+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+							+ '<div class="post-thumbnail col-4 col-xs-4 col-lg-4"> ' 
 								+ thumbnail 
 								+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[i].duration) +'</div>' 
 							+ ' </div>' 
-							+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center" onclick="viewVideo(\''  //viewVideo호출
+							+ '<div class="post-content col-6 col-xs-6 col-lg-6 align-items-center" onclick="viewVideo(\''  //viewVideo호출
 								+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
 								+ 	playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this.parentNode)" >' 
 								+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[i].newTitle + '</div>' 
@@ -460,7 +460,7 @@ function myThumbnail(classContentID, idx){
 var visited = 0;
 function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
 	
-	if(allContents[seq-1].playlistID != 0)
+	if(allContents[seq].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
 		document.getElementById("onepageLMS").style.display = "none";
@@ -770,7 +770,8 @@ function collectPlayCount(data) {
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<span class="text-primary">${classInfo.className}</span>  - 강의컨텐츠	<!-- 이부분 이름 바꾸기!! -->
+                        		<i class="pe-7s-left-arrow fa-lg" style="margin-right: 10px" onclick="history.back();"> </i>
+                            	<span class="text-primary" style="margin-left: 10px">${classInfo.className}</span>  - 강의컨텐츠	<!-- 이부분 이름 바꾸기!! -->
                             </div>
                         </div>
                     </div>    

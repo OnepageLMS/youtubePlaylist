@@ -259,7 +259,7 @@ public class Stu_ClassController{
 		Map<Double, Double> map = new HashMap<Double, Double>();
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
-		System.out.println(studentID + " / " + videoID);
+		
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setStudentID(studentID);

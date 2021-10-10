@@ -55,7 +55,7 @@
 	</select>
 	
 	<select id="getRealAll" resultType="classContent">
-		select id, classID, days, daySeq, title, description, playlistID, startDate, endDate
+		select id, classID, days, daySeq, title, description, playlistID, published, startDate, endDate
 		from lms_classContent
 		where classID=#{classID} order by days, daySeq
 	</select>

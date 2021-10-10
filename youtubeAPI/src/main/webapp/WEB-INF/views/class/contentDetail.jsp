@@ -491,7 +491,7 @@ var visited = 0;
 function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
 	
 
-	if(allContents[seq-1].playlistID != 0)
+	if(allContents[seq].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
 		document.getElementById("onepageLMS").style.display = "none";
@@ -624,8 +624,8 @@ function deleteContent(){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
+                        		<i class="pe-7s-left-arrow fa-lg" style="margin-right: 10px" onclick="history.back();"> </i>
                             	<span class="text-primary">${classInfo.className}</span>  - 강의컨텐츠
-                            	
                             </div>  
                         </div>
                     </div>    
