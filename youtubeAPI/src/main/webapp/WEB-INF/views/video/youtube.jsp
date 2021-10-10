@@ -159,7 +159,7 @@ $(document).ready(function(){
 		}
 		$("#get_view").empty();
 		$("#nav_view").empty();
-		var key = "AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //"AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //
+		var key = "AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //"AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //
 		//var accessToken = "${accessToken}";
 		var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order="
 				+ $getorder
@@ -321,61 +321,6 @@ $(document).ready(function(){
 	
 </script>
 
-<script>	//시작, 끝 시간 설정 bar
-	var start_hour, start_min, start_sec, end_hour, end_min, end_sec;
-	
-	$( function() {
-		$( "#slider-range" ).slider({
-			range: true,
-			min: 0,
-			max: 500,
-			/* values: [ 75, 300 ], */
-			slide: function( event, ui ) {
-				//$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
-
-				start_hour = Math.floor(ui.values[ 0 ] / 3600);
-			    start_min = Math.floor(ui.values[ 0 ] % 3600 / 60);
-			    start_sec = ui.values[ 0 ] % 60;
-
-			    end_hour = Math.floor(ui.values[ 1 ] / 3600);
-			    end_min = Math.floor(ui.values[ 1 ] % 3600 / 60);
-			    end_sec = ui.values[ 1 ] % 60;
-
-			    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
-			}
-		}); 
-		//$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + " - 끝: " + $( "#slider-range" ).slider( "values", 1 ) );
-	    
-	} );
-
-	function setSlider() {
-		console.log("limit값 확인 !! ", limit);
-		/* $("#slider-range").slider("destroy"); */
-		/*var attributes = {
-			max: limit
-		}
-		// update attributes
-		$element.attr(attributes);
-
-		// pass updated attributes to rangeslider.js
-		$element.rangeslider('update', true); */
-		$('#slider-range').slider( "option", "min", 0);
-		$('#slider-range').slider( "option", "max", limit);
-
-		$( "#slider-range" ).slider( "option", "values", [ 0, limit ] );
-		//$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
-		
-		start_hour= start_min = start_sec = 0;
-
-	    end_hour = Math.floor(limit / 3600);
-	    end_min = Math.floor(limit % 3600 / 60);
-	    end_sec = limit % 60;
-
-		
-		$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
-	}
-</script>
-
 <body>
 	<!-- Youtube video player -->
 	<script>
@@ -413,25 +358,24 @@ $(document).ready(function(){
 			console.log(id, title, duration, index);
 
 			// (21/10/06) youtube 플레이어 띄워주고, 제목을 띄워준다. 이 부분은 <div> 태그로 감싸져서 초록색이 나타나게 되는데 영상구간 설정 부분까지 태그로 감싸지게 해야 전체가 초록색 배경이 될듯. 
-			var $div = $('<div id="playerBox" class="text-center" style="margin: auto;"> <div class="iframe-container" id="player"></div>'
+			var $div = $('<div id="playerBox" class="text-center" > <div class="iframe-container" id="player" ></div>'
 					+ '<form class>'
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative row form-group">'
 							+ '<div class="col-sm-1"> 제목 </div>'
-							+ '<div class="col-sm-11"> <input name="newName" id="newName" type="text" class="col-sm-11 form-control" value="'+ title +'"></div>'
+							+ '<div class="col-sm-11"> <input id="setTitle" type="text" class="col-sm-11 form-control" value="'+ title +'"></div>'
 						+ '</div>'
-						+ '<div id="setVideoInfo"> <input type="hidden" name="duration" id="duration">'
+						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete" >'
 								+ '<div class="setTimeRange input-group">'
 									+ '<div class="col-md-2 input-group-prepend">'
-										+ '<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">시작</button>'
+										+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>'
 									+ '</div>'
-									+ '<div class="col-md-8"> </div>'
+									+ '<div class="col-md-8"> <div id="slider-range"></div> </div>'
 									+ '<div class="col-md-2 input-group-append">' 
-										+ '<button class="btn btn-outline-secondary" onclick="getCurrentPlayTime(this)">끝</button>'
+										+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>'
 									+ '</div>' 
 								+ '</div>'
-								+ '<div id="slider-range"></div>'
 								+ '<div class="position-relative row form-group">'
 									+ '<div class="col-sm-2 col-form-label d-flex justify-content-center">'
 										+ '<label for="amount"><b>설정된 시간</b></label>'
@@ -443,7 +387,7 @@ $(document).ready(function(){
 							+ '<div> <span style="font-weight: bold"> 태그: </span> <input type="text" id="tag" name="tag"> </div>' 
 						+ '</div>'
 						+ '<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>' 
-					+'</form>' 
+					+ '</form>' 
 					+ '</div>'); 		
 					
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
@@ -494,9 +438,89 @@ $(document).ready(function(){
 			prev_index = index;		
 		}
 
+		function addToCart(id, title){
+			// title 은 원본 title, $('#setTitle').val() 은 사용자 지정 title 
+			var thumbnail2 = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="img-fluid">';
+			if ($('#setTitle').val().length > 40) {
+				var shortTitle = $('#setTitle').val().substring(0,40) + " ...";
+			}
+			else{
+				var shortTitle = $('#setTitle').val();
+			}
+			/* if(!validation()){
+				return;
+			}; */
+			
+			//1. 
+			//var content = thumbnail2 + title;
+			//$("#videosInCart").append(content);
+			//2.
+	
+				//document.getElementById('running_time').innerHTML += hhmmss; 
+				//$('#running_time').html("duration: "+ hhmmss);
+				//document.getElementById('running_time').innerHTML = "duration: " + hhmmss; 
+				// 아직 카트 element가 생성되기 전이라서 이렇게 변수에 저장해놓은 뒤에 사용할 수 밖에 없음. 
+				
+				//running_time = hhmmss;
+				
+			// running time 구하기 * (다시 하기 ==> 21/10/07)
+			start_time = start_hour*3600.00 + start_min*60.00 + start_sec*1.00;
+			end_time = end_hour*3600.00 + end_min*60.00 + end_sec*1.00;
+			
+			const totalSeconds = end_time - start_time;
+			const hours = Math.floor(totalSeconds / 3600);
+		    const minutes = Math.floor(totalSeconds % 3600 / 60);
+		    const seconds = parseFloat(totalSeconds % 60).toFixed(0);
 
+		    if(hours!=0){
+		    	hhmmss = hours + ':' + minutes + ':' + seconds;
+		    }
+		    else {
+		    	hhmmss = minutes + ':' + seconds;
+		    }
+
+		  	console.log("check hhmmss ==>" , hhmmss); 
+		  	
+			$('#duration').val(totalSeconds);
+			
+			var cart_start_time;
+			var cart_end_time;
+
+			if(start_hour == 0) {
+				cart_start_time = start_min + ":" + start_sec;
+				cart_end_time = end_min + ":" + end_sec;
+			}
+			else {
+				cart_start_time = start_hour + ":" + start_min + ":" + start_sec;
+				cart_end_time = end_hour + ":" + end_min + ":" + end_sec;
+			}
+				
+			var html = '<div class="videoSeq">' 
+				+ '<input type="hidden" name="youtubeID id="inputYoutubeID" value="' + id +'">'
+				+ '<input type="hidden" name="start_s" id="start_s" value="' + start_time + '">' 
+				+ '<input type="hidden" name="end_s" id="end_s" value="' + end_time + '">' 
+				+ '<input type="hidden" name="title" id="inputYoutubeTitle" value="' + title + '">'
+				+ '<input type="hidden" name="newName" id="newName" value="'+ $('#setTitle').val() + '">'
+				+ '<input type="hidden" name="maxLength" id="maxLength" value="' + limit + '">' 
+				+ '<input type="hidden" name="duration" id="duration" value="' + totalSeconds + '">'
+				//+ '<input type="hidden" name="duration" id="duration">'
+				+ '<div class="row">' //videoID="' + id + '" videoTitle="' + title + '">' 
+				+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave" name="chk"></div>'
+				+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
+				+ '<div class="col-lg-7">'
+				+ '<div style="font-weight: bold;">' + shortTitle + '</div>'
+				+ '<div style="display:inline" value="'+cart_start_time+'"> start ' + cart_start_time + '</div>'
+				+ '<div style="display:inline" value="'+cart_end_time+'"> end ' + cart_end_time + '</div>' 
+				//+ '<div id="duration" style="display: none"> duration:' + $('#duration').val() + '</div>'
+				+ '<div id="running_time" style="display:inline" value="'+hhmmss+'"> duration ' + hhmmss + '</div>'
+				+ '</div> </div>'; 
+			//3. var html = $('#setVideosInCart').html();
+			$("#videosInCart").append(html); 				
+				
+		}
 
 		var start_hour, start_min, start_sec, end_hour, end_min, end_sec;
+
 		function showSlider(){
 			$( "#slider-range" ).slider({
 				range: true,
@@ -516,11 +540,9 @@ $(document).ready(function(){
 
 				    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
 				}
-		});
-			//$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + " - 끝: " + $( "#slider-range" ).slider( "values", 1 ) );
-		    
+			});    
 		}
-
+		
 		function setSlider() {
 			console.log("limit값 확인 !! ", limit);
 			/* $("#slider-range").slider("destroy"); */
@@ -547,10 +569,6 @@ $(document).ready(function(){
 			
 			$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
 		}
-
-
-
-
 		
 		function showYoutubePlayer(id, title, index){
 			//$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
@@ -658,7 +676,8 @@ $(document).ready(function(){
 			player.seekTo(end_time);
 		}
 		// 현재 재생위치를 시작,끝 시간에 지정 
-		function getCurrentPlayTime(obj) {
+		function getCurrentPlayTime(e, obj) {
+			e.preventDefault();
 			/* var d = Number(player.getCurrentTime());
 			d = parseFloat(d).toFixed(2); */
 
@@ -710,7 +729,7 @@ $(document).ready(function(){
 				end_time *= 1.00;
 			}
 
-			
+			return false;
 
 			/* document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
 			document.getElementById("start_hh").value = h;/* .toFixed(2);
@@ -778,105 +797,19 @@ $(document).ready(function(){
 				return false;
 			}
 
-			// running time 구하기 * (다시 하기 ==> 21/10/07)
-			start_time = start_hour*3600.00 + start_min*60.00 + start_sec*1.00;
-			end_time = end_hour*3600.00 + end_min*60.00 + end_sec*1.00;
-			
-			const totalSeconds = end_time - start_time;
-			const hours = Math.floor(totalSeconds / 3600);
-		    const minutes = Math.floor(totalSeconds % 3600 / 60);
-		    const seconds = totalSeconds % 60;
-
-		    if(hours!=0){
-		    	hhmmss = hours + ':' + minutes + ':' + seconds;
-		    }
-		    else {
-		    	hhmmss = minutes + ':' + seconds;
-		    }
-
-		  	console.log("check hhmmss ==>" , hhmmss); // *
-		  	
-		  	
-			//console.log(limit);
-			//console.log(end_time - start_time);
-			$('#duration').val(totalSeconds);
-
-
-			// 아래 코드는 없애도 될듯. 
-			/* if (start_time > end_time) {
-				document.getElementById("warning1").innerHTML = "start time cannot exceed end time";
-				//document.getElementById("start_ss").focus();
-				return false;
-			}
-			
-			if (end_time > limit) {
-				//console.log(end_time,"  ", limit);
-				document.getElementById("warning2").innerHTML = "Please insert again";
-				//document.getElementById("end_ss").focus();
-				return false;
-			}  */
-
 			return true;
 			
 		}
-		function addToCart(id, title){
-			console.log(id, title);
-			var thumbnail2 = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="img-fluid">';
-			if (title.length > 40) {
-				title = title.substring(0,40) + " ...";
-			}
-			/* if(!validation()){
-				return;
-			}; */
-			
-			//1. 
-			//var content = thumbnail2 + title;
-			//$("#videosInCart").append(content);
-			//2.
-	
-				//document.getElementById('running_time').innerHTML += hhmmss; 
-				//$('#running_time').html("duration: "+ hhmmss);
-				//document.getElementById('running_time').innerHTML = "duration: " + hhmmss; 
-				// 아직 카트 element가 생성되기 전이라서 이렇게 변수에 저장해놓은 뒤에 사용할 수 밖에 없음. 
-				
-				//running_time = hhmmss;
-			
-			var cart_start_time;
-			var cart_end_time;
 
-			// 시작, 끝시간을 정할떄 validation을 통과했으면 start_
-			
-			if( $('#start_hh').is(':empty') ) {
-				cart_start_time =  $('#start_mm').val() + ":" + $('#start_ss').val();
-				cart_end_time = $('#end_mm').val() + ":" + $('#end_ss').val();
-			}
-			else {
-				cart_start_time = $('#start_hh').val() + ":" + $('#start_mm').val() + ":" + $('#start_ss').val();
-				cart_end_time = $('#end_hh').val() + ":" + $('#end_mm').val() + ":" + $('#end_ss').val();
-			}
-				
-			var html = '<div class="videoSeq">' 
-				+ '<div class="row" videoID="' + id + '" videoTitle="' + title + '">' 
-				+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave" name="chk"></div>'
-				+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
-				+ '<div class="col-lg-7">'
-				+ '<div id="title" style="font-weight: bold;">' + title + '</div>'
-				+ '<div id="start_s" style="display:inline" value="'+cart_start_time+'"> start ' + cart_start_time + '   </div>'
-				+ '<div id="end_s" style="display:inline" value="'+cart_end_time+'"> end ' + cart_end_time + '</div>' 
-				+ '<div id="duration_s" style="display: none"> duration:' + $('#duration').val() + '</div>'
-				+ '<div id="running_time" style="display:inline" value="'+hhmmss+'"> duration ' + hhmmss + '</div>'
-				+ '</div> </div>'; 
-			//3. var html = $('#setVideosInCart').html();
-			$("#videosInCart").append(html); 				
-				
-		}
+		// 원래 addToCart 자리 (21/10/09)
+		
 		function deleteFromCart(){
-
+				
 			$('input:checkbox:checked').each(function(i){
 				console.log($(this).parent().closest('.videoSeq').remove());
 			});
 			// 전체 선택 체크 해제 
-			$("input:checkbox[id='checkAll']").prop("checked", false); /* by ID */ 
+			$("input:checkbox[id='checkAll']").prop("checked", false); /* by ID */  
 			
 		}
 		function selectAll(selectAll) {
@@ -895,6 +828,72 @@ $(document).ready(function(){
 		function closeSidebar(){
 			$('.ui-theme-settings').attr('class', 'ui-theme-settings');
 		}
+
+		function insertVideos(){ 	// video들 저장 		
+				event.preventDefault(); // avoid to execute the actual submit of the form.
+
+				var jsonArray = new Array();
+				var aJson = new Object();
+				
+				var checkBoxArr = []; // 플레이리스트에 추가될 영상들을 저장
+				$('input:checkbox:checked').each(function(i) {
+					checkBoxArr.push($(this).closest('.videoSeq'));
+				});
+
+				//console.log(checkBoxArr.length);
+
+				for(let i=0; i<checkBoxArr.length; i++){
+					console.log(checkBoxArr[i].find('#inputYoutubeTitle').val());
+
+					aJson.title = checkBoxArr[i].find('#inputYoutubeTitle').val();
+					aJson.newName = checkBoxArr[i].find('#newName').val();
+					aJson.start_s = checkBoxArr[i].find('#start_s').val();
+					aJson.end_s = checkBoxArr[i].find('#end_s').val();
+					aJson.inputYoutubeID = checkBoxArr[i].find('#inputYoutubeID').val();
+					aJson.maxLength = checkBoxArr[i].find('#maxLength').val();
+					aJson.duration = checkBoxArr[i].find('#duration').val();
+					aJson.tag = checkBoxArr[i].find('#tag').val();
+
+					aJsonArray.push(aJson);
+				}
+
+				var jsonData = JSON.stringify(aJsonArray);				
+				
+				/* var title = $("#inputYoutubeTitle").val();
+				var newName = $("#newName").val();
+				var start_s = $("#start_s").val();
+				var end_s = $("#end_s").val();
+				var youtubeID = $("#inputYoutubeID").val();
+				var maxLength = $("#maxLength").val();
+				var duration = $('#duration').val();
+				var tag = $("#tag").val();
+				var newTitle;
+				
+				if(newName != title){
+					newTitle = newName;
+				} */
+				
+				$.ajax({
+					'type' : "POST", 
+					'url' : "${pageContext.request.contextPath}/video/addToPlaylist",
+					'data' : {
+						jsonData : jsonData
+					},
+					success : function(data) {
+						console.log("ajax video저장 완료!");
+						/* for (var i = 0; i < checkBoxArr.length; i++) {
+							getAllVideo(checkBoxArr[i]);
+						} */
+					},
+					error : function(error) {
+						//getAlMyPlaylist();
+						console.log("ajax video저장 실패!" + error);
+					}
+				});
+
+				//confirmSearch();
+				return false;
+		}
 		
 	</script>
 	<div
@@ -909,16 +908,55 @@ $(document).ready(function(){
             <div class="theme-settings__inner">
                 <div class="scrollbar-container ps ps--active-y">
                     <div class="theme-settings__options-wrapper">
-                        <h3 class="themeoptions-heading"> 선택된 비디오 플레이리스트 
-	                        <button type="button" class="close ml-auto " aria-label="Close" onclick="closeSidebar();">
-			                    <span aria-hidden="true">×</span>
-			                </button>
-                        </h3>
+	               		<div class="themeoptions-heading">
+	                            <!-- <div>
+	                               선택된 비디오 플레이리스트
+	                            </div>
+	                            <button type="button" class="close ml-auto btn" aria-label="Close" onclick="closeSidebar();">
+	                            	<span aria-hidden="true">×</span>
+	                            </button> -->
+	                            <div class="row">
+	                            	<div class="col-sm-12">
+			                            선택된 비디오 플레이리스트
+			                            <button type="button" class="close ml-auto btn" aria-label="Close" onclick="closeSidebar();" style="line-height:35px">
+			                            	<span aria-hidden="true">X</span>
+			                            </button>
+	                            	</div>
+	                            	<div class="videoNewTitle col-sm-12">
+		                            	<input type="checkbox" id="checkAll" onclick="selectAll(this)"> <label class="form-check-label"> 전체 선택 </label>  
+										<button onclick="deleteFromCart()" class="m-0 btn-transition btn btn-danger float-right">선택 항목 삭제</button>
+	                            	
+	                            	</div>
+	                            </div>
+                        </div>
+		                        
                       
-                        <div id="videosInCart"
-											class="scrollbar-container ps--active-y ps"></div>
+                        <div id="videosInCart" class="vh-100 scrollbar-container ps--active-y ps" style="overflow-y:auto; height:750px;">
+                           
+                        </div>
+                        
+                        <div style="position: fixed; left: 0; bottom: 0; width: 100%;">
+					          <div class="app-footer">
+					              <div class="app-footer__inner">
+					                  <div class="app-footer-left">
+			                              <button onclick="createVideo();">
+			                                  선택된 비디오 playlist에 추가
+			                              </button>
+					                  </div>
+					                  <!-- <div class="app-footer-right">
+					                      <button>
+					                         전체 비디오 playlist에 추가
+					                      </button>             
+					                  </div> -->
+					              </div>
+					          </div>
+					      </div>
+                        
+                        
                     </div>
-                <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 446px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 151px;"></div></div></div>
+                <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div>
+                <!-- <div class="ps__rail-y" style="top: 0px; height: 446px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 151px;"></div></div></div> -->
+                <div class="ps__rail-y ps--clicking" style="top: 0px; height: 493px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 184px;"></div></div></div>
             </div>
         </div>
 
@@ -978,7 +1016,9 @@ $(document).ready(function(){
 							</div> 
 						</div>
 
-						<!-- <div class="playerForm col-lg-6" style="display:none;">
+						
+						<!-- 우측 카트 완전히 완료되면 지울 것  
+						<div class="playerForm col-lg-6" style="display:none;">
 							<div class="main-card card sticky-top" id="rightCard">
 								<div class="card-title m-0"> 
 									<h6 style="font-weight: bold; margin: 10px 20px;"> 선택된 비디오 리스트 </h6>
@@ -997,11 +1037,8 @@ $(document).ready(function(){
 						
 						
 						<div class="playerForm col-lg-6 form-class" style="display:none;">
-							<div class="main-card card" id="rightCard">
-								<!-- form 추가(jw) -->
-								
-								
-								
+							<div class="main-card card">
+								<!-- form 동적으로 추가(jw) -->
 							</div>
 							
 						</div>

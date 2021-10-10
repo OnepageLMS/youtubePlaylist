@@ -1,21 +1,16 @@
 package com.mycom.myapp.video;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,7 +43,6 @@ public class VideoController {
 	@RequestMapping(value = "/detail", method = RequestMethod.POST)
 	public String getSelectedPlaylistVideos(@RequestParam("playlistID") int playlistID, 
 			@RequestParam("videoID") int videoID, Model model){
-		model.addAttribute("playlistID", playlistID);
 		model.addAttribute("videoID", videoID);	//가장 먼저 플레이어에 띄워지는 비디오
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
@@ -146,10 +140,60 @@ public class VideoController {
 			System.out.println("totalVideoLength 업데이트 실패! ");
 		
 	}
+//	@RequestMapping(value = "/addToPlaylist", method = RequestMethod.POST)
+//	public String addToPlaylist(Model model, @ModelAttribute VideoVO vo) {
+//		//List<Integer> playlistArr = vo.getPlaylistArr();
+//		//System.out.println("controller: maxLength!!->" + vo.getmaxLength());
+//		
+////		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+////		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+//
+//		// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+//		double length = vo.getDuration();
+//		
+//		for(int i=0; i<playlistArr.size(); i++) {
+//			int playlistID = playlistArr.get(i);
+//			
+//			// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+//			PlaylistVO Pvo = new PlaylistVO();
+//			Pvo.setId(playlistID);
+//			Pvo.setThumbnailID(vo.getYoutubeID());
+//			System.out.println("thumbnail id check" + Pvo.getThumbnailID());
+//			
+//			// (jw) 썸네일 추가를 위한 코드 (21/08/11) 
+//			int count = videoService.getTotalCount(playlistID);
+//			
+//			if(count == 0) {
+//				if(playlistService.updateThumbnailID(Pvo) != 0) {
+//					System.out.println("playlist 썸네일 추가 성공! ");
+//				}
+//				else {
+//					System.out.println("playlist 썸네일 추가 실패! ");
+//				}
+//			}
+//				
+//			vo.setSeq(videoService.getTotalCount(playlistID)); //새로운 video의 seq 구하기
+//			vo.setPlaylistID(playlistID);
+//			
+//			if(videoService.insertVideo(vo) != 0) {
+//				System.out.println("title: " + vo.getTitle());
+//				System.out.println(playlistID + "번 비디오 추가 성공!! ");
+//				
+//				updateTotalVideo(playlistID);
+//				updateTotalLength(playlistID);
+//				
+//			}
+//			else 
+//				System.out.println("비디오 추가 실패 ");
+//		}
+//		
+//		model.addAttribute("myName", memberService.getInstructorName(instructorID));
+//		
+//		return "youtube";
+//	}
 	
 	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
-	public String addVideo(Model model) {
-		VideoVO vo = new VideoVO();
+	public String addVideo(Model model, @ModelAttribute VideoVO vo) {
 		List<Integer> playlistArr = vo.getPlaylistArr();
 		System.out.println("controller: maxLength!!->" + vo.getmaxLength());
 		

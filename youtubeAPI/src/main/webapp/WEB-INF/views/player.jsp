@@ -206,7 +206,7 @@ img {
 
 								$('#allMyPlaylist').empty();
 
-								if (playlists == null)	ㅇ
+								if (playlists == null)
 									$('#allMyPlaylist').append('저장된 playlist가 없습니다.');
 
 								else{
