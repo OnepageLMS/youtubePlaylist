@@ -33,6 +33,11 @@
 		where classID=#{classID}
 	</select>
 	
+	<select id="getOneContentInstructor" resultType="classContent">
+		select * from lms_classContent
+		where id=#{id}
+	</select>
+	
 	<select id="getOneContent" resultType="classContent">
 		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
 		inner join lms_class on lms_class.id = lms_classContent.classID
@@ -50,7 +55,7 @@
 	</select>
 	
 	<select id="getRealAll" resultType="classContent">
-		select days, daySeq, title, description, playlistID, startDate, endDate
+		select id, classID, days, daySeq, title, description, playlistID, startDate, endDate
 		from lms_classContent
 		where classID=#{classID} order by days, daySeq
 	</select>

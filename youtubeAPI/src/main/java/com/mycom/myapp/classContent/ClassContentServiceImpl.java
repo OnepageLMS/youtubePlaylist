@@ -39,6 +39,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public ClassContentVO getOneContentInstructor(int id) {
+		return ClassContentDAO.getOneContentInstructor(id);
+	}
+	
+	@Override
 	public ClassContentVO getOneContent(int id) {
 		return ClassContentDAO.getOneContent(id);
 	}
