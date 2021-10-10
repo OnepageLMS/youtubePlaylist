@@ -411,6 +411,8 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 		tags = tags.replace('#', '');
 		//tags = tags.replace(' ', ', ');
 	}
+
+	if(description == '설명 없음')	 description = null;
 	
 	$('#setPlaylistID').val(playlistID);
 	$('#editPlaylistName').val(playlistName);
@@ -485,7 +487,7 @@ function submitEditPlaylist(){
 										</div>
 
 									 	<div class="col-lg-3">
-									 		<button type="button" id="addVideoButton" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button>
+									 		<button type="button" id="addVideoButton" class="btn btn-transition btn-outline-success" onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button>
 									 	 </div>
 									</div>
 									<div class="row">
