@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -141,15 +142,22 @@ public class VideoController {
 			System.out.println("totalVideoLength 업데이트 실패! ");
 		
 	}
-//	@RequestMapping(value = "/addToPlaylist", method = RequestMethod.POST)
-//	public String addToPlaylist(Model model, @ModelAttribute VideoVO vo) {
-//		//List<Integer> playlistArr = vo.getPlaylistArr();
-//		//System.out.println("controller: maxLength!!->" + vo.getmaxLength());
-//		
-////		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-////		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-//
-//		// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+	@RequestMapping(value = "/addToPlaylist", method = RequestMethod.POST)
+	public String addToPlaylist(Model model, @RequestBody String paramData) {
+		//List<Integer> playlistArr = vo.getPlaylistArr();
+		//System.out.println("controller: maxLength!!->" + vo.getmaxLength());
+		
+//		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+//		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+
+		// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+		List<Map<String,Object>> resultMap = new ArrayList<Map<String,Object>>();
+	    resultMap = JSONArray.fromObject(paramData);
+
+	    for (Map<String, Object> map : resultMap) {
+	        System.out.println(map.get("playlistID") + " : " + map.get("title"));
+	    }
+	    
 //		double length = vo.getDuration();
 //		
 //		for(int i=0; i<playlistArr.size(); i++) {
@@ -189,9 +197,9 @@ public class VideoController {
 //		}
 //		
 //		model.addAttribute("myName", memberService.getInstructorName(instructorID));
-//		
-//		return "youtube";
-//	}
+		
+		return "youtube";
+	}
 	
 	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
 	public String addVideo(Model model, @ModelAttribute VideoVO vo) {
