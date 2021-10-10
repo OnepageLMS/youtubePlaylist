@@ -27,7 +27,6 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
 $(document).ready(function(){
 	
 	
-	
 	var activeClass = JSON.parse('${allMyClass}');	//이부분 수정
 	var inactiveClass = JSON.parse('${allMyInactiveClass}');
 
@@ -334,22 +333,23 @@ function publishNotice(){	//공지등록
                     <div class="app-main__inner">
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
-                                <div class="page-title-heading">
-                                  	<h3 class="">내 강의실</h3>
-                                  	<div class="search-wrapper">
-					                    <div class="input-holder">
-					                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
-					                        <button class="search-icon"><span></span></button>
-					                    </div>
-					                    <button class="close"></button>
-					                </div> 
+                                <div class="page-title-heading mr-3">
+                                  	<h3>내 강의실</h3> 	
                                 </div>
+                               <div class="search-wrapper">
+				                    <div class="input-holder">
+				                        <input type="text" class="search-input" placeholder="강의실 검색">
+				                        <button class="search-icon"><span></span></button>
+				                    </div>
+				                    <button class="close"></button>
+				                </div> 
+				                <button class="btn btn-primary mr-3" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
+                               	<b>+</b> 강의실 생성
+                               </button>
                           </div>
                         </div>      
                        	<div>
-                       		<button class="btn btn-primary float-right" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
-                               	<b>+</b> 강의실 생성
-                               </button>
+                       		
                        	</div>
                        
                         <div class="dashboardClass">

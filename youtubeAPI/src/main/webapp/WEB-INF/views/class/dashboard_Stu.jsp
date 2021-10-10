@@ -172,7 +172,7 @@ function submitDeleteClassroom(){
                                </div>
                                <div class="search-wrapper">
 			                    <div class="input-holder">
-			                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+			                        <input type="text" class="search-input" placeholder="강의실 검색">
 			                        <button class="search-icon"><span></span></button>
 			                    </div>
 			                    <button class="close"></button>

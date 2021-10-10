@@ -76,18 +76,33 @@
 					$.each(notices, function( index, value){
 						var num = length - index;
 						var collapseID = "collapse" + num;
-						var regDate = value.regDate;
+						//var regDate = value.regDate;
+						var regDate = value.regDate.split(" ")[0];
+						var important = value.important;
 
+						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
+						else important = '';
+
+						/*var html = '<div id="module" class="col-md-12 col-lg-10 col-sm-12 col-auto">'
+							 +  '<h3>' + value.title + '</h3>'
+							 + ' <p class="collapse" id="' + collapseID + '" aria-expanded="false">'
+							 + value.content   
+							 +  '</p>'
+							 +  '<a role="button" class="collapsed" data-toggle="collapse" href="#' + collapseID + '" aria-expanded="false" aria-controls="collapseExample"></a>'
+							+'</div>';
+							*/
+							
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
 								+ '<div class="card">'
 									+ '<div id="headingOne" class="card-header">'
 										+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
-																														+ 'class="text-left m-0 p-0 btn btn-link btn-block collapsed">'
-											+ '<h5 class="m-0 p-0 text-muted"><b>#' + num + '</b> ' + value.title + ' </h5>'
+																														+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
+											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
 										+ '</button>'
-										+ '<div>작성일 ' + value.regDate + '</div>'
-										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="btn">'
+										+ '<div class="text-success col-2 pl-5 pr-0">**% 읽음</div>'
+										+ '<div class="col-3">작성일 ' + regDate + '</div>'
+										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 btn">'
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 										+ '</button>'
 										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
@@ -97,7 +112,7 @@
 									+ '</div>'
 									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
 										+ '<div class="card-body">' 
-											+ '<div class="text-success">**명 읽음</div>'
+											
 											+ '<div>' + value.content + '</div>'
 										+ '</div>'
 									+ '</div>'
@@ -158,7 +173,6 @@
 			$('#editImportant').val(1);
 
 		console.log($('#editNoticeForm').serialize());
-/*
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/updateNotice',
@@ -172,7 +186,6 @@
 				console.log('공지 수정 실패!');
 			}
 		});
-		*/
 	}
 
 	
@@ -197,17 +210,18 @@
                             </div>
                             <div class="search-wrapper">
 			                    <div class="input-holder">
-			                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+			                        <input type="text" class="search-input" placeholder="공지 검색">
 			                        <button class="search-icon"><span></span></button>
 			                    </div>
 			                    <button class="close"></button>
 			                </div>
+			                <button type="button" id="publishNoticeBtn" class="btn btn-sm mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
                         </div>
                     </div>            
                     <div class="row">
                     	<div class="col-12">
                     		<div class="col-10">
-                    			<button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
+                    			
                     		</div>
                     		
                     	</div>

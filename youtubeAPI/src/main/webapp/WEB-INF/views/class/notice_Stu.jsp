@@ -72,17 +72,25 @@
 					$.each(notices, function( index, value){
 						var num = length - index;
 						var collapseID = "collapse" + num;
-						var regDate = value.regDate;
+						//var regDate = value.regDate;
+						var regDate = value.regDate.split(" ")[0];
+						var important = value.important;
+						var viewCheck = '';	//학생이 읽지 않은 공지는 색상 다르게
+
+						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
+						else important = '';
+
+						if (index > 1) viewCheck = 'text-muted';	//학생이 읽은 공지는 색깔 진회색으로
 
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
 								+ '<div class="card">'
 									+ '<div id="headingOne" class="card-header">'
 										+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
-																														+ 'class="text-left m-0 p-0 btn btn-link btn-block collapsed">'
-											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + value.title + ' </h5>'
+																														+ 'class="col-9 text-left m-0 p-0 btn btn-link btn-block collapsed">'
+											+ '<h5 class="m-0 p-0 ' + viewCheck + '"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
 										+ '</button>'
-										+ '<div>작성일 ' + value.regDate + '</div>'
+										+ '<div>작성일 ' + regDate + '</div>'
 									+ '</div>'
 									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
 										+ '<div class="card-body">' + value.content + '</div>'
@@ -183,7 +191,7 @@
                             </div>
                             <div class="search-wrapper ml-3">
 			                    <div class="input-holder">
-			                        <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+			                        <input type="text" class="search-input" placeholder="공지 검색">
 			                        <button class="search-icon"><span></span></button>
 			                    </div>
 			                    <button class="close"></button>
