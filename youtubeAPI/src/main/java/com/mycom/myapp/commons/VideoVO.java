@@ -13,7 +13,7 @@ public class VideoVO {
 	private int seq;
 	private String tag;
 	private String regdate;
-	private List<Integer> playlistArr;
+	private List<Integer> playlistArr; 
 	private double maxLength;
 	private float duration;
 	

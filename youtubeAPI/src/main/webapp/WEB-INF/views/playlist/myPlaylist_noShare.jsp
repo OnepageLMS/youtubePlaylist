@@ -464,6 +464,12 @@ function submitEditPlaylist(){
 	});
 }
 
+function addYoutubeVideo(){
+	request.setAttribute("selectedPlaylistID", playlistID);
+	/* ("PlaylistID", ) */
+	location.href='${pageContext.request.contextPath}/video/youtube
+}
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -494,7 +500,8 @@ function submitEditPlaylist(){
 										</div>
 
 									 	<div class="col-lg-3">
-									 		<button type="button" id="addVideoButton" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button>
+									 		<%-- <button type="button" id="addVideoButton" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button> --%>
+									 		<button type="button" id="addVideoButton" class="btn btn-primary" onclick="addYoutubeVideo();" style="display: none">Youtube 영상추가</button>
 									 	 </div>
 									</div>
 									<div class="row">
