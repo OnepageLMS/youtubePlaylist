@@ -487,7 +487,7 @@ function submitEditPlaylist(){
 										</div>
 
 									 	<div class="col-lg-3">
-									 		<button type="button" id="addVideoButton" class="btn btn-transition btn-outline-success" onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button>
+									 		<button type="button" id="addVideoButton" class="btn btn-transition btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button>
 									 	 </div>
 									</div>
 									<div class="row">
