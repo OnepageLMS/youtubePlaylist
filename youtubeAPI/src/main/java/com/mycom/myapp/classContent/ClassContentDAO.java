@@ -39,6 +39,13 @@ public class ClassContentDAO {
 		return result;
 	}
 	
+	
+	public ClassContentVO getOneContentInstructor(int id) {
+		ClassContentVO result = sqlSession.selectOne("ClassContent.getOneContentInstructor", id);
+		return result;
+	}
+	
+	
 	public ClassContentVO getOneContent(int id) {
 		ClassContentVO result = sqlSession.selectOne("ClassContent.getOneContent", id);
 		return result;

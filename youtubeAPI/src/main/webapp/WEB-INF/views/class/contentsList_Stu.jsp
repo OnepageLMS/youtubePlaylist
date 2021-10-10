@@ -49,6 +49,7 @@
 		
 		//console.log("몇개냐면,, " + weekContents.length);
 		console.log("length : " + allMyClass.length);
+		console.log(allMyClass);
 			for(var i=0; i<allMyClass.length; i++){
 				//if(allMyClass[i].playist == 0){
 					
@@ -56,10 +57,23 @@
 				//var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 				var day = allMyClass[i].days;
 				var endDate = allMyClass[i].endDate; //timestamp -> actural time
+				var videoLength = '';
 				//var result_date = convertTotalLength(date);
 				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
-				
+				var symbol;
+				if(allMyClass[i].playlistID == 0){
+					symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
+					videoLength = '';
+				}
+				else{
+					symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
+					
+					for(var j=0; j<weekContents.length; j++){
+							if(allMyClass[i].playlistID == weekContents[j].playlistID)
+							videoLength = "[" + convertTotalLength(weekContents[j].totalVideoLength) + "]";
+					}
+				}
 				var onclickDetail = "location.href='../contentDetail/" + allMyClass[i].playlistID + "/" + allMyClass[i].id + "/" +classInfo+ "/" + i +  "'";
 				
 				var content = $('.day:eq(' + day + ')');
@@ -69,10 +83,10 @@
 									//+ '<div class="row col d-flex justify-content-between align-items-center">'
 									+ '<div class="row col d-flex align-items-center">'
 										+ '<div class="index col-sm-1 ">' + (allMyClass[i].daySeq+1) + '. </div>'
-										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
+										+ '<div class="videoIcon col-sm-1">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
 										+ "<div class='col-sm-8 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
 											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
-												+ allMyClass[i].title + "  [" + convertTotalLength(allMyClass[i].totalVideoLength)  + "]"
+												+ allMyClass[i].title + " " + videoLength  
 											+ '</div>'
 											
 											+ '<div class="col-sm-12 align-items-center" style=" height: 50%; font-size: 15px; padding: 5px 0px 0px;">'

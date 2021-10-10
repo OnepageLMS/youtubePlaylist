@@ -46,7 +46,7 @@ var ccID = ${id};
 
 $(document).ready(function(){
 	$.ajax({ 
-		  url : "../../forInstructorContentDetail",
+		  url : "${pageContext.request.contextPath}/class/forInstructorContentDetail",
 		  type : "post",
 		  async : false,
 		  data : {	
@@ -54,42 +54,61 @@ $(document).ready(function(){
 		  },
 		  dataType : "json",
 		  success : function(data) {
-			information = data;
-			console.log("성공이긴" + information[0]);
+			weekContents = data;
 			videoIdx = ${daySeq};
+			console.log(weekContents);
 		  },
 		  error : function() {
 		  	alert("error1");
 		  }
 	})
 	
-	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-		  url : "../../forVideoInformation",
+	$.ajax({ 
+		  url : "${pageContext.request.contextPath}/class/instructorAllContents",
 		  type : "post",
 		  async : false,
 		  data : {	
-			  playlistID : information[videoIdx].playlistID
-			 //playlistID : playlistSameCheck[0].playlistID //contentsList에서 선택한 주차의 첫번째 영상 보여주기
+			 classID : classID //현재 class의 id를 보낸다.
 		  },
+		  dataType : "json",
 		  success : function(data) {
-			 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
-			 playlist_length = Object.keys(playlist).length;
-			 console.log("성공이다 이놈");
+			allContents = data;
+			console.log(allContents);
 		  },
 		  error : function() {
-		  	alert("error2");
+		  	alert("error1");
 		  }
 	})
 	
+	if(allContents[videoIdx].playlistID != 0){
+		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			  url : "${pageContext.request.contextPath}/class/forVideoInformation",
+			  type : "post",
+			  async : false,
+			  data : {	
+				  playlistID : allContents[videoIdx].playlistID
+				 //playlistID : playlistSameCheck[0].playlistID //contentsList에서 선택한 주차의 첫번째 영상 보여주기
+			  },
+			  success : function(data) {
+				 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
+				 playlist_length = Object.keys(playlist).length;
+				 console.log("성공이다 이놈" + playlist);
+			  },
+			  error : function() {
+			  	alert("error2");
+			  }
+		})
+	}
+	
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-		url : "../../changeID",
+		url : "${pageContext.request.contextPath}/class/changeID",
 		type : "post",
 		async : false,
 		data : {	
 			id: ${id}
 		},
 		success : function(data) {
-			console.log("changeID 성공!");
+			console.log("id : " + ${id});
 			console.log(data.title);
 			var element = document.getElementById("contentsTitle");
 			element.innerText = data.title;
@@ -101,112 +120,203 @@ $(document).ready(function(){
 		}
 	})
 	
-	var weekContents = JSON.parse('${allContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
-	console.log(weekContents);
-	for(var i=0; i<weekContents.length; i++){
-		var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
-		var day = weekContents[i].days;
-		console.log("day : " + day);
-		var date = new Date(weekContents[i].endDate.time); //timestamp -> actural time
-			
-		var result_date = convertTotalLength(date);
-			
-		var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
-			
-		var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classID+  "'";
-		classContentID = weekContents[i].id; // classContent의 id //여기 수정
+	//var weekContents = JSON.parse('${allContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
+	//console.log(weekContents);
+	var urlContent='';
+	for(var i=0; i<allContents.length; i++){
+		var symbol;
 		
-		if(i == videoIdx){
-			var area_expanded = true;
-			var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
-			var showing = 'class="collapse show"';
-			id = weekContents[i].id;
+		
+		if(allContents[i].playlistID == 0){
+			console.log("playlistID없음 ");
+			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
+			if(videoIdx == i) {
+				document.getElementById("onepageLMS").style.display = "none";
+			}
+			
+			var day = allContents[i].days;
+			var endDate = allContents[i].endDate; //timestamp -> actural time
+			
+			//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
+			if(i == videoIdx){
+				var area_expanded = true;
+				var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
+				var showing = 'class="collapse show"';
+			}
+			else{
+				var area_expanded = false;
+				var area_labelledby = '';
+				var showing = 'class="collapse"';
+			}
+			
+			var content = $('.day:eq(' + day + ')');
+			content.append("<div id=\'heading" +(i+1)+ "\'>"
+		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
+						+ allContents[i].playlistID + ','   + allContents[i].id + ',' + classID + ',' + (i+1) +')"'
+		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
+			               + "<div class='content card align-items-center list-group-item' seq='" + allContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
+							+ '<div class="row col d-flex align-items-center">'
+								+ "<div class='index col-1 col-sm-1'>" + symbol + "</div>"
+									
+								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
+									+ "<div class='col-12 col-sm-12 card-title'>"
+										+ allContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
+									+ '</div>'
+									+ '<div class="col-sm-12">'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
+									+ '</div>' 
+								+ '</div>'
+									
+							+ '</div>'
+						+ '</div>'
+		   			+ '</button>'
+				+ '</div>'
+				
+				
+					+ '<div data-parent="#accordion" id="collapse' + (i+1) + '"' + area_labelledby + showing + '>'
+		    			+ '<div class="card-body" day="' +(i+1)+ '"> '
+					
+					    	+ '<div id="allVideo" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">'
+								
+								+ '<div id="classTitle"></div>'
+								+ '<div id="classDescription"> </div>'
+								+ '<div id="total_runningtime"></div>'
+								+ '<div id="get_view'+ (i+1) +'">'
+									
+								//	+ innerText
+													
+								+ '</div>'
+								 	
+					       	+ '</div>'
+					       	+'</div>'
+						+ '</div>'
+	  			+ '</div>');
+			
 		}
+		
 		else{
-			var area_expanded = false;
-			var area_labelledby = '';
-			var showing = 'class="collapse"';
-		}
+			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
+			document.getElementById("onepageLMS").style.display = "";
+			for(var k=0; k<weekContents.length; k++){
+			
+			
+			if(allContents[i].playlistID == weekContents[k].playlistID){
+				
+				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[k].thumbnailID + '/1.jpg">';
+				var day = weekContents[k].days;
+				var endDate = weekContents[k].endDate; //timestamp -> actural time
 		
-		var innerText ='';
-		for(var j=0; j<playlist_length; j++){
+				classContentID = weekContents[k].id; // classContent의 id //여기 수정
+				
+				
+				//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
+				if(i == videoIdx){
+					var area_expanded = true;
+					var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
+					var showing = 'class="collapse show"';
+				}
+				else{
+					var area_expanded = false;
+					var area_labelledby = '';
+					var showing = 'class="collapse"';
+				}
+				
 			
-			var newTitle = playlist[j].newTitle;
-			var title = playlist[j].title;
+			var innerText ='';
 			
-			if (playlist[j].newTitle == null){
-				playlist[j].newTitle = playlist[j].title;
-				playlist[j].title = '';
-	    	}
-			
-			if ((playlist[j].newTitle).length > 30){
-				playlist[j].newTitle = (playlist[j].newTitle).substring(0, 30) + " ..."; 
+			if(allContents[videoIdx].playlistID != 0){
+				for(var j=0; j<playlist.length; j++){ //classcontent내에 들어있는 비디오 개수
+					
+					var newTitle = playlist[j].newTitle;
+					var title = playlist[j].title;
+						
+					if (playlist[j].newTitle == null){
+						playlist[j].newTitle = playlist[j].title;
+						playlist[j].title = '';
+				    }
+					
+					if ((playlist[j].newTitle).length > 30){
+						playlist[j].newTitle = (playlist[j].newTitle).substring(0, 30) + " ..."; 
+					}
+						
+					var completed ='';
+					if(playlist[j].watched == 1 && playlist[j].classContentID == classContentID){
+						completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+					}
+						
+						
+					var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
+						
+					innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
+									+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
+										+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+											+ thumbnail 
+											+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
+										+ ' </div>' 
+										+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
+											+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
+											+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ',' + i + ', this)" >' 
+											+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[j].newTitle + '</div>' 
+											+	'<div class=""> start : '+  convertTotalLength(playlist[j].start_s) + '</div>' 
+											+	'<div class=""> end : '+  convertTotalLength(playlist[j].end_s) + '</div>' 
+										+'</div>' 
+										+ 	completed 
+								+ '</div>'
+								
+						
+								
+						//ori_videoID = playlist[0].id;
+				}
 			}
 			
 			
-			
-			
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg">';
-			
-			innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
-						+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-						+ '<div class="post-thumbnail col-xs-4 col-lg-5"> ' + thumbnail + ' </div>' 
-						+ '<div class="post-content col-xs-7 col-lg-5" onclick="viewVideo(\'' 
-							+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
-							+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ','  + j + ', this)" >' 
-							+ 	'<h6 class="post-title videoNewTitle">' + playlist[j].newTitle + '</h6>' 
-							+	'<div class="">'+  convertTotalLength(playlist[j].duration) +'</div>' +
-							'</div>' 
-					+ '</div>'
-		}
-		
-		var content = $('.day:eq(' + day + ')');
-		content.append("<div id=\'heading" +(i+1)+ "\' >"
-	               + '<button type="button" onclick="showLecture('
-					+ information[i].playlistID + ',' + weekContents[i].id + ',' + classID + ',' + (i+1) +')"'
-	 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-		               + "<div class='content card ' seq='" + weekContents[i].daySeq + ">"
-						+ '<div>'
-							+ '<div class="index col-sm-1 text-center">' + (weekContents[i].daySeq+1) + '. </div>'
-								
-							+ "<div class='col-sm-7' style='cursor: pointer;'>"
-								+ "<div class='col-sm-12'>"
-								+ weekContents[i].title  + '  [' + weekContents[i].totalVideo + ']' 
+			var content = $('.day:eq(' + day + ')');
+			content.append("<div id=\'heading" +(i+1)+ "\'>"
+		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
+						+ weekContents[k].playlistID + ','   + weekContents[k].id + ',' + classID + ',' + (i+1) +')"'
+		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
+			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[k].daySeq + "' style='padding: 10px 0px 0px;' >"
+							+ '<div class="row col d-flex align-items-center">'
+								+ '<div class="index col-1 col-sm-1 ">' + symbol + '</div>'
+									
+								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
+									+ "<div class='col-12 col-sm-12 card-title'>"
+										+ weekContents[k].title  + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
+									+ '</div>'
+									+ '<div class="col-sm-12">'
+										+ '<div class="contentInfoBorder"></div>'
+										+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
+									+ '</div>' 
 								+ '</div>'
-								+ '<div class="col-sm-12">'
-									+ '<p style="display:inlne">' + 'Youtube' + '</p>'
-									+ '<div class="contentInfoBorder"></div>'
-									+ '<p class="videoLength contentInfo" style="display:inlne">' + convertTotalLength(weekContents[i].totalVideoLength) + '</p>'
-									+ '<div class="contentInfoBorder"></div>'
-									+ '<p class="endDate contentInfo">' + '마감일: ' + endDate + '</p>'
-								+ '</div>' 
+									
 							+ '</div>'
-								
 						+ '</div>'
-					+ '</div>'
-	   			+ '</button>'
-			+ '</div>'
-				
-				+ '<div data-parent="#accordion" id="collapse' + (i+1) + '"' + area_labelledby + showing + '>'
-	    			+ '<div class="card-body" day="' +(i+1)+ '"> '
-				
-				    	+ '<div id="allVideo" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">'
-							
-							+ '<div id="classTitle"></div>'
-							+ '<div id="classDescription"> </div>'
-							+ '<div id="total_runningtime"></div>'
-							+ '<div id="get_view'+ (i+1) +'">'
+		   			+ '</button>'
+				+ '</div>'
+					
+					+ '<div data-parent="#accordion" id="collapse' + (i+1) + '"' + area_labelledby + showing + '>'
+		    			+ '<div class="card-body" day="' +(i+1)+ '"> '
+					
+					    	+ '<div id="allVideo" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">'
 								
-								+ innerText
-												
-							+ '</div>'
-							 	
-				       	+ '</div>'
-				       	+'</div>'
-					+ '</div>'
-  			+ '</div>');
+								+ '<div id="classTitle"></div>'
+								+ '<div id="classDescription"> </div>'
+								+ '<div id="total_runningtime"></div>'
+								+ '<div id="get_view'+ (i+1) +'">'
+									
+									+ innerText
+													
+								+ '</div>'
+								 	
+					       	+ '</div>'
+					       	+'</div>'
+						+ '</div>'
+	  			+ '</div>');
+			}
+			}
 		}
-	
+	}
 		
 });
 
@@ -226,11 +336,16 @@ function convertTotalLength(seconds){
 var n ;
 var playlistVideo;
 function showLecture(playlistID, id, classInfo, idx){
+
+	if(allContents[idx-1].playlistID != 0)
+		document.getElementById("onepageLMS").style.display = "";
+	else 
+		document.getElementById("onepageLMS").style.display = "none";
+	
 	n = idx;
-	//playlistSameCheck = JSON.parse('${playlistSameCheck}');
-	console.log("showLecture인데 playlistID는 " +playlistID +' id는 ' + classID);
+	
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-		  url : "../../forVideoInformation",
+		  url : "${pageContext.request.contextPath}/class/forVideoInformation",
 		  type : "post",
 		  async : false,
 		  data : {	
@@ -241,7 +356,7 @@ function showLecture(playlistID, id, classInfo, idx){
 			 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
 			 playlist_length = Object.keys(playlist).length;
 			 
-			 console.log("길이 : " + playlist[0].youtubeID);
+			 //console.log("길이 : " + playlist[0].youtubeID);
 			 console.log("forVideoInformation 성공!");
 			 
 		  },
@@ -251,7 +366,7 @@ function showLecture(playlistID, id, classInfo, idx){
 	})
 	
 	 $.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-			  url : "../../changeID",
+			  url : "${pageContext.request.contextPath}/class/changeID",
 			  type : "post",
 			  async : false,
 			  data : {	
@@ -262,7 +377,7 @@ function showLecture(playlistID, id, classInfo, idx){
 				 console.log(data);
 
 				var element = document.getElementById("contentsTitle");
-				element.innerText = data.title;
+				element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
 				var elementD = document.getElementById("contentsDescription");
 				elementD.innerText = data.description;
 			  },
@@ -271,18 +386,19 @@ function showLecture(playlistID, id, classInfo, idx){
 			  }
 		})
 	
-	lastVideo = playlist[0].id;
+	//lastVideo = playlist[0].id;
 	myThumbnail(id, idx);
 	ccID = id;
-	console.log("id라고!! " + ccID);
+	//console.log("id라고!! " + ccID);
 }
 
-function myThumbnail(classContentID, idx){
+/*function myThumbnail(classContentID, idx){
+	if(allContents[idx-1].playlistID == 0) return;
 	var className = '#get_view' + idx;
 	$(className).empty();
 	
-	for(var i=0; i<playlist_length; i++){
-	
+	for(var i=0; i<playlist.length; i++){
+		console.log(playlist[i].id);
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg">';
 		
 		var newTitle = playlist[i].newTitle;
@@ -297,10 +413,6 @@ function myThumbnail(classContentID, idx){
 			playlist[i].newTitle = (playlist[i].newTitle).substring(0, 30) + " ..."; 
 		}
 	
-		var completed ='';
-		if(playlist[i].watched == 1 && playlist[i].classContentID == classContentID){
-			completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
-		}
 		
 		$(className).append( //stu//stu
 					'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
@@ -308,29 +420,95 @@ function myThumbnail(classContentID, idx){
 						'<div class="post-thumbnail col-xs-4 col-lg-5"> ' + thumbnail + ' </div>' +
 						'<div class="post-content col-xs-7 col-lg-5" onclick="viewVideo(\'' 
 							+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-	 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ', this)" >' 
-	 					+ 	'<h6 class="post-title videoNewTitle">' + playlist[i].newTitle + '</h6>' 
-	 					+	'<div class="">'+  convertTotalLength(playlist[i].duration) +'</div>' +
+	 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this.parentNode)" >' 
+	 					+ 	'<div class="post-title videoNewTitle">' + playlist[i].newTitle + '</div>' 
+	 					+	'<div class=""> start : '+  convertTotalLength(playlist[i].start_s) + '</div>' 
+						+	'<div class=""> end : '+  convertTotalLength(playlist[i].end_s) + '</div>' 
 	 					'</div>' 
-						+ 	completed 
 					+ '</div>'
 					+ '<div class="videoLine"></div>'
 		);
 		
 	}
 	
+}*/
+
+function myThumbnail(classContentID, idx){
+	if(allContents[idx-1].playlistID == 0) return;
+	var className = '#get_view' + idx;
+	$(className).empty();
+	
+	console.log("이 강의 컨텐츠 내에 동영상은 " + playlist.length+ " 개 ");
+	for(var i=0; i<playlist.length; i++){
+	
+		var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
+		
+		var newTitle = playlist[i].newTitle;
+		var title = playlist[i].title;
+		
+		if (playlist[i].newTitle == null){
+			playlist[i].newTitle = playlist[i].title;
+			playlist[i].title = '';
+  		}
+		
+		if ((playlist[i].newTitle).length > 30){
+			playlist[i].newTitle = (playlist[i].newTitle).substring(0, 30) + " ..."; 
+		}
+	
+		var completed ='';
+		if(playlist[i].watched == 1 && playlist[i].classContentID == classContentID){
+			completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+		}
+		
+		$(className).append( //stu//stu
+						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
+						+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
+							+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+								+ thumbnail 
+								+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[i].duration) +'</div>' 
+							+ ' </div>' 
+							+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center" onclick="viewVideo(\''  //viewVideo호출
+								+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
+								+ 	playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this.parentNode)" >' 
+								+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[i].newTitle + '</div>' 
+								+	'<div class=""> start : '+  convertTotalLength(playlist[i].start_s) + '</div>' 
+								+	'<div class=""> end : '+  convertTotalLength(playlist[i].end_s) + '</div>' 
+							+'</div>' 
+							+ 	completed 
+					+ '</div>'
+					+ '<div class="videoLine"></div>'
+		);
+		
+		//console.log("ori_playlistID가 바뀌는 순간! " + ori_playlistID);
+		//ori_playlistID = playlist[i].playlistID ; //아니 왜.. ㅠ
+		//console.log("ori_playlistID가 바뀐 후 ! " + ori_playlistID);
+		
+	}
+	
 }
 
-function viewVideo(videoID, id, startTime, endTime, index, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
-	console.log("viewVideo");
-	console.log("ccID " + ccID);
+var visited = 0;
+function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
+	
+
+	if(allContents[seq-1].playlistID != 0)
+		document.getElementById("onepageLMS").style.display = "";
+	else 
+		document.getElementById("onepageLMS").style.display = "none";
+		
 	start_s = startTime;
-	$(".video").css({'background-color' : 'unset'});
-	item.style.background = "lightgrey";
 	$('.videoTitle').text(playlist[index].newTitle); //비디오 제목 정해두기
 	if (confirm("다른 영상으로 변경하시겠습니까? ") == true){    //확인
 		flag = 0;
 		time = 0;
+		
+		if(visited == 0){
+			item.style.background = "lightgrey";
+		}
+		else if(visited == 1){
+			ori_item.style.background = "transparent";
+			item.style.background = "lightgrey";
+		}
 		
 		player.loadVideoById({'videoId': videoID,
              'startSeconds': startTime,
@@ -355,11 +533,16 @@ var player;
 
 function onYouTubeIframeAPIReady() { 
 	//var playerID = 'onepageLMS' + n;
+	
+	if(allContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
+		videoId =  weekContents[0].thumbnailID;
+	else //영상을 클릭했을 때
+		videoId = weekContents[videoIdx].thumbnailID;
 		
 	player = new YT.Player('onepageLMS', {
 	       height: '480',            // <iframe> 태그 지정시 필요없음
 	       width: '854',             // <iframe> 태그 지정시 필요없음
-	       videoId: information[videoIdx].thumbnailID,
+	       videoId: videoId,
 	       playerVars: {             // <iframe> 태그 지정시 필요없음
 	           controls: '2'
 	       },
@@ -484,23 +667,22 @@ function deleteContent(){
 	                       	</div>
 	                       	
 	                       	<div class="main-card mb-3 card">
-                                    <div class="card-body">
-                                        <div class="scroll-area-lg">
-                                            <div class="scrollbar-container ps--active-y">
+                                    <div class="card-body" style="overflow-y:auto; height:750px;">
+                                    
+                                            <div class="ps--active-y">
                                             	<div id="accordion" class="accordion-wrapper mb-3">
 													<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 														<div class="main-card mb-3 card">
-						                                    <div class="card-body">
-																<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
+						                                    	<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
 							                                    <div class="list-group day" day="${status.index}">
 							                                        	
 							                                    </div>
-						                                   </div>
+						                                   
 						                               </div>
 													</c:forEach>
 												</div>
                                             </div>
-                                        </div>
+                                        
                                     </div>
                            	</div>
 	                       	

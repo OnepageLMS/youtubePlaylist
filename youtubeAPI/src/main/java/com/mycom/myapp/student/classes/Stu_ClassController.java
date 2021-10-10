@@ -142,9 +142,18 @@ public class Stu_ClassController{
 	@RequestMapping(value = "/weekContents", method = RequestMethod.POST)
 	public List<ClassContentVO> weekContents(HttpServletRequest request, Model model) throws Exception {
 		
-	   // return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
+	    return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
+		//return classContentService.getAllClassContent(Integer.parseInt(request.getParameter("classID")));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/allContents", method = RequestMethod.POST)
+	public List<ClassContentVO> allContents(HttpServletRequest request, Model model) throws Exception {
+		
+	    //return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
 		return classContentService.getAllClassContent(Integer.parseInt(request.getParameter("classID")));
 	}
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/forStudentContentDetail", method = RequestMethod.POST)
@@ -181,7 +190,6 @@ public class Stu_ClassController{
 		//int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
 	    VideoVO vo = new VideoVO();
 	    vo.setPlaylistID(playlistID);
-	    System.out.println("playlistID : " + playlistID);
 	    //Stu_VideoCheckVO vco = new Stu_VideoCheckVO();
 	    //vco.setClassPlaylistID(classPlaylistID);
 	    //model.addAttribute("totalVideo", playlistcheckService.getTotalVideo(playlistID));

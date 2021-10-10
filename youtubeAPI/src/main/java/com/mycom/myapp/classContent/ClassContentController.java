@@ -49,10 +49,10 @@ public class ClassContentController {
 		classID = classId;
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
-		//model.addAttribute("allFileContents", JSONArray.fromObject(classContentService.getFileClassContent(classID)));
+		model.addAttribute("allFileContents", JSONArray.fromObject(classContentService.getFileClassContent(classID)));
+		
 		model.addAttribute("realAllContents", JSONArray.fromObject(classContentService.getRealAll(classID))); // 그냥 모든 강의 컨텐츠 우선은 가져오려고,
-		System.out.println(classContentService.getFileClassContent(classID).get(0).getTitle());
-		System.out.println("강의 개수 : " + classContentService.getClassNum(classID));
+			
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
@@ -66,7 +66,6 @@ public class ClassContentController {
 		
 		//ClassContentVO vo = classContentService.getOneContent(id);
 		//model.addAttribute("vo", vo);
-		System.out.println("controller contentDetail인데 " + classID);
 		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
@@ -93,20 +92,18 @@ public class ClassContentController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/forInstructorContentDetail", method = RequestMethod.POST)
-	public Map<Integer, Object> forInstructorContentDetail(HttpServletRequest request, Model model) throws Exception {
-		//List<Map<Integer, Object>> listMap = new ArrayList<Map<Integer, Object>>();
-		Map<Integer, Object> map = new HashMap<Integer, Object>();
-				
-		int classID = Integer.parseInt(request.getParameter("classID"));
+	public List<ClassContentVO> forInstructorContentDetail(HttpServletRequest request, Model model) throws Exception {
 		
-		List<ClassContentVO> VOlist = new ArrayList<ClassContentVO>();
-		VOlist = classContentService.getAllClassContent(classID);
-		//System.out.println(VOlist.get(0).getClassName());
-		for(int i=0; i<VOlist.size(); i++) {
-			map.put(i, VOlist.get(i));
-		}
 		
-		return map;
+		return classContentService.getAllClassContent(Integer.parseInt(request.getParameter("classID")));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/instructorAllContents", method = RequestMethod.POST)
+	public List<ClassContentVO> instructorAllContents(HttpServletRequest request, Model model) throws Exception {
+		
+		
+		return classContentService.getRealAll(Integer.parseInt(request.getParameter("classID")));
 	}
 	
 	@ResponseBody
@@ -124,10 +121,12 @@ public class ClassContentController {
 	@ResponseBody
 	@RequestMapping(value = "/changeID", method = RequestMethod.POST)
 	public ClassContentVO changeID(HttpServletRequest request, Model model) throws Exception {
-		ClassContentVO vo = classContentService.getOneContent(Integer.parseInt(request.getParameter("id")));
+		ClassContentVO vo = classContentService.getOneContentInstructor(Integer.parseInt(request.getParameter("id")));
 	    
 	    return vo;
 	}
+	
+
 	
 	/*
 	@ResponseBody
