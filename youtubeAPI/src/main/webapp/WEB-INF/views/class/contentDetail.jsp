@@ -197,7 +197,7 @@ $(document).ready(function(){
 		
 		else{
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-			document.getElementById("onepageLMS").style.display = "";
+			//document.getElementById("onepageLMS").style.display = "";
 			for(var k=0; k<weekContents.length; k++){
 			
 			

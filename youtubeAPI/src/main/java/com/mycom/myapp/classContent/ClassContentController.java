@@ -149,6 +149,8 @@ public class ClassContentController {
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
 	public String addContentOK(HttpServletRequest request, Model model) {
 		ClassContentVO vo = new ClassContentVO();
+		
+		System.out.println(request.getParameter("playlistID"));
 		vo.setClassID(Integer.parseInt(request.getParameter("id")));
 		vo.setDays(Integer.parseInt(request.getParameter("days")));
 		vo.setTitle(request.getParameter("title"));
@@ -159,15 +161,27 @@ public class ClassContentController {
 		String playlistID = request.getParameter("playlistID");
 		if(endDate != "")
 			vo.setEndDate(endDate);
-		if(playlistID != "")
+		if(Integer.parseInt(playlistID) != 0) { //playlist와 함께 insert 
 			vo.setPlaylistID(Integer.parseInt(playlistID));
-		
-		if(classContentService.insertContent(vo) != 0) {
-			System.out.println("add classcontent 성공");
-			return "ok";
+			
+			if(classContentService.insertContent(vo) != 0) {
+				System.out.println("add classcontent 성공");
+				return "ok";
+			}
+			else {
+				return "false";
+			}
 		}
-		else
-			return "false";
+		else { // url만 insert 
+			if(classContentService.insertURLContent(vo) != 0) {
+				System.out.println("add URLclasscontent 성공");
+				return "ok";
+			}
+			else {
+				return "false";
+			}
+		}
+			
 	}
 	
 	@ResponseBody
@@ -217,7 +231,6 @@ public class ClassContentController {
 	@ResponseBody
 	@RequestMapping(value = "/deleteDay", method = RequestMethod.POST)
 	public int deleteDay(HttpServletRequest request, Model model) throws Exception {
-		System.out.println("?? day " + Integer.parseInt(request.getParameter("days")));
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(Integer.parseInt(request.getParameter("classID")));
 		ccvo.setDays(Integer.parseInt(request.getParameter("days"))-1);

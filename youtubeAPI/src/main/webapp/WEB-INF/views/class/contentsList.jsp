@@ -32,6 +32,7 @@
 </head>
 
 <script>
+
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
@@ -250,7 +251,7 @@ $(document).ready(function(){
 			else
 				published = '<label class="custom-control-label" for="switch">비공개</label>'
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
-								
+			
 			content.append(
 				"<div class='content list-group-item-action list-group-item' seq='" + realAllContents[i].daySeq + "'>"
 						+ '<div class="row col d-flex justify-content-between align-items-center">'
@@ -329,7 +330,7 @@ $(document).ready(function(){
 							+ '</div>'
 							+ '<form id="addContent" class="form-group card-body needs-validation was-validated" method="post" novalidate>' 
 								+ '<input type="hidden" name="classID" id="inputClassID" value="${classInfo.id}">'
-								+ '<input type="hidden" name="days" id="inputDays" value=""/>'
+								+ '<input type="hidden" name="days" id="inputDays" value="'+ day +'"/>'
 								+ '<input type ="hidden" id="inputPlaylistID" name="playlistID">'
 								+ '<div class="selectContent m-3">'
 									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
@@ -446,7 +447,14 @@ $(document).ready(function(){
         }*/
 
         //$('#addContent').serialize()
-
+		if($("#inputPlaylistID").val() != 0){
+			playlistID = $("#inputPlaylistID").val();
+		}
+		else{
+			playlistID = 0;
+		}
+        
+        
         $.ajax({
             type: 'post',
             url: '${pageContext.request.contextPath}/class/addContentOK',
@@ -455,7 +463,7 @@ $(document).ready(function(){
             	days : $('#inputDays').val(),
             	title : $("#inputTitle").val(),
     			description : $("#inputDescription").val(),
-    			playlistID : $("#inputPlaylistID").val(),
+    			playlistID : playlistID,
     			startDate : startDate,
     			endDate : endDate,
                 },
@@ -469,6 +477,7 @@ $(document).ready(function(){
     			location.reload();
     		},
     		error: function(data, status,error){
+    			console.log("days: " + $('#inputDays').val()+ " playlistID" + playlistID);
     			alert('강의실 생성 실패! ');
     		}
         });

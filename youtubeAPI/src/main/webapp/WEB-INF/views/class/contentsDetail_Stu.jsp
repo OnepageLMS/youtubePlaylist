@@ -204,7 +204,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		
 		else{
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-			document.getElementById("onepageLMS").style.display = "";
+			//document.getElementById("onepageLMS").style.display = "";//
 			for(var k=0; k<weekContents.length; k++){
 			
 			

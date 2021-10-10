@@ -19,6 +19,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public int insertURLContent(ClassContentVO vo) {
+		return ClassContentDAO.insertURLContent(vo);
+	}
+	
+	@Override
 	public int updateContent(ClassContentVO vo) {
 		return ClassContentDAO.updateContent(vo);
 	}

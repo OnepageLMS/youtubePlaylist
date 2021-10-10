@@ -6,6 +6,11 @@
 		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}, #{startDate}, #{endDate})
 	</insert>
 	
+	<insert id="insertURLContent">
+		insert into lms_classContent (title, description, classID, days, daySeq, startDate, endDate)
+		values (#{title}, #{description}, #{classID}, #{days}, #{daySeq}+1, #{startDate}, #{endDate})
+	</insert>
+	
 	<select id="getDaySeq" resultType="int">
 		select count(*) from lms_classContent
 		where classID=#{classID} and days=#{days}
