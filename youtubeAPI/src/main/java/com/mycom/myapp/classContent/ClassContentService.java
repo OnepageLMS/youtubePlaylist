@@ -6,6 +6,7 @@ import com.mycom.myapp.commons.ClassContentVO;
 
 public interface ClassContentService {
 	public int insertContent(ClassContentVO vo);
+	public int insertURLContent(ClassContentVO vo);
 	public int updateContent(ClassContentVO vo);
 	public int updatePublished(ClassContentVO vo);
 	public int deleteContent(ClassContentVO vo); //int id -> ClassContentVO vo수정

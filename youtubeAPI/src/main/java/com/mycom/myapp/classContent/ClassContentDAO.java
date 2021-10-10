@@ -18,6 +18,11 @@ public class ClassContentDAO {
 		return result;
 	}
 	
+	public int insertURLContent(ClassContentVO vo) {
+		int result = sqlSession.insert("ClassContent.insertURLContent", vo);
+		return result;
+	}
+	
 	public int updateContent(ClassContentVO vo) {
 		int result = sqlSession.update("ClassContent.updateContent", vo);
 		return result;
