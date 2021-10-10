@@ -457,6 +457,19 @@ function submitEditPlaylist(){
 	});
 }
 
+//(jw) localStorage 말고 request로 보내는 방법 다음에 시도해 볼것. (21/10/10)
+/* function goToYoutubePage(){
+	var PlaylistID = $('.selectedPlaylist').attr('playlistID');
+
+	// (jw) playlistID를 설정해서 
+	console.log(result.playlistName);
+	localStorage.setItem("selectedPlaylistName", result.playlistName);
+	localStorage.setItem("selectedPlaylistID", playlistID);
+
+	request.setAttribute("playlistID", PlaylistID);
+	window.location.href='${pageContext.request.contextPath}/video/youtube';
+} */
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">

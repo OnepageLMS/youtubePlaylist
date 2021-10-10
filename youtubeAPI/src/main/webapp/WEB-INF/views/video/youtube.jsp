@@ -358,12 +358,12 @@ $(document).ready(function(){
 			console.log(id, title, duration, index);
 
 			// (21/10/06) youtube 플레이어 띄워주고, 제목을 띄워준다. 이 부분은 <div> 태그로 감싸져서 초록색이 나타나게 되는데 영상구간 설정 부분까지 태그로 감싸지게 해야 전체가 초록색 배경이 될듯. 
-			var $div = $('<div id="playerBox" class="text-center" > <div class="iframe-container" id="player" ></div>'
+			var $div = $('<div id="playerBox" class="text-center" > <div class="iframe-container" id="player" style="width: 100%;"></div>'
 					+ '<form class>'
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative row form-group">'
-							+ '<div class="col-sm-1"> 제목 </div>'
-							+ '<div class="col-sm-11"> <input id="setTitle" type="text" class="col-sm-11 form-control" value="'+ title +'"></div>'
+							+ '<label for="exampleEmail" class="col-sm-2 col-form-label">제목</label>'
+							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value="'+ title +'"></div>'
 						+ '</div>'
 						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete" >'
@@ -377,16 +377,24 @@ $(document).ready(function(){
 									+ '</div>' 
 								+ '</div>'
 								+ '<div class="position-relative row form-group">'
-									+ '<div class="col-sm-2 col-form-label d-flex justify-content-center">'
-										+ '<label for="amount"><b>설정된 시간</b></label>'
-									+ '</div>' 
-									+ '<div class="col-sm-6"> <input type="text" id="amount" class="form-control" readonly style="border:0;"> </div>'
-									+ '<div class="col-sm-3"> <div id="warning1"> </div> </div>' 
+									/* + '<div class="col-sm-2 col-form-label d-flex justify-content-center">' */
+									+ '<label for="amount" class="col-sm-2 col-form-label"><b>설정된 시간</b></label>'
+									/* + '</div>'  */
+									+ '<div class="col-sm-10"> <input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> </div>'
 								+ '</div>' 
+								+ '<div class="position-relative row form-group" style="display: none;">'
+									+ '<div class="col-sm-2">'
+									+ '<div class="col-sm-10"> <div id="warning1"> </div> </div>' 
+								+ '</div>'
 							+ '</div>'
-							+ '<div> <span style="font-weight: bold"> 태그: </span> <input type="text" id="tag" name="tag"> </div>' 
+							+ '<div class="position-relative row form-group">' 
+								+ '<label class="col-sm-2 col-form-label" style="font-weight: bold"> 태그: </label>' 
+								+ '<div class="col-sm-10"><input type="text" id="tag" name="tag" class="col-sm-11 form-control"> </div>'
+							+ '</div>' 
 						+ '</div>'
-						+ '<div> <i class="fas fa-plus-square" onclick="addToCart(\''+id+ '\'' + ',\'' +title+'\')"> 리스트에 추가 </i></div>' 
+						+ '<div> <button class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\')">' 
+							+ '<i class="fas fa-plus-square"> 리스트에 추가 </i>'
+						+ '</button> </div>'
 					+ '</form>' 
 					+ '</div>'); 		
 					
@@ -438,9 +446,10 @@ $(document).ready(function(){
 			prev_index = index;		
 		}
 
-		function addToCart(id, title){
+		function addToCart(e, id, title){
+			e.preventDefault();
 			// title 은 원본 title, $('#setTitle').val() 은 사용자 지정 title 
-			var thumbnail2 = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="img-fluid">';
+			var thumbnail2 = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="img-fluid" style="width:100%;">';
 			if ($('#setTitle').val().length > 40) {
 				var shortTitle = $('#setTitle').val().substring(0,40) + " ...";
 			}
@@ -496,7 +505,7 @@ $(document).ready(function(){
 			}
 				
 			var html = '<div class="videoSeq">' 
-				+ '<input type="hidden" name="youtubeID id="inputYoutubeID" value="' + id +'">'
+				+ '<input type="hidden" name="youtubeID" id="inputYoutubeID" value="' + id +'">'
 				+ '<input type="hidden" name="start_s" id="start_s" value="' + start_time + '">' 
 				+ '<input type="hidden" name="end_s" id="end_s" value="' + end_time + '">' 
 				+ '<input type="hidden" name="title" id="inputYoutubeTitle" value="' + title + '">'
@@ -829,36 +838,40 @@ $(document).ready(function(){
 			$('.ui-theme-settings').attr('class', 'ui-theme-settings');
 		}
 
-		function insertVideos(){ 	// video들 저장 		
+		function insertVideo(){ 	// video들 저장 		
 				event.preventDefault(); // avoid to execute the actual submit of the form.
 
-				var jsonArray = new Array();
+				var aJsonArray = new Array();
 				var aJson = new Object();
 				
 				var checkBoxArr = []; // 플레이리스트에 추가될 영상들을 저장
 				$('input:checkbox:checked').each(function(i) {
+					console.log($(this).closest('.videoSeq').children());
+					console.log($(this).closest('.videoSeq').children("#inputYoutubeTitle").val());
 					checkBoxArr.push($(this).closest('.videoSeq'));
 				});
+				
 
 				//console.log(checkBoxArr.length);
 
 				for(let i=0; i<checkBoxArr.length; i++){
-					console.log(checkBoxArr[i].find('#inputYoutubeTitle').val());
 
-					aJson.title = checkBoxArr[i].find('#inputYoutubeTitle').val();
-					aJson.newName = checkBoxArr[i].find('#newName').val();
-					aJson.start_s = checkBoxArr[i].find('#start_s').val();
-					aJson.end_s = checkBoxArr[i].find('#end_s').val();
-					aJson.inputYoutubeID = checkBoxArr[i].find('#inputYoutubeID').val();
-					aJson.maxLength = checkBoxArr[i].find('#maxLength').val();
-					aJson.duration = checkBoxArr[i].find('#duration').val();
-					aJson.tag = checkBoxArr[i].find('#tag').val();
+					aJson.playlistID = localStorage.getItem("selectedPlaylistID");
+					aJson.title = checkBoxArr[i].children('#inputYoutubeTitle').val();
+					aJson.newName = checkBoxArr[i].children('#newName').val();
+					aJson.start_s = checkBoxArr[i].children('#start_s').val();
+					aJson.end_s = checkBoxArr[i].children('#end_s').val();
+					aJson.inputYoutubeID = checkBoxArr[i].children('#inputYoutubeID').val();
+					aJson.maxLength = checkBoxArr[i].children('#maxLength').val();
+					aJson.duration = checkBoxArr[i].children('#duration').val();
+					aJson.tag = checkBoxArr[i].children('#tag').val();
 
-					aJsonArray.push(aJson);
+					aJsonArray.push(aJson);  
 				}
 
 				var jsonData = JSON.stringify(aJsonArray);				
-				
+
+				// 안쓰이는 것들 
 				/* var title = $("#inputYoutubeTitle").val();
 				var newName = $("#newName").val();
 				var start_s = $("#start_s").val();
@@ -873,12 +886,14 @@ $(document).ready(function(){
 					newTitle = newName;
 				} */
 				
+				
 				$.ajax({
 					'type' : "POST", 
 					'url' : "${pageContext.request.contextPath}/video/addToPlaylist",
 					'data' : {
 						jsonData : jsonData
 					},
+					'contentType' : "application/json",
 					success : function(data) {
 						console.log("ajax video저장 완료!");
 						/* for (var i = 0; i < checkBoxArr.length; i++) {
@@ -936,10 +951,10 @@ $(document).ready(function(){
                         </div>
                         
                         <div style="position: fixed; left: 0; bottom: 0; width: 100%;">
-					          <div class="app-footer">
+					          <div class="app-footer mb-2">
 					              <div class="app-footer__inner">
 					                  <div class="app-footer-left">
-			                              <button onclick="createVideo();">
+			                              <button class="btn btn-primary mr-3" onclick="insertVideo();">
 			                                  선택된 비디오 playlist에 추가
 			                              </button>
 					                  </div>
@@ -1037,7 +1052,7 @@ $(document).ready(function(){
 						
 						
 						<div class="playerForm col-lg-6 form-class" style="display:none;">
-							<div class="main-card card">
+							<div class="main-card card pb-3">
 								<!-- form 동적으로 추가(jw) -->
 							</div>
 							
