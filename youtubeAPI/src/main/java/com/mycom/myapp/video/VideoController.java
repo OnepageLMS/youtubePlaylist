@@ -44,6 +44,7 @@ public class VideoController {
 	public String getSelectedPlaylistVideos(@RequestParam("playlistID") int playlistID, 
 			@RequestParam("videoID") int videoID, Model model){
 		model.addAttribute("videoID", videoID);	//가장 먼저 플레이어에 띄워지는 비디오
+		model.addAttribute("playlistID", playlistID);
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
