@@ -73,7 +73,10 @@ $(document).ready(function(){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<span class="text-primary">${classInfo.className}</span> - 출석/학습현황 <!-- 이부분 이름 바꾸기!! -->
+                            	<span class="text-primary">${classInfo.className}</span> - 출석/학습현황 
+                            	<button class="mb-2 mr-2 btn-transition btn btn-outline-secondary" style="float: right; margin-top:5px"> 
+                                	<i class="pe-7s-add-user fa-lg" style="margin-right:5px;"> </i> 구성원 관리
+                                </button>
                             </div>
                         </div>
                     </div>  
@@ -86,7 +89,7 @@ $(document).ready(function(){
                                             <thead>   
                                             <tr>
                                             	<!-- <th colspan="2"> # </th>-->
-                                            	<th width = "10%"> 수강생 </th>
+                                            	<th width = "10%"> 차시 </th>
 	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 	                                                <th style="text-align:center" >${j} 차시 </th>
 	                                            </c:forEach>

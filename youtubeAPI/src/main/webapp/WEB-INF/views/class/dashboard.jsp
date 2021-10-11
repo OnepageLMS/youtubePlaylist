@@ -36,7 +36,7 @@ $(document).ready(function(){
 		
 		var classNoticeURL = 'moveToNotice(' + classID + ')';
 		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
-		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
+		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
 		var regDate = activeClass[i].regDate.split(' ')[0];
 		var cardColor = active_colors[i%(active_colors.length)]; 
 		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'

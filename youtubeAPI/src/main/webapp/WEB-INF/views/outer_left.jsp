@@ -85,7 +85,7 @@
 			                                   	</a>
 			                               	</li>
 			                               	<li>
-			                                   <a href="#">
+			                                   <a href="${pageContext.request.contextPath}/attendance/${v.id}">
 			                                       <i class="metismenu-icon"></i>
 			                                      	출결/학습 현황
 			                                   </a>

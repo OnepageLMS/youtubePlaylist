@@ -257,8 +257,8 @@ $(document).ready(function(){
 						+ '<div class="row col d-flex justify-content-between align-items-center">'
 							+ '<div class="index col-sm-1 text-center">' + (realAllContents[i].daySeq+1) + '. </div>'
 							+ '<div class="videoIcon col-sm-1">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
-							+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-									+ "<div class='col-sm-6 card-title inline-block' style=' height: 50%; font-size: 15px'>"
+							+ "<div class='col-sm-6 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-12 card-title inline-block' style=' height: 50%; font-size: 15px'>"
 										+ realAllContents[i].title  + " " + videoLength 
 									+ '</div>'		
 									+ '<div class="col-sm-12">'
@@ -268,6 +268,7 @@ $(document).ready(function(){
 										+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
 									+ '</div>' 
 							+ '</div>'
+							+ '<div class="col-sm-2 text-success col-2 pl-5 pr-0">**% 시청</div>'
 							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
 									//+ published
 								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'

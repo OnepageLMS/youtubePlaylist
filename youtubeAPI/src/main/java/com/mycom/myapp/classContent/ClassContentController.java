@@ -72,7 +72,7 @@ public class ClassContentController {
 		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		/*VideoVO pvo = new VideoVO();
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 		ClassContentVO ccvo = new ClassContentVO();

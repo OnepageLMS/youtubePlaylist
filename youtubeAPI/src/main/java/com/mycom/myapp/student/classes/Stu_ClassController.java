@@ -110,6 +110,7 @@ public class Stu_ClassController{
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
+		model.addAttribute("myName", memberService.getStudentName(1));
 		//return "t_contentsList_Stu";
 		return "class/contentsList_Stu";
 	}
@@ -134,6 +135,7 @@ public class Stu_ClassController{
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
+		model.addAttribute("myName", memberService.getStudentName(1));
 		return "class/contentsDetail_Stu";
 		
 	}
