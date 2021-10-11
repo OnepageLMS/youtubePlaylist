@@ -74,9 +74,12 @@ $(document).ready(function(){
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
                             	<span class="text-primary">${classInfo.className}</span> - 출석/학습현황 
-                            	<button class="mb-2 mr-2 btn-transition btn btn-outline-secondary" style="float: right; margin-top:5px"> 
-                                	<i class="pe-7s-add-user fa-lg" style="margin-right:5px;"> </i> 구성원 관리
-                                </button>
+                                <a href="javascript:void(0);" data-toggle="modal" data-target="#addStudentModal" class="nav-link editPlaylistBtn" style="display:inline;">       
+	                            	<button class="mb-2 mr-2 btn-transition btn btn-outline-secondary" style="float: right; margin-top:5px"> 
+	                            		
+	                                		<i class="pe-7s-add-user fa-lg" style="margin-right:5px;"> </i>  구성원 관리
+	                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>  
@@ -84,29 +87,45 @@ $(document).ready(function(){
                     <div class="row">
                     	<div class="col-lg-12">
                          	<div class="main-card mb-3 card">
-                                    <div class="card-body"><h5 class="card-title">Table bordered</h5>
+                                    <div class="card-body">
                                         <table class="mb-0 table table-bordered takes">
                                             <thead>   
                                             <tr>
                                             	<!-- <th colspan="2"> # </th>-->
-                                            	<th width = "10%"> 차시 </th>
+                                            	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
 	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-	                                                <th style="text-align:center" >${j} 차시 </th>
+	                                                <th style="text-align:center" colspan=2>${j} 차시 </th>
 	                                            </c:forEach>
+                                            </tr>
+                                            
+                                            <tr>
+                                            	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+                                            		<td style="text-align:center"><i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM </td>
+				                                    <td style="text-align:center"> LMS </td>
+				                                </c:forEach>
                                             </tr>
                                             </thead>
                                             
                                             <tbody>
                                             
+                                            
 	                                             <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 		                                            <tr>
-		                                                <th scope="row${status.index}">${status.index+1}. ${takes[status.index].studentName}</th>
+		                                                <th scope="row${status.index}" rowspan=2>${status.index+1}. ${takes[status.index].studentName}</th>
 		                                                
-		                                                <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
-		                                                	<td id = "take${status2.index}" style="text-align:center"> 0% </td>
-		                                                </c:forEach>
+		                                                
 			                                            
 		                                            </tr>
+		                                            
+		                                             <tr>
+		                                            
+		                                            	 <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
+		                                            	 	<td id = "take${status2.index}" style="text-align:center" > 출석 </td>
+		                                                	<td id = "take${status2.index}" style="text-align:center"> 0% </td>
+		                                                </c:forEach>
+		                                            </tr>  
+		                                              
+		                                            
 	                                            </c:forEach>
                                             
                                             </tbody>
@@ -168,6 +187,45 @@ $(document).ready(function(){
 	   		</div>
 	   	</div>
    	</div>
+   	
+   	<div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	            
+	            	
+                        <div class="card-body" style="overflow-y:auto; height:600px;">
+                            <ul class="list-group">
+                            
+                            	<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
+                            		
+                            		<li class="list-group-item" style="padding-top : 5px; padding-bottom: 30px">
+                            			<i class="pe-7s-close fa-lg" style="margin-right:30px"> </i>
+                            			${takes[status.index].studentName}
+                            			
+                            		</li>
+                            		
+	                            </c:forEach>
+	                            
+                                
+                            </ul>
+                        </div>
+                   
+                                       
+	            </div>
+	            <div class="modal-footer">
+	                <button id="modalSubmit" type="button" class="btn-transition btn btn-outline-secondary" onclick="#">구성원 추가</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
    	
 </body>
 
