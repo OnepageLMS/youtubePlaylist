@@ -254,14 +254,14 @@ $(document).ready(function(){
 			
 			content.append(
 				"<div class='content list-group-item-action list-group-item' seq='" + realAllContents[i].daySeq + "'>"
-						+ '<div class="row col d-flex justify-content-between align-items-center">'
-							+ '<div class="index col-sm-1 text-center">' + (realAllContents[i].daySeq+1) + '. </div>'
+						+ '<div class="row col d-flex align-items-center">'
+							+ '<div class="index col-sm-1 ">' + (realAllContents[i].daySeq+1) + '. </div>'
 							+ '<div class="videoIcon col-sm-1">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
-							+ "<div class='col-sm-6 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-									+ "<div class='col-sm-12 card-title inline-block' style=' height: 50%; font-size: 15px'>"
+							+ "<div class='col-sm-6 row align-items-center' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
 										+ realAllContents[i].title  + " " + videoLength 
 									+ '</div>'		
-									+ '<div class="col-sm-12">'
+									+ '<div class="col-sm-12 align-items-center" style=" height: 50%; font-size: 15px; padding: 5px 0px 0px;">'
 										+ '<div class="contentInfoBorder"></div>'
 										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
 										+ '<div class="contentInfoBorder"></div>'
