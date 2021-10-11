@@ -268,7 +268,7 @@ $(document).ready(function(){
 										+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
 									+ '</div>' 
 							+ '</div>'
-							+ '<div class="col-sm-2 text-success col-2 pl-5 pr-0">**% 시청</div>'
+							+ '<div class="col-sm-2 text-success col-2 pl-5 pr-0">**% 완료</div>'
 							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
 									//+ published
 								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
@@ -329,7 +329,7 @@ $(document).ready(function(){
 							+ '<div class="card-header">'
 								+ '<h5> 학습페이지 추가 </h5>'
 							+ '</div>'
-							+ '<form id="addContent" class="form-group card-body needs-validation was-validated" method="post" novalidate>' 
+							+ '<form id="addContent" class="form-group card-body needs-validation" method="post" novalidate>' 
 								+ '<input type="hidden" name="classID" id="inputClassID" value="${classInfo.id}">'
 								+ '<input type="hidden" name="days" id="inputDays" value="'+ day +'"/>'
 								+ '<input type ="hidden" id="inputPlaylistID" name="playlistID">'
@@ -371,7 +371,7 @@ $(document).ready(function(){
 								+ '</div>'
 								+ '<div class="text-center m-3">'
 									+ '<button type="button" class="btn btn-sm btn-warning" onclick="cancelForm();" >취소</button>'
-									+ '<button type="button" class="btn btn-sm btn-primary" onclick="submitAddContentForm();">저장</button>'
+									+ '<button type="submit" form="addContent" class="btn btn-sm btn-primary" onclick="submitAddContentForm();">저장</button>'
 								+ '</div>'
 							+ '</form>';
 									
@@ -425,6 +425,9 @@ $(document).ready(function(){
 	} 
 
 	function submitAddContentForm(){
+		alert($('#inputTitle').val());
+		if($('#inputTitle').val() == null || $('#inputTitle').val() == '') return false;
+		
 		var date = $('#startDate').val(); 
 		var hour = $('.start_h').val();
         var min = $('.start_m').val();
