@@ -1,6 +1,9 @@
 package com.mycom.myapp.attendance;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;

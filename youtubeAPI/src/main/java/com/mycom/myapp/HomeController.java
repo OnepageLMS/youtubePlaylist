@@ -126,6 +126,12 @@ public class HomeController {
 		return "main";
 	}
 	
+	@RequestMapping(value = "/attend", method = RequestMethod.GET)
+	public String attend() {															
+
+		return "attend_Temp";
+	}
+	
 	
 //	@RequestMapping(value = "/deletePlaylist", method = RequestMethod.POST)
 //	@ResponseBody

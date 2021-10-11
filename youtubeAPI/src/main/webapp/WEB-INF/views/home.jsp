@@ -11,6 +11,7 @@
 	<button onclick="location.href='dashboard'">Teacher</button>
 	<button onclick="location.href='student/class/1'">Student1</button>
 	<button onclick="location.href='student/class/2'">Student2</button>
+	<button onclick="location.href='attend'">학생관리modal</button>
 	<!-- 나중에는 학생이 join한 class들을 먼저 보여주고, 거기서 선택해서 들어갈 수 있도록하기
 	지금은 그냥 임의로 ClassID가 1인 수업으로 들어가고있음! -->
 
