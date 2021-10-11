@@ -66,13 +66,12 @@ $(document).ready(function(){
                     <div class="row">
                     	<div class="col-lg-12">
                          	<div class="main-card mb-3 card">
-                                    <div class="card-body"><h5 class="card-title">Table bordered</h5>
+                                    <div class="card-body"><h5 class="card-title"></h5>
                                         <table class="mb-0 table table-bordered takes" >
                                             <thead>   
                                             <tr>
                                             	<!-- <th colspan="2"> # </th>-->
-                                            	<th style="text-align:center"> 차시 </th>
-                                            	<th style="text-align:center" >  </th>
+                                            	<th style="text-align:center" colspan=2> 차시 </th>
 	                                            <th style="text-align:center" > 출결 </th>
 	                                           
                                             </tr>
@@ -83,15 +82,20 @@ $(document).ready(function(){
 	                                             <c:forEach var="i" begin="1" end="${classInfo.days}" varStatus="status">
 		                                            <tr>
 		                                            
-		                                                <th scope="row${status.index}" style="text-align:center" rowspan=2 >
-		                                                	${status.index} 차시
-		                                                </th>
+		                                            	<th scope="row${status.index}" style="text-align:center" rowspan=2 > ${status.index} 차시 </th>
+		                                                
+                                                        
+                                                    
+                                                      	<td style="text-align:center"><i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM </td>
+		                                              	<td id = "take${status2.index}" style="text-align:center" > 출석 </td>
+		                                            </tr>  
 		                                              
-		                                              	<td> ZOOM </td>
-		                                                <td id = "take${status2.index}" style="text-align:center"> 0% </td>
-		                                              
-			                                            
+		                                            <tr>
+		                                            	<td style="text-align:center"> LMS </td>
+			                                            <td id = "take${status2.index}" style="text-align:center"> 0% </td>
 		                                            </tr>
+		                                            
+		                                            
 	                                            </c:forEach>
 	                                            
 	                                            
