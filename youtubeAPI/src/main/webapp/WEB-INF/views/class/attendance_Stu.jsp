@@ -51,7 +51,10 @@ $(document).ready(function(){
 		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="../outer_left_stu.jsp" flush="false"/>
+		 	<jsp:include page="../outer_left_stu.jsp" flush="false">
+		 		<jsp:param name="className" value="${classInfo.className}"/>	
+		 		<jsp:param name="menu"  value="notice"/>
+		 	</jsp:include>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">

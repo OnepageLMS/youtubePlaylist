@@ -82,7 +82,7 @@
                                    	</a>
                                	</li>
                                	<li>
-                                   <a href="#">
+                                   <a href="${pageContext.request.contextPath}/student/attendance/${v.id}">
                                        <i class="metismenu-icon"></i>
                                       	출결/학습 현황
                                    </a>
@@ -121,7 +121,7 @@
                                    	</a>
                                	</li>
                                	<li>
-                                   <a href="#">
+                                   <a href="${pageContext.request.contextPath}/student/attendance/${v.id}">
                                        <i class="metismenu-icon"></i>
                                       	출결/학습 현황
                                    </a>

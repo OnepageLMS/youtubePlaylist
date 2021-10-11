@@ -113,7 +113,7 @@
 	                           	</a>
 	                           	<ul class="mm-collapse">
 									<li>
-										<a href="#">
+										<a href="javascript:moveToNotice(${u.id});">
 	                                   		<i class="metismenu-icon"></i>
 	                                   		공지
 	                              		</a>
@@ -125,7 +125,7 @@
 	                                   	</a>
 	                               	</li>
 	                               	<li>
-	                                   <a href="#">
+	                                   <a href="${pageContext.request.contextPath}/attendance/${u.id}">
 	                                       <i class="metismenu-icon"></i>
 	                                      	출결/학습 현황
 	                                   </a>
