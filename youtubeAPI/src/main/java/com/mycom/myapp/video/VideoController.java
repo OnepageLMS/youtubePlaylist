@@ -142,8 +142,10 @@ public class VideoController {
 			System.out.println("totalVideoLength 업데이트 실패! ");
 		
 	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/addToPlaylist", method = RequestMethod.POST)
-	public String addToPlaylist(Model model, @RequestBody String paramData) {
+	public String addToPlaylist(Model model, @RequestBody String paramData) { //, @RequestBody VideoVO vo
 		//List<Integer> playlistArr = vo.getPlaylistArr();
 		//System.out.println("controller: maxLength!!->" + vo.getmaxLength());
 		
@@ -151,56 +153,103 @@ public class VideoController {
 //		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 
 		// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+			
+		// 2차
+//		JSONArray arr = JSONArray.fromObject(paramData);
+//		
+//		System.out.println("size of array" + " : " + arr.size());
+//		
+//		//List<Map<String, Object>> resendList = new ArrayList<Map<String, Object>>();
+//		 for(int i=0; i<arr.size(); i++){
+//		           
+//		        JSONObject obj = (JSONObject)arr.get(i);
+////		        Map<String, Object> resendMap = new HashMap<String, Object>();
+////		        resendMap.put("Nation", obj.get("Nation"));
+////		        resendMap.put("Brand", obj.get("Brand"));
+////		            
+////		        resendList.add(resendMap);
+//		        System.out.println(obj.get("playlistID") + " : " + obj.get("title"));
+//		  }
+		String result= "";
+		// 1차 
 		List<Map<String,Object>> resultMap = new ArrayList<Map<String,Object>>();
 	    resultMap = JSONArray.fromObject(paramData);
 
 	    for (Map<String, Object> map : resultMap) {
-	        System.out.println(map.get("playlistID") + " : " + map.get("title"));
+	    	VideoVO vo = new VideoVO();
+	        System.out.println(map.get("playlistID") + " : " + map.get("duration"));
+	        int playlistID = Integer.parseInt(map.get("playlistID").toString());
+	        String youtubeID = map.get("youtubeID").toString();
+	        
+	        // (jw) 썸네일 추가를 위한 코드 (21/08/11) 
+ 			int count = videoService.getTotalCount(playlistID);
+ 			
+ 			PlaylistVO Pvo = new PlaylistVO();
+			Pvo.setId(playlistID);
+			Pvo.setThumbnailID(youtubeID);
+			System.out.println("thumbnail id check" + Pvo.getThumbnailID());
+ 			
+ 			if(count == 0) {
+ 				if(playlistService.updateThumbnailID(Pvo) != 0) {
+ 					System.out.println("playlist 썸네일 추가 성공! ");
+ 					
+ 				}
+ 				else {
+ 					System.out.println("playlist 썸네일 추가 실패! ");
+ 				
+ 				}
+ 			}
+ 			
+ 			float duration = Float.parseFloat(map.get("duration")+"");
+ 			//System.out.println("역ㅁ샤ㅐㅜ"+ duration);
+ 			
+ 			String tag;
+ 			if(map.get("tag")==null) {
+ 				tag = null;
+ 			}
+ 			else {
+ 				tag = map.get("tag").toString();
+ 			}
+ 			//System.out.println(map.get("tag").toString());
+ 			
+ 			//새로운 video의 seq 구하기
+			vo.setSeq(videoService.getTotalCount(playlistID)); 
+			//playlistID 설정하기 
+			vo.setPlaylistID(playlistID);
+			vo.setTitle(map.get("title").toString());
+			vo.setNewTitle(map.get("newTitle").toString()); 
+			vo.setStart_s(Double.parseDouble(map.get("start_s").toString()));
+			vo.setEnd_s(Double.parseDouble(map.get("end_s").toString()));
+			vo.setYoutubeID(map.get("youtubeID").toString());
+			vo.setmaxLength(Double.parseDouble(map.get("maxLength").toString()));
+			vo.setDuration(duration); 
+			//vo.setDuration(Float.parseFloat(map.get("duration")));
+			vo.setTag(tag);
+			 
+			
+			// 동영상 DB에 추가하기 
+			if(videoService.insertVideo(vo) != 0) {
+				System.out.println("title: " + vo.getTitle());
+				//System.out.println(playlistID + "번 비디오 추가 성공!! ");
+				System.out.println(map.get("title").toString() + " 비디오 추가 성공!! ");
+				// 플레이리스트 동영상 개수, 모든 동영상 총길이 업데이트 예원이가 만든 함수  
+				updateTotalVideo(playlistID);
+				updateTotalLength(playlistID);
+				
+			}
+			else {
+				System.out.println("비디오 추가 실패 ");
+				result = "error";
+			}
 	    }
 	    
-//		double length = vo.getDuration();
-//		
-//		for(int i=0; i<playlistArr.size(); i++) {
-//			int playlistID = playlistArr.get(i);
-//			
-//			// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
-//			PlaylistVO Pvo = new PlaylistVO();
-//			Pvo.setId(playlistID);
-//			Pvo.setThumbnailID(vo.getYoutubeID());
-//			System.out.println("thumbnail id check" + Pvo.getThumbnailID());
-//			
-//			// (jw) 썸네일 추가를 위한 코드 (21/08/11) 
-//			int count = videoService.getTotalCount(playlistID);
-//			
-//			if(count == 0) {
-//				if(playlistService.updateThumbnailID(Pvo) != 0) {
-//					System.out.println("playlist 썸네일 추가 성공! ");
-//				}
-//				else {
-//					System.out.println("playlist 썸네일 추가 실패! ");
-//				}
-//			}
-//				
-//			vo.setSeq(videoService.getTotalCount(playlistID)); //새로운 video의 seq 구하기
-//			vo.setPlaylistID(playlistID);
-//			
-//			if(videoService.insertVideo(vo) != 0) {
-//				System.out.println("title: " + vo.getTitle());
-//				System.out.println(playlistID + "번 비디오 추가 성공!! ");
-//				
-//				updateTotalVideo(playlistID);
-//				updateTotalLength(playlistID);
-//				
-//			}
-//			else 
-//				System.out.println("비디오 추가 실패 ");
-//		}
-//		
-//		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		
-		return "youtube";
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
+		return result;
+		
 	}
 	
+	@ResponseBody
 	@RequestMapping(value = "/addVideo", method = RequestMethod.POST)
 	public String addVideo(Model model, @ModelAttribute VideoVO vo) {
 		List<Integer> playlistArr = vo.getPlaylistArr();
@@ -209,19 +258,18 @@ public class VideoController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 
-		// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+		// (jw) 이거 지워도 되는지 확인 
 		double length = vo.getDuration();
 		
 		for(int i=0; i<playlistArr.size(); i++) {
 			int playlistID = playlistArr.get(i);
 			
-			// (jw) totalVideoLength 추가를 위한 코드 (21/08/09) 
+			// (jw) 썸네일 추가를 위한 코드 (21/08/09) => 만약 썸네일에 해당하는 영상이 삭제될시 다음 영상의 썸네일로 해야하는데 이 부분 수정필. 
 			PlaylistVO Pvo = new PlaylistVO();
 			Pvo.setId(playlistID);
 			Pvo.setThumbnailID(vo.getYoutubeID());
 			System.out.println("thumbnail id check" + Pvo.getThumbnailID());
 			
-			// (jw) 썸네일 추가를 위한 코드 (21/08/11) 
 			int count = videoService.getTotalCount(playlistID);
 			
 			if(count == 0) {
@@ -232,14 +280,20 @@ public class VideoController {
 					System.out.println("playlist 썸네일 추가 실패! ");
 				}
 			}
-				
-			vo.setSeq(videoService.getTotalCount(playlistID)); //새로운 video의 seq 구하기
+			
+			//새로운 video의 seq 구하기
+			vo.setSeq(videoService.getTotalCount(playlistID)); 
+			//playlistID 설정하기 
 			vo.setPlaylistID(playlistID);
 			
+			System.out.println("제대로 작동 check" + vo.getPlaylistID());
+			
+			// 동영상 DB에 추가하기 
 			if(videoService.insertVideo(vo) != 0) {
 				System.out.println("title: " + vo.getTitle());
 				System.out.println(playlistID + "번 비디오 추가 성공!! ");
 				
+				// 플레이리스트 동영상 개수, 모든 동영상 총길이 업데이트 예원이가 만든 함수  
 				updateTotalVideo(playlistID);
 				updateTotalLength(playlistID);
 				

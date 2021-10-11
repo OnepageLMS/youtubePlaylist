@@ -505,7 +505,7 @@ img {
 			var duration = $('#duration').val();
 			var tag = $("#tag").val();
 			var newTitle;
-			
+			›
 			if(newName != title){
 				newTitle = newName;
 			}
