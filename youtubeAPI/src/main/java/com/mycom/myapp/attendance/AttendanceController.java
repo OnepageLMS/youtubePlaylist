@@ -1,9 +1,6 @@
 package com.mycom.myapp.attendance;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
-import com.mycom.myapp.commons.ClassContentVO;
+import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
 
@@ -31,6 +28,9 @@ public class AttendanceController {
 	@Autowired
 	private Stu_TakesService stu_takesService;
 	
+	@Autowired
+	private MemberService memberService;
+	
 	private int instructorID = 1;
 	public int classID;
 	
@@ -40,6 +40,7 @@ public class AttendanceController {
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
