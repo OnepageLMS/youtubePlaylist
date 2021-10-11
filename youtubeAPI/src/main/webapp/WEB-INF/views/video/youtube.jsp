@@ -159,7 +159,7 @@ $(document).ready(function(){
 		}
 		$("#get_view").empty();
 		$("#nav_view").empty();
-		var key = "AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //"AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //
+		var key = "AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //"AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //
 		//var accessToken = "${accessToken}";
 		var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order="
 				+ $getorder
@@ -362,7 +362,7 @@ $(document).ready(function(){
 					+ '<form class>'
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative row form-group">'
-							+ '<label for="exampleEmail" class="col-sm-2 col-form-label">제목</label>'
+							+ '<label for="exampleEmail" class="col-sm-2 col-form-label">영상제목 설정</label>'
 							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value="'+ title +'"></div>'
 						+ '</div>'
 						+ '<div id="setVideoInfo"> '
@@ -378,7 +378,7 @@ $(document).ready(function(){
 								+ '</div>'
 								+ '<div class="position-relative row form-group">'
 									/* + '<div class="col-sm-2 col-form-label d-flex justify-content-center">' */
-									+ '<label for="amount" class="col-sm-2 col-form-label"><b>설정된 시간</b></label>'
+									+ '<label for="amount" class="col-sm-2 col-form-label"><b>설정된시간</b></label>'
 									/* + '</div>'  */
 									+ '<div class="col-sm-10"> <input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> </div>'
 								+ '</div>' 
@@ -389,7 +389,7 @@ $(document).ready(function(){
 							+ '</div>'
 							+ '<div class="position-relative row form-group">' 
 								+ '<label class="col-sm-2 col-form-label" style="font-weight: bold"> 태그: </label>' 
-								+ '<div class="col-sm-10"><input type="text" id="tag" name="tag" class="col-sm-11 form-control"> </div>'
+								+ '<div class="col-sm-10"><input type="text" id="setTag" name="setTag" class="col-sm-11 form-control"> </div>'
 							+ '</div>' 
 						+ '</div>'
 						+ '<div> <button class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\')">' 
@@ -512,6 +512,7 @@ $(document).ready(function(){
 				+ '<input type="hidden" name="newName" id="newName" value="'+ $('#setTitle').val() + '">'
 				+ '<input type="hidden" name="maxLength" id="maxLength" value="' + limit + '">' 
 				+ '<input type="hidden" name="duration" id="duration" value="' + totalSeconds + '">'
+				+ '<input type="hidden" name="tag" id="tag" value="' + $('#setTag').val() + '">'
 				//+ '<input type="hidden" name="duration" id="duration">'
 				+ '<div class="row">' //videoID="' + id + '" videoTitle="' + title + '">' 
 				+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave" name="chk"></div>'
@@ -842,26 +843,32 @@ $(document).ready(function(){
 				event.preventDefault(); // avoid to execute the actual submit of the form.
 
 				var aJsonArray = new Array();
-				var aJson = new Object();
+				
+				console.log($('input:checkbox#selectToSave:checked'));
 				
 				var checkBoxArr = []; // 플레이리스트에 추가될 영상들을 저장
-				$('input:checkbox:checked').each(function(i) {
-					console.log($(this).closest('.videoSeq').children());
-					console.log($(this).closest('.videoSeq').children("#inputYoutubeTitle").val());
+				$('input:checkbox[id="selectToSave"]:checked').each(function(i) {
+				//$('.chk:checked').each(function(i) {
+					//console.log($(this).closest('.videoSeq').children());
+					//console.log($(this).closest('.videoSeq').children("#inputYoutubeTitle").val());
 					checkBoxArr.push($(this).closest('.videoSeq'));
 				});
 				
 
-				//console.log(checkBoxArr.length);
+				console.log(checkBoxArr.length);
 
 				for(let i=0; i<checkBoxArr.length; i++){
 
+					var aJson = new Object();
+
+					console.log(checkBoxArr[i].children('#inputYoutubeTitle').val());
+
 					aJson.playlistID = localStorage.getItem("selectedPlaylistID");
 					aJson.title = checkBoxArr[i].children('#inputYoutubeTitle').val();
-					aJson.newName = checkBoxArr[i].children('#newName').val();
+					aJson.newTitle = checkBoxArr[i].children('#newName').val();
 					aJson.start_s = checkBoxArr[i].children('#start_s').val();
 					aJson.end_s = checkBoxArr[i].children('#end_s').val();
-					aJson.inputYoutubeID = checkBoxArr[i].children('#inputYoutubeID').val();
+					aJson.youtubeID = checkBoxArr[i].children('#inputYoutubeID').val();
 					aJson.maxLength = checkBoxArr[i].children('#maxLength').val();
 					aJson.duration = checkBoxArr[i].children('#duration').val();
 					aJson.tag = checkBoxArr[i].children('#tag').val();
@@ -869,7 +876,9 @@ $(document).ready(function(){
 					aJsonArray.push(aJson);  
 				}
 
-				var jsonData = JSON.stringify(aJsonArray);				
+				var jsonData = JSON.stringify(aJsonArray);		
+
+				console.log(jsonData);		
 
 				// 안쓰이는 것들 
 				/* var title = $("#inputYoutubeTitle").val();
@@ -890,17 +899,17 @@ $(document).ready(function(){
 				$.ajax({
 					'type' : "POST", 
 					'url' : "${pageContext.request.contextPath}/video/addToPlaylist",
-					'data' : {
-						jsonData : jsonData
-					},
+					'data' : jsonData,
 					'contentType' : "application/json",
 					success : function(data) {
 						console.log("ajax video저장 완료!");
 						/* for (var i = 0; i < checkBoxArr.length; i++) {
 							getAllVideo(checkBoxArr[i]);
 						} */
+						
 					},
 					error : function(error) {
+						
 						//getAlMyPlaylist();
 						console.log("ajax video저장 실패!" + error);
 					}
