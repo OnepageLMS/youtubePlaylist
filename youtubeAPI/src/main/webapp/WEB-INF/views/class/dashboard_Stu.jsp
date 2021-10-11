@@ -44,7 +44,7 @@ $(document).ready(function(){
 		var classID = allMyClass[i].id;
 		var classNoticeURL = 'moveToNotice(' + classID + ')';
 		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
-		var classAttendanceURL = '#';
+		var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
 		var cardColor = active_colors[i%(active_colors.length)];
 		
 		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'

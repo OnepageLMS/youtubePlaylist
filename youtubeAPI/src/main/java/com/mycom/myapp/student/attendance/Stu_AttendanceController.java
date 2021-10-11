@@ -1,9 +1,6 @@
-package com.mycom.myapp.attendance;
+package com.mycom.myapp.student.attendance;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,18 +13,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
-import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.student.classes.Stu_ClassesService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 import net.sf.json.JSONArray;
 
 @Controller
-@RequestMapping(value="/attendance")
-public class AttendanceController {
+@RequestMapping(value="/student/attendance")
+public class Stu_AttendanceController {
 	@Autowired
-	private ClassesService classService;
+	private Stu_ClassesService classesService;
 	
 	@Autowired
 	private Stu_TakesService stu_takesService;
@@ -41,14 +38,15 @@ public class AttendanceController {
 	@RequestMapping(value = "/{classId}", method = RequestMethod.GET)
 	public String attendancehome(@PathVariable("classId") int classId, Model model) {
 		classID = classId;
-		model.addAttribute("classInfo", classService.getClass(classID)); 
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		model.addAttribute("myName", memberService.getInstructorName(instructorID));
+		model.addAttribute("classInfo", classesService.getClass(classID)); 
+		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
+		model.addAttribute("myName", memberService.getStudentName(1));
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
-		return "class/attendance";
+		return "class/attendance_Stu";
 	}	
 	
 	@ResponseBody
