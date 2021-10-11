@@ -134,61 +134,14 @@ $(document).ready(function(){
                         	</div>
                     	</div>
                     
-                    </div>  
-                            
-                 <!--   <div class="row">
-                    	
-                    	<div class="col-sm-12">
-                           <nav class="" aria-label="Page navigation example">
-                           	   <button onclick='updateDays(${classInfo.id})' class="float-right mb-2 mr-2 btn btn-primary">차시 추가</button>
-								
-                               <ul class="pagination">
-                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-										<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
-									</c:forEach>
-                              	</ul>
-                            </nav>
-                       	</div>
-                       	
-                    	<div class="contents col-sm-12" classID="${classInfo.id}">
-								
-								
-								<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-								
-                                
-	                                <div class="main-card mb-3 card">
-	                                    <div class="card-body">
-	                                    	<div class="card-title" style="display: inline;" >
-	                                    		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
-												 <h5 style="display: inline; ">${j} 차시</h5>
-												
-												</a> 
-												 <button onclick='showAddContentForm(${status.index})' class="mb-2 mr-2 btn-transition btn btn-outline-primary">+페이지추가</button>
-												 <button onclick='deleteDay(${classInfo.id}, ${status.index})' class="mb-2 mr-2 btn-transition btn btn-danger float-right" style="float-right;">차시삭제</button>
-												 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(-207px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
-	                                                <button type="button" tabindex="-1" class="dropdown-item" onclick='showAddContentForm(${status.index})'>+페이지추가</button>
-	                                                <button type="button" tabindex="-1" class="dropdown-item">-페이지삭제</button>
-	                                            </div> 
-	                                    	</div>
-
-		                                    <div class="list-group accordion-wrapper day" day="${status.index}">
-		                                        	
-		                                    </div>
-	                                   </div>
-	                               </div>
-                                        
-                                        
-								</c:forEach>
-						</div>
-
-                    </div>	--> 
+                    </div> 
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
    	</div>
    	
-   	<div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
+   <!-- <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
@@ -224,6 +177,172 @@ $(document).ready(function(){
 	            </div>
 	        </div>
 	    </div>
+	</div> -->
+	
+	<div class="modal fade" id="addStudentModal" tabindex="-1"
+		role="dialog" aria-labelledby="editContentModal" aria-hidden="true"
+		style="display: none;">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+
+					<div class="card-body" style="overflow-y: auto; height: 600px;">
+						<button id="modalSubmit" type="button"
+							class="btn-transition btn btn-outline-secondary" onclick="#">구성원
+							추가</button>
+
+						<ul class="list-group">
+
+							<%-- <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
+                            		
+                            		<li class="list-group-item" style="padding-top : 5px; padding-bottom: 30px">
+                            			<i class="pe-7s-close fa-lg" style="margin-right:30px"> </i>
+                            			${takes[status.index].studentName}
+                            		</li>
+	                            </c:forEach> --%>
+	                        <p class="text-primary mt-3"> 허락 대기중 인원 </p>
+							<li class="list-group-item d-sm-inline-block"
+								style="padding-top: 5px; padding-bottom: 30px">
+								
+								<div class="row">
+									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+										<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
+									</div>
+									<div class="titles col-sm-8 ">
+										<div class="row">
+											<p class="col-sm-12 mb-0">이예원</p>
+											<p class="col-sm-12 mb-0">yewon@gmail.com</p>
+										<p class="col-sm-12 mb-0">010-8687-5813</p></div>
+									</div>
+									<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
+								</div>	
+							</li>
+							
+							<li class="list-group-item d-sm-inline-block"
+								style="padding-top: 5px; padding-bottom: 30px">
+								
+								<div class="row">
+									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+										<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
+									</div>
+									<div class="titles col-sm-8 ">
+										<div class="row">
+											<p class="col-sm-12 mb-0"> 조하영 </p>
+											<p class="col-sm-12 mb-0">hayeong@gmail.com</p>
+										<p class="col-sm-12 mb-0">010-3588-7863</p></div>
+									</div>
+									<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
+								</div>	
+							</li>
+							
+							<li class="list-group-item d-sm-inline-block"
+								style="padding-top: 5px; padding-bottom: 30px">
+								
+								<div class="row">
+									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+										<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
+									</div>
+									<div class="titles col-sm-8 ">
+										<div class="row">
+											<p class="col-sm-12 mb-0"> 김은지 </p>
+											<p class="col-sm-12 mb-0">silverji@gmail.com</p>
+										<p class="col-sm-12 mb-0">010-1234-9999</p></div>
+									</div>
+									<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
+								</div>	
+							</li>
+							
+							
+							
+							 <p class="text-primary mt-3"> 등록된 인원 </p>
+							 <li class="list-group-item d-sm-inline-block"
+								style="padding-top: 5px; padding-bottom: 30px">
+								
+								<div class="row">
+									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+
+									</div>
+									<div class="titles col-sm-8 ">
+										<div class="row">
+											<p class="col-sm-12 mb-0">김태인 </p>
+											<p class="col-sm-12 mb-0">taetaeo@gmail.com</p>
+										<p class="col-sm-12 mb-0">010-8571-1453</p></div>
+									</div>
+									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
+								</div>	
+							</li>
+							
+							<li class="list-group-item d-sm-inline-block"
+								style="padding-top: 5px; padding-bottom: 30px">
+								
+								<div class="row">
+									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+										
+									</div>
+									<div class="titles col-sm-8 ">
+										<div class="row">
+											<p class="col-sm-12 mb-0"> 박다인 </p>
+											<p class="col-sm-12 mb-0">sky@gmail.com</p>
+										<p class="col-sm-12 mb-0">010-4568-7863</p></div>
+									</div>
+									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
+								</div>	
+							</li>
+							
+							<li class="list-group-item d-sm-inline-block"
+								style="padding-top: 5px; padding-bottom: 30px">
+								
+								<div class="row">
+									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+										
+									</div>
+									<div class="titles col-sm-8 ">
+										<div class="row">
+											<p class="col-sm-12 mb-0"> 이진우 </p>
+											<p class="col-sm-12 mb-0">joowon@naver.com</p>
+										<p class="col-sm-12 mb-0">010-7895-6677</p></div>
+									</div>
+									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
+								</div>	
+							</li>
+							
+							<li class="list-group-item d-sm-inline-block"
+								style="padding-top: 5px; padding-bottom: 30px">
+								
+								<div class="row">
+									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+										
+									</div>
+									<div class="titles col-sm-8 ">
+										<div class="row">
+											<p class="col-sm-12 mb-0"> 홍길동 </p>
+											<p class="col-sm-12 mb-0">allin@gmail.com</p>
+										<p class="col-sm-12 mb-0">010-9988-7766</p></div>
+									</div>
+									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
+								</div>	
+							</li>
+
+						</ul>
+					</div>
+
+
+				</div>
+				<!-- <div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-primary">저장</button>
+				</div> -->
+			</div>
+		</div>
 	</div>
 	
    	
