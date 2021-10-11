@@ -356,33 +356,6 @@ function seekTo2() {
 	player.seekTo(end_time);
 }
 
-// 현재 재생위치를 시작,끝 시간에 지정 
-function getCurrentPlayTime1() {
-	var d = Number(player.getCurrentTime());
-	var h = Math.floor(d / 3600);
-	var m = Math.floor(d % 3600 / 60);
-	var s = d % 3600 % 60;
-	document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
-	document.getElementById("start_hh").value = h;/* .toFixed(2); */
-	document.getElementById("start_mm").value = m;/* .toFixed(2); */
-	document.getElementById("start_s").value = parseFloat(d).toFixed(2);
-	start_time = parseFloat(d).toFixed(2);
-	start_time *= 1.00;
-	//console.log("check:", typeof start_time);
-}
-function getCurrentPlayTime2() {
-	var d = Number(player.getCurrentTime());
-	var h = Math.floor(d / 3600);
-	var m = Math.floor(d % 3600 / 60);
-	var s = d % 3600 % 60;
-	document.getElementById("end_ss").value = parseFloat(s).toFixed(2);
-	document.getElementById("end_hh").value = h;/* .toFixed(2); */
-	document.getElementById("end_mm").value = m;/* .toFixed(2); */
-	document.getElementById("end_s").value = parseFloat(d).toFixed(2);
-	end_time = parseFloat(d).toFixed(2);
-	end_time *= 1.00;
-	//console.log("check", typeof end_time);
-}
 
 // 재생 구간 유효성 검사: 
 function validation(event) { //video 추가 form 제출하면 실행되는 함수
@@ -458,7 +431,6 @@ function updateVideo(){ // video 정보 수정
 	});
 }
 
-
 function deleteVideo(videoID){ // video 삭제
 	//이부분 수정필요!!! --> 학습자료로 사용중인 비디오 있을때 체크!!!!
 	if (confirm("정말 삭제하시겠습니까?")){
@@ -490,12 +462,12 @@ function deleteVideo(videoID){ // video 삭제
 			range: true,
 			min: 0,
 			max: 500,
-			values: [ 75, 300 ],
+			values: [ 0, 3000 ],
 			slide: function( event, ui ) {
-				$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
+				$( "#amount" ).val( "시작: " + ui.values[ 0 ] + "초 - 끝: " + ui.values[ 1 ] + "초" );
 			}
 		});
-		$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + " - 끝: " + $( "#slider-range" ).slider( "values", 1 ) );
+		$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + "초 - 끝: " + $( "#slider-range" ).slider( "values", 1 ) + "초");
 	} );
 </script>
 <body>
@@ -574,8 +546,12 @@ function deleteVideo(videoID){ // video 삭제
 														<button class="btn btn-outline-secondary">끝</button>
 													</div>
 													<div class="col">
-														<label for="amount"><b>설정된 시간</b></label>
-														<input type="text" id="amount" readonly style="border:0;">
+														<div class="position-relative row form-group">
+															<label for="amount" class="col-sm-2 col-form-label"><b>설정된 시간</b></label>
+															<div class="col-sm-10"> 
+																<input type="text" id="amount" class="text-center col-sm-11 form-control" readonly="" style="border:0;"> 
+															</div>
+														</div>
 													</div>
 												</div>
                                             </div>
