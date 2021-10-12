@@ -218,7 +218,7 @@
 			                    </div>
 			                    <button class="close"></button>
 			                </div>
-			                <button type="button" id="publishNoticeBtn" class="btn btn-sm mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
+			                <button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
                         </div>
                     </div>            
                     <div class="row">
