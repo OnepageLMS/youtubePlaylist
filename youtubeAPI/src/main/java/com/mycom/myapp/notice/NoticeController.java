@@ -38,7 +38,7 @@ public class NoticeController {
 	private int classID;
 	
 	@RequestMapping(value="/notice", method = {RequestMethod.GET, RequestMethod.POST})
-	public String notice(@RequestParam(value="classID", required=false) int classID, Model model) {
+	public String notice(@RequestParam(value="classID") int classID, Model model) {
 		model.addAttribute("classID", classID);
 		model.addAttribute("allMyClass", classService.getAllMyActiveClass(instructorID));
 		model.addAttribute("allMyInactiveClass", classService.getAllMyInactiveClass(instructorID));
@@ -70,6 +70,7 @@ public class NoticeController {
 	@ResponseBody
 	public void updateNotice(@ModelAttribute NoticeVO vo) {
 		classID = vo.getClassID();
+		System.out.println(classID);
 		if(noticeService.updateNotice(vo) != 0) 
 			System.out.println("notice 업데이트 성공! ");
 		else
