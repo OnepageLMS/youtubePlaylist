@@ -102,6 +102,29 @@ $(document).ready(function(){
 		}
 	});
 	
+	$("#button").click(function(event){
+		alert("누름!");
+		event.preventDefault();
+		var form = $("#attendForm");
+		var formData = new FormData(form[0]);
+		formData.append("file", $("#exampleFile")[0].files[0]);
+
+		$.ajax({
+			'url' : "${pageContext.request.contextPath}/uploadCSV",
+			'processData' : false,
+			'contentType' : false,
+			'data' : formData,
+			'type' : 'POST',
+			success: function(data){
+				alert(data);
+				console.log(data);
+			},
+			error : function(err){
+				alert("실패");
+			}
+		});
+	});
+	
 	
 });
 
@@ -169,7 +192,7 @@ function timeLimit(){
 		<div class="col-md-6">
         	<div class="main-card mb-3 card">
                  <div class="card-body"><h5 class="card-title">ZOOM 출석체크 !</h5>
-                      <form class="">
+                      <form id="attendForm" enctype="multipart/form-data">
                       	  <label for="startTime" class="">출석 인정시간을 입력하세요 </label>
                           <div class="position-relative form-group input-group">
                           	<input name="start" id="startTimeH" placeholder="시" class="form-control"  value="0"> 시
@@ -181,6 +204,11 @@ function timeLimit(){
                           	<input name="end" id="endTimeH" placeholder="시" class="form-control"  value="0"> 시
                           	<input name="end" id="endTimeM" placeholder="분" class="form-control"  value="0"> 분
                           </div>
+                          
+                           <div class="position-relative form-group input-group">
+                           	<input name="file" id="exampleFile" type="file" class="form-control-file">
+                           </div>
+
                                                    
                         <!-- <div class="position-relative form-group">
                          	<label for="exampleText" class="">Text Area</label>
@@ -194,7 +222,7 @@ function timeLimit(){
                                  	This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
                          </div> --> 
                          
-                         <button  type="submit" class="mt-1 btn btn-primary" onclick="timeLimit();">Submit</button>
+                         <button id="button" type="submit" class="mt-1 btn btn-primary">Submit</button>
                      </form>
                   </div>
              </div>

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -174,6 +177,37 @@ public class HomeController {
             }
         }
         return csvList;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/uploadCSV", method = RequestMethod.POST)
+	public int uploadCSV(MultipartHttpServletRequest request, Model model) throws Exception {
+		System.out.println("오긴해..?");
+		MultipartFile file = request.getFile("file1");
+		String name = request.getParameter("name");
+		System.out.println(name);
+		System.out.println(file.getName());
+		System.out.println(file.getOriginalFilename());
+		System.out.println(file.getContentType());
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/upload/");
+		System.out.println(realPath);
+		File dir = new File(realPath);
+		if(!dir.exists()) dir.mkdirs();
+		try {
+			String line;
+			BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+			while((line=br.readLine()) != null) {
+				System.out.println(line);
+			}
+			br.close();
+			
+			file.transferTo(new File(realPath, file.getOriginalFilename()));
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return 1;
 	}
 	
 	
