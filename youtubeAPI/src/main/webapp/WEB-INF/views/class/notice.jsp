@@ -47,17 +47,20 @@
 	}
 </style>
 <script>
+	var classID = ${classID};
+	var notices;
+	
 	$(document).ready(function(){
-		getAllNotices(${classID});
+		getAllNotices();
 		
 		$("#publishNoticeBtn").click(function () {
 			$('#inputNoticeForm')[0].reset();
 		});
 	});
 
-	var notices;
-
-	function getAllNotices(classID){
+	function getAllNotices(){
+		console.log("here" + classID);
+		
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/getAllNotice',
@@ -158,7 +161,7 @@
 			datatype: 'json',
 			success: function(data){
 				console.log('공지 생성 성공');
-				location.reload();
+				getAllNotices();
 			},
 			error: function(data, status,error){
 				console.log('공지 생성 실패!');
@@ -172,15 +175,15 @@
 		if ($('#editImportant').val() == 'on')
 			$('#editImportant').val(1);
 
-		console.log($('#editNoticeForm').serialize());
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/updateNotice',
 			data: $('#editNoticeForm').serialize(),
 			datatype: 'json',
 			success: function(data){
+				alert('hello');
 				console.log('공지 수정 성공');
-				location.reload();
+				getAllNotices();
 			},
 			error: function(data, status,error){
 				console.log('공지 수정 실패!');

@@ -36,7 +36,7 @@ public class NoticeController {
 	
 	private int studentId = 1;
 	
-	@RequestMapping(value="/notice", method = RequestMethod.POST)
+	@RequestMapping(value="/notice", method = {RequestMethod.GET, RequestMethod.POST})
 	public String notice(@RequestParam(value="classID") int id, Model model) {
 		model.addAttribute("classID", id);
 		model.addAttribute("allMyClass", classService.getAllMyActiveClass(instructorID));
@@ -46,7 +46,7 @@ public class NoticeController {
 		return "class/notice";
 	}
 	
-	@RequestMapping(value="/student/notice", method = RequestMethod.POST)
+	@RequestMapping(value="/student/notice", method = {RequestMethod.GET, RequestMethod.POST})
 	public String studentNotice(@RequestParam(value="classID") int id, Model model) {
 		model.addAttribute("classID", id);
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService_stu.getAllMyClass(studentId)));

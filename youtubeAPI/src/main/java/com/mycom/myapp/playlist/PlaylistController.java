@@ -36,7 +36,7 @@ public class PlaylistController {
 	
 	private int instructorID = 1;
 	
-	@RequestMapping(value = "/myPlaylist", method = RequestMethod.GET) 
+	@RequestMapping(value = "/myPlaylist", method = {RequestMethod.GET, RequestMethod.POST}) 
 	public String myPlaylist(Model model) {
 		model.addAttribute("instructorID", instructorID);	//이거 지우기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
@@ -64,6 +64,16 @@ public class PlaylistController {
 			System.out.println("playlist 수정 성공! ");
 		else
 			System.out.println("playlist 수정 실패! ");
+	}
+	
+	@RequestMapping(value = "/deletePlaylist", method = RequestMethod.POST)
+	@ResponseBody
+	public void deletePlaylist(@RequestParam(value="playlistID") int id) {
+
+		if(playlistService.deletePlaylist(id) != 0) 
+			System.out.println("playlist 삭제 성공! ");
+		else
+			System.out.println("playlist 삭제 실패! ");
 	}
 	
 

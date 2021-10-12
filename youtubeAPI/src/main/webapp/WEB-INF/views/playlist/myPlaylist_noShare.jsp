@@ -449,12 +449,29 @@ function submitEditPlaylist(){
 		datatype: 'json',
 		success: function(data){
 			console.log('playlist 수정 완료!');
-			location.reload();
+			//location.reload();
 		},
 		error: function(data, status,error){
 			alert('playlist 수정 실패! ');
 		}
 	});
+}
+
+function submitDeletePlaylist(){
+	if(confirm("Playlist를 삭제하시겠습니까? 플레이리스트의 비디오도 모두 삭제됩니다.")){
+		var playlistID = $('#setPlaylistID').val();
+
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/playlist/deletePlaylist',
+			data: {playlistID : playlistID},
+			datatype: 'json',
+			success: function(data){
+				console.log('playlist삭제 성공');
+				location.reload();
+				}
+			});
+	}
 }
 
 //(jw) localStorage 말고 request로 보내는 방법 다음에 시도해 볼것. (21/10/10)
@@ -586,7 +603,7 @@ function submitEditPlaylist(){
 			       </form>
 	            </div>
 	            <div class="modal-footer">
-	            	<button type="button" class="btn btn-danger" data-dismiss="modal">Playlist 삭제</button>
+	            	<button type="button" class="btn btn-danger" onclick="submitDeletePlaylist();">Playlist 삭제</button>
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
 	                <button type="submit" form="formEditPlaylist" class="btn btn-primary" onclick="submitEditPlaylist();">수정완료</button>
 	            </div>

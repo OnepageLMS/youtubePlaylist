@@ -18,8 +18,8 @@
 		where id=#{playlistID}
 	</insert>
 	
-	<delete id="deletePlaylist">	<!-- playlist 내의 video들도 지우도록 변경필요!! -->
-		delete from lms_playlist where id=#{playlistID}
+	<delete id="deletePlaylist">
+		delete from lms_playlist where id=#{id}
 	</delete>
 	
 	<update id="changeSeq">
