@@ -308,6 +308,8 @@ function publishNotice(){	//공지등록
 
 	if ($('#inputImportant').val() == 'on')
 		$('#inputImportant').val(1);
+	else
+		$('#inputImportant').val(0);
 
 	$.ajax({
 		type: 'post',
@@ -316,7 +318,9 @@ function publishNotice(){	//공지등록
 		datatype: 'json',
 		success: function(data){
 			console.log('공지 생성 성공');
-			location.reload();
+		},
+		complete: function(data){
+			//location.reload();
 		},
 		error: function(data, status,error){
 			console.log('공지 생성 실패!');
@@ -590,7 +594,9 @@ function publishNotice(){	//공지등록
                                 </div>
                                 <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">중요 공지</label>
                                     <div class="col-sm-10 mt-2">
-                                        <div class="position-relative form-check"><input id="inputImportant" name="important" type="checkbox" class="form-check-input"></div>
+                                        <div class="position-relative form-check">
+                                        	<input id="inputImportant" name="important" type="checkbox" class="form-check-input">
+                                        </div>
                                     </div>
                                 </div>
                             </form>

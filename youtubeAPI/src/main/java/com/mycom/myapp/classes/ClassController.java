@@ -33,7 +33,7 @@ public class ClassController {
 	
 	private int instructorID = 1;
 	
-	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+	@RequestMapping(value = "/dashboard",  method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));

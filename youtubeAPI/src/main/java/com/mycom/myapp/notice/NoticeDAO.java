@@ -18,7 +18,7 @@ public class NoticeDAO {
 	}
 	
 	public int updateNotice(NoticeVO vo) {
-		return sqlSession.update("Notice.updatetNotice", vo);
+		return sqlSession.update("Notice.updateNotice", vo);
 	}
 	
 	public int deleteNotice(int id) {
