@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -28,7 +31,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.playlist.PlaylistService;
+import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
 import com.mycom.myapp.video.VideoService;
 import com.mycom.myapp.youtube.GoogleOAuthRequest;
@@ -52,6 +57,13 @@ public class HomeController {
 	PlaylistService playlistService;
 	@Autowired
 	VideoService videoService;
+	
+	//여기서부터 추가한것 //나중에 controller따로만들어서 옮겨야함 
+	@Autowired
+	private Stu_TakesService stu_takesService;
+	
+	@Autowired
+	private MemberService memberService;
 	
 	@Autowired
 	private ClassesService classService;	//임의로 example 함수에 사용하려 추가함
@@ -138,7 +150,15 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/attendCSV", method = RequestMethod.GET)
-	public String attend() {															
+	public String attend(Model model) {
+		
+		model.addAttribute("classInfo", classService.getClass(1)); 
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(1)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(1)));
+		model.addAttribute("myName", memberService.getInstructorName(1));
+		
+		model.addAttribute("takes", stu_takesService.getStudentNum(1));
+		model.addAttribute("takesNum", stu_takesService.getStudentNum(1).size());
 
 		return "attendCSV";
 	}
@@ -174,6 +194,44 @@ public class HomeController {
             }
         }
         return csvList;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/uploadCSV", method = RequestMethod.POST)
+	public List<List<String>> uploadCSV(MultipartHttpServletRequest request, Model model) throws Exception {
+		System.out.println("오긴해..?");
+		MultipartFile file = request.getFile("file");
+		String name = request.getParameter("name");
+		System.out.println(name);
+		System.out.println(file.getName());
+		System.out.println(file.getOriginalFilename());
+		System.out.println(file.getContentType());
+		
+		
+		List<List<String>> csvList = new ArrayList<List<String>>();
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/");
+		System.out.println(realPath);
+		File dir = new File(realPath);
+		if(!dir.exists()) dir.mkdirs();
+		try {
+			String line;
+			BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+			while((line=br.readLine()) != null) {
+				//System.out.println(" : " + line);
+				List<String> aLine = new ArrayList<String>();
+                String[] lineArr = line.split(","); // 파일의 한 줄을 ,로 나누어 배열에 저장 후 리스트로 변환한다.
+                aLine = Arrays.asList(lineArr);
+                csvList.add(aLine);
+			}
+			br.close();
+			
+			file.transferTo(new File(realPath, file.getOriginalFilename()));
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return csvList;
 	}
 	
 	
