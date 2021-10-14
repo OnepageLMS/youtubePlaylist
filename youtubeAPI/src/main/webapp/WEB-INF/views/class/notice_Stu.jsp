@@ -21,39 +21,15 @@
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 </head>
-<style>
-	#module {
-	  font-size: 1rem;
-	  line-height: 1.5;
-	}
-	
-	
-	#module #collapseExample.collapse:not(.show) {
-	  display: block;
-	  height: 3rem;
-	  overflow: hidden;
-	}
-	
-	#module #collapseExample.collapsing {
-	  height: 3rem;
-	}
-	
-	#module a.collapsed::after {
-	  content: '+ Show More';
-	}
-	
-	#module a:not(.collapsed)::after {
-	  content: '- Show Less';
-	}
-</style>
 <script>
+	var classID = ${classID};
+	var notices;
+	
 	$(document).ready(function(){
-		getAllNotices(${classID});
+		getAllNotices();
 	});
 
-	var notices;
-
-	function getAllNotices(classID){
+	function getAllNotices(){
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/getAllNotice',
@@ -108,67 +84,6 @@
 			}
 		});
 	}
-
-	function setEditNotice(index){	//공지수정 modal data 설정
-		var id = notices[index].id;
-		var title = notices[index].title;
-		var content = notices[index].content;
-		var important = notices[index].important;
-		$('#setID').val(id);
-		$('#editTitle').val(title);
-		$('#editContent').val(content);
-
-		if(important == 1)
-			$('#editImportant').attr('checked', '');
-		else
-			$('#editImportant').removeAttr('checked');
-	}
-		
-	function publishNotice(){	//공지등록
-		if($('#inputTitle').val() == '' ) return false;
-
-		if ($('#inputImportant').val() == 'on')
-			$('#inputImportant').val(1);
-
-		$.ajax({
-			type: 'post',
-			url: '${pageContext.request.contextPath}/addNotice',
-			data: $('#inputNoticeForm').serialize(),
-			datatype: 'json',
-			success: function(data){
-				console.log('공지 생성 성공');
-				location.reload();
-			},
-			error: function(data, status,error){
-				console.log('공지 생성 실패!');
-			}
-		});
-	}
-
-	function editNotice(){	//공지수정
-		if($('#editTitle').val() == '' ) return false;
-
-		if ($('#editImportant').val() == 'on')
-			$('#editImportant').val(1);
-
-		console.log($('#editNoticeForm').serialize());
-/*
-		$.ajax({
-			type: 'post',
-			url: '${pageContext.request.contextPath}/updateNotice',
-			data: $('#editNoticeForm').serialize(),
-			datatype: 'json',
-			success: function(data){
-				console.log('공지 수정 성공');
-				location.reload();
-			},
-			error: function(data, status,error){
-				console.log('공지 수정 실패!');
-			}
-		});
-		*/
-	}
-
 	
 </script>
 <body>
