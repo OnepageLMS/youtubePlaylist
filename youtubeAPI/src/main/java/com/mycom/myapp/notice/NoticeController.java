@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,18 +71,17 @@ public class NoticeController {
 	
 	@RequestMapping(value = "/updateNotice", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateNotice(@ModelAttribute NoticeVO vo) {
-		classID = vo.getClassID();
-		System.out.println(classID);
+	public void upateNotice(@ModelAttribute NoticeVO vo) {
 		if(noticeService.updateNotice(vo) != 0) 
-			System.out.println("notice 업데이트 성공! ");
+			System.out.println("notice 추가 성공! ");
 		else
-			System.out.println("notice 업데이트 실패! ");
+			System.out.println("notice 추가 실패! ");
 	}
+	
 	
 	@RequestMapping(value = "/deleteNotice", method = RequestMethod.POST)
 	@ResponseBody
-	public void deleteNotice(@RequestParam(value="classID") int id) {
+	public void deleteNotice(@RequestParam(value="id") int id) {
 		if(noticeService.deleteNotice(id) != 0) 
 			System.out.println("notice 삭제 성공! ");
 		else

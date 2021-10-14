@@ -59,8 +59,6 @@
 	});
 
 	function getAllNotices(){
-		console.log("here" + classID);
-		
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/getAllNotice',
@@ -110,7 +108,7 @@
 										+ '</button>'
 										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
 	                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
-	                                        + '<button type="button" class="dropdown-item"><p class="text-danger">삭제</p></button>'
+	                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
                                     	+ '</div>'
 									+ '</div>'
 									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
@@ -153,6 +151,8 @@
 
 		if ($('#inputImportant').val() == 'on')
 			$('#inputImportant').val(1);
+		else
+			$('#inputImportant').val(0);
 
 		$.ajax({
 			type: 'post',
@@ -161,7 +161,9 @@
 			datatype: 'json',
 			success: function(data){
 				console.log('공지 생성 성공');
-				getAllNotices();
+			},
+			complete: function(data){
+				location.reload();
 			},
 			error: function(data, status,error){
 				console.log('공지 생성 실패!');
@@ -183,9 +185,10 @@
 			data: $('#editNoticeForm').serialize(),
 			datatype: 'json',
 			success: function(data){
-				alert('hello');
 				console.log('공지 수정 성공');
-				getAllNotices();
+			},
+			complete: function(data){
+				location.reload();
 			},
 			error: function(data, status,error){
 				console.log('공지 수정 실패!');
@@ -193,6 +196,24 @@
 		});
 	}
 
+	function deleteNotice(id){
+		if(confirm('공지글을 삭제하시겠습니까?')){
+			$.ajax({
+				type: 'post',
+				url: '${pageContext.request.contextPath}/deleteNotice',
+				data: {id: id},
+				success: function(data){
+					console.log('공지 삭제 성공');
+				},
+				complete: function(data){
+					location.reload();
+				},
+				error: function(data, status,error){
+					console.log('공지 삭제 실패!');
+				}
+			});
+		}
+	}
 	
 </script>
 <body>
@@ -317,7 +338,7 @@
 	            <div class="modal-body">  
 	                <div class="main-card">
 						<div class="card-body">
-                            <form class="needs-validation" id="editNoticeForm" novalidate>
+                            <form class="needs-validation" id="editNoticeForm" method="post" novalidate>
                             	<input type="hidden" name="id" id="setID" value=""/>
                                 <div class="position-relative row form-group">
                                 	<label for="editTitle" class="col-sm-2 col-form-label">제목</label>
@@ -345,7 +366,7 @@
 	            </div>
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="submit" form="editNoticeForm" class="btn btn-primary" onclick="editNotice();">수정</button>
+	                <button type="submit" form="editNoticeForm" class="btn btn-primary" onclick="editNotice(); return false;">수정</button>
 	            </div>
 	        </div>
 	    </div>
