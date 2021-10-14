@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Attendance">
+
+	<insert id="insertAttendance">
+		insert into lms_attendance(className, classID, days, instructorID)
+		values
+		(#{className}, #{classID}, #{days}, #{instructorID})
+	</insert>
+	
+	<update id="updateAttendance">
+		update lms_attendance
+		set className=#{className}, classID=#{classID}, days=#{days}, instructorID=#{instructorID}
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteAttendance">
+		delete from lms_attendance where id=#{id}
+	</delete>
+	
+	<select id="getAttendance" resultType="attendance">
+		select * from lms_attendance
+		where id=#{id}
+	</select>
+
+</mapper>
