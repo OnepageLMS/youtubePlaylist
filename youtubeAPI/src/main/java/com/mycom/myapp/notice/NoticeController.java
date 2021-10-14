@@ -23,7 +23,6 @@ import com.mycom.myapp.student.classes.Stu_ClassesService;
 
 import net.sf.json.JSONArray;
 
-
 @Controller
 public class NoticeController {
 	private int instructorID = 1;
@@ -32,12 +31,10 @@ public class NoticeController {
 	private NoticeService noticeService;
 	@Autowired
 	private ClassesService classService;
-	@Autowired
-	private Stu_ClassesService classService_stu;
+	
 	@Autowired
 	private MemberService memberService;
 	
-	private int studentId = 1;
 	private int classID;
 	
 	@RequestMapping(value="/notice", method = {RequestMethod.GET, RequestMethod.POST})
@@ -48,16 +45,6 @@ public class NoticeController {
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		model.addAttribute("className", classService.getClassName(classID));
 		return "class/notice";
-	}
-	
-	@RequestMapping(value="/student/notice", method = {RequestMethod.GET, RequestMethod.POST})
-	public String studentNotice(@RequestParam(value="classID") int id, Model model) {
-		model.addAttribute("classID", id);
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService_stu.getAllMyClass(studentId)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService_stu.getAllMyInactiveClass(studentId)));
-		model.addAttribute("myName", memberService.getStudentName(studentId));
-		model.addAttribute("className", classService.getClassName(id));
-		return "class/notice_Stu";
 	}
 	
 	@RequestMapping(value = "/addNotice", method = RequestMethod.POST)
