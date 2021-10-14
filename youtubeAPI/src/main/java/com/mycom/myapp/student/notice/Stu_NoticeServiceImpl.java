@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Stu_NoticeServiceImpl implements Stu_NoticeService{
-	@Autowired
-	Stu_NoticeDAO noticeDAO;
+	//@Autowired
+	//Stu_NoticeDAO noticeDAO;
 
 }
