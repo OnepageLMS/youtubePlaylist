@@ -301,6 +301,13 @@
 		    <version>2.12.1</version>
 		</dependency>
 		
+		<!-- to upload file -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		
 		
 	</dependencies>
 	<build>

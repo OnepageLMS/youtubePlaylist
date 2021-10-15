@@ -1,6 +1,7 @@
 package com.mycom.myapp.classes;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,32 @@ public class ClassController {
 		return "class/dashboard";
 	}	
 	
+	// (jw) entryCode 중복값 판정때 사용함. 
+	@ResponseBody
+	@RequestMapping(value = "/createEntryCode", method = RequestMethod.POST)	
+	public String createEntryCode() {
+		List<String> list = classService.getAllEntryCodes();
+		StringBuilder entryCode = new StringBuilder();
+		String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ";
+		int flag = 1;
+		Random rand = new Random();
+		
+		while(true) {
+			for(int i=0; i<6; i++) {
+				entryCode.append(chars.charAt(rand.nextInt(36)));
+			}
+			for(String codes : list) {
+				if(codes.toString().equals(entryCode.toString())) {
+					flag = 0;
+				}
+			}
+			if(flag == 1) break;
+		}
+		String result = entryCode.toString();
+		
+		return result;
+	}
+	
 	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//나중에 지우기
 	public void getAllMyClass(Model model) {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
@@ -54,6 +81,19 @@ public class ClassController {
 		return vo;
 	}
 	
+//	@ResponseBody
+//	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
+//	public ClassesVO getClassInfo(@RequestParam(value = "classID") int classID, @RequestParam(value ="getEntryCode", defaultValue = "0") int getEntryCode) {
+//		System.out.println(getEntryCode);
+//		ClassesVO vo = classService.getClass(classID);
+//		if(getEntryCode == 0) {
+//			return vo;
+//		}
+//		else {
+//			return vo.getEntryCode(classID);
+//		}
+//	}
+	
 	@RequestMapping(value = "/addDays", method = RequestMethod.POST) 
 	public String addContent(ClassesVO vo) {
 		if (classService.updateDays(vo) != 0)
@@ -65,8 +105,9 @@ public class ClassController {
 	}
 	
 	@RequestMapping(value="/insertClassroom", method = RequestMethod.POST)
-	public String insertClassroom(@ModelAttribute ClassesVO vo) {
+	public String insertClassroom(@ModelAttribute ClassesVO vo, @RequestParam(value = "code") String entryCode) {
 		vo.setInstructorID(instructorID);
+		vo.setEntryCode(entryCode);
 
 		if (classService.insertClassroom(vo) >= 0) 
 			System.out.println("controller 강의실 생성 성공"); 
@@ -147,5 +188,7 @@ public class ClassController {
 		
 		return 1;
 	}
+	
+
 
 }

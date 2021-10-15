@@ -233,6 +233,12 @@ public class HomeController {
 		
 		return csvList;
 	}
+
+	@RequestMapping(value = "/entryCode", method = RequestMethod.GET)
+	public String entry(Model model) {
+
+		return "entryCode";
+	}
 	
 	
 //	@RequestMapping(value = "/deletePlaylist", method = RequestMethod.POST)

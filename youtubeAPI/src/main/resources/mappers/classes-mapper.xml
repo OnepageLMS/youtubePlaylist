@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Classes">
 	<insert id="insertClassroom" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into lms_class (instructorID, active, className, description, days, tag, closeDate)
-		values (#{instructorID}, #{active}, #{className}, #{description}, #{days}, #{tag}, #{closeDate})
+		insert into lms_class (instructorID, active, className, description, days, tag, closeDate, entryCode)
+		values (#{instructorID}, #{active}, #{className}, #{description}, #{days}, #{tag}, #{closeDate}, #{entryCode})
 	</insert>
 	
 	<update id="updateClassroom">
@@ -58,6 +58,10 @@
 	
 	<select id="getAllMyClass" resultType="classes">
 		select * from lms_class where instructorID=#{instructorID}
+	</select>
+	
+	<select id="getAllEntryCodes" resultType="String">
+		select entryCode from lms_class
 	</select>
 	
 </mapper>
