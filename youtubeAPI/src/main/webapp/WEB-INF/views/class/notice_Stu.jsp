@@ -58,6 +58,9 @@
 
 						if (index > 1) viewCheck = 'text-muted';	//학생이 읽은 공지는 색깔 진회색으로
 
+						//notice, noticeCheck를 join해서 가져온다
+						//
+
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
 								+ '<div class="card">'
