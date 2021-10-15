@@ -853,7 +853,12 @@ $(document).ready(function(){
 					//console.log($(this).closest('.videoSeq').children("#inputYoutubeTitle").val());
 					checkBoxArr.push($(this).closest('.videoSeq'));
 				});
-				
+
+				if(checkBoxArr.length==0){
+					/* $('#addVideoModal').modal("hide"); */
+					alert("최소 한개 이상의 동영상을 선택해주세요!"); 
+					return false;
+				}							
 
 				console.log(checkBoxArr.length);
 
@@ -878,23 +883,7 @@ $(document).ready(function(){
 
 				var jsonData = JSON.stringify(aJsonArray);		
 
-				console.log(jsonData);		
-
-				// 안쓰이는 것들 
-				/* var title = $("#inputYoutubeTitle").val();
-				var newName = $("#newName").val();
-				var start_s = $("#start_s").val();
-				var end_s = $("#end_s").val();
-				var youtubeID = $("#inputYoutubeID").val();
-				var maxLength = $("#maxLength").val();
-				var duration = $('#duration').val();
-				var tag = $("#tag").val();
-				var newTitle;
-				
-				if(newName != title){
-					newTitle = newName;
-				} */
-				
+				console.log(jsonData);			
 				
 				$.ajax({
 					'type' : "POST", 
@@ -903,16 +892,21 @@ $(document).ready(function(){
 					'contentType' : "application/json",
 					success : function(data) {
 						console.log("ajax video저장 완료!");
-						/* for (var i = 0; i < checkBoxArr.length; i++) {
-							getAllVideo(checkBoxArr[i]);
-						} */
-						
+						/* if(!confirm("플레이리스트가 저장되었습니다! 더 추가하시겠습니까?")){
+							var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
+							location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/';
+						}
+						else{
+							deleteFromCart();
+							return false;
+						}
+						*/
 					},
 					error : function(error) {
 						
 						//getAlMyPlaylist();
 						console.log("ajax video저장 실패!" + error);
-					}
+					} 
 				});
 
 				//confirmSearch();
@@ -963,9 +957,13 @@ $(document).ready(function(){
 					          <div class="app-footer mb-2">
 					              <div class="app-footer__inner">
 					                  <div class="app-footer-left">
-			                              <button class="btn btn-primary mr-3" onclick="insertVideo();">
+					                  	
+					                  	<a href="javascript:void(0);" style="display:inline;">       
+			                            	<button class="btn btn-primary mr-3" onclick="insertVideo();">
 			                                  선택된 비디오 playlist에 추가
 			                              </button>
+		                                </a>
+			                              
 					                  </div>
 					                  <!-- <div class="app-footer-right">
 					                      <button>
@@ -1064,10 +1062,7 @@ $(document).ready(function(){
 							<div class="main-card card pb-3">
 								<!-- form 동적으로 추가(jw) -->
 							</div>
-							
 						</div>
-
-						
 
 					</div>
 
@@ -1075,6 +1070,28 @@ $(document).ready(function(){
 				<jsp:include page="../outer_bottom.jsp" flush="false" />
 			</div>
 		</div>
+	</div>
+	
+	
+	<!-- 동영상 추가시 나타나는 모달창  -->
+	<div class="modal fade" id="addVideoModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-modal="true">
+	    <div class="modal-dialog modal-sm">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="exampleModalLongTitle">알림창</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <p>플레이리스트가 저장되었습니다. 동영상을 더 추가하시겠습니까?</p>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">아니오 </button>
+	                <button type="button" class="btn btn-primary">네 </button>
+	            </div>
+	        </div>
+	    </div>
 	</div>
 
 </body>

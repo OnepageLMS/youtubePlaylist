@@ -176,22 +176,37 @@ function submitAddClassroom(){	//submit the add classroom form
 		$('#customSwitch1').val(0);
 	if($('#inputCloseDate').val() == '')
 		$('#inputCloseDate').val('9999-12-31');	//null이나 '' 가 들어가면 에러난다. --> 이부분 수정하기
+
+	var code;
 	$.ajax({
 		type: 'post',
-		url: '${pageContext.request.contextPath}/insertClassroom',
-		data: $('#formAddClassroom').serialize(),
-		datatype: 'json',
+		url: '${pageContext.request.contextPath}/createEntryCode',
 		success: function(data){
-			if(data == 'ok')
-				console.log('강의실 생성 완료!');
-			else
-				console.log('강의실 생성 실패! ');
-			location.reload();
+			code = data;
+			$.ajax({
+				type: 'post',
+				url: '${pageContext.request.contextPath}/insertClassroom',
+				data: $('#formAddClassroom').serialize() + "&code=" + code,
+				datatype: 'json',
+				success: function(data){
+					if(data == 'ok')
+						console.log('강의실 생성 완료!');
+					else
+						console.log('강의실 생성 실패! ');
+					location.reload();
+				},
+				error: function(data, status,error){
+					alert('강의실 생성 실패! ');
+					return;
+				}
+			});	
 		},
-		error: function(data, status,error){
-			alert('강의실 생성 실패! ');
+		error: function(){
+			alert("error");
 		}
-	});	
+	});
+
+	
 }
 function submitEditClassroom(){	//미완성
 	if ($('#editClassName').val() == '') return false;

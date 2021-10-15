@@ -68,5 +68,9 @@ public class ClassesDAO {
 	public List<ClassesVO> getAllMyClass(int instructorID){
 		return sqlSession.selectList("Classes.getAllMyClass", instructorID);
 	}
+
+	public List<String> getAllEntryCodes() {
+		return sqlSession.selectList("Classes.getAllEntryCodes");
+	}
 }
 

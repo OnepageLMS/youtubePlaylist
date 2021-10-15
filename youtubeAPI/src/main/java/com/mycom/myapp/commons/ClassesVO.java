@@ -9,6 +9,7 @@ public class ClassesVO {
 	private String tag;
 	private String startDate;
 	private String closeDate;
+	private String entryCode;
 	private int active;
 	private String regDate;
 	
@@ -62,6 +63,12 @@ public class ClassesVO {
 	}
 	public void setCloseDate(String closeDate) {
 		this.closeDate = closeDate;
+	}
+	public String getEntryCode() {
+		return entryCode;
+	}
+	public void setEntryCode(String entryCode) {
+		this.entryCode = entryCode;
 	}
 	public int getActive() {
 		return active;

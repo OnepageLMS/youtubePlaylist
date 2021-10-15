@@ -19,5 +19,6 @@ public interface ClassesService {
 	public List<ClassesVO> getAllMyActiveClass(int instructorID);
 	public List<ClassesVO> getAllMyInactiveClass(int instructorID);
 	public List<ClassesVO> getAllMyClass(int instructorID);
+	public List<String> getAllEntryCodes();
 
 }
