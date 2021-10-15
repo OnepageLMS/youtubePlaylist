@@ -10,6 +10,8 @@ public class NoticeVO {
 	private String modDate;
 	private String regDate;
 	
+	private int studentID;	//학생 읽음표시에 사용
+	
 	public int getId() {
 		return id;
 	}
@@ -57,6 +59,13 @@ public class NoticeVO {
 	}
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
+	}
+	
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
 	}
 	
 }
