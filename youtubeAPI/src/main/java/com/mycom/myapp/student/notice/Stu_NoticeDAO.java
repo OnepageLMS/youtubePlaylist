@@ -14,7 +14,7 @@ public class Stu_NoticeDAO {
 	SqlSession sqlSession;
 	
 	public List<NoticeVO> getAllNotice(int id) {
-		return sqlSession.selectList("Notice.getAllNotice", id);
+		return sqlSession.selectList("Stu_Notice.getAllNotice", id);
 	}
 
 }

@@ -32,13 +32,13 @@
 	function getAllNotices(){
 		$.ajax({
 			type: 'post',
-			url: '${pageContext.request.contextPath}/getAllNotice',
+			url: '${pageContext.request.contextPath}/student/notice/getAllNotice',
 			data: {classID: classID},
 			datatype: 'json',
 			success: function(data){
 				notices = data.notices;
 				$('.noticeList').empty();
-
+				console.log(notices);
 				var length = notices.length;
 
 				if (length == 0) 
