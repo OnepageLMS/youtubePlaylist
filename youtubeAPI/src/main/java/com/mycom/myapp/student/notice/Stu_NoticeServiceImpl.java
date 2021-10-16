@@ -13,8 +13,18 @@ public class Stu_NoticeServiceImpl implements Stu_NoticeService{
 	Stu_NoticeDAO noticeDAO;
 	
 	@Override
-	public List<NoticeVO> getAllNotice(int id){
-		return noticeDAO.getAllNotice(id);
+	public List<NoticeVO> getAllNotice(NoticeVO vo){
+		return noticeDAO.getAllNotice(vo);
+	}
+	
+	@Override
+	public int insertView(NoticeVO vo) {
+		return noticeDAO.insertView(vo);
+	}
+	
+	@Override
+	public int updateViewCount(int id) {
+		return noticeDAO.updateViewCount(id);
 	}
 
 }

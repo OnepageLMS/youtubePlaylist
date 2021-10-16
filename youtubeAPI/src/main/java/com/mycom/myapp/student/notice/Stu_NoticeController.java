@@ -46,7 +46,10 @@ public class Stu_NoticeController {
 	@RequestMapping(value = "/getAllNotice", method = RequestMethod.POST)
 	@ResponseBody
 	public Object getAllNotices(@RequestParam(value="classID") int id) {
-		List<NoticeVO> list = noticeService.getAllNotice(id);
+		NoticeVO vo = new NoticeVO();
+		vo.setClassID(id);
+		vo.setStudentID(studentId);
+		List<NoticeVO> list = noticeService.getAllNotice(vo);
 		
 		if(list != null) 
 			System.out.println("notice list가져오기 성공!");
@@ -56,4 +59,18 @@ public class Stu_NoticeController {
 		
 		return map;
 	}
+	
+	@RequestMapping(value = "/insertView", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateView(@RequestParam(value="noticeID") int id) {
+		NoticeVO vo = new NoticeVO();
+		vo.setId(id);
+		vo.setStudentID(studentId);
+		if(noticeService.insertView(vo) != 0) {
+			System.out.println("insert view 성공!");
+			if(noticeService.updateViewCount(id) != 0)	//pass the noticeID
+				System.out.println("viewCount업데이트 성공!");
+		}
+	}
+	
 }

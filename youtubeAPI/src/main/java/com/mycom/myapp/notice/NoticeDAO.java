@@ -30,9 +30,4 @@ public class NoticeDAO {
 		return sqlSession.selectList("Notice.getAllNotice", id);
 	}
 	
-	public int insertNoticeCheckRecord(NoticeVO vo) {
-		return sqlSession.insert("Notice.insertNoticeCheckRecord", vo);
-	}
-	
-	
 }

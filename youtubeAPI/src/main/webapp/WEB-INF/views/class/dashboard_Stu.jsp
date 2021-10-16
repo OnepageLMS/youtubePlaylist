@@ -108,7 +108,7 @@ function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항
 
 	var goForm = $('<form>', {
 			method: 'post',
-			action: '${pageContext.request.contextPath}/student/notice',
+			action: '${pageContext.request.contextPath}/student/notice/',
 			html: html
 		}).appendTo('body'); 
 
