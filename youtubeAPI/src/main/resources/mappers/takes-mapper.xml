@@ -28,5 +28,10 @@
 		where classID=#{classID} order by studentName
 	</select>
 	
+	<select id="getAllClassStudent" resultType="TakesVO">
+		select id, studentID from lms_takes
+		where classID=#{classID}
+	</select>
+	
 
 </mapper>

@@ -20,6 +20,8 @@ import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classes.Stu_ClassesService;
+import com.mycom.myapp.student.takes.Stu_TakesService;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 import net.sf.json.JSONArray;
 
@@ -31,9 +33,10 @@ public class NoticeController {
 	private NoticeService noticeService;
 	@Autowired
 	private ClassesService classService;
-	
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private Stu_TakesService takesService;
 	
 	private int classID;
 	
@@ -50,8 +53,24 @@ public class NoticeController {
 	@RequestMapping(value = "/addNotice", method = RequestMethod.POST)
 	@ResponseBody
 	public void addNotice(@ModelAttribute NoticeVO vo) {
-		if(noticeService.insertNotice(vo) != 0) 
-			System.out.println("notice 추가 성공! ");
+		int noticeID = noticeService.insertNotice(vo);
+		
+		if(noticeID > 0) {
+			System.out.println(noticeID + " notice 추가 성공! ");
+			
+			//noticeCheck에 record 생성
+			int noticeClassID = vo.getClassID();
+			List<Stu_TakesVO> students = takesService.getAllClassStudent(noticeClassID);	//수강 학생 리스트 가져오기
+			for(int i=0; i<students.size(); i++) {
+				NoticeVO newRecord = new NoticeVO();
+				int studentID = students.get(i).getStudentID();
+				newRecord.setId(noticeID);
+				newRecord.setStudentID(studentID);
+				if(noticeService.insertNoticeCheckRecord(newRecord) != 0)
+					System.out.println(studentID + ":" + i + " noticeCheck record생성됨!");
+			}
+		}
+			
 		else
 			System.out.println("notice 추가 실패! ");
 	}

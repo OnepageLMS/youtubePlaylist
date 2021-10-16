@@ -6,11 +6,12 @@ public class NoticeVO {
 	private String title;
 	private String content;
 	private int important;
-	private int view;
+	private int viewCount;
 	private String modDate;
 	private String regDate;
 	
-	private int studentID;	//학생 읽음표시에 사용
+	private int studentID;	//noticeCheck
+	private int view;	//noticeCheck
 	
 	public int getId() {
 		return id;
@@ -42,11 +43,11 @@ public class NoticeVO {
 	public void setImportant(int important) {
 		this.important = important;
 	}
-	public int getView() {
-		return view;
+	public int getViewCount() {
+		return viewCount;
 	}
-	public void setView(int view) {
-		this.view = view;
+	public void setViewCount(int viewCount) {
+		this.viewCount = viewCount;
 	}
 	public String getModDate() {
 		return modDate;
@@ -66,6 +67,12 @@ public class NoticeVO {
 	}
 	public void setStudentID(int studentID) {
 		this.studentID = studentID;
+	}
+	public int getView() {
+		return view;
+	}
+	public void setView(int view) {
+		this.view = view;
 	}
 	
 }
