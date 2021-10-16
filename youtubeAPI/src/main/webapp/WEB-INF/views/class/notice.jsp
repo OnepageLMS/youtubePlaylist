@@ -22,29 +22,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 </head>
 <style>
-	#module {
-	  font-size: 1rem;
-	  line-height: 1.5;
-	}
 	
-	
-	#module #collapseExample.collapse:not(.show) {
-	  display: block;
-	  height: 3rem;
-	  overflow: hidden;
-	}
-	
-	#module #collapseExample.collapsing {
-	  height: 3rem;
-	}
-	
-	#module a.collapsed::after {
-	  content: '+ Show More';
-	}
-	
-	#module a:not(.collapsed)::after {
-	  content: '- Show Less';
-	}
 </style>
 <script>
 	var classID = ${classID};
@@ -80,18 +58,12 @@
 						//var regDate = value.regDate;
 						var regDate = value.regDate.split(" ")[0];
 						var important = value.important;
+						var viewCount = value.viewCount;
 
 						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
 						else important = '';
 
-						/*var html = '<div id="module" class="col-md-12 col-lg-10 col-sm-12 col-auto">'
-							 +  '<h3>' + value.title + '</h3>'
-							 + ' <p class="collapse" id="' + collapseID + '" aria-expanded="false">'
-							 + value.content   
-							 +  '</p>'
-							 +  '<a role="button" class="collapsed" data-toggle="collapse" href="#' + collapseID + '" aria-expanded="false" aria-controls="collapseExample"></a>'
-							+'</div>';
-							*/
+						if (viewCount == null)	viewCount = '0';
 							
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
@@ -101,7 +73,7 @@
 																														+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
 											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
 										+ '</button>'
-										+ '<div class="text-success col-2 pl-5 pr-0">**% 읽음</div>'
+										+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '% 읽음</div>'
 										+ '<div class="col-3">작성일 ' + regDate + '</div>'
 										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 btn">'
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'

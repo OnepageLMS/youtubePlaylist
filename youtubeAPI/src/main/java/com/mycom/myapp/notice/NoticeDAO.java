@@ -14,7 +14,8 @@ public class NoticeDAO {
 	SqlSession sqlSession;
 	
 	public int insertNotice(NoticeVO vo) {
-		return sqlSession.insert("Notice.insertNotice", vo);
+		sqlSession.insert("Notice.insertNotice", vo);	//새로 insert된 noticeID 리턴 
+		return vo.getId();
 	}
 	
 	public int updateNotice(NoticeVO vo) {
@@ -27,6 +28,10 @@ public class NoticeDAO {
 	
 	public List<NoticeVO> getAllNotice(int id) {
 		return sqlSession.selectList("Notice.getAllNotice", id);
+	}
+	
+	public int insertNoticeCheckRecord(NoticeVO vo) {
+		return sqlSession.insert("Notice.insertNoticeCheckRecord", vo);
 	}
 	
 	

@@ -13,31 +13,27 @@ public class Stu_TakesDAO {
 	SqlSession sqlSession;
 
 	public int insertStudent(Stu_TakesVO vo) {
-		// TODO Auto-generated method stub
-		int result = sqlSession.insert("Takes.insertTakes", vo);
-		return result;
+		return sqlSession.insert("Takes.insertTakes", vo);
 	}
 
 	public int deleteStudent(int id) {
-		// TODO Auto-generated method stub
-		int result = sqlSession.delete("Takes.deleteTakes", id);
-		return result;
+		return sqlSession.delete("Takes.deleteTakes", id);
 	}
 
 	public int updateStudent(Stu_TakesVO vo) {
-		// TODO Auto-generated method stub
-		int result = sqlSession.update("Takes.updateTakes", vo);
-		return result;
+		return sqlSession.update("Takes.updateTakes", vo);
 	}
 
 	public Stu_TakesVO getStudent(int id) {
-		// TODO Auto-generated method stub
 		return sqlSession.selectOne("Takes.getTakes", id);
 	}
 	
 	public List<Stu_TakesVO> getStudentNum(int classID) {
-		// TODO Auto-generated method stub
 		return sqlSession.selectList("Takes.getTakesNum", classID);
+	}
+	
+	public List<Stu_TakesVO> getAllClassStudent(int classID){
+		return sqlSession.selectList("Takes.getAllClassStudent", classID);
 	}
 
 }

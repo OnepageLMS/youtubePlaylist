@@ -9,4 +9,5 @@ public interface NoticeService {
 	public int updateNotice(NoticeVO vo);
 	public int deleteNotice(int id);
 	public List<NoticeVO> getAllNotice(int id);	
+	public int insertNoticeCheckRecord(NoticeVO vo);
 }
