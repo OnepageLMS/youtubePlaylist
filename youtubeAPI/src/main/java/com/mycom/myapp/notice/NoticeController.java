@@ -57,7 +57,7 @@ public class NoticeController {
 		
 		if(noticeID > 0) {
 			System.out.println(noticeID + " notice 추가 성공! ");
-			
+			/*
 			//noticeCheck에 record 생성
 			int noticeClassID = vo.getClassID();
 			List<Stu_TakesVO> students = takesService.getAllClassStudent(noticeClassID);	//수강 학생 리스트 가져오기
@@ -68,7 +68,7 @@ public class NoticeController {
 				newRecord.setStudentID(studentID);
 				if(noticeService.insertNoticeCheckRecord(newRecord) != 0)
 					System.out.println(studentID + ":" + i + " noticeCheck record생성됨!");
-			}
+			}*/
 		}
 			
 		else

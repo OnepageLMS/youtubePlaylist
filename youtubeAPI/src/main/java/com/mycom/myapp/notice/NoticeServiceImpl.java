@@ -31,9 +31,4 @@ public class NoticeServiceImpl implements NoticeService{
 	public List<NoticeVO> getAllNotice(int id){
 		return noticeDAO.getAllNotice(id);
 	}
-	
-	@Override
-	public int insertNoticeCheckRecord(NoticeVO vo) {
-		return noticeDAO.insertNoticeCheckRecord(vo);
-	}
 }

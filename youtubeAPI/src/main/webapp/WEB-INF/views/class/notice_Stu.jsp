@@ -48,26 +48,26 @@
 					$.each(notices, function( index, value){
 						var num = length - index;
 						var collapseID = "collapse" + num;
-						//var regDate = value.regDate;
 						var regDate = value.regDate.split(" ")[0];
 						var important = value.important;
-						var viewCheck = '';	//학생이 읽지 않은 공지는 색상 다르게
+						var viewCheck = value.studentID;	//학생이 읽지 않은 공지는 색상 다르게
+						var updateView = '';
 
 						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
 						else important = '';
 
-						if (index > 1) viewCheck = 'text-muted';	//학생이 읽은 공지는 색깔 진회색으로
-
-						//notice, noticeCheck를 join해서 가져온다
-						//
+						if (viewCheck != 0) viewCheck = 'text-muted';	//학생이 읽은 공지는 색깔 진회색으로
+						else {
+							updateView = 'onclick="updateView(' + index + ',' + value.id + ');" ';
+						}
 
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
 								+ '<div class="card">'
 									+ '<div id="headingOne" class="card-header">'
-										+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
-																														+ 'class="col-9 text-left m-0 p-0 btn btn-link btn-block collapsed">'
-											+ '<h5 class="m-0 p-0 ' + viewCheck + '"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
+										+ '<button type="button" ' + updateView + 'class="col-9 text-left m-0 p-0 btn btn-link btn-block collapsed" '
+														+ 'data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne">'
+											+ '<h5 class="title m-0 p-0 ' + viewCheck + '"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
 										+ '</button>'
 										+ '<div>작성일 ' + regDate + '</div>'
 									+ '</div>'
@@ -87,7 +87,25 @@
 			}
 		});
 	}
-	
+
+	function updateView(index, noticeID){
+		if($('.title:eq(' + index + ')').hasClass('text-muted') == true) 
+			return false;
+		
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/student/notice/insertView',
+			data: {noticeID: noticeID},
+			datatype: 'json',
+			success: function(data){
+				console.log('update view 완료!');
+					$('.title:eq(' + index + ')').addClass('text-muted');
+				},
+				error: function(data, status,error){
+					alert('공지 가져오기 실패!');
+				}
+			});
+	}
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow">

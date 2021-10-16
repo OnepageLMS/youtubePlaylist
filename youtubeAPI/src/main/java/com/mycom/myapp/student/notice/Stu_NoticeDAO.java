@@ -13,8 +13,16 @@ public class Stu_NoticeDAO {
 	@Autowired
 	SqlSession sqlSession;
 	
-	public List<NoticeVO> getAllNotice(int id) {
-		return sqlSession.selectList("Stu_Notice.getAllNotice", id);
+	public List<NoticeVO> getAllNotice(NoticeVO vo) {
+		return sqlSession.selectList("Stu_Notice.getAllNotice", vo);
+	}
+	
+	public int insertView(NoticeVO vo) {
+		return sqlSession.insert("Stu_Notice.insertView", vo);
+	}
+	
+	public int updateViewCount(int id) {
+		return sqlSession.update("Stu_Notice.updateViewCount", id);
 	}
 
 }

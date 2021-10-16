@@ -20,9 +20,4 @@
 		select * from lms_notice
 		where classID=#{classID} order by id desc
 	</select>
-	
-	<insert id="insertNoticeCheckRecord">
-		insert into lms_noticeCheck (noticeID, studentID)
-		values (#{id}, #{studentID})
-	</insert>
 </mapper>
