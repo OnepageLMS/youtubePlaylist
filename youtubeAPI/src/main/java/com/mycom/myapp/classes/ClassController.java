@@ -43,7 +43,29 @@ public class ClassController {
 		return "class/dashboard";
 	}	
 	
-	// (jw) entryCode 중복값 판정때 사용함. 
+	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//나중에 지우기
+	public void getAllMyClass(Model model) {
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
+	public ClassesVO getClassInfo(@RequestParam(value = "classID") int classID) {
+		ClassesVO vo = classService.getClass(classID);
+		return vo;
+	}
+	
+	@RequestMapping(value = "/addDays", method = RequestMethod.POST) 
+	public String addContent(ClassesVO vo) {
+		if (classService.updateDays(vo) != 0)
+			System.out.println("addDays 성공");
+		else
+			System.out.println("addDays 실패");
+		
+		return "ok";
+	}
+	
+	// (jw) entryCode 생성에 사용함. 
 	@ResponseBody
 	@RequestMapping(value = "/createEntryCode", method = RequestMethod.POST)	
 	public String createEntryCode() {
@@ -67,41 +89,6 @@ public class ClassController {
 		String result = entryCode.toString();
 		
 		return result;
-	}
-	
-	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//나중에 지우기
-	public void getAllMyClass(Model model) {
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
-	public ClassesVO getClassInfo(@RequestParam(value = "classID") int classID) {
-		ClassesVO vo = classService.getClass(classID);
-		return vo;
-	}
-	
-//	@ResponseBody
-//	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
-//	public ClassesVO getClassInfo(@RequestParam(value = "classID") int classID, @RequestParam(value ="getEntryCode", defaultValue = "0") int getEntryCode) {
-//		System.out.println(getEntryCode);
-//		ClassesVO vo = classService.getClass(classID);
-//		if(getEntryCode == 0) {
-//			return vo;
-//		}
-//		else {
-//			return vo.getEntryCode(classID);
-//		}
-//	}
-	
-	@RequestMapping(value = "/addDays", method = RequestMethod.POST) 
-	public String addContent(ClassesVO vo) {
-		if (classService.updateDays(vo) != 0)
-			System.out.println("addDays 성공");
-		else
-			System.out.println("addDays 실패");
-		
-		return "ok";
 	}
 	
 	@RequestMapping(value="/insertClassroom", method = RequestMethod.POST)
@@ -136,6 +123,7 @@ public class ClassController {
 		if(classService.updateInstructorNull(classID) != 0) {
 			System.out.println("controller instructor null 성공");
 			if(classService.updateActive(classID) != 0) {
+				
 				System.out.println("controller class active null 성공");
 			}
 		}

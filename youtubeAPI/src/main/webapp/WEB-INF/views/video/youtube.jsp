@@ -892,7 +892,7 @@ $(document).ready(function(){
 					'contentType' : "application/json",
 					success : function(data) {
 						console.log("ajax video저장 완료!");
-						/* if(!confirm("플레이리스트가 저장되었습니다! 더 추가하시겠습니까?")){
+						if(!confirm("플레이리스트가 저장되었습니다! 더 추가하시겠습니까?")){
 							var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
 							location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/';
 						}
@@ -900,7 +900,6 @@ $(document).ready(function(){
 							deleteFromCart();
 							return false;
 						}
-						*/
 					},
 					error : function(error) {
 						
@@ -914,8 +913,7 @@ $(document).ready(function(){
 		}
 		
 	</script>
-	<div
-		class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
 		<jsp:include page="../outer_top.jsp" flush="false" />
 		
 		<!-- (jw ) -->
@@ -957,24 +955,20 @@ $(document).ready(function(){
 					          <div class="app-footer mb-2">
 					              <div class="app-footer__inner">
 					                  <div class="app-footer-left">
-					                  	
 					                  	<a href="javascript:void(0);" style="display:inline;">       
 			                            	<button class="btn btn-primary mr-3" onclick="insertVideo();">
 			                                  선택된 비디오 playlist에 추가
-			                              </button>
+			                              	</button>
 		                                </a>
-			                              
 					                  </div>
 					                  <!-- <div class="app-footer-right">
 					                      <button>
 					                         전체 비디오 playlist에 추가
-					                      </button>             
-					                  </div> -->
+					                      </button> 
+					                      -->            
 					              </div>
 					          </div>
-					      </div>
-                        
-                        
+					      </div>                        
                     </div>
                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div>
                 <!-- <div class="ps__rail-y" style="top: 0px; height: 446px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 151px;"></div></div></div> -->
@@ -984,7 +978,7 @@ $(document).ready(function(){
 
 		<div class="app-main">
 			<jsp:include page="../outer_left.jsp" flush="true" />
-
+ 
 			<div class="app-main__outer">
 				<div class="app-main__inner">
 					<button class="btn row" onclick="history.back();"> 
