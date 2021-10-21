@@ -71,6 +71,15 @@ function copyToClipboard(element) {
 	 navigator.clipboard.writeText($(element).text());
 }
 
+function updateStudent(obj){
+	/* var studentID = $(obj).parent().parent().children(); */
+	var studentID = $(obj).closest("div.row").find("input[id='studentID']").val();
+	console.log("check studentID ==>" , studentID);
+	/* $.ajax({
+		'type' : "POST"
+		'url' : $ 
+	}); */
+}
 
 	
 </script>
@@ -154,8 +163,94 @@ function copyToClipboard(element) {
 	   		</div>
 	   	</div>
    	</div>
-   	
-   <%-- <!-- 하영이가 원래 해놓은 부분 -->
+	 
+	<div class="modal fade" id="addStudentModal" tabindex="-1"
+		role="dialog" aria-labelledby="editContentModal" aria-hidden="true"
+		style="display: none;">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+
+					<div class="card-body" style="overflow-y: auto; height: 600px;">
+						<div class="row">
+							<div class="col-md-2 pr-0">
+								<button id="modalSubmit" type="button"
+								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">구성원
+								추가</button>
+							</div>
+							<div class="entryCode col-md-8" style="position:relative; display:none;">
+								<span id=link style="position: absolute; margin: 0; top:20%;"> 초대링크: www.onepageLMS.com/${classInfo.entryCode} </span>
+								<div class="entryCode float-right" style="display:none;">
+									<button class="btn btn-transition btn-primary" onclick="copyToClipboard('#link')" data-container="body" data-toggle="popover" data-placement="bottom" data-content="링크가 복사되었습니다!"> 복사하기 </button>
+								</div>
+							</div>
+							
+						</div>
+						
+
+						<ul class="list-group">
+							<p class="text-primary mt-3"> 허락 대기중 인원 </p>
+							<c:forEach var="person" items="${studentInfo}" varStatus="status">
+                            	<c:if test="${person.status == 'pending'}" >
+                            		<li class="list-group-item d-sm-inline-block"  
+										style="padding-top: 5px; padding-bottom: 30px">
+										<div class="row">
+											<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+												<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
+											</div>
+											<div class="titles col-sm-8 ">
+												<div class="row">
+													<input type="hidden" id='studentID' value="${person.studentID }" />
+													<p class="col-sm-12 mb-0">${person.studentName} </p>
+													<p class="col-sm-12 mb-0">${person.email} </p>
+													<p class="col-sm-12 mb-0">${person.phone }</p>
+												</div>
+											</div>
+											<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="updateStudent(this);"> 추가 </button></div>
+										</div> 
+                            		</li> 
+                            	</c:if>
+	                        </c:forEach>  							
+							
+							 <p class="text-primary mt-3"> 등록된 인원 </p>
+							 <c:forEach var="person" items="${studentInfo}" varStatus="status">
+							 	<c:if test="${person.status == 'accepted'}" >
+							 		<li class="list-group-item d-sm-inline-block"
+									style="padding-top: 5px; padding-bottom: 30px"> 
+										<div class="row">
+											<div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>
+											<div class="titles col-sm-8 ">
+											<div class="row">
+												<p class="col-sm-12 mb-0">${person.studentName } </p>
+												<p class="col-sm-12 mb-0">${person.email } </p>
+												<p class="col-sm-12 mb-0">${person.phone } </p></div>
+											</div>
+											<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
+										</div>	
+									</li>
+								</c:if>
+							</c:forEach>
+							</ul>
+					</div>
+				</div>
+				<!-- <div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-primary">저장</button>
+				</div> -->
+			</div>
+		</div>
+	</div>
+	
+	<%-- <!-- 하영이가 원래 해놓은 부분 -->
    <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
@@ -213,193 +308,6 @@ function copyToClipboard(element) {
 	        </div>
 	    </div>
 	</div> --%>
-	 
-	<div class="modal fade" id="addStudentModal" tabindex="-1"
-		role="dialog" aria-labelledby="editContentModal" aria-hidden="true"
-		style="display: none;">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-
-
-					<div class="card-body" style="overflow-y: auto; height: 600px;">
-						<div class="row">
-							<div class="col-md-2 pr-0">
-								<button id="modalSubmit" type="button"
-								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">구성원
-								추가</button>
-							</div>
-							<div class="entryCode col-md-8" style="position:relative; display:none;">
-								<span id=link style="position: absolute; margin: 0; top:20%;"> 초대링크: www.onepageLMS.com/${classInfo.entryCode} </span>
-								<div class="entryCode float-right" style="display:none;">
-									<button class="btn btn-transition btn-primary" onclick="copyToClipboard('#link')" data-container="body" data-toggle="popover" data-placement="bottom" data-content="링크가 복사되었습니다!"> 복사하기 </button>
-								</div>
-							</div>
-							
-						</div>
-						
-
-						<ul class="list-group">
-							<p class="text-primary mt-3"> 허락 대기중 인원 </p>
-							<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
-                            	
-                            	<c:if test="${takes[status.index].status == 'pending'}" >
-                            		<li class="list-group-item d-sm-inline-block"  
-										style="padding-top: 5px; padding-bottom: 30px">
-										<div class="row">
-											<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-												<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
-											</div>
-											<div class="titles col-sm-8 ">
-												<div class="row">
-													<p class="col-sm-12 mb-0">${takes[status.index].studentName} </p>
-													<p class="col-sm-12 mb-0">${takes[status.index].status} </p>
-												<p class="col-sm-12 mb-0">010-8687-5813</p></div>
-											</div>
-											<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
-										</div> 
-                            		</li> 
-                            	</c:if>
-	                        </c:forEach> 
-	                        
-	                        <!-- <p class="text-primary mt-3"> 허락 대기중 인원 </p>
-							<li class="list-group-item d-sm-inline-block"  
-								style="padding-top: 5px; padding-bottom: 30px">
-								
-								<div class="row">
-									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-										<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
-									</div>
-									<div class="titles col-sm-8 ">
-										<div class="row">
-											<p class="col-sm-12 mb-0">이예원</p>
-											<p class="col-sm-12 mb-0">yewon@gmail.com</p>
-										<p class="col-sm-12 mb-0">010-8687-5813</p></div>
-									</div>
-									<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
-								</div>	
-							</li>
-							
-							<li class="list-group-item d-sm-inline-block"
-								style="padding-top: 5px; padding-bottom: 30px">
-								
-								<div class="row">
-									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-										<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
-									</div>
-									<div class="titles col-sm-8 ">
-										<div class="row">
-											<p class="col-sm-12 mb-0"> 조하영 </p>
-											<p class="col-sm-12 mb-0">hayeong@gmail.com</p>
-										<p class="col-sm-12 mb-0">010-3588-7863</p></div>
-									</div>
-									<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
-								</div>	
-							</li>
-							
-							<li class="list-group-item d-sm-inline-block"
-								style="padding-top: 5px; padding-bottom: 30px">
-								
-								<div class="row">
-									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-										<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
-									</div>
-									<div class="titles col-sm-8 ">
-										<div class="row">
-											<p class="col-sm-12 mb-0"> 김은지 </p>
-											<p class="col-sm-12 mb-0">silverji@gmail.com</p>
-										<p class="col-sm-12 mb-0">010-1234-9999</p></div>
-									</div>
-									<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
-								</div>	
-							</li> -->
-							
-							
-							
-							 <p class="text-primary mt-3"> 등록된 인원 </p>
-							 <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
-							 	<c:if test="${takes[status.index].status == 'accepted'}" >
-							 		<li class="list-group-item d-sm-inline-block"
-									style="padding-top: 5px; padding-bottom: 30px"> 
-										<div class="row">
-											<div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>
-											<div class="titles col-sm-8 ">
-											<div class="row">
-												<p class="col-sm-12 mb-0">${takes[status.index].studentName } </p>
-												<p class="col-sm-12 mb-0">taetaeo@gmail.com</p>
-												<p class="col-sm-12 mb-0">010-8571-1453</p></div>
-											</div>
-											<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
-										</div>	
-									</li>
-								</c:if>
-							</c:forEach>
-							</ul>
-							
-							<!-- <li class="list-group-item d-sm-inline-block"
-								style="padding-top: 5px; padding-bottom: 30px">
-								<div class="row">
-									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-									</div>
-									<div class="titles col-sm-8 ">
-										<div class="row">
-											<p class="col-sm-12 mb-0"> 박다인 </p>
-											<p class="col-sm-12 mb-0">sky@gmail.com</p>
-										<p class="col-sm-12 mb-0">010-4568-7863</p></div>
-									</div>
-									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
-								</div>	
-							</li>
-							
-							<li class="list-group-item d-sm-inline-block"
-								style="padding-top: 5px; padding-bottom: 30px">
-								<div class="row">
-									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-									</div>
-									<div class="titles col-sm-8 ">
-										<div class="row">
-											<p class="col-sm-12 mb-0"> 이진우 </p>
-											<p class="col-sm-12 mb-0">joowon@naver.com</p>
-										<p class="col-sm-12 mb-0">010-7895-6677</p></div>
-									</div>
-									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
-								</div>	
-							</li>
-							
-							<li class="list-group-item d-sm-inline-block"
-								style="padding-top: 5px; padding-bottom: 30px">
-								<div class="row">
-									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-									</div>
-									<div class="titles col-sm-8 ">
-										<div class="row">
-											<p class="col-sm-12 mb-0"> 홍길동 </p>
-											<p class="col-sm-12 mb-0">allin@gmail.com</p>
-										<p class="col-sm-12 mb-0">010-9988-7766</p></div>
-									</div>
-									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
-								</div>	
-							</li> -->
-						<!-- </ul> -->
-					
-					</div>
-				</div>
-				<!-- <div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">취소</button>
-					<button type="button" class="btn btn-primary">저장</button>
-				</div> -->
-			</div>
-		</div>
-	</div>
-	
    	
 </body>
 
