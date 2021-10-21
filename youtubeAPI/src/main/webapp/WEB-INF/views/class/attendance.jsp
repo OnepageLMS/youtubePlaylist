@@ -57,8 +57,21 @@ $(document).ready(function(){
 			alert("실패");
 		}
 	}); */
+	$("#addStudentModal").on("hidden.bs.modal", function () {
+		console.log("hi there");
+		$('.entryCode').hide();
+	});
 });
-	
+
+function displayEntryCode(){
+	$('.entryCode').show();
+}
+
+function copyToClipboard(element) {
+	 navigator.clipboard.writeText($(element).text());
+}
+
+
 	
 </script>
 <body>
@@ -79,7 +92,6 @@ $(document).ready(function(){
                             	<span class="text-primary">${classInfo.className}</span> - 출석/학습현황 
                                 <a href="javascript:void(0);" data-toggle="modal" data-target="#addStudentModal" class="nav-link editPlaylistBtn" style="display:inline;">       
 	                            	<button class="mb-2 mr-2 btn-transition btn btn-outline-secondary" style="float: right; margin-top:5px"> 
-	                            		
 	                                		<i class="pe-7s-add-user fa-lg" style="margin-right:5px;"> </i>  구성원 관리
 	                                </button>
                                 </a>
@@ -130,7 +142,6 @@ $(document).ready(function(){
 		                                              
 		                                            
 	                                            </c:forEach>
-                                            
                                             </tbody>
                                         </table>
                                     </div>
@@ -144,7 +155,8 @@ $(document).ready(function(){
 	   	</div>
    	</div>
    	
-   <!-- <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
+   <%-- <!-- 하영이가 원래 해놓은 부분 -->
+   <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
@@ -154,34 +166,54 @@ $(document).ready(function(){
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	            
-	            	
                         <div class="card-body" style="overflow-y:auto; height:600px;">
                             <ul class="list-group">
-                            
                             	<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
-                            		
                             		<li class="list-group-item" style="padding-top : 5px; padding-bottom: 30px">
                             			<i class="pe-7s-close fa-lg" style="margin-right:30px"> </i>
                             			${takes[status.index].studentName}
-                            			
                             		</li>
-                            		
 	                            </c:forEach>
-	                            
-                                
                             </ul>
                         </div>
-                   
-                                       
 	            </div>
 	            <div class="modal-footer">
 	                <button id="modalSubmit" type="button" class="btn-transition btn btn-outline-secondary" onclick="#">구성원 추가</button>
 	            </div>
 	        </div>
 	    </div>
-	</div> -->
+	</div> --%>
 	
+    <%-- <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+                        <div class="card-body" style="overflow-y:auto; height:600px;">
+                            <ul class="list-group">
+                            	<!-- 이 부분에서 ${takes[status.index].status} == accepted \\ pending 인지에 따라 따로 구분하여
+                            	보여질 수 있도록 하기 . foreach문을ㅡ 2개 만들어서 위에는 pending,. 아래는 accpeted하면 될듯. -->
+                            	<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
+                            		<li class="list-group-item" style="padding-top : 5px; padding-bottom: 30px">
+                            			<i class="pe-7s-close fa-lg" style="margin-right:30px"> </i>
+                            			${takes[status.index].studentName}
+                            		</li>
+	                            </c:forEach>
+                            </ul>
+                        </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button id="modalSubmit" type="button" class="btn-transition btn btn-outline-secondary" onclick="#">구성원 추가</button>
+	            </div>
+	        </div>
+	    </div>
+	</div> --%>
+	 
 	<div class="modal fade" id="addStudentModal" tabindex="-1"
 		role="dialog" aria-labelledby="editContentModal" aria-hidden="true"
 		style="display: none;">
@@ -198,21 +230,47 @@ $(document).ready(function(){
 
 
 					<div class="card-body" style="overflow-y: auto; height: 600px;">
-						<button id="modalSubmit" type="button"
-							class="btn-transition btn btn-outline-secondary" onclick="#">구성원
-							추가</button>
+						<div class="row">
+							<div class="col-md-2 pr-0">
+								<button id="modalSubmit" type="button"
+								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">구성원
+								추가</button>
+							</div>
+							<div class="entryCode col-md-8" style="position:relative; display:none;">
+								<span id=link style="position: absolute; margin: 0; top:20%;"> 초대링크: www.onepageLMS.com/${classInfo.entryCode} </span>
+								<div class="entryCode float-right" style="display:none;">
+									<button class="btn btn-transition btn-primary" onclick="copyToClipboard('#link')" data-container="body" data-toggle="popover" data-placement="bottom" data-content="링크가 복사되었습니다!"> 복사하기 </button>
+								</div>
+							</div>
+							
+						</div>
+						
 
 						<ul class="list-group">
-
-							<%-- <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
-                            		
-                            		<li class="list-group-item" style="padding-top : 5px; padding-bottom: 30px">
-                            			<i class="pe-7s-close fa-lg" style="margin-right:30px"> </i>
-                            			${takes[status.index].studentName}
-                            		</li>
-	                            </c:forEach> --%>
-	                        <p class="text-primary mt-3"> 허락 대기중 인원 </p>
-							<li class="list-group-item d-sm-inline-block"
+							<p class="text-primary mt-3"> 허락 대기중 인원 </p>
+							<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
+                            	
+                            	<c:if test="${takes[status.index].status == 'pending'}" >
+                            		<li class="list-group-item d-sm-inline-block"  
+										style="padding-top: 5px; padding-bottom: 30px">
+										<div class="row">
+											<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
+												<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
+											</div>
+											<div class="titles col-sm-8 ">
+												<div class="row">
+													<p class="col-sm-12 mb-0">${takes[status.index].studentName} </p>
+													<p class="col-sm-12 mb-0">${takes[status.index].status} </p>
+												<p class="col-sm-12 mb-0">010-8687-5813</p></div>
+											</div>
+											<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
+										</div> 
+                            		</li> 
+                            	</c:if>
+	                        </c:forEach> 
+	                        
+	                        <!-- <p class="text-primary mt-3"> 허락 대기중 인원 </p>
+							<li class="list-group-item d-sm-inline-block"  
 								style="padding-top: 5px; padding-bottom: 30px">
 								
 								<div class="row">
@@ -261,34 +319,34 @@ $(document).ready(function(){
 									</div>
 									<div class="col-sm-2"><button class="btn btn-transition btn-primary"> 추가 </button></div>
 								</div>	
-							</li>
+							</li> -->
 							
 							
 							
 							 <p class="text-primary mt-3"> 등록된 인원 </p>
-							 <li class="list-group-item d-sm-inline-block"
-								style="padding-top: 5px; padding-bottom: 30px">
-								
-								<div class="row">
-									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-
-									</div>
-									<div class="titles col-sm-8 ">
+							 <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
+							 	<c:if test="${takes[status.index].status == 'accepted'}" >
+							 		<li class="list-group-item d-sm-inline-block"
+									style="padding-top: 5px; padding-bottom: 30px"> 
 										<div class="row">
-											<p class="col-sm-12 mb-0">김태인 </p>
-											<p class="col-sm-12 mb-0">taetaeo@gmail.com</p>
-										<p class="col-sm-12 mb-0">010-8571-1453</p></div>
-									</div>
-									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
-								</div>	
-							</li>
+											<div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>
+											<div class="titles col-sm-8 ">
+											<div class="row">
+												<p class="col-sm-12 mb-0">${takes[status.index].studentName } </p>
+												<p class="col-sm-12 mb-0">taetaeo@gmail.com</p>
+												<p class="col-sm-12 mb-0">010-8571-1453</p></div>
+											</div>
+											<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
+										</div>	
+									</li>
+								</c:if>
+							</c:forEach>
+							</ul>
 							
-							<li class="list-group-item d-sm-inline-block"
+							<!-- <li class="list-group-item d-sm-inline-block"
 								style="padding-top: 5px; padding-bottom: 30px">
-								
 								<div class="row">
 									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-										
 									</div>
 									<div class="titles col-sm-8 ">
 										<div class="row">
@@ -302,10 +360,8 @@ $(document).ready(function(){
 							
 							<li class="list-group-item d-sm-inline-block"
 								style="padding-top: 5px; padding-bottom: 30px">
-								
 								<div class="row">
 									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-										
 									</div>
 									<div class="titles col-sm-8 ">
 										<div class="row">
@@ -319,10 +375,8 @@ $(document).ready(function(){
 							
 							<li class="list-group-item d-sm-inline-block"
 								style="padding-top: 5px; padding-bottom: 30px">
-								
 								<div class="row">
 									<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-										
 									</div>
 									<div class="titles col-sm-8 ">
 										<div class="row">
@@ -332,12 +386,10 @@ $(document).ready(function(){
 									</div>
 									<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
 								</div>	
-							</li>
-
-						</ul>
+							</li> -->
+						<!-- </ul> -->
+					
 					</div>
-
-
 				</div>
 				<!-- <div class="modal-footer">
 					<button type="button" class="btn btn-secondary"

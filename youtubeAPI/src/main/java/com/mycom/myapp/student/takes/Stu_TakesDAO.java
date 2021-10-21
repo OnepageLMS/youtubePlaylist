@@ -35,5 +35,10 @@ public class Stu_TakesDAO {
 	public List<Stu_TakesVO> getAllClassStudent(int classID){
 		return sqlSession.selectList("Takes.getAllClassStudent", classID);
 	}
+	
+	public List<Stu_TakesVO> getStudentInfo(int classID) {
+		return sqlSession.selectList("Takes.getStudentInfo", classID);
+	}
+
 
 }

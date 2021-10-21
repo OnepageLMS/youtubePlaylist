@@ -33,5 +33,10 @@
 		where classID=#{classID}
 	</select>
 	
+	<select id="getStudentInfo" resultType="TakesVO">
+		select * from lms_takes inner join lms_student where
+		lms_takes.studentID = lms_student.id and classID = #{classID}
+	</select>
+	
 
 </mapper>

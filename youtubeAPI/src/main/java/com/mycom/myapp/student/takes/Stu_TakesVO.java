@@ -6,7 +6,11 @@ public class Stu_TakesVO {
 	private String studentName;
 	private String className;
 	private int classID;
+	private String status;
 	private boolean pass; //db에는 varchar로 선언
+	
+	private String email;
+	private String phone;
 	
 	public int getId() {
 		return id;
@@ -38,11 +42,29 @@ public class Stu_TakesVO {
 	public void setClassID(int classID) {
 		this.classID = classID;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public boolean isPass() {
 		return pass;
 	}
 	public void setPass(boolean pass) {
 		this.pass = pass;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	
 }
