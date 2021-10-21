@@ -196,7 +196,6 @@ public class VideoController {
  				}
  				else {
  					System.out.println("playlist 썸네일 추가 실패! ");
- 				
  				}
  			}
  			
