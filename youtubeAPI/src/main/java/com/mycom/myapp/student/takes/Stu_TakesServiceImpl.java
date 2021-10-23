@@ -52,4 +52,9 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 		return stu_TakesDAO.getStudentInfo(classID);
 	}
 
+	@Override
+	public int updateStatus(Stu_TakesVO vo) {
+		return stu_TakesDAO.updateStatus(vo);
+	}
+
 }
