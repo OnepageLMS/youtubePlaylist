@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
@@ -48,7 +50,7 @@ public class AttendanceController {
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
-		// 학생 email, phone 정보 
+		// 학생 email, phone 정보 (jw)
 		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classId));
 		return "class/attendance";
 	}	
@@ -59,4 +61,12 @@ public class AttendanceController {
 		
 		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
 	}
+	
+	//(jw) 
+	@ResponseBody
+	@RequestMapping(value ="/allowTakes", method = RequestMethod.POST)
+	public int allowTakes(@RequestBody Stu_TakesVO vo) {
+		return stu_takesService.updateStatus(vo);
+	}
+	
 } 

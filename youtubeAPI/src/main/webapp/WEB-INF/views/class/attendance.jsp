@@ -71,14 +71,33 @@ function copyToClipboard(element) {
 	 navigator.clipboard.writeText($(element).text());
 }
 
-function updateStudent(obj){
+function allowStudent(obj){
 	/* var studentID = $(obj).parent().parent().children(); */
 	var studentID = $(obj).closest("div.row").find("input[id='studentID']").val();
 	console.log("check studentID ==>" , studentID);
-	/* $.ajax({
-		'type' : "POST"
-		'url' : $ 
-	}); */
+
+	console.log(${classInfo.id});	
+	var classID = ${classInfo.id};
+
+	var objParams = {
+		studentID : studentID,
+		status : "accepted",
+		classID : classID,
+	};
+
+	$.ajax({
+		'type' : 'POST',
+		'url' : '${pageContext.request.contextPath}/attendance/allowTakes',
+		'data' : JSON.stringify(objParams),
+		'contentType' : "application/json",
+		'dataType' : "text",
+		success : function(data){
+			alert('학생 강의실 승낙 성공! ');
+		}, 
+		error:function(request,status,error){
+	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+	       }	
+	});
 }
 
 	
@@ -214,7 +233,7 @@ function updateStudent(obj){
 													<p class="col-sm-12 mb-0">${person.phone }</p>
 												</div>
 											</div>
-											<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="updateStudent(this);"> 추가 </button></div>
+											<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent(this);"> 추가 </button></div>
 										</div> 
                             		</li> 
                             	</c:if>

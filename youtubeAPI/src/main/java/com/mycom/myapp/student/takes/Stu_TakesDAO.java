@@ -39,6 +39,10 @@ public class Stu_TakesDAO {
 	public List<Stu_TakesVO> getStudentInfo(int classID) {
 		return sqlSession.selectList("Takes.getStudentInfo", classID);
 	}
+	
+	public int updateStatus(Stu_TakesVO vo) {
+		return sqlSession.update("Takes.updateStatus", vo);
+	}
 
 
 }

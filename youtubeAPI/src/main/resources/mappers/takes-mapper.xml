@@ -39,10 +39,10 @@
 		lms_takes.studentID = lms_student.id and classID = #{classID}
 	</select>
 	
-	<update id="updateStatus">
+	<update id="updateStatus"> 
 		update lms_takes
 		set status=#{status}
-		where studentID=#{studentID} 
+		where studentID=#{studentID} and classID=#{classID}
 	</update>
 	
 
