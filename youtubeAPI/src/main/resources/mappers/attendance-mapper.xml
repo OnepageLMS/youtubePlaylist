@@ -22,5 +22,10 @@
 		select * from lms_attendance
 		where id=#{id}
 	</select>
+	
+	<select id="getAttendanceID" resultType="attendance">
+		select id from lms_attendance
+		where classID=#{classID} and instructorID=#{instructorID} and days=#{days}
+	</select>
 
 </mapper>

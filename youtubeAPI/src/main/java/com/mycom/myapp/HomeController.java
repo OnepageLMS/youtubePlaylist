@@ -30,7 +30,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.mycom.myapp.attendance.AttendanceService;
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
@@ -67,6 +69,10 @@ public class HomeController {
 	
 	@Autowired
 	private ClassesService classService;	//임의로 example 함수에 사용하려 추가함
+	
+	@Autowired
+	private AttendanceService attendanceService;
+	
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -164,39 +170,6 @@ public class HomeController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/readCSV", method = RequestMethod.POST)
-	public List<List<String>> readCSV(HttpServletRequest request, Model model) throws Exception {
-		
-		List<List<String>> csvList = new ArrayList<List<String>>();
-        File csv = new File("/Users/mac/downloads/0402.csv");
-        BufferedReader br = null;
-        String line = "";
-
-        try {
-            br = new BufferedReader(new FileReader(csv));
-            while ((line = br.readLine()) != null) { // readLine()은 파일에서 개행된 한 줄의 데이터를 읽어온다.
-                List<String> aLine = new ArrayList<String>();
-                String[] lineArr = line.split(","); // 파일의 한 줄을 ,로 나누어 배열에 저장 후 리스트로 변환한다.
-                aLine = Arrays.asList(lineArr);
-                csvList.add(aLine);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (br != null) { 
-                    br.close(); // 사용 후 BufferedReader를 닫아준다.
-                }
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return csvList;
-	}
-	
-	@ResponseBody
 	@RequestMapping(value = "/uploadCSV", method = RequestMethod.POST)
 	public List<List<String>> uploadCSV(MultipartHttpServletRequest request, Model model) throws Exception {
 		System.out.println("오긴해..?");
@@ -240,6 +213,25 @@ public class HomeController {
 		return "entryCode";
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/whichAttendance", method = RequestMethod.POST)
+	public int whichAttendance(HttpServletRequest request) {
+		System.out.println("enter??");
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		int instructorID = Integer.parseInt(request.getParameter("instructorID"));
+		int days = Integer.parseInt(request.getParameter("days"));
+		
+		AttendanceVO avo = new AttendanceVO();
+		avo.setClassID(classID);
+		avo.setInstructorID(instructorID);
+		avo.setDays(days);
+		
+		System.out.println(attendanceService.getAttendanceID(avo));
+		
+		return attendanceService.getAttendanceID(avo).getId();
+		
+		
+	}
 	
 //	@RequestMapping(value = "/deletePlaylist", method = RequestMethod.POST)
 //	@ResponseBody

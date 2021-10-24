@@ -9,6 +9,7 @@ public interface AttendanceService {
 	public int updateAttendance(AttendanceVO vo);
 	public int deleteAttendance(int id);
 	public AttendanceVO getAttendance(int id);
+	public AttendanceVO getAttendanceID(AttendanceVO vo);
 	public List<AttendanceVO> getAttendanceList(AttendanceVO vo);
 	
 }

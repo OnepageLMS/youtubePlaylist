@@ -33,6 +33,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 	
 	@Override
+	public AttendanceVO getAttendanceID(AttendanceVO vo){
+		return attendanceDAO.getAttendanceID(vo);
+	}
+	
+	@Override
 	public List<AttendanceVO> getAttendanceList(AttendanceVO vo){
 		return attendanceDAO.getAttendanceList(vo);
 	}

@@ -81,17 +81,10 @@ $(document).ready(function(){
 			classID : 1
 		},
 		success : function(data){
-			console.log("성공");
-			//console.log(data);
-			console.log(data);
-			
 			stuNameList = new Array();
 			
 			for(var i=0; i<data.length; i++)
-				stuNameList.push(data[i].studentName);
-			
-			for(var i=0;i<stuNameList.length;i++)
-			    console.log("잘들어옴!" + stuNameList[i]);
+				stuNameList.push(data[i].studentName); //takes테이블에 있는 학생들의 이름
 			
 		}, 
 		error : function(err){
@@ -113,16 +106,29 @@ $(document).ready(function(){
 			'type' : 'POST',
 			success: function(data){
 				csvNameList = data;
-				alert(data);
+				alert(data[0][0]);
 				console.log(data);
-
+				
+				for(var i=0; i<data[0].length; i++){
+					console.log(data[0][i]);
+					$("showAttendance").append('<th> ' + data[0][i] +' </th>');
+				}
+				
+				for(var i=0; i<data.length; i++){
+					for(var j=0; j<data[0].length; j++){
+						$("showAttendance").append(data[i][j]);
+					}
+					
+				}
+				// $("showAttendance").append(data);
+				 
 				whoIsAttend(csvNameList, stuNameList);
 				console.log("whoIsAttend실행 ");
 				timeLimit();
 			},
 			error : function(err){
 				alert("실패");
-			}
+			},
 		});
 	});
 	
@@ -243,7 +249,6 @@ function timeLimit(){ //지금은 오전 10시와 오후 1시에 대해서는 �
 					  		$(".takeZoom"+seq).eq(r).val(3).prop("selected", true); 
 					  		break;
 					  }
-					  console.log(name.data);
 
 				}
 				
@@ -256,10 +261,33 @@ function timeLimit(){ //지금은 오전 10시와 오후 1시에 대해서는 �
 		
 	}
 }
+
+function updateAttendance(days){
+	//attendanceID를 알아야한다. 그러기 위해서는 classID, days, instructorID가 필요하다.
+	console.log("days : " + days);
+	
+	$.ajax({ 
+		'type' : "post",
+		'url' : "${pageContext.request.contextPath}/whichAttendance",
+		'data' : { //나중에 수정 
+			classID : 1,
+			instructorID : 1,
+			days : days
+		},
+		success : function(data){
+			attendanceID = data;
+			
+		}, 
+		error : function(err){
+			alert("실패");
+		}
+	});
+	
+}
+
 	
 	
 </script>
-<body>
 
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -289,7 +317,7 @@ function timeLimit(){ //지금은 오전 10시와 오후 1시에 대해서는 �
                     
                     <div class="row">
 	
-						<div class="col-md-3">
+					<!--  	<div class="col-md-3">
 				        	<div class="main-card mb-3 card">
 				                 <div class="card-body"><h5 class="card-title">ZOOM 출석체크 !</h5>
 				                      <form id="attendForm" enctype="multipart/form-data">
@@ -319,10 +347,9 @@ function timeLimit(){ //지금은 오전 10시와 오후 1시에 대해서는 �
 				                     </form>
 				                  </div>
 				             </div>
-				         </div>
+				         </div>-->
                     	
-                    	
-                    	<div class="col-lg-9">
+                    	<div class="col-lg-12">
                          	<div class="main-card mb-3 card">
                                     <div class="card-body">
                                         <table class="mb-0 table table-bordered takes">
@@ -331,14 +358,18 @@ function timeLimit(){ //지금은 오전 10시와 오후 1시에 대해서는 �
                                             	<!-- <th colspan="2"> # </th>-->
                                             	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
 	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-	                                                <th style="text-align:center" colspan=2>${j} 차시 </th>
+	                                                <th style="text-align:center" colspan=2>${j} 차시
+	                                                	<button type="button" class="btn btn-secondary" onclick="updateAttendance(${j}-1)" >업데이트</button>
+	                                                 </th>
 	                                            </c:forEach>
                                             </tr>
                                             
                                             <tr>
                                             	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
                                             		<td id="zoomAttend" style="text-align:center">
-                                            			<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
+                                            			<a href="javascript:void(0);" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
+                                            				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
+                                            			</a>
                                             		</td>
 				                                    <td  id="lmsAttend" style="text-align:center"> LMS </td>
 				                                </c:forEach>
@@ -381,14 +412,72 @@ function timeLimit(){ //지금은 오전 10시와 오후 1시에 대해서는 �
                     	</div>
                     
                     </div> 
+                    
+                   <div>
+                   
+	                  	<div class="main-card mb-3 card">
+	                    	<div id="showAttendance" class="card-body"></div>
+	                    </div>
+                   </div>
         		</div>
         		<jsp:include page="outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
    	</div>
+   	
+   	
+   		<!-- edit classContent modal -->
+    <div class="modal fade" id="editAttendance" tabindex="-1" role="dialog" aria-labelledby="editAttendance" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="editAttendanceLabel">ZOOM 출석체크</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            
+	            <form id="attendForm" enctype="multipart/form-data">
+		            <div class="modal-body">
+		               <div class="position-relative form-group">
+		               		<label for="editAttendanceSequence" class="">출석체크할 차시를 입력하세요 </label>
+		               		<input name="seq" id="seq" class="form-control"  value="0"> 차시 
+		               </div>
+				             
+				             <label for="startTime" class="">출석을 인정할 시작시간을 입력하세요</label>             
+		               <div class="position-relative form-group">
+		               		
+		               		<input name="start" id="startTimeH" placeholder="시" class="form-control"> 
+		               		<input name="start" id="startTimeM" placeholder="분" class="form-control"> 
+		               </div>
+		               
+		               <div class="position-relative form-group">
+		               		<label for="endTime" class="">출석을 인정할 마감시간을 입력하세요</label>
+					      	<input name="end" id="endTimeH" placeholder="시" class="form-control"> 
+					        <input name="end" id="endTimeM" placeholder="분" class="form-control"> 
+		               </div>
+		               
+		               
+					  <div class="position-relative form-group input-group">
+					       <input name="file" id="exampleFile" type="file" class="form-control-file">
+					  </div>
+		               
+		               
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+		            	<button id="button" type="submit" class="mt-1 btn btn-primary" data-dismiss="modal">Submit</button>
+		            </div>
+	            
+	           </form>
+	        </div>
+	    </div>
+	</div>
 
 	
 </body>
+
+
 
 
 </html>
