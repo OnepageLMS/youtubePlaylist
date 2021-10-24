@@ -72,12 +72,13 @@ function copyToClipboard(element) {
 	 navigator.clipboard.writeText($(element).text());
 }
 
-function allowStudent(obj){
+function allowStudent(studentID){
 	/* var studentID = $(obj).parent().parent().children(); */
-	var studentID = $(obj).closest("div.row").find("input[id='studentID']").val();
-	console.log("check studentID ==>" , studentID);
+/* 	var studentID = $(obj).closest("div.row").find("input[id='studentID']").val();
+	console.log("check studentID ==>" , studentID); */
 
-	console.log(${classInfo.id});	
+	console.log("studentID ==> " + studentID);	
+	console.log("classID ==> " + ${classInfo.id});	
 	var classID = ${classInfo.id};
 
 	var objParams = {
@@ -94,15 +95,47 @@ function allowStudent(obj){
 		'dataType' : "text",
 		success : function(data){
 			alert('학생 강의실 승낙 성공! ');
-			getAllStudentInfo();
+			showAllStudentInfo();
 		}, 
 		error:function(request,status,error){
 	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
-	       }	
+	    }	
 	});
 }
 
-function getAllStudentInfo(){
+function deleteRequest(studentID, option){
+	console.log("삭제 버튼 되는지 확인 => ", studentID);
+	if(option == 1){
+		if(!confirm("해당 학생의 요청을 삭제하시겠습니까? ")){
+			return false;
+		}
+	}
+	else {
+		if(!confirm("주의!! 해당 학생의 모든 수업 정보는 사라지게 됩니다. 진행하시겠습니까? ")){
+			return false;
+		}
+	}
+	var classID = ${classInfo.id};
+	var objParams = {
+		studentID : studentID,
+		classID : classID,
+	}
+	
+	$.ajax({
+		'type' : 'POST',
+		'url' : '${pageContext.request.contextPath}/attendance/deleteTakes',
+		'data' : JSON.stringify(objParams),
+		'contentType' : "application/json",
+		success : function(data){
+			showAllStudentInfo();
+		},
+		error:function(request,status,error){
+	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+	    }	
+	});
+}
+
+function showAllStudentInfo(){
 	$.ajax({
 		'type' : 'GET',
 		'url' : '${pageContext.request.contextPath}/attendance/updateTakesList',
@@ -119,21 +152,30 @@ function getAllStudentInfo(){
         				'<li class="list-group-item d-sm-inline-block" style="padding-top: 5px; padding-bottom: 30px">'
         					+ '<div class="row">'
         						+ '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
-        							+ '<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>'
+        							+ '<span onclick="deleteRequest( ' + value.studentID + ' ,1)">'
+        							+ '<i class="pe-7s-close fa-lg" style="margin-right: 30px; cursor:pointer" > </i>'
+        							+ '</span>'
        							+ '</div>'
-       							+ '<div class="titles col-sm-8 ">'
+       							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
-	       								+ '<input type="hidden" id="studentID" value="${person.studentID }" />'
 	      								+ '<p class="col-sm-12 mb-0">' + value.studentName + ' </p>'
 	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
 	       								+ '<p class="col-sm-12 mb-0">' + value.phone + '</p>'
 	    							+ '</div>'
     							+ '</div>'
-    						+ '<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent(this);"> 추가 </button></div>'
+    							+ '<div class="col-sm-4">'
+    							+ '<div class="row">'
+	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">신청일자  </p>'
+									<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
+									<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
+									+ '<p class="col-sm-12 mb-0" style="text-align:center">' + value.regDate + ' </p>'
+								+ '</div>'
+								+ '</div>' 
+    						+ '<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent('+ value.studentID + ');"> 추가 </button></div>'
     						+ '</div>'
     					+ '</li>';
-        			}	    		
-			}); 
+        			}
+			});
 
 			updatedStudentList += '<p class="text-primary mt-3"> 등록된 인원 </p>';
 			
@@ -143,7 +185,6 @@ function getAllStudentInfo(){
 	    				'<li class="list-group-item d-sm-inline-block" style="padding-top: 5px; padding-bottom: 30px">'
 	    					+ '<div class="row">'
 	    						+ '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
-	    							+ '<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>'
 	   							+ '</div>'
 	   							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
@@ -158,9 +199,9 @@ function getAllStudentInfo(){
 	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">등록일자  </p>'
 									<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
 									<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
-									+ '<p class="col-sm-12 mb-0" style="text-align:center"> ${person.regDate} </p>'
+									+ '<p class="col-sm-12 mb-0" style="text-align:center">' + value.modDate + ' </p>'
 								+ '</div>'
-							+ ' </div>'    
+								+ '</div>'    
 							+ '<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>'
 							+ '</div>'
 						+ '</li>';
@@ -184,7 +225,7 @@ function getAllStudentInfo(){
 		<div class="app-main">
 		 	<jsp:include page="../outer_left.jsp" flush="false">
 		 		<jsp:param name="className" value="${classInfo.className}"/>	
-		 		<jsp:param name="menu"  value="notice"/>
+		 		<jsp:param name="menu" value="notice"/>
 		 	</jsp:include>
 		 	
         	<div class="app-main__outer">
@@ -298,11 +339,12 @@ function getAllStudentInfo(){
 										style="padding-top: 5px; padding-bottom: 30px">
 										<div class="row">
 											<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
-												<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
+												<span onclick="deleteRequest(${person.studentID}, 1)">
+													<i class="pe-7s-close fa-lg" style="margin-right: 30px; cursor:pointer"> </i>
+												</span>
 											</div>
 											<div class="titles col-sm-4 ">
 												<div class="row">
-													<input type="hidden" id='studentID' value="${person.studentID }" />
 													<p class="col-sm-12 mb-0">${person.studentName} </p>
 													<p class="col-sm-12 mb-0">${person.email} </p>
 													<p class="col-sm-12 mb-0">${person.phone }</p>
@@ -316,7 +358,7 @@ function getAllStudentInfo(){
 													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.regDate} </p>
 												</div>
 											 </div> 
-											<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent(this);"> 추가 </button></div>
+											<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent(${person.studentID});"> 추가 </button></div>
 										</div> 
                             		</li> 
                             	</c:if>
@@ -338,12 +380,10 @@ function getAllStudentInfo(){
 											<div class="col-sm-4">
 												<div class="row">
 													<p class="col-sm-12 mb-0" style="text-align:center">등록일자  </p>
-													<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
-													<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
-													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.regDate} </p>
+													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.modDate} </p>
 												</div>
 											 </div> 
-											<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
+											<div class="col-sm-2"><button class="btn btn-transition btn-danger" onclick="deleteRequest(${person.studentID}, 2)" > 삭제  </button></div>
 										</div>	
 									</li>
 								</c:if>

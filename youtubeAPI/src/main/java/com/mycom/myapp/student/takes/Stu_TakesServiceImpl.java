@@ -20,9 +20,9 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 	}
 
 	@Override
-	public int deleteStudent(int id) {
+	public int deleteStudent(Stu_TakesVO vo) {
 		// TODO Auto-generated method stub
-		return stu_TakesDAO.deleteStudent(id);
+		return stu_TakesDAO.deleteStudent(vo);
 	}
 
 	@Override

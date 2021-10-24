@@ -70,6 +70,13 @@ public class AttendanceController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value ="/deleteTakes" , method = RequestMethod.POST)
+	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
+		System.out.println(vo.getClassID() + vo.getStudentID());
+		return stu_takesService.deleteStudent(vo);
+	}
+	
+	@ResponseBody
 	@RequestMapping(value="/updateTakesList", method = RequestMethod.GET)
 	public Object updateList(@RequestParam(value = "classID") int classID, Model model) {
 //		model.addAttribute("classInfo", classService.getClass(classID));

@@ -123,7 +123,6 @@ public class ClassController {
 		if(classService.updateInstructorNull(classID) != 0) {
 			System.out.println("controller instructor null 성공");
 			if(classService.updateActive(classID) != 0) {
-				
 				System.out.println("controller class active null 성공");
 			}
 		}
