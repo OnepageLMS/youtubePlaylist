@@ -12,6 +12,7 @@ public class Stu_TakesVO {
 	private String email;
 	private String phone;
 	private String regDate;
+	private String modDate;
 	
 	public int getId() {
 		return id;
@@ -72,6 +73,12 @@ public class Stu_TakesVO {
 	}
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
+	}
+	public String getModDate() {
+		return modDate;
+	}
+	public void setModDate(String modDate) {
+		this.modDate = modDate;
 	}
 	
 }

@@ -16,7 +16,7 @@
 	</update>
 	
 	<delete id="deleteTakes">
-		delete from lms_takes where id=#{id}
+		delete from lms_takes where studentID=#{studentID} and classID=#{classID} 
 	</delete>
 	
 	<select id="getTakes" resultType="TakesVO">
@@ -37,15 +37,15 @@
 	<select id="getStudentInfo" resultType="TakesVO">
 		<!-- select * from lms_takes as A inner join lms_student as B where
 		lms_takes.studentID = lms_student.id and classID = #{classID} -->
-		select A.studentID, A.studentName, A.classID, A.status, A.regDate, B.name, B.email, B.phone 
+		select A.studentID, A.studentName, A.classID, A.status, A.regDate, A.modDate, B.name, B.email, B.phone 
 		from lms_takes A inner join lms_student B on
 		A.studentID = B.id and classID = #{classID}
-	</select>
+	</select> 
 	
 	<update id="updateStatus"> 
 		update lms_takes
 		set status=#{status}
-		where studentID=#{studentID} and classID=#{classID}
+		where studentID=#{studentID} and classID=#{classID} 
 	</update>
 	
 </mapper> 

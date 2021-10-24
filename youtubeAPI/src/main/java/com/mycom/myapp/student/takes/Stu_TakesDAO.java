@@ -16,8 +16,8 @@ public class Stu_TakesDAO {
 		return sqlSession.insert("Takes.insertTakes", vo);
 	}
 
-	public int deleteStudent(int id) {
-		return sqlSession.delete("Takes.deleteTakes", id);
+	public int deleteStudent(Stu_TakesVO vo) {
+		return sqlSession.delete("Takes.deleteTakes", vo);
 	}
 
 	public int updateStudent(Stu_TakesVO vo) {
