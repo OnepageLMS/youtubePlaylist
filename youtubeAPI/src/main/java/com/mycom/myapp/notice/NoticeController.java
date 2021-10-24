@@ -100,7 +100,7 @@ public class NoticeController {
 		List<NoticeVO> list = noticeService.getAllNotice(id);
 		
 		if(list != null) 
-			System.out.println("notice list가져오기 성공!");
+			System.out.println("teacher_notice list가져오기 성공!");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("notices", list);
