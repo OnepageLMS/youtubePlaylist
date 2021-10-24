@@ -34,6 +34,11 @@ public class AttendanceDAO {
 		return vo;
 	}
 	
+	public AttendanceVO getAttendanceID(AttendanceVO vo) {
+		AttendanceVO result = sqlSession.selectOne("Attendance.getAttendanceID", vo);
+		return result;
+	}
+	
 	public List<AttendanceVO> getAttendanceList(AttendanceVO vo){
 		List<AttendanceVO> result = sqlSession.selectList("Attendance.getAttendanceList", vo);
 		return result;

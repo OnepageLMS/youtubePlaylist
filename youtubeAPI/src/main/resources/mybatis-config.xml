@@ -11,6 +11,7 @@
 		<typeAlias alias="notice" type="com.mycom.myapp.commons.NoticeVO" />
 		<typeAlias alias="attendance" type="com.mycom.myapp.commons.AttendanceVO" />
 		
+		<typeAlias alias="AttendanceCheckVO" type="com.mycom.myapp.attendanceCheck.AttendanceCheckVO" />
 		<typeAlias alias="VideoCheckVO" type="com.mycom.myapp.student.videocheck.Stu_VideoCheckVO" />
         <typeAlias alias="PlaylistCheckVO" type="com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO" />
         <typeAlias alias="TakesVO" type="com.mycom.myapp.student.takes.Stu_TakesVO" />
