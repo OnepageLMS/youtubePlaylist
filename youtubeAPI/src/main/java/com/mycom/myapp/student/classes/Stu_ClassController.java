@@ -24,6 +24,7 @@ import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
+import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
 
@@ -49,6 +50,9 @@ public class Stu_ClassController{
 	
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private Stu_NoticeService noticeService;
 	
 	private int studentId;
 	

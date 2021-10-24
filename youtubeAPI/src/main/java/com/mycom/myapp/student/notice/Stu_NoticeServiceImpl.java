@@ -26,5 +26,15 @@ public class Stu_NoticeServiceImpl implements Stu_NoticeService{
 	public int updateViewCount(int id) {
 		return noticeDAO.updateViewCount(id);
 	}
+	
+	@Override
+	public int countNotice(int classID) {
+		return noticeDAO.countNotice(classID);
+	}
+	
+	@Override
+	public int countNoticeCheck(int studentID) {
+		return noticeDAO.countNotice(studentID);
+	}
 
 }

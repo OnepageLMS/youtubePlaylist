@@ -27,9 +27,11 @@
 <script>
 	var classID = ${classID};
 	var notices;
+	var totalStudent = 0;
 	
 	$(document).ready(function(){
-		getAllNotices();
+		getClassInfo();
+		//getAllNotices();
 		
 		$("#publishNoticeBtn").click(function () {
 			$('#inputNoticeForm')[0].reset();
@@ -39,11 +41,12 @@
 	function getClassInfo(){
 		$.ajax({
 			type: 'post',
-			url: '${pageContext.request.contextPath}',
+			url: '${pageContext.request.contextPath}/getClassInfo',
 			data: {classID, classID},
 			datatype: 'json',
 			success: function(data){
-
+				totalStudent = data.totalStudent;
+				getAllNotices();
 				},
 			error: function(data, status,error){
 				console.log('강의실 정보 가져오기 실패!');
@@ -75,7 +78,7 @@
 						//var regDate = value.regDate;
 						var regDate = value.regDate.split(" ")[0];
 						var important = value.important;
-						var viewCount = value.viewCount;
+						var viewCount = (value.viewCount/totalStudent) * 100;
 
 						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
 						else important = '';
@@ -90,7 +93,7 @@
 																														+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
 											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
 										+ '</button>'
-										+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '명 읽음</div>'
+										+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '% 읽음</div>'
 										+ '<div class="col-3">작성일 ' + regDate + '</div>'
 										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 btn">'
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
@@ -221,7 +224,7 @@
         			<div class="app-page-title">
                     	<div class="page-title-wrapper align-items-center">
                         	<div class="page-title-heading mr-3">
-                            	<h4><span class="text-primary">${className}</span> - 공지</h4>	
+                            	<h4><span class="text-primary displayClassName">${className}</span> - 공지</h4>	
                             </div>
                             <div class="search-wrapper">
 			                    <div class="input-holder">

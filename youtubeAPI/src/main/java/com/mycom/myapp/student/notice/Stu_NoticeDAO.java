@@ -24,5 +24,13 @@ public class Stu_NoticeDAO {
 	public int updateViewCount(int id) {
 		return sqlSession.update("Stu_Notice.updateViewCount", id);
 	}
+	
+	public int countNotice(int classID) {
+		return sqlSession.selectOne("Stu_Notice.getCountNotice", classID);
+	}
+	
+	public int countNoticeCheck(int studentID) {
+		return sqlSession.selectOne("Stu_Notice.getCountNoticeCheck", studentID);
+	}
 
 }
