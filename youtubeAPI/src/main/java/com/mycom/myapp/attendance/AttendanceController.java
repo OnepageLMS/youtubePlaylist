@@ -69,4 +69,42 @@ public class AttendanceController {
 		return stu_takesService.updateStatus(vo);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="/updateTakesList", method = RequestMethod.GET)
+	public Object updateList(@RequestParam(value = "classID") int classID, Model model) {
+//		model.addAttribute("classInfo", classService.getClass(classID));
+//		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classID));
+		
+		List<Stu_TakesVO> takesList = new ArrayList<Stu_TakesVO>();
+		takesList = stu_takesService.getStudentInfo(classID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("studentInfo", takesList);
+
+		return map; 
+	}
+	
 } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

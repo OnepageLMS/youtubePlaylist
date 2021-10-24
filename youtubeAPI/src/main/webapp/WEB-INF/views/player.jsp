@@ -259,8 +259,7 @@ img {
 		}
 		
 		function getAllPlaylist() { //all playlist 출력
-			$
-					.ajax({
+			$.ajax({
 						type : 'post',
 						url : '${pageContext.request.contextPath}/playlist/getAllPlaylist',
 						async : false,
@@ -442,8 +441,6 @@ img {
 													40)
 													+ " ...";
 										}
-										
-
 										if(value.newTitle == null){
 											//console.log(value.newTitle);
 											value.newTitle = title;

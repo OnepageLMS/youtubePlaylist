@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -93,10 +94,84 @@ function allowStudent(obj){
 		'dataType' : "text",
 		success : function(data){
 			alert('학생 강의실 승낙 성공! ');
+			getAllStudentInfo();
 		}, 
 		error:function(request,status,error){
 	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 	       }	
+	});
+}
+
+function getAllStudentInfo(){
+	$.ajax({
+		'type' : 'GET',
+		'url' : '${pageContext.request.contextPath}/attendance/updateTakesList',
+		'data' : {classID : ${classInfo.id}},
+		success : function(data) {
+			$('.studentList').empty();
+			var list = data.studentInfo;
+			console.log(list);
+			var updatedStudentList = '<p class="text-primary mt-3"> 허락 대기중 인원 </p>';
+			
+			$.each(list, function(index, value){
+        			if(value.status == "pending"){
+        				updatedStudentList +=
+        				'<li class="list-group-item d-sm-inline-block" style="padding-top: 5px; padding-bottom: 30px">'
+        					+ '<div class="row">'
+        						+ '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
+        							+ '<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>'
+       							+ '</div>'
+       							+ '<div class="titles col-sm-8 ">'
+	       							+ '<div class="row">'
+	       								+ '<input type="hidden" id="studentID" value="${person.studentID }" />'
+	      								+ '<p class="col-sm-12 mb-0">' + value.studentName + ' </p>'
+	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
+	       								+ '<p class="col-sm-12 mb-0">' + value.phone + '</p>'
+	    							+ '</div>'
+    							+ '</div>'
+    						+ '<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent(this);"> 추가 </button></div>'
+    						+ '</div>'
+    					+ '</li>';
+        			}	    		
+			}); 
+
+			updatedStudentList += '<p class="text-primary mt-3"> 등록된 인원 </p>';
+			
+			$.each(list, function(index, value){
+	    			if(value.status == "accepted"){
+	    				updatedStudentList +=
+	    				'<li class="list-group-item d-sm-inline-block" style="padding-top: 5px; padding-bottom: 30px">'
+	    					+ '<div class="row">'
+	    						+ '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
+	    							+ '<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>'
+	   							+ '</div>'
+	   							+ '<div class="titles col-sm-4 ">'
+	       							+ '<div class="row">'
+	       								+ '<input type="hidden" id="studentID" value="${person.studentID }" />'
+	      								+ '<p class="col-sm-12 mb-0">' + value.studentName + ' </p>'
+	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
+	       								+ '<p class="col-sm-12 mb-0">' + value.phone + '</p>'
+	    							+ '</div>'
+								+ '</div>'
+								+ '<div class="col-sm-4">'
+    							+ '<div class="row">'
+	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">등록일자  </p>'
+									<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
+									<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
+									+ '<p class="col-sm-12 mb-0" style="text-align:center"> ${person.regDate} </p>'
+								+ '</div>'
+							+ ' </div>'    
+							+ '<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>'
+							+ '</div>'
+						+ '</li>';
+	    			}
+			}); 
+			
+			$('.list-group').append(updatedStudentList);
+		},
+		error:function(request,status,error){
+	    	alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+	    }
 	});
 }
 
@@ -215,7 +290,7 @@ function allowStudent(obj){
 						</div>
 						
 
-						<ul class="list-group">
+						<ul class="list-group studentList">
 							<p class="text-primary mt-3"> 허락 대기중 인원 </p>
 							<c:forEach var="person" items="${studentInfo}" varStatus="status">
                             	<c:if test="${person.status == 'pending'}" >
@@ -225,7 +300,7 @@ function allowStudent(obj){
 											<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
 												<i class="pe-7s-close fa-lg" style="margin-right: 30px"> </i>
 											</div>
-											<div class="titles col-sm-8 ">
+											<div class="titles col-sm-4 ">
 												<div class="row">
 													<input type="hidden" id='studentID' value="${person.studentID }" />
 													<p class="col-sm-12 mb-0">${person.studentName} </p>
@@ -233,6 +308,14 @@ function allowStudent(obj){
 													<p class="col-sm-12 mb-0">${person.phone }</p>
 												</div>
 											</div>
+											<div class="col-sm-4">
+												<div class="row">
+													<p class="col-sm-12 mb-0" style="text-align:center"> 신청일자  </p>
+													<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
+													<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
+													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.regDate} </p>
+												</div>
+											 </div> 
 											<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent(this);"> 추가 </button></div>
 										</div> 
                             		</li> 
@@ -246,12 +329,20 @@ function allowStudent(obj){
 									style="padding-top: 5px; padding-bottom: 30px"> 
 										<div class="row">
 											<div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>
-											<div class="titles col-sm-8 ">
+											<div class="titles col-sm-4 ">
 											<div class="row">
 												<p class="col-sm-12 mb-0">${person.studentName } </p>
 												<p class="col-sm-12 mb-0">${person.email } </p>
 												<p class="col-sm-12 mb-0">${person.phone } </p></div>
 											</div>
+											<div class="col-sm-4">
+												<div class="row">
+													<p class="col-sm-12 mb-0" style="text-align:center">등록일자  </p>
+													<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
+													<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
+													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.regDate} </p>
+												</div>
+											 </div> 
 											<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>
 										</div>	
 									</li>

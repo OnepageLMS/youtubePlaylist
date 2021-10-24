@@ -11,6 +11,7 @@ public class Stu_TakesVO {
 	
 	private String email;
 	private String phone;
+	private String regDate;
 	
 	public int getId() {
 		return id;
@@ -65,6 +66,12 @@ public class Stu_TakesVO {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
 	
 }
