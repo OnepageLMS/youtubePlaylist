@@ -38,7 +38,6 @@
 			success: function(data){
 				notices = data.notices;
 				$('.noticeList').empty();
-				console.log(notices);
 				var length = notices.length;
 
 				if (length == 0) 

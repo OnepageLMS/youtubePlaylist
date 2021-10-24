@@ -36,6 +36,22 @@
 		});
 	});
 
+	function getClassInfo(){
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}',
+			data: {classID, classID},
+			datatype: 'json',
+			success: function(data){
+
+				},
+			error: function(data, status,error){
+				console.log('강의실 정보 가져오기 실패!');
+			}
+				
+			});
+	}
+
 	function getAllNotices(){
 		$.ajax({
 			type: 'post',
@@ -52,6 +68,7 @@
 					$('.noticeList').append('게시된 공지사항이 없습니다.');
 
 				else {
+					
 					$.each(notices, function( index, value){
 						var num = length - index;
 						var collapseID = "collapse" + num;
@@ -73,7 +90,7 @@
 																														+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
 											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
 										+ '</button>'
-										+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '% 읽음</div>'
+										+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '명 읽음</div>'
 										+ '<div class="col-3">작성일 ' + regDate + '</div>'
 										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 btn">'
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
