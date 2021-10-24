@@ -10,6 +10,7 @@ public class ClassesVO {
 	private String startDate;
 	private String closeDate;
 	private String entryCode;
+	private int totalStudent;
 	private int active;
 	private String regDate;
 	
@@ -69,6 +70,12 @@ public class ClassesVO {
 	}
 	public void setEntryCode(String entryCode) {
 		this.entryCode = entryCode;
+	}
+	public int getTotalStudent() {
+		return totalStudent;
+	}
+	public void setTotalStudent(int totalStudent) {
+		this.totalStudent = totalStudent;
 	}
 	public int getActive() {
 		return active;

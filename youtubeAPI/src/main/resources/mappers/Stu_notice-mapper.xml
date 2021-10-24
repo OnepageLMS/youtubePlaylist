@@ -19,4 +19,17 @@
 			where noticeID=#{id} )
 		where id=#{id}
 	</update>
+	
+	<select id="getCountNotice" resultType="int">
+		select count(*)
+		from lms_notice
+		where classID=#{classID}
+	</select>
+	
+	<select id="getCountNoticeCheck" resultType="int">
+		select count(*)
+		from lms_noticeCheck join lms_notice on lms_noticeCheck.noticeID = lms_notice.id 
+		where studentID=#{studentID}
+	</select>
+	
 </mapper>
