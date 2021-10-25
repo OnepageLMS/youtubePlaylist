@@ -80,10 +80,10 @@ img {
 .card {
 	border-radius: 5px;
 }
-.searchedVideo a:hover{
+/* .searchedVideo a:hover{
 	background: ligthgray;
 	cursor:pointer
-}
+} */
 </style>
 
 </head>
@@ -254,7 +254,9 @@ $(document).ready(function(){
 			var view = viewCount[i];
 			var title = titleList[i].replace("'", "\\'").replace("\"","\\\"");
 			
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg">';
+			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 85%; height:85%; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
+			+ '\'' + ',\'' + title + '\''
+			+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" >';
 			//var url = '<a href="https://youtu.be/' + id + '">';
 			var link = "'${pageContext.request.contextPath}/player";
 			link = link + "?id=" + id.toString();
@@ -262,18 +264,36 @@ $(document).ready(function(){
 			link = link + "?duration=" + durationCount[i] + "'";
 			$("#get_view").append(					
 					/* '<div class="searchedVideo" onclick="$(#form2).submit();">' */
-					'<div class="searchedVideo mb-2" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
-							+ '\'' + ',\'' + title + '\''
-							+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();;">'
-							+ thumbnail
-							+ '<span>' + title + '</span>'
-							+ '<div>'
-							+ '<span class="info m-0"> published: <b>' + dateList[i]
-							+ '</b> view: <b>' + view
-							+ '</b> like: <b>' + likeCount[i]
-							+ '</b> dislike: <b>' + dislikeCount[i]
-							+ '</b> </span>'
-							+ '</div></div>');
+					
+				/* 	'<ul class="list-group">'
+                        + '<button class="list-group-item-action list-group-item">Dapibus ac facilisis in</button>'
+                        <button class="list-group-item-action list-group-item">Morbi leo risus</button>
+                        <button class="list-group-item-action list-group-item">Porta ac consectetur ac</button>
+                        <button class="disabled list-group-item-action list-group-item">Vestibulum at eros</button>
+                    </ul> */
+					
+					'<div class="searchedVideo list-group-item-action list-group-item" >'
+							+ '<div class="row">'
+								+ '<div class="col-sm-3" style="height: 90%; ">'
+									+ thumbnail
+								+ '</div>'
+								/* + '<div class="col-sm-1"> </div>' */
+								+ '<div class="col-sm-8 ">'
+									+ '<div onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
+									+ '\'' + ',\'' + title + '\''
+									+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" style="cursor: pointer;">'
+										+ '<h5 class="mt-4">' + title + '</h5>'
+										+ '<div>'
+											+ '<span class="info m-0"> published: <b>' + dateList[i]
+											+ '</b> view: <b>' + view
+											+ '</b> like: <b>' + likeCount[i]
+											+ '</b> dislike: <b>' + dislikeCount[i]
+											+ '</b> </span>'
+										+ '</div>'
+									+ '</div>'
+								+ '</div>'
+							+ '</div>'
+					+ '</div>');
 							/* + '<div style="display:none">'
 							+ '<div id="player_info"></div>'
 							+ '<div id="player"></div>' 
@@ -1021,7 +1041,7 @@ $(document).ready(function(){
 									</form>
 								</div>
 
-								<div id="get_view" style="cursor:pointer"></div>
+								<div id="get_view"></div>
 
 								<div class="container">
 									<div class="row">
