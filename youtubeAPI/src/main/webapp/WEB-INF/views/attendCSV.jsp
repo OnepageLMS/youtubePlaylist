@@ -109,7 +109,7 @@ $(document).ready(function(){
 				alert(data[0][0]);
 				console.log(data);
 				
-				for(var i=0; i<data[0].length; i++){
+				/*for(var i=0; i<data[0].length; i++){
 					console.log(data[0][i]);
 					$("showAttendance").append('<th> ' + data[0][i] +' </th>');
 				}
@@ -119,7 +119,7 @@ $(document).ready(function(){
 						$("showAttendance").append(data[i][j]);
 					}
 					
-				}
+				}*/
 				// $("showAttendance").append(data);
 				 
 				whoIsAttend(csvNameList, stuNameList);
@@ -282,7 +282,10 @@ function updateAttendance(days){
 			alert("실패");
 		}
 	});
-	
+	//takeZoom(days+1)번째의 value들을 array에 저장하기
+	var l = $(".takeZoom1").eq(days+1).val();
+	console.log(l);
+	//
 }
 
 	
@@ -363,7 +366,7 @@ function updateAttendance(days){
 	                                                 </th>
 	                                            </c:forEach>
                                             </tr>
-                                            
+                                             
                                             <tr>
                                             	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
                                             		<td id="zoomAttend" style="text-align:center">
