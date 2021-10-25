@@ -33,8 +33,8 @@ public class Stu_NoticeServiceImpl implements Stu_NoticeService{
 	}
 	
 	@Override
-	public int countNoticeCheck(int studentID) {
-		return noticeDAO.countNotice(studentID);
+	public int countNoticeCheck(NoticeVO vo) {
+		return noticeDAO.countNoticeCheck(vo);
 	}
 
 }

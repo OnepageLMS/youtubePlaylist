@@ -37,71 +37,102 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate", ];
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 
 $(document).ready(function(){
-	var allMyClass = JSON.parse('${allMyClass}');
-	var inactiveClass = JSON.parse('${allMyInactiveClass}');
-	
-	for(var i=0; i<allMyClass.length; i++){
-		var classID = allMyClass[i].id;
-		var classNoticeURL = 'moveToNotice(' + classID + ')';
-		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
-		var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
-		var cardColor = active_colors[i%(active_colors.length)];
-		
-		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
-								+ '<div class="mb-3 card">'
-									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  allMyClass[i].className + ' (' + allMyClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
-											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
-									+ '</div>'
-									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지' 
-											+ '<span class="badge badge-primary">NEW</span>'
-										+ '</button>'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-	                        		+ '</div>'
-	                        		+ '<div class="card-footer">'
-	                        			+ '<div class="row col">'
-		                        			+ '<div class="widget-subheading col-12">학습 진행</div>'
-											+ '<div class="col-12">'
-												+ '<div class="mb-3 progress">'
-	                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
-	                                            + '</div>'
-											+ '</div>'
-										+ '</div>'
-									+ '</div>'
-	                        	'</div>'
-	                        + '</div>';
-		$('.classActive').append(dashboardCard);
-	}
-
-
-	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
-		var classID = inactiveClass[i].id;
-		var classNoticeURL = 'moveToNotice(' + classID + ')';
-		var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
-		var classAttendanceURL = '#';
-		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-
-		var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
-								+ '<div class="mb-3 card">'
-									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
-										+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
-											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
-									+ '</div>'
-									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-					        		+ '</div>'
-					        	+ '</div>'
-					        + '</div>';
-							
-			$('.classInactive').append(dashboardCard);
-	}
+	getAllMyActiveClass();
+	getAllMyInactiveClass();
 });
+
+function getAllMyActiveClass(){
+	var i=0;
+	$.ajax({
+		type: 'post',
+		url: "${pageContext.request.contextPath}/student/class/getAllMyActiveClass",
+		success: function(data){
+			 $('.activeClassList').empty();
+			$(data).each(function(){
+				console.log(this);
+				var classID = this.id;
+				var classNoticeURL = 'moveToNotice(' + classID + ')';
+				var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
+				var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
+				var cardColor = active_colors[i%(active_colors.length)];
+				var newNotice = this.newNotice;
+				
+				if(newNotice == 1)
+					newNotice = '<span class="badge badge-primary">NEW</span>';
+				else
+					newNotice = '';
+				
+				var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+										+ '<div class="mb-3 card">'
+											+ '<div class="card-header ' + cardColor + '">' 
+												+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
+												+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+													+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+											+ '</div>'
+											+ '<div class="card-body">'
+												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지' 
+													+ newNotice
+												+ '</button>'
+												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+												+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+			                        		+ '</div>'
+			                        		+ '<div class="card-footer">'
+			                        			+ '<div class="row col">'
+				                        			+ '<div class="widget-subheading col-12">학습 진행</div>'
+													+ '<div class="col-12">'
+														+ '<div class="mb-3 progress">'
+			                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+			                                            + '</div>'
+													+ '</div>'
+												+ '</div>'
+											+ '</div>'
+			                        	'</div>'
+			                        + '</div>';
+			   
+				$('.activeClassList').append(dashboardCard);
+				i++;
+			});
+		},
+		error: function(data, status,error){
+			console.log('ajax dashboard 가져오기 실패!');
+		}
+	});
+}
+
+function getAllMyInactiveClass(){
+	var i=0;
+	$.ajax({
+		type: 'post',
+		url: "${pageContext.request.contextPath}/student/class/getAllMyInactiveClass",
+		success: function(data){
+			//$('.activeClassList').empty();
+			$(data).each(function(){
+				var classID = inactiveClass[i].id;
+				var classNoticeURL = 'moveToNotice(' + classID + ')';
+				var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
+				var classAttendanceURL = '#';
+				var cardColor = inactive_colors[i%(inactive_colors.length)]; 
+
+				var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+										+ '<div class="mb-3 card">'
+											+ '<div class="card-header ' + cardColor + '">' 
+												+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
+												+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+													+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+											+ '</div>'
+											+ '<div class="card-body">'
+												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
+												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+												+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+							        		+ '</div>'
+							        	+ '</div>'
+							        + '</div>';
+									
+					$('.classInactive').append(dashboardCard);
+			
+			});
+		});
+}
 
 function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
 	var html = '<input type="hidden" name="classID"  value="' + id + '">';
@@ -192,6 +223,7 @@ function submitDeleteClassroom(){
 		                           </div>
 		                       </div>
                        		</div>
+                       		<div class="activeClassList col row"></div>
                        	</div>
                        	<div class="classInactive row col">
                        		<div class="col-12 row">

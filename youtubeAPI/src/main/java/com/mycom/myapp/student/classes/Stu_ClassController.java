@@ -21,6 +21,7 @@ import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
+import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
@@ -58,12 +59,23 @@ public class Stu_ClassController{
 	
 	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)
 	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		studentId = studentID;
-		
+
+		List<ClassesVO> list = classesService.getAllMyClass(studentId);
+		for(int i=0; i<list.size(); i++) {
+			int classID = list.get(i).getId();
+			NoticeVO tmp = new NoticeVO();
+			tmp.setId(classID);
+			tmp.setStudentID(studentId);
+			
+			if(noticeService.countNotice(classID) != noticeService.countNoticeCheck(tmp))
+				list.get(i).setNewNotice(1);
+			else
+				list.get(i).setNewNotice(0);
+		}
+		model.addAttribute("allMyClass", JSONArray.fromObject(list));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		model.addAttribute("myName", memberService.getStudentName(studentId));
-		
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
@@ -71,14 +83,39 @@ public class Stu_ClassController{
 		return "class/dashboard_Stu";
 	}
 	
-	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)	// 9/24 studentID url에서 지운 버전(yewon)
-	public String dashboard (Model model) {
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
-		model.addAttribute("myName", memberService.getStudentName(studentId));
-		
-		return "class/dashboard_Stu";
+	@ResponseBody
+	@RequestMapping(value = "/getAllMyActiveClass", method = RequestMethod.POST)
+	public List<ClassesVO> getAllMyActiveClass() {
+		List<ClassesVO> list = classesService.getAllMyClass(studentId);
+		for(int i=0; i<list.size(); i++) {
+			int classID = list.get(i).getId();
+			NoticeVO tmp = new NoticeVO();
+			tmp.setId(classID);
+			tmp.setStudentID(studentId);
+			
+			if(noticeService.countNotice(classID) != noticeService.countNoticeCheck(tmp))
+				list.get(i).setNewNotice(1);
+			else
+				list.get(i).setNewNotice(0);
+		}
+
+		return list;
 	}
+	
+	/*@RequestMapping(value = "/getAllNotice", method = RequestMethod.POST)
+	@ResponseBody
+	public Object getAllNotices(@RequestParam(value="classID") int id) {
+		List<NoticeVO> list = noticeService.getAllNotice(id);
+		
+		if(list != null) 
+			System.out.println("teacher_notice list가져오기 성공!");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("notices", list);
+		
+		return map;
+	}*/
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)

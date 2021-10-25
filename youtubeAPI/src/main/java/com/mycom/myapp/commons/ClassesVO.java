@@ -1,7 +1,7 @@
 package com.mycom.myapp.commons;
 
 public class ClassesVO {
-	private int id;
+	private int id;	//classID
 	private int instructorID;
 	private String className;
 	private String description;
@@ -16,6 +16,8 @@ public class ClassesVO {
 	
 	private String name;	//instructorName
 	private int studentID;
+	
+	private int newNotice;	//학생 dashboard에서 새로운 공지 표시
 	
 	public int getId() {
 		return id;
@@ -102,5 +104,12 @@ public class ClassesVO {
 	}
 	public void setStudentID(int studentID) {
 		this.studentID = studentID;
+	}
+	
+	public int getNewNotice() {
+		return newNotice;
+	}
+	public void setNewNotice(int newNotice) {
+		this.newNotice = newNotice;
 	}
 }
