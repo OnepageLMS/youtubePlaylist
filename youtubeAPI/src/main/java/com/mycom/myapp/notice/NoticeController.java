@@ -55,22 +55,8 @@ public class NoticeController {
 	public void addNotice(@ModelAttribute NoticeVO vo) {
 		int noticeID = noticeService.insertNotice(vo);
 		
-		if(noticeID > 0) {
+		if(noticeID > 0) 
 			System.out.println(noticeID + " notice 추가 성공! ");
-			/*
-			//noticeCheck에 record 생성
-			int noticeClassID = vo.getClassID();
-			List<Stu_TakesVO> students = takesService.getAllClassStudent(noticeClassID);	//수강 학생 리스트 가져오기
-			for(int i=0; i<students.size(); i++) {
-				NoticeVO newRecord = new NoticeVO();
-				int studentID = students.get(i).getStudentID();
-				newRecord.setId(noticeID);
-				newRecord.setStudentID(studentID);
-				if(noticeService.insertNoticeCheckRecord(newRecord) != 0)
-					System.out.println(studentID + ":" + i + " noticeCheck record생성됨!");
-			}*/
-		}
-			
 		else
 			System.out.println("notice 추가 실패! ");
 	}

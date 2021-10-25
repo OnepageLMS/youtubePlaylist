@@ -29,8 +29,8 @@ public class Stu_NoticeDAO {
 		return sqlSession.selectOne("Stu_Notice.getCountNotice", classID);
 	}
 	
-	public int countNoticeCheck(int studentID) {
-		return sqlSession.selectOne("Stu_Notice.getCountNoticeCheck", studentID);
+	public int countNoticeCheck(NoticeVO vo) {
+		return sqlSession.selectOne("Stu_Notice.getCountNoticeCheck", vo);
 	}
 
 }

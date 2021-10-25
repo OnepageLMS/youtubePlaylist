@@ -9,5 +9,5 @@ public interface Stu_NoticeService {
 	public int insertView(NoticeVO vo);
 	public int updateViewCount(int id);
 	public int countNotice(int classID);
-	public int countNoticeCheck(int studentID);
+	public int countNoticeCheck(NoticeVO vo);
 }

@@ -29,7 +29,7 @@
 	<select id="getCountNoticeCheck" resultType="int">
 		select count(*)
 		from lms_noticeCheck join lms_notice on lms_noticeCheck.noticeID = lms_notice.id 
-		where studentID=#{studentID}
+		where studentID=#{studentID} and lms_notice.classID=#{id}
 	</select>
 	
 </mapper>
