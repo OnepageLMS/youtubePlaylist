@@ -1,6 +1,8 @@
 package com.mycom.myapp.classes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +38,8 @@ public class ClassController {
 	
 	@RequestMapping(value = "/dashboard",  method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(Model model) {
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		//model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
 		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "class/dashboard";
@@ -53,6 +55,18 @@ public class ClassController {
 	public ClassesVO getClassInfo(@RequestParam(value = "classID") int classID) {
 		ClassesVO vo = classService.getClass(classID);
 		return vo;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
+	public Object getAllNotices() {
+		List<ClassesVO> list = classService.getAllMyClass(instructorID);
+		List<ClassesVO> inactiveList = classService.getAllMyInactiveClass(instructorID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("active", list);
+		map.put("inactive", inactiveList);
+		return map;
 	}
 	
 	@RequestMapping(value = "/addDays", method = RequestMethod.POST) 

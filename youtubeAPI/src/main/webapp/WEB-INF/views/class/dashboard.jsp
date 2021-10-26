@@ -25,92 +25,108 @@ var inactive_colors = ["border-primary", "border-warning", "border-success", "bo
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
 
 $(document).ready(function(){
-	
-	
-	var activeClass = JSON.parse('${allMyClass}');	//이부분 수정
-	var inactiveClass = JSON.parse('${allMyInactiveClass}');
-
-	for(var i=0; i<activeClass.length; i++){	//active classroom card
-		var classID = activeClass[i].id;
-		var className = activeClass[i].className;
-		
-		var classNoticeURL = 'moveToNotice(' + classID + ')';
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
-		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
-		var regDate = activeClass[i].regDate.split(' ')[0];
-		var cardColor = active_colors[i%(active_colors.length)]; 
-		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
-								+ '<div class="mb-3 card classCard">'
-									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  className + ' (' + activeClass[i].days + ' 차시)' + '</div>'
-										+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
-											+ '<i class="nav-link-icon fa fa-share"></i>'
-										+ '</a>'
-										+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
-											+ '<i class="nav-link-icon fa fa-cog"></i>'
-										+ '</a>'
-									+ '</div>'
-									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-										+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
-												+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-		                        	+ '</div>'
-	                        		+ '<div class="divider m-0 p-0"></div>'
-		                        	+ '<div class="card-body">'
-										+ '<div class="row">'
-											+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
-											+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + activeClass[i].closeDate + ' </div>'
-											+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
-											+ '<div class="col-12">'
-												+ '<div class="mb-3 progress">'
-								                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
-								                + '</div>'
-											+ '</div>'
-										+ '</div>'
-									 + '</div>'
-	                        	+ '</div>'
-	                        + '</div>';
-							
-			$('.classActive').append(dashboardCard);
-	}
-	for(var i=0; i<inactiveClass.length; i++){	//inactive classroom card
-		var id = inactiveClass[i].id;
-		var classNoticeURL = 'moveToNotice(' + inactiveClass[i].id + ')';
-		var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + id + "'";
-		var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
-		var regDate = inactiveClass[i].regDate.split(' ')[0];
-		var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-		var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
-								+ '<div class="mb-3 card classCard">'
-									+ '<div class="card-header ' + cardColor + '">' 
-										+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
-											+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
-											+ '<i class="nav-link-icon fa fa-share"></i>'
-										+ '</a>'
-										+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
-											+ '<i class="nav-link-icon fa fa-cog"></i>'
-										+ '</a>'
-									+ '</div>'
-									+ '<div class="card-body">'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-										+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-										+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-	                        		+ '</div>'
-	                        		+ '<div class="divider m-0 p-0"></div>'
-		                        	+ '<div class="card-body">'
-										+ '<div class="row">'
-											+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
-											+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + inactiveClass[i].closeDate + ' </div>'
-										+ '</div>'
-									 + '</div>'
-								+ '</div>'
-	                        	+ '</div>'
-	                        + '</div>';
-			$('.classInactive').append(dashboardCard);
-	}
+	getAllMyClass();
 });
+
+function getAllMyClass(){
+	var i=0;
+	var active, inactive;
+	$.ajax({
+		type: 'post',
+		url: "${pageContext.request.contextPath}/getAllMyClass",
+		success: function(data){
+			 $('.activeClassList').empty();
+			active = data.active;
+			inactive = data.inactive;
+
+			$(active).each(function(){
+				var classID = this.id;
+				var className = this.className;
+				
+				var classNoticeURL = 'moveToNotice(' + classID + ')';
+				var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
+				var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
+				var regDate = this.regDate.split(' ')[0];
+				var cardColor = active_colors[i%(active_colors.length)]; 
+				var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
+										+ '<div class="mb-3 card classCard">'
+											+ '<div class="card-header ' + cardColor + '">' 
+												+ '<div class="col-sm-10">' +  className + ' (' + this.days + ' 차시)' + '</div>'
+												+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+													+ '<i class="nav-link-icon fa fa-share"></i>'
+												+ '</a>'
+												+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+													+ '<i class="nav-link-icon fa fa-cog"></i>'
+												+ '</a>'
+											+ '</div>'
+											+ '<div class="card-body">'
+												+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+												+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
+														+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
+												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+												+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+				                        	+ '</div>'
+			                        		+ '<div class="divider m-0 p-0"></div>'
+				                        	+ '<div class="card-body">'
+												+ '<div class="row">'
+													+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
+													+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + this.closeDate + ' </div>'
+													+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
+													+ '<div class="col-12">'
+														+ '<div class="mb-3 progress">'
+										                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+										                + '</div>'
+													+ '</div>'
+												+ '</div>'
+											 + '</div>'
+			                        	+ '</div>'
+			                        + '</div>';
+									
+					$('.activeClassList').append(dashboardCard);
+					i++;
+			});
+			
+			i=0;
+			$(inactive).each(function(){
+				var id = this.id;
+				var classNoticeURL = 'moveToNotice(' + this.id + ')';
+				var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + id + "'";
+				var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
+				var regDate = this.regDate.split(' ')[0];
+				var cardColor = inactive_colors[i%(inactive_colors.length)]; 
+				var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
+										+ '<div class="mb-3 card classCard">'
+											+ '<div class="card-header ' + cardColor + '">' 
+												+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
+													+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+													+ '<i class="nav-link-icon fa fa-share"></i>'
+												+ '</a>'
+												+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+													+ '<i class="nav-link-icon fa fa-cog"></i>'
+												+ '</a>'
+											+ '</div>'
+											+ '<div class="card-body">'
+												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+												+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+			                        		+ '</div>'
+			                        		+ '<div class="divider m-0 p-0"></div>'
+				                        	+ '<div class="card-body">'
+												+ '<div class="row">'
+													+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
+													+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + this.closeDate + ' </div>'
+												+ '</div>'
+											 + '</div>'
+										+ '</div>'
+			                        	+ '</div>'
+			                        + '</div>';
+					$('.inactiveClassList').append(dashboardCard);
+					i++;
+			});
+			
+		}
+	});
+}
 
 function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
 	var html = '<input type="hidden" name="classID"  value="' + id + '">';
@@ -383,7 +399,7 @@ function publishNotice(){	//공지등록
 			                           </div>
 			                       </div>
                         		</div>
-                        		
+                        		<div class="activeClassList col row"></div>
                         	</div>
                             <div class="classInactive row col">
                             	<div class="col-12 row">
@@ -395,10 +411,10 @@ function publishNotice(){	//공지등록
 			                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
 			                           </div>
 			                       </div>
-                            </div>
-                        </div>	<!-- 대시보드 안 box 끝 !! -->
-        
-                    </div>
+                            	</div>
+	                            <div class="inactiveClassList col row"></div>
+	                        </div>	<!-- 대시보드 안 box 끝 !! -->
+                    	</div>
                    <jsp:include page="../outer_bottom.jsp" flush="true"/>
               </div>
         </div>

@@ -69,8 +69,8 @@ public class Stu_ClassController{
 		return "class/dashboard_Stu";
 	}
 	
-	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
 	@ResponseBody
+	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
 	public Object getAllNotices() {
 		List<ClassesVO> list = classesService.getAllMyClass(studentId);
 		List<ClassesVO> inactiveList = classesService.getAllMyInactiveClass(studentId);
@@ -86,7 +86,6 @@ public class Stu_ClassController{
 			else
 				list.get(i).setNewNotice(0);
 		}
-		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("active", list);

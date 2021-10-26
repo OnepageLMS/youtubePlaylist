@@ -7,7 +7,7 @@
 
 		var goForm = $('<form>', {
 				method: 'post',
-				action: '${pageContext.request.contextPath}/student/notice',
+				action: '${pageContext.request.contextPath}/student/notice/',
 				html: html
 			}).appendTo('body'); 
 
