@@ -129,43 +129,6 @@ function getAllMyClass(){
 	});
 }
 
-function getAllMyInactiveClass(){
-	var i=0;
-	$.ajax({
-		type: 'post',
-		url: "${pageContext.request.contextPath}/student/class/getAllMyInactiveClass",
-		success: function(data){
-			//$('.activeClassList').empty();
-			$(data).each(function(){
-				var classID = inactiveClass[i].id;
-				var classNoticeURL = 'moveToNotice(' + classID + ')';
-				var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
-				var classAttendanceURL = '#';
-				var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-
-				var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
-										+ '<div class="mb-3 card">'
-											+ '<div class="card-header ' + cardColor + '">' 
-												+ '<div class="col-sm-10">' +  inactiveClass[i].className + ' (' + inactiveClass[i].days + ' 차시)' + '</div>'
-												+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
-													+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
-											+ '</div>'
-											+ '<div class="card-body">'
-												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
-												+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-												+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-							        		+ '</div>'
-							        	+ '</div>'
-							        + '</div>';
-									
-					$('.classInactive').append(dashboardCard);
-			
-			});
-		}
-	
-	});
-}
-
 function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
 	var html = '<input type="hidden" name="classID"  value="' + id + '">';
 
@@ -268,7 +231,9 @@ function submitDeleteClassroom(){
 		                           </div>
 		                       </div>
                        		</div>
+                       		<div class="inactiveClassList col row"></div>
                        	</div>
+                       	
                             	<!-- 대시보드 안 box 끝 !! -->
         
                     </div>
