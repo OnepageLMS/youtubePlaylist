@@ -91,7 +91,7 @@ public class HomeController {
 		return "t_example";
 		//return "outer";
 	}
-
+/*
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String google(RedirectAttributes rttr) {
 		String clientID = "99431484339-5lvpv4ieg4gd75l57g0k4inh10tiqkdj.apps.googleusercontent.com";
@@ -101,7 +101,7 @@ public class HomeController {
 				+"&access_type=offline";
 
 		return url;
-	}
+	}*/
 
 	@RequestMapping(value = "/oauth2callback", method = RequestMethod.GET)
 	public String googleAuth(Model model, @RequestParam(value = "code") String authCode, HttpServletRequest request,
