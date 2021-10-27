@@ -383,9 +383,6 @@ function publishNotice(){	//공지등록
                                </button>
                           </div>
                         </div>      
-                       	<div>
-                       		
-                       	</div>
                        
                         <div class="dashboardClass">
                         	<div class="classActive row col">
