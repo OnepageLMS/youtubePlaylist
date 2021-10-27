@@ -17,6 +17,10 @@ public class Stu_NoticeDAO {
 		return sqlSession.selectList("Stu_Notice.getAllNotice", vo);
 	}
 	
+	public List<NoticeVO> getAllPin(NoticeVO vo) {
+		return sqlSession.selectList("Stu_Notice.getAllPin", vo);
+	}
+	
 	public int insertView(NoticeVO vo) {
 		return sqlSession.insert("Stu_Notice.insertView", vo);
 	}

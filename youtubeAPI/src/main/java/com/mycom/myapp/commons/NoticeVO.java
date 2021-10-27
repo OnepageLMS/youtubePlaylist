@@ -6,6 +6,7 @@ public class NoticeVO {
 	private String title;
 	private String content;
 	private int important;
+	private int pin;
 	private int viewCount;
 	private String modDate;
 	private String regDate;
@@ -42,6 +43,12 @@ public class NoticeVO {
 	}
 	public void setImportant(int important) {
 		this.important = important;
+	}
+	public int getPin() {
+		return pin;
+	}
+	public void setPin(int pin) {
+		this.pin = pin;
 	}
 	public int getViewCount() {
 		return viewCount;

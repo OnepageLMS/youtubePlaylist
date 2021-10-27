@@ -383,14 +383,11 @@ function publishNotice(){	//공지등록
                                </button>
                           </div>
                         </div>      
-                       	<div>
-                       		
-                       	</div>
                        
                         <div class="dashboardClass">
                         	<div class="classActive row col">
                         		<div class="col-12 row">
-                        			<h4 class="col-sm-5 col-md-2">활성화된 강의실</h4>
+                        			<h4 class="col-sm-5 col-md-2">진행중인 강의실</h4>
 	                        		<div class="dropdown d-inline-block">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">

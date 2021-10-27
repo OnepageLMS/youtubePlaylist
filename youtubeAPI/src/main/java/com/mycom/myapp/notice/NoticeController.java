@@ -82,7 +82,7 @@ public class NoticeController {
 	
 	@RequestMapping(value = "/getAllNotice", method = RequestMethod.POST)
 	@ResponseBody
-	public Object getAllNotices(@RequestParam(value="classID") int id) {
+	public Object getAllNotice(@RequestParam(value="classID") int id) {
 		List<NoticeVO> list = noticeService.getAllNotice(id);
 		
 		if(list != null) 
@@ -93,4 +93,35 @@ public class NoticeController {
 		
 		return map;
 	}
+	
+	@RequestMapping(value = "/getAllPin", method = RequestMethod.POST)
+	@ResponseBody
+	public List<NoticeVO> getAllPin(@RequestParam(value="classID") int id) {
+		List<NoticeVO> list = noticeService.getAllPin(id);
+		
+		if(list != null) 
+			System.out.println("teacher_notice list가져오기 성공!");
+		
+		return list;
+	}
+	
+	@RequestMapping(value = "/setPin", method = RequestMethod.POST)
+	@ResponseBody
+	public void setPin(@RequestParam(value="id") int id) {
+		if(noticeService.setPin(id) != 0) 
+			System.out.println("set pin 성공! ");
+		else
+			System.out.println("set pin 실패! ");
+	}
+	
+	@RequestMapping(value = "/unsetPin", method = RequestMethod.POST)
+	@ResponseBody
+	public void unsetPin(@RequestParam(value="id") int id) {
+		if(noticeService.unsetPin(id) != 0) 
+			System.out.println("unset pin 성공! ");
+		else
+			System.out.println("unset pin 실패! ");
+	}
+	
+	
 }

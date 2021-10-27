@@ -31,4 +31,19 @@ public class NoticeServiceImpl implements NoticeService{
 	public List<NoticeVO> getAllNotice(int id){
 		return noticeDAO.getAllNotice(id);
 	}
+	
+	@Override
+	public List<NoticeVO> getAllPin(int id){
+		return noticeDAO.getAllPin(id);
+	}
+	
+	@Override
+	public int setPin(int id) {
+		return noticeDAO.setPin(id);
+	}
+	
+	@Override
+	public int unsetPin(int id) {
+		return noticeDAO.unsetPin(id);
+	}
 }

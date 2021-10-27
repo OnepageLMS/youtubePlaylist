@@ -7,6 +7,12 @@
 		where lms_notice.classID=#{classID} order by lms_notice.id desc
 	</select>
 	
+	<select id="getAllPin" resultType="notice">
+		select * from lms_notice left join (select * from lms_noticeCheck where studentID=#{studentID}) nc
+		on lms_notice.id = nc.noticeID 
+		where lms_notice.classID=#{classID} and pin=1 order by lms_notice.id desc
+	</select>
+	
 	<insert id="insertView">
 		insert into lms_noticeCheck (noticeID, studentID)
 		values (#{id}, #{studentID})

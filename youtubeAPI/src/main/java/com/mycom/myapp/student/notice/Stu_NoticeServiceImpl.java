@@ -18,6 +18,11 @@ public class Stu_NoticeServiceImpl implements Stu_NoticeService{
 	}
 	
 	@Override
+	public List<NoticeVO> getAllPin(NoticeVO vo){
+		return noticeDAO.getAllPin(vo);
+	}
+	
+	@Override
 	public int insertView(NoticeVO vo) {
 		return noticeDAO.insertView(vo);
 	}
