@@ -30,4 +30,16 @@ public class NoticeDAO {
 		return sqlSession.selectList("Notice.getAllNotice", id);
 	}
 	
+	public List<NoticeVO> getAllPin(int id) {
+		return sqlSession.selectList("Notice.getAllPin", id);
+	}
+	
+	public int setPin(int id) {
+		return sqlSession.update("Notice.setPin", id);
+	}
+	
+	public int unsetPin(int id) {
+		return sqlSession.update("Notice.unsetPin", id);
+	}
+	
 }

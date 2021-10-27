@@ -60,6 +60,20 @@ public class Stu_NoticeController {
 		return map;
 	}
 	
+	@RequestMapping(value = "/getAllPin", method = RequestMethod.POST)
+	@ResponseBody
+	public List<NoticeVO> getAllPin(@RequestParam(value="classID") int id) {
+		NoticeVO vo = new NoticeVO();
+		vo.setClassID(id);
+		vo.setStudentID(studentId);
+		List<NoticeVO> list = noticeService.getAllPin(vo);
+		
+		if(list != null) 
+			System.out.println("notice pin list가져오기 성공!");
+		
+		return list;
+	}
+	
 	@RequestMapping(value = "/insertView", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateView(@RequestParam(value="noticeID") int id) {

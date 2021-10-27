@@ -21,15 +21,73 @@
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 </head>
+<style>
+	.text-black{
+		color: #495057;
+	}
+</style>
 <script>
 	var classID = ${classID};
 	var notices;
 	
 	$(document).ready(function(){
-		getAllNotices();
+		getAllPin();
 	});
 
-	function getAllNotices(){
+	function getAllPin(){
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/student/notice/getAllPin',
+			data: {classID: classID},
+			datatype: 'json',
+			success: function(data){
+				$('.noticeList').empty();
+
+				$.each(data, function( index, value){
+					var collapseID = "collapse" + index;
+					var regDate = value.regDate.split(" ")[0];
+					var important = value.important;
+					var viewCheck = value.studentID;	//학생이 읽지 않은 공지는 색상 다르게
+					var viewdClass = '';
+					var updateView = '';
+
+					if (important == 1)	important = '<span class="text-danger"> [중요] </span>';	//지금 사용안하는 버전
+					else important = '';
+					
+					if (viewCheck == 0 || viewCheck == null) {
+						viewCheck = '<span class="badge badge-primary viewCheck">NEW</span>';
+						updateView = 'onclick="updateView(' + index + ',' + value.id + ');" ';
+					}
+					else {
+						viewCheck = '';
+						viewdClass = 'viewClass';
+					}
+
+					var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
+						+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
+							+ '<div class="card">'
+								+ '<div id="headingOne" class="card-header">'
+									+ '<button type="button" ' + updateView + 'class="col-9 text-left m-0 p-0 btn btn-link btn-block collapsed" '
+													+ 'data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne">'
+										+ '<h5 class="title m-0 p-0 ' + viewdClass + '" id="' + value.id + '"><i class="pe-7s-pin"></i> ' + value.title + viewCheck + '</h5>'
+									+ '</button>'
+									+ '<div>작성일 ' + regDate + '</div>'
+								+ '</div>'
+								+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+									+ '<div class="card-body">' + value.content + '</div>'
+								+ '</div>'
+							+ '</div>'
+						+ '</div>'
+					+ '</div>';
+
+					$('.noticeList').append(html);
+				});
+				getAllNotices(data.length);
+			}
+		});
+	}
+
+	function getAllNotices(last){
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/student/notice/getAllNotice',
@@ -37,36 +95,38 @@
 			datatype: 'json',
 			success: function(data){
 				notices = data.notices;
-				$('.noticeList').empty();
-				var length = notices.length;
 
-				if (length == 0) 
+				if (notices.length == 0) 
 					$('.noticeList').append('게시된 공지사항이 없습니다.');
 
 				else {
-					$.each(notices, function( index, value){
-						var num = length - index;
-						var collapseID = "collapse" + num;
+					$.each(notices, function(idx, value){
+						var index = last + idx;
+						var collapseID = "collapse" + index;
 						var regDate = value.regDate.split(" ")[0];
 						var important = value.important;
 						var viewCheck = value.studentID;	//학생이 읽지 않은 공지는 색상 다르게
 						var updateView = '';
-
+						var viewdClass = '';
+						
 						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
 						else important = '';
-
-						if (viewCheck != 0) viewCheck = 'text-muted';	//학생이 읽은 공지는 색깔 진회색으로
-						else {
+						
+						if (viewCheck == 0 || viewCheck == null) {
 							updateView = 'onclick="updateView(' + index + ',' + value.id + ');" ';
+							viewCheck = '<span class="badge badge-primary viewCheck">NEW</span>';
 						}
-
+						else {
+							viewCheck = '';
+							viewdClass = 'viewClass';
+						}
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
 								+ '<div class="card">'
 									+ '<div id="headingOne" class="card-header">'
 										+ '<button type="button" ' + updateView + 'class="col-9 text-left m-0 p-0 btn btn-link btn-block collapsed" '
 														+ 'data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne">'
-											+ '<h5 class="title m-0 p-0 ' + viewCheck + '"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
+											+ '<h5 class="title text-black m-0 p-0 ' + viewdClass + '" id="' + value.id + '">' + value.title + viewCheck + '</h5>'
 										+ '</button>'
 										+ '<div>작성일 ' + regDate + '</div>'
 									+ '</div>'
@@ -88,7 +148,7 @@
 	}
 
 	function updateView(index, noticeID){
-		if($('.title:eq(' + index + ')').hasClass('text-muted') == true) 
+		if($('.title:eq(' + index + ')').hasClass('viewdClass') == true) 
 			return false;
 		
 		$.ajax({
@@ -98,7 +158,29 @@
 			datatype: 'json',
 			success: function(data){
 				console.log('update view 완료!');
-					$('.title:eq(' + index + ')').addClass('text-muted');
+					$('.title:eq(' + index + ')').addClass('viewdClass');
+
+					var element = $('.title:eq(' + index + ')');
+					$('.title:eq(' + index + ')').children('span').remove();
+					
+					var elements = $('.title');
+					$.each(elements, function(idx, value){	//같은 공지사항이 있으면 같이 'new' 뱃지 제거
+						if(value.getAttribute('id') == noticeID && value != $('.title:eq(' + index + ')')){
+							$('.title:eq(' + index + ')').addClass('viewdClass');
+
+							var element = $('.title:eq(' + index + ')');
+							$('.title:eq(' + index + ')').children('span').remove();
+							
+							var elements = $('.title');
+							$.each(elements, function(idx, value){	//같은 공지사항이 있으면 같이 'new' 뱃지 제거
+								if(value.getAttribute('id') == noticeID && value != $('.title:eq(' + index + ')'))
+									$('.title:eq(' + idx + ')').addClass('viewdClass');
+									$('.title:eq(' + idx + ')').children('span').remove();
+							});
+							return false;
+						}
+							
+					});
 				},
 				error: function(data, status,error){
 					alert('공지 가져오기 실패!');

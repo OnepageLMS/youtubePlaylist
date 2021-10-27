@@ -60,7 +60,7 @@ public class ClassController {
 	@ResponseBody
 	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
 	public Object getAllNotices() {
-		List<ClassesVO> list = classService.getAllMyClass(instructorID);
+		List<ClassesVO> list = classService.getAllMyActiveClass(instructorID);
 		List<ClassesVO> inactiveList = classService.getAllMyInactiveClass(instructorID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -22,7 +22,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 </head>
 <style>
-	
+	.text-black{
+		color: #495057;
+	}
 </style>
 <script>
 	var classID = ${classID};
@@ -31,7 +33,6 @@
 	
 	$(document).ready(function(){
 		getClassInfo();
-		//getAllNotices();
 		
 		$("#publishNoticeBtn").click(function () {
 			$('#inputNoticeForm')[0].reset();
@@ -46,7 +47,7 @@
 			datatype: 'json',
 			success: function(data){
 				totalStudent = data.totalStudent;
-				getAllNotices();
+				getAllPin();
 				},
 			error: function(data, status,error){
 				console.log('강의실 정보 가져오기 실패!');
@@ -55,7 +56,62 @@
 			});
 	}
 
-	function getAllNotices(){
+	function getAllPin(){
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/getAllPin',
+			data: {classID: classID},
+			datatype: 'json',
+			success: function(data){
+				$('.noticeList').empty();
+				$.each(data, function( index, value){
+					var collapseID = "collapse" + index;
+					var regDate = value.regDate.split(" ")[0];
+					var important = value.important;
+					var viewCount = (value.viewCount/totalStudent) * 100;
+
+					if (important == 1)	important = '<span class="text-danger"> [중요] </span>'; //지금 사용안함
+					else important = '';
+
+					if (viewCount == null)	viewCount = '0';
+						
+					var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
+						+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
+							+ '<div class="card">'
+								+ '<div id="headingOne" class="card-header">'
+									+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
+																													+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
+										+ '<h5 class="m-0 p-0"><i class="pe-7s-pin"></i> ' + value.title + ' </h5>'
+									+ '</button>'
+									+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '% 읽음</div>'
+									+ '<div class="col-3">작성일 ' + regDate + '</div>'
+									+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 btn">'
+										+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+									+ '</button>'
+									+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
+										+ '<button type="button" class="dropdown-item" onclick="unsetPin(' + value.id + ');">상단고정 해재</button>' 
+                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
+                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
+                                   	+ '</div>'
+								+ '</div>'
+								+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+									+ '<div class="card-body">' 
+										
+										+ '<div>' + value.content + '</div>'
+									+ '</div>'
+								+ '</div>'
+							+ '</div>'
+						+ '</div>'
+					+ '</div>';
+
+					$('.noticeList').append(html);
+				});
+				getAllNotices(data.length);
+			}
+		});
+	}
+
+	function getAllNotices(last){
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/getAllNotice',
@@ -63,27 +119,27 @@
 			datatype: 'json',
 			success: function(data){
 				notices = data.notices;
-				$('.noticeList').empty();
 
-				var length = notices.length;
-
-				if (length == 0) 
+				if (notices.length == 0) 
 					$('.noticeList').append('게시된 공지사항이 없습니다.');
 
 				else {
-					
-					$.each(notices, function( index, value){
-						var num = length - index;
-						var collapseID = "collapse" + num;
-						//var regDate = value.regDate;
+					$.each(notices, function( idx, value){
+						var index = last + idx;
+						var collapseID = "collapse" + index;
 						var regDate = value.regDate.split(" ")[0];
 						var important = value.important;
+						var pin = value.pin;
 						var viewCount = (value.viewCount/totalStudent) * 100;
 
-						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
+						if (important == 1)	important = '<span class="text-danger"> [중요] </span>'; //지금 사용안함
 						else important = '';
 
+						if(pin != 1) pin = 'onclick="setPin(' + value.id + ');">상단고정';
+						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해재';
+
 						if (viewCount == null)	viewCount = '0';
+
 							
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
@@ -91,7 +147,7 @@
 									+ '<div id="headingOne" class="card-header">'
 										+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
 																														+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
-											+ '<h5 class="m-0 p-0"><b>#' + num + '</b> ' + important + value.title + ' </h5>'
+											+ '<h5 class="m-0 p-0 text-black">' + value.title + ' </h5>'
 										+ '</button>'
 										+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '% 읽음</div>'
 										+ '<div class="col-3">작성일 ' + regDate + '</div>'
@@ -99,13 +155,13 @@
 											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 										+ '</button>'
 										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
+											+ '<button type="button" class="dropdown-item"' + pin + '</button>' 
 	                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
 	                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
                                     	+ '</div>'
 									+ '</div>'
 									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
 										+ '<div class="card-body">' 
-											
 											+ '<div>' + value.content + '</div>'
 										+ '</div>'
 									+ '</div>'
@@ -118,7 +174,37 @@
 				}
 			},
 			error: function(data, status,error){
-				alert('공지 생성 실패!');
+				console.log('공지 생성 실패!');
+			}
+		});
+	}
+
+	function setPin(id){	//상단 pin고정
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/setPin',
+			data: {id: id},
+			datatype: 'json',
+			success: function(data){
+				getAllPin();
+			},
+			error: function(data, status,error){
+				console.log('pin 설정 실패!');
+			}
+		});
+	}
+
+	function unsetPin(id){	//상단 pin고정 해재
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/unsetPin',
+			data: {id: id},
+			datatype: 'json',
+			success: function(data){
+				getAllPin();
+			},
+			error: function(data, status,error){
+				console.log('pin 해재 실패!');
 			}
 		});
 	}
@@ -127,12 +213,12 @@
 		var id = notices[index].id;
 		var title = notices[index].title;
 		var content = notices[index].content;
-		var important = notices[index].important;
+		var pin = notices[index].pin;
 		$('#setID').val(id);
 		$('#editTitle').val(title);
 		$('#editContent').val(content);
 
-		if(important == 1)
+		if(pin == 1)
 			$('#editImportant').attr('checked', '');
 		else
 			$('#editImportant').removeAttr('checked');
@@ -239,32 +325,9 @@
                     <div class="row">
                     	<div class="col-12">
                     		<div class="col-10">
-                    			
                     		</div>
-                    		
                     	</div>
-                    
-                    	<div class="col-12 row justify-content-center noticeList">
-                    		<!--  
-                    		<c:forEach var="item" items="${allNotices}" varStatus="status">
-                    			<div class="col-md-12 col-lg-10 col-md-12 col-auto ">
-	                             <div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">
-	                                 <div class="card">
-	                                     <div id="headingOne" class="card-header">
-	                                     	<c:set var="num" value="${fn:length(allNotices) - status.index}" />
-	                                         <button type="button" data-toggle="collapse" data-target="#collapse${status.index}" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
-	                                             <h5 class="m-0 p-0"><b>#<c:out value="${num}" /> </b><c:out value="${item.title}" /></h5>
-	                                         </button>
-	                                     </div>
-	                                     <div data-parent="#accordion" id="collapse${status.index}" aria-labelledby="headingOne" class="collapse" style="">
-	                                         <div class="card-body"><c:out value="${item.content}" /></div>
-	                                     </div>
-	                                 </div>
-	                             </div>
-	                         </div>
-                    		</c:forEach>
-                    		-->
-                    	</div>
+                    	<div class="col-12 row justify-content-center noticeList"></div>
                     </div>	
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
@@ -300,9 +363,9 @@
                                     	<textarea id="inputContent" name="content" class="form-control" rows="7"></textarea>
                                     </div>
                                 </div>
-                                <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">중요 공지</label>
+                                <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">상단고정</label>
                                     <div class="col-sm-10 mt-2">
-                                        <div class="position-relative form-check"><input id="inputImportant" name="important" type="checkbox" class="form-check-input"></div>
+                                        <div class="position-relative form-check"><input id="inputImportant" name="pin" type="checkbox" class="form-check-input"></div>
                                     </div>
                                 </div>
                             </form>
@@ -345,10 +408,10 @@
                                     	<textarea id="editContent" name="content" class="form-control" rows="7"></textarea>
                                     </div>
                                 </div>
-                                <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">중요 공지</label>
+                                <div class="position-relative row form-group"><label for="checkbox2" class="col-sm-2 col-form-label">상단고정</label>
                                     <div class="col-sm-10 mt-2">
                                         <div class="position-relative form-check">
-                                        	<input id="editImportant" name="important" type="checkbox" class="form-check-input">
+                                        	<input id="editImportant" name="pin" type="checkbox" class="form-check-input">
                                         </div>
                                     </div>
                                 </div>
