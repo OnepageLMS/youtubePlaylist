@@ -69,6 +69,17 @@ public class Stu_ClassController{
 		return "class/dashboard_Stu";
 	}
 	
+	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+	public String dashboard(Model model) {
+		
+		model.addAttribute("myName", memberService.getStudentName(studentId));
+		// select id, className, startDate from lms_class where instructorID=#{instructorID}
+		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
+		// takes테이블을 통해 가져올 수 있도록 해야겠다..
+		
+		return "class/dashboard_Stu";
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
 	public Object getAllNotices() {

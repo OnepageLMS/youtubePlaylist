@@ -6,12 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Sign-in</title>
-<link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/favicon.ico">
-<link rel="icon" href="${pageContext.request.contextPath}/resources/img/favicon.png">
-<link rel="icon" href="favicon-16.png" sizes="16x16"> 
-<link rel="icon" href="favicon-32.png" sizes="32x32"> 
-<link rel="icon" href="favicon-48.png" sizes="48x48"> 
-<link rel="icon" href="favicon-64.png" sizes="64x64"> 
+<link rel="shortcut icon"
+	href="${pageContext.request.contextPath}/resources/img/favicon.ico">
+<link rel="icon"
+	href="${pageContext.request.contextPath}/resources/img/favicon.png">
+<link rel="icon" href="favicon-16.png" sizes="16x16">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="icon" href="favicon-48.png" sizes="48x48">
+<link rel="icon" href="favicon-64.png" sizes="64x64">
 <link rel="icon" href="favicon-128.png" sizes="128x128">
 <!--favicon 설정 -->
 
@@ -20,13 +22,11 @@
 	rel="stylesheet"
 	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
 	crossorigin="anonymous">
-
+<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://kit.fontawesome.com/3daf17ae22.js"
 	crossorigin="anonymous"></script>
-<meta name="google-signin-client_id"
-	content="614414049636-vmoicaro2j8pqts15mto327u6cm9p5u0.apps.googleusercontent.com">
 </head>
 <style>
 .divider:after, .divider:before {
@@ -55,22 +55,37 @@
 					<div class="card" style="border-radius: 1rem;">
 						<div class="row g-0">
 							<div class="col-md-6 col-lg-5 d-none d-md-block">
-								<img
-									src="resources/img/Learntube-logos_transparent.png"
+								<img src="${pageContext.request.contextPath}/resources/img/Learntube-logos_transparent.png"
 									alt="login form" class="img-fluid"
 									style="border-radius: 1rem 0 0 1rem;" />
 							</div>
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
 									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0">Sign into your account</span>
+										<span class="h1 fw-bold mb-0">로그인 옵션을 선택해주세요</span>
 									</div>
-
-									<div class="pt-1 mb-4">
-										<button class="btn btn-lg btn-block btn-danger" onclick="${pageContext.request.contextPath}/google">
+									<form action='${pageContext.request.contextPath}/login/google' method='post'>
+										<fieldset class="position-relative form-group">
+											<div class="position-relative form-check">
+												<label class="form-check-label"> 
+													<input name="mode" type="radio" class="form-check-input" value="tea">
+													선생님
+												</label>
+											</div>
+											<div class="position-relative form-check">
+												<label class="form-check-label"> 
+												<input name="mode" type="radio" class="form-check-input" value="stu">
+													학생
+												</label>
+											</div>
+										</fieldset>
+										<div class="pt-1 mb-4">
+										<button class="btn btn-lg btn-block btn-danger" type="submit">
 											<i class="fab fa-google me-2"></i> Google로 로그인
 										</button>
 									</div>
+									</form>
+									
 									<p class="small text-muted">&copy;Everyday</p>
 								</div>
 							</div>
