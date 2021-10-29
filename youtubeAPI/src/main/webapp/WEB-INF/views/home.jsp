@@ -7,7 +7,7 @@
 	<title>Home</title>
 </head>
 <body>
-	<button onclick="location.href='signin'">Sign In</button>
+	<button onclick="location.href='login/signin'">Sign In</button>
 	<button onclick="location.href='dashboard'">Teacher</button>
 	<button onclick="location.href='student/class/1'">Student1</button>
 	<button onclick="location.href='student/class/2'">Student2</button>

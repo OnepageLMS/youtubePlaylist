@@ -10,6 +10,7 @@
 		<typeAlias alias="classContent" type="com.mycom.myapp.commons.ClassContentVO" />
 		<typeAlias alias="notice" type="com.mycom.myapp.commons.NoticeVO" />
 		<typeAlias alias="attendance" type="com.mycom.myapp.commons.AttendanceVO" />
+		<typeAlias alias="member" type="com.mycom.myapp.commons.MemberVO"/>
 		
 		<typeAlias alias="AttendanceCheckVO" type="com.mycom.myapp.attendanceCheck.AttendanceCheckVO" />
 		<typeAlias alias="VideoCheckVO" type="com.mycom.myapp.student.videocheck.Stu_VideoCheckVO" />

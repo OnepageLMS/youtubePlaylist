@@ -118,6 +118,12 @@
 			<artifactId>spring-social-google</artifactId>
 			<version>1.0.0.RELEASE</version>
 		</dependency>
+		
+		<dependency>
+              <groupId>org.apache.httpcomponents</groupId>
+              <artifactId>httpclient</artifactId>
+              <version>4.5.3</version>
+        </dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.social/spring-social-core -->
 		<dependency>
