@@ -62,7 +62,7 @@
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
 									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0">로그인 옵션을 선택해주세요</span>
+										<span class="h1 fw-bold mb-0">로그인 모드를 선택해주세요</span>
 									</div>
 									<form action='${pageContext.request.contextPath}/login/google' method='post'>
 										<fieldset class="position-relative form-group">
