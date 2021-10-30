@@ -53,9 +53,9 @@ public class ClassController {
 	@ResponseBody
 	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
 	public Object getAllNotices(HttpSession session) {
-		int instructorID = (Integer)session.getAttribute("login");
-		List<ClassesVO> list = classService.getAllMyActiveClass(instructorID);
-		List<ClassesVO> inactiveList = classService.getAllMyInactiveClass(instructorID);
+		//int instructorID = (Integer)session.getAttribute("login");
+		List<ClassesVO> list = classService.getAllMyActiveClass(1);
+		List<ClassesVO> inactiveList = classService.getAllMyInactiveClass(1);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("active", list);
