@@ -10,7 +10,6 @@ public class Stu_TakesVO {
 	private boolean pass; //db에는 varchar로 선언
 	
 	private String email;
-	private String phone;
 	private String regDate;
 	private String modDate;
 	
@@ -61,12 +60,6 @@ public class Stu_TakesVO {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 	public String getRegDate() {
 		return regDate;

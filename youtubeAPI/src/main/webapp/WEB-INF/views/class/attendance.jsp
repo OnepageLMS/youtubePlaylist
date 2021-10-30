@@ -160,7 +160,6 @@ function showAllStudentInfo(){
 	       							+ '<div class="row">'
 	      								+ '<p class="col-sm-12 mb-0">' + value.studentName + ' </p>'
 	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
-	       								+ '<p class="col-sm-12 mb-0">' + value.phone + '</p>'
 	    							+ '</div>'
     							+ '</div>'
     							+ '<div class="col-sm-4">'
@@ -347,7 +346,6 @@ function showAllStudentInfo(){
 												<div class="row">
 													<p class="col-sm-12 mb-0">${person.studentName} </p>
 													<p class="col-sm-12 mb-0">${person.email} </p>
-													<p class="col-sm-12 mb-0">${person.phone }</p>
 												</div>
 											</div>
 											<div class="col-sm-4">
@@ -375,7 +373,6 @@ function showAllStudentInfo(){
 											<div class="row">
 												<p class="col-sm-12 mb-0">${person.studentName } </p>
 												<p class="col-sm-12 mb-0">${person.email } </p>
-												<p class="col-sm-12 mb-0">${person.phone } </p></div>
 											</div>
 											<div class="col-sm-4">
 												<div class="row">
