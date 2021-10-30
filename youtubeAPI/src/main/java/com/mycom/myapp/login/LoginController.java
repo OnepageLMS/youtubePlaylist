@@ -64,14 +64,17 @@ public class LoginController {
 		System.out.println(mode);
 		loginMode = mode;
 			
-		OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();	//구글 code 발행 
-		String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);	//google 로그인페이지 이동 url생성
+		//OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();	//구글 code 발행 
+		//String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);	//google 로그인페이지 이동 url생성
+		String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
+		String url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=681590312169-uqt06gfeq64jmh1unlprnc3toq97sv9j.apps.googleusercontent.com&"
+							+ "redirect_uri=" + redirectURL + "&response_type=code&scope=email%20profile%20openid&access_type=offline";
 		return "redirect:" + url;
 	}
 	
 	@RequestMapping(value = "/oauth2callback", method = RequestMethod.GET)
 	public String googleAuth(Model model, @RequestParam(value = "code") String authCode, HttpServletRequest request,
-			HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+			HttpSession session, MemberVO vo, RedirectAttributes redirectAttributes) throws Exception {
 		
 		// HTTP Request를 위한 RestTemplate
 		RestTemplate restTemplate = new RestTemplate();
@@ -109,35 +112,40 @@ public class LoginController {
 		Map<String, String> userInfo = mapper.readValue(resultJson, new TypeReference<Map<String, String>>() {
 		});
 		model.addAllAttributes(userInfo);
-		model.addAttribute("token", result.getAccessToken()); //토큰 token에 저장!!
-		
+		model.addAttribute("token", result.getAccessToken()); //token 저장
+
         //DB 저장 or check
         String email = userInfo.get("email");
+        String name = userInfo.get("family_name") + userInfo.get("given_name");
         MemberVO checkvo = new MemberVO();
 		checkvo.setEmail(email);
-		checkvo.setName(userInfo.get("family_name") + userInfo.get("given_name"));
+		checkvo.setName(name);
 		
-		String returnURL = "";
 		if (session.getAttribute("login") != null) { 
 			session.removeAttribute("login");
 		}
-		System.out.println(email);
 		
-		if(loginMode.equals("tea")) {		
-			if(memberService.getInstructor(email) == null) {
-				if(memberService.insertInstructor(checkvo) != 0)
+		String returnURL = "";
+		int userID = 0;
+		
+		if(loginMode.equals("tea")) {	
+			userID = memberService.getInstructorID(email);
+			if(userID < 0) {
+				userID = memberService.insertInstructor(checkvo);
+				if(userID > 0)
 					System.out.println("회원가입 성공:)");
 				else {
 					System.out.println("회원가입 실패:(");
 					return "redirect:/login/signin";
 				}
-					
 			}
 			returnURL = "redirect:/dashboard";
 		}
 		else if(loginMode == "stu") {
-			if(memberService.getStudent(email) == null) {
-				if(memberService.insertStudent(checkvo) != 0)
+			userID = memberService.getStudentID(email);
+			if(userID < 0) {
+				userID = memberService.insertStudent(checkvo);
+				if(userID > 0)
 					System.out.println("회원가입 성공!");
 				else {
 					System.out.println("회원가입 실패:(");
@@ -147,15 +155,11 @@ public class LoginController {
 			returnURL = "redirect:/student/class/dashboard";
 		}
 		
+		checkvo.setId(userID);
+		session.setAttribute("userName", name);
+		session.setAttribute("userID", userID);
+		session.setAttribute("userEmail", email);
 		session.setAttribute("login", checkvo);
-		
-        // set info session userid
-		/*
-        session.setAttribute("info_userid", profile.getAccountEmail());
-        session.setAttribute("info_usernname", profile.getDisplayName());
-        session.setAttribute("info_userprofile", profile.getImageUrl());
-        session.setAttribute("info_oauth", "google");
-        */
  
 		return returnURL;
 	}
@@ -177,6 +181,7 @@ public class LoginController {
 	@RequestMapping(value = "/signout")
 	public String logout(HttpSession session) {
 		session.invalidate();
+		System.out.println("logged out!");
 		return "redirect:/login/signin";
 	}
 	

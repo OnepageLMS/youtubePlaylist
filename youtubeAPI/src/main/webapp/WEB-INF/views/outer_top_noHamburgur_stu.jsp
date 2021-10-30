@@ -46,7 +46,7 @@
                             </div>
                             <div class="widget-content-left  ml-3 header-user-info">
                                 <div class="widget-heading">
-                                    ${myName}
+                                    ${login.name}
                                 </div>
                                 <div class="widget-subheading">
                                     학생
