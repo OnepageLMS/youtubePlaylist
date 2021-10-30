@@ -15,7 +15,7 @@ public class ClassesDAO {
 	
 	public int insertClassroom(ClassesVO vo) {
 		int result = sqlSession.insert("Classes.insertClassroom", vo);
-		if (result != 0) {
+		if (result > 0) {
 			return vo.getId();	//새로 생성된 classID 
 		}
 		return -1;

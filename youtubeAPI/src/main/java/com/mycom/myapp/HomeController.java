@@ -170,33 +170,235 @@ public class HomeController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/takes", method = RequestMethod.POST)
+	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {
+		
+		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
+	}
+	
+	/*public List<String> whoTakes(List<List<String>> csv, List<String> stu ) {
+		System.out.println("들어왔어!");
+		List<String> attendStu = new ArrayList<String>();
+		List<String> annonyStu = new ArrayList<String>();
+		//List<List<String>> stuList = new ArrayList<List<String>>();
+		//List<Integer> csvStartH = new ArrayList<Integer>();
+		//List<Integer> csvEndH = new ArrayList<Integer>();
+		//System.out.println("csv : " + csv);
+		//System.out.println("csv.get : " + csv.get(0));
+		//System.out.println("csv.get.get : " + csv.get(0).get(0));
+		//System.out.println("csv.get.get.get : " + csv.get(0).get(0).charAt(0));
+		
+		for(int i=4; i<csv.size(); i++) {
+			for(int j=0; j<stu.size(); j++) {
+				
+				if(csv.get(i).get(0).indexOf(stu.get(j)) != -1) {
+					attendStu.add(stu.get(j));
+					//stuList.add(attendStu);
+				}
+				else {
+					continue;
+				}
+	
+			}
+		}
+		
+		return attendStu;
+	}*/
+	
+	/*public List<String> timeLimit(List<List<String>> csv, List<String> stu){
+		//List<Integer> csvStartH = new ArrayList<Integer>();
+				//List<Integer> csvEndH = new ArrayList<Integer>();
+	}*/
+	
+	@ResponseBody
 	@RequestMapping(value = "/uploadCSV", method = RequestMethod.POST)
 	public List<List<String>> uploadCSV(MultipartHttpServletRequest request, Model model) throws Exception {
-		System.out.println("오긴해..?");
+		//업로드된 파일에서 리스트 뽑은거랑, takes테이블에서 학생이름 가져오기
+		//데이터는 함수를 또 만들어서 넘겨주기 
 		MultipartFile file = request.getFile("file");
 		String name = request.getParameter("name");
-		System.out.println(name);
-		System.out.println(file.getName());
-		System.out.println(file.getOriginalFilename());
-		System.out.println(file.getContentType());
-		
+		int start_h = 10;
+		int start_m = 5;
+		int end_h = 11;
+		int end_m = 15;
+		int seq = 1; //차시 
+		//start_h ~ seq모두 jsp파일에서 받아오기 
 		
 		List<List<String>> csvList = new ArrayList<List<String>>();
-		
 		String realPath = request.getSession().getServletContext().getRealPath("/");
-		System.out.println(realPath);
+		
+		List<Integer> csvStartH = new ArrayList<Integer>();
+		List<Integer> csvStartM = new ArrayList<Integer>();
+		List<Integer> csvEndH = new ArrayList<Integer>();
+		List<Integer> csvEndM = new ArrayList<Integer>();
+		List<List<String>> finalTakes = new ArrayList<List<String>>();
+		 
 		File dir = new File(realPath);
 		if(!dir.exists()) dir.mkdirs();
 		try {
 			String line;
 			BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
-			while((line=br.readLine()) != null) {
-				//System.out.println(" : " + line);
+			int idx = 0;
+			while((line=br.readLine()) != null) { 
 				List<String> aLine = new ArrayList<String>();
                 String[] lineArr = line.split(","); // 파일의 한 줄을 ,로 나누어 배열에 저장 후 리스트로 변환한다.
+                
+               /*if(idx > 3) {
+                	//System.out.println("lineArr: "  + Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12))); 
+                	csvStartH.add( Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12)));
+                	csvEndH.add( Integer.parseInt(lineArr[3].charAt(11) + "" + lineArr[3].charAt(12)));
+                	
+                	csvStartM.add( Integer.parseInt(lineArr[2].charAt(14) + "" + lineArr[2].charAt(15)));
+                	csvEndM.add( Integer.parseInt(lineArr[3].charAt(14) + "" + lineArr[3].charAt(15)));
+                
+                }*/
+                //System.out.println("lineArr: "  + Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12))); 
+               // csvStartH.add()
                 aLine = Arrays.asList(lineArr);
                 csvList.add(aLine);
+                idx++;
 			}
+			
+			for(int i=0; i<csvStartH.size(); i++) {
+				System.out.println(csvStartH.get(i));
+			}
+			
+            List<Stu_TakesVO> data = stu_takesService.getStudentNum(1); //db에서 학생정보 가져오기 classID임의로 넣음 
+            List<String> stuNameArr = new ArrayList<String>();
+            for(int i=0; i<data.size(); i++) {
+            	stuNameArr.add(data.get(i).getStudentName()); //data에서 sudentName어떻게 가져올지,,
+            }
+            
+
+    		List<String> attendStu = new ArrayList<String>();
+    		List<String> absentStu = new ArrayList<String>();
+    		List<String> annonyStu = new ArrayList<String>();
+            
+    		//int stuNum = 0;
+            for(int i=4; i<csvList.size(); i++) {
+            	//if(stuNum == stuNameArr.size() ) break;
+    			for(int j=0; j<stuNameArr.size(); j++) {
+    				//System.out.println(csvList.get(i).get(0));
+    				if(csvList.get(i).get(0).contains(stuNameArr.get(j)) ) { //csv파일 내에 이름이 있는 학생의 경우와
+    					//결석보다는 출석한 학생이 많으므로 우선 출석으로 넣어두고,
+    					System.out.println("학생이름이 있습니다. ");
+    					attendStu.add(stuNameArr.get(j));
+    					
+    					csvStartH.add( Integer.parseInt(csvList.get(i).get(2).charAt(11) + "" + csvList.get(i).get(2).charAt(12)));
+                    	csvEndH.add( Integer.parseInt(csvList.get(i).get(3).charAt(11) + "" + csvList.get(i).get(3).charAt(12)));
+                    	
+                    	csvStartM.add( Integer.parseInt(csvList.get(i).get(2).charAt(14) + "" + csvList.get(i).get(2).charAt(15)));
+                    	csvEndM.add( Integer.parseInt(csvList.get(i).get(3).charAt(14) + "" + csvList.get(i).get(3).charAt(15)));
+                    	
+    					//stuNum++;
+    				}
+    				else { // 미확인 학생들 
+    					/*System.out.println("학생이름이 없습니다. ");
+    					stuNum++;
+    					annonyStu.add(stuNameArr.get(j));*/
+    					//stuNum++;
+    					continue;
+    				}
+    	
+    			}
+    		}
+            
+            int count = 0;
+            for(int i=0; i<stuNameArr.size(); i++) {
+            	if(start_h > csvStartH.get(i) ) {
+            		if(end_h < csvEndH.get(i)) {
+            			System.out.println("1");
+            			continue;
+        				//출석 
+        			}
+            		
+            		else if(end_h == csvEndH.get(i)){ 
+            			if(end_m <= csvEndM.get(i)) {
+            				System.out.println("2" + start_h + " / " + csvStartH.get(i));
+            				continue;
+            				// 출석 
+        				}
+            			else {
+            				//결석 
+            				//출석에서 빼고 결석에 넣기
+            				// i번째의 학생이 attendStu의 list에서는 몇번재인지.,
+            				System.out.println("3");
+            				attendStu.remove(count);
+            				absentStu.add(attendStu.get(count));
+            				
+            			}
+            		}
+            		
+            		else {
+    					//결석 
+            			//출석에서 빼고 결석에 넣기 
+            			System.out.println("4");
+        				attendStu.remove(i);
+        				absentStu.add(attendStu.get(i));
+    				}
+            	}
+            	else if(start_h == csvStartH.get(i)) {
+            		if(start_m >= csvStartM.get(i)) {
+            			if(end_h < csvEndH.get(i)) {
+            				System.out.println("5");
+            				continue;
+            				//출석 
+            			}
+                		
+                		else if(end_h == csvEndH.get(i)){ 
+                			if(end_m <= csvEndM.get(i)) {
+                				System.out.println("6");
+                				continue;
+                				// 출석 
+            				}
+                			else {
+                				//결석 
+                    			//출석에서 빼고 결석에 넣기 
+                				System.out.println("7");
+                				System.out.println("attendStu.length " + attendStu.size());
+                				attendStu.remove(count);
+                				absentStu.add(attendStu.get(count));
+                				System.out.println("attendStu.length " + attendStu.size());
+                			}
+                		}
+                		
+                		else {
+                			//결석 
+                			//출석에서 빼고 결석에 넣기 
+                			System.out.println("8");
+                			attendStu.remove(count);
+            				absentStu.add(attendStu.get(count));
+                		}
+            		}
+            		
+            		else {
+            			//결석 
+            			//출석에서 빼고 결석에 넣기 
+            			System.out.println("9");
+            			System.out.println("attendStu.length " + attendStu.size());
+        				attendStu.remove(count);
+        				absentStu.add(attendStu.get(count));
+        				System.out.println("attendStu.length " + attendStu.size());
+            		}
+            		
+            	}
+            	else {
+            		//결석 
+        			//출석에서 빼고 결석에 넣기 
+            		System.out.println("10");
+            		attendStu.remove(count);
+    				absentStu.add(attendStu.get(count));
+            	}
+            	
+            	count++;
+            }
+            
+            
+            
+            finalTakes.add(attendStu);
+            finalTakes.add(absentStu);
+            finalTakes.add(annonyStu);
+            
 			br.close();
 			
 			file.transferTo(new File(realPath, file.getOriginalFilename()));
@@ -204,7 +406,7 @@ public class HomeController {
 			e.printStackTrace();
 		}
 		
-		return csvList;
+		return finalTakes;
 	}
 
 	@RequestMapping(value = "/entryCode", method = RequestMethod.GET)

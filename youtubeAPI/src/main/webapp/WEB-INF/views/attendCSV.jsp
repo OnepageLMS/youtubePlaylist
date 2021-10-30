@@ -105,9 +105,9 @@ $(document).ready(function(){
 			'data' : formData,
 			'type' : 'POST',
 			success: function(data){
-				csvNameList = data;
-				alert(data[0][0]);
-				console.log(data);
+				console.log(data[0]); //attendStuList
+				console.log(data[1]); //absentStuList
+				console.log(data[2]); //annonyStuList
 				
 				/*for(var i=0; i<data[0].length; i++){
 					console.log(data[0][i]);
@@ -161,7 +161,10 @@ function whoIsAttend(csv, stu){
 		}
 	}
 	
-	
+	//항목에 따라서 selectbox의 색이 다르게
+	//전체적으로 출/결여부를 바꾸어줄 수 있는대로 
+	//밑에 데이터 로드해서 보여주기보다는, 파일을 open하도록 하는 방식으로
+	//업로드했을때, 몇개가 check가 되었는지 미반영은 몇개인지 
 	
 	/*for(var i=0; i<attendStu.length; i++){
 		console.log("출석한 학생은 말이지 " + attendStu[i]); 
@@ -288,6 +291,12 @@ function updateAttendance(days){
 	//
 }
 
+backgroundCh = function() {
+	console.log(document.getElementById('sel'));
+	console.log(sel.className);
+    var sel = document.getElementById('sel');
+    sel.style.backgroundColor = sel.className;
+};
 	
 	
 </script>
@@ -394,11 +403,11 @@ function updateAttendance(days){
 		                                            
 		                                            	 <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
 		                                            	 	<td style="text-align:center" > 
-						                                        <select  class="takeZoom${status2.index+1} form-select"  aria-label="Default select example">
+						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" onchange="backgroundCh();">
 																  <option selected>출결체크</option>
-																  <option value="1">출석</option>
-																  <option value="2">지각</option>
-																  <option value="3">결석</option>
+																  <option value="1" class="blue">출석</option>
+																  <option value="2" class="yellow">지각</option>
+																  <option value="3" class="red">결석</option>
 																</select>
 		                                            	 	</td>
 		                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>

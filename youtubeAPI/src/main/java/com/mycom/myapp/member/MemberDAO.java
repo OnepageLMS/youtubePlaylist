@@ -12,27 +12,29 @@ public class MemberDAO {
 	SqlSession sqlSession;
 	
 	public int insertInstructor(MemberVO vo) {
-		return sqlSession.insert("Member.insertInstructor", vo);
+		int id = sqlSession.insert("Member.insertInstructor", vo);
+		return vo.getId();
 	}
 	
 	public int insertStudent(MemberVO vo) {
-		return sqlSession.insert("Member.insertStudent", vo);
+		int id = sqlSession.insert("Member.insertStudent", vo);
+		return vo.getId();
 	}
 	
-	public String getInstructorName(int id) {
+	public String getInstructorName(int id) {	//지우기 
 		return sqlSession.selectOne("Member.getInstructorName", id);
 	}
 	
-	public String getStudentName(int id) {
+	public String getStudentName(int id) {	//지우기
 		return sqlSession.selectOne("Member.getStudentName", id);
 	}
 	
-	public MemberVO getInstructor(String email) {
-		return sqlSession.selectOne("Member.getInstructor", email);
+	public int getInstructorID(String email) {
+		return sqlSession.selectOne("Member.getInstructorID", email);
 	}
 	
-	public MemberVO getStudent(String email) {
-		return sqlSession.selectOne("Member.getStudent", email);
+	public int getStudentID(String email) {
+		return sqlSession.selectOne("Member.getStudentID", email);
 	}
 	
 

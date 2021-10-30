@@ -61,11 +61,9 @@ public class Stu_ClassController{
 	
 	private int studentId;
 	
-	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)	//이제사용x (10/30)
 	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
 		studentId = studentID;
-		
-		model.addAttribute("myName", memberService.getStudentName(studentId));
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,17 +40,8 @@ public class ClassController {
 	
 	@RequestMapping(value = "/dashboard",  method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(Model model) {
-		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-		//model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		
-		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "class/dashboard";
 	}	
-	
-	@RequestMapping(value = "/allMyClass", method = RequestMethod.GET)	//나중에 지우기
-	public void getAllMyClass(Model model) {
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
-	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
@@ -59,7 +52,8 @@ public class ClassController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
-	public Object getAllNotices() {
+	public Object getAllNotices(HttpSession session) {
+		int instructorID = (Integer)session.getAttribute("login");
 		List<ClassesVO> list = classService.getAllMyActiveClass(instructorID);
 		List<ClassesVO> inactiveList = classService.getAllMyInactiveClass(instructorID);
 		
