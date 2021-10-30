@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.student.video.Stu_VideoService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
+import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.NoticeVO;
@@ -34,6 +35,9 @@ import net.sf.json.JSONArray;
 @Controller
 @RequestMapping(value="/student/class")
 public class Stu_ClassController{
+	@Autowired
+	private ClassesService classService;
+	
 	@Autowired
 	private Stu_ClassesService classesService;
 	
@@ -124,6 +128,12 @@ public class Stu_ClassController{
 			System.out.println("강의실 나가기 성공!");
 		else
 			System.out.println("강의실 나가기 실패!");
+		//(jw)
+		if(classService.updateTotalStudent(id) == 1)
+			System.out.println("totalStudent 업데이트 성공! ");
+		else
+			System.out.println("totalStudent 업데이트 실패 ");
+		
 	}
 	
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)

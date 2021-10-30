@@ -66,14 +66,28 @@ public class AttendanceController {
 	@ResponseBody
 	@RequestMapping(value ="/allowTakes", method = RequestMethod.POST)
 	public int allowTakes(@RequestBody Stu_TakesVO vo) {
-		return stu_takesService.updateStatus(vo);
+		int result = stu_takesService.updateStatus(vo);
+		
+		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
+			System.out.println("totalStudent 업데이트 성공!");
+		else 
+			System.out.println("totalStudent 업데이트 실패 ");
+
+		return result;
 	}
 	
 	@ResponseBody
 	@RequestMapping(value ="/deleteTakes" , method = RequestMethod.POST)
 	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
 		System.out.println(vo.getClassID() + vo.getStudentID());
-		return stu_takesService.deleteStudent(vo);
+		int result = stu_takesService.deleteStudent(vo);
+		
+		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
+			System.out.println("totalStudent 업데이트 성공!");
+		else
+			System.out.println("totalStudent 업데이트 실패 ");	
+				
+		return result;
 	}
 	
 	@ResponseBody

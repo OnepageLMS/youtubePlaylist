@@ -45,6 +45,10 @@ public class ClassesDAO {
 		return sqlSession.delete("Classes.deleteClassroom", id);
 	}
 	
+	public int updateTotalStudent(int id) {
+		return sqlSession.update("Classes.updateTotalStudent", id);
+	}
+	
 	public String getClassName(int id) {
 		return sqlSession.selectOne("Classes.getClassName", id);
 	}
@@ -72,5 +76,6 @@ public class ClassesDAO {
 	public List<String> getAllEntryCodes() {
 		return sqlSession.selectList("Classes.getAllEntryCodes");
 	}
+
 }
 
