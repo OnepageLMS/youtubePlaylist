@@ -133,7 +133,12 @@ $(document).ready(function(){
 	// Playlist 이름 보여지게 하기
 	//console.log(JSON.stringify(localStorage.getItem("selectedPlaylist")));
 	console.log(localStorage.getItem("selectedPlaylistName"));
-	$("#playlistName").before('<h4 class="text-primary" style="display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');	
+	$("#playlistName").before('<h4 class="text-primary" style="display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');
+
+	$('#cartButton').click(function(){
+	    $('.toast').toast({delay: 1000});
+	    $('.toast').toast('show');
+	  });	
 });
 </script>
 
@@ -254,7 +259,7 @@ $(document).ready(function(){
 			var view = viewCount[i];
 			var title = titleList[i].replace("'", "\\'").replace("\"","\\\"");
 			
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 85%; height:85%; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
+			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 100%; height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
 			+ '\'' + ',\'' + title + '\''
 			+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" >';
 			//var url = '<a href="https://youtu.be/' + id + '">';
@@ -274,15 +279,15 @@ $(document).ready(function(){
 					
 					'<div class="searchedVideo list-group-item-action list-group-item" >'
 							+ '<div class="row">'
-								+ '<div class="col-sm-3" style="height: 90%; ">'
+								+ '<div class="col-sm-3">'
 									+ thumbnail
 								+ '</div>'
 								/* + '<div class="col-sm-1"> </div>' */
-								+ '<div class="col-sm-8 ">'
+								+ '<div class="col-sm-8 " style="display: flex; align-items: center;">'
 									+ '<div onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
 									+ '\'' + ',\'' + title + '\''
-									+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" style="cursor: pointer;">'
-										+ '<h5 class="mt-4">' + title + '</h5>'
+									+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" style="cursor: pointer; ">'
+										+ '<h5>' + title + '</h5>'
 										+ '<div>'
 											+ '<span class="info m-0"> published: <b>' + dateList[i]
 											+ '</b> view: <b>' + view
@@ -336,6 +341,10 @@ $(document).ready(function(){
 		var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
 		location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/' + myEmail;
 	}
+
+/* 	function showToast(){
+		$('#toast-container').css("display", "block");
+	} */
 
 	
 </script>
@@ -411,12 +420,16 @@ $(document).ready(function(){
 								+ '<div class="col-sm-10"><input type="text" id="setTag" name="setTag" class="col-sm-11 form-control"> </div>'
 							+ '</div>' 
 						+ '</div>'
-						+ '<div> <button class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\')">' 
+						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\')">' 
 							+ '<i class="fas fa-plus-square"> 리스트에 추가 </i>'
 						+ '</button> </div>'
 					+ '</form>' 
+						+ '<div class="toast">'
+							+ '<div class="toast-body">I do not think that means what you think it means.</div>'
+						+ '</div>'
 					+ '</div>'); 		
-					
+			
+			
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
 
@@ -819,10 +832,11 @@ $(document).ready(function(){
 				//document.getElementById("start_ss").focus();
 				return false;
 			}
+			
 			if(d<values[0]){
 				console.log(d+"는 "+values[0]+"보다 작다.. ㅋㅋㅋ 왜 이렇게 나오는데");
 				console.log(d, " vs ", values[0]);
-				document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요.";
+				document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요."; 
 				return false;
 			}
 
@@ -833,14 +847,13 @@ $(document).ready(function(){
 		// 원래 addToCart 자리 (21/10/09)
 		
 		function deleteFromCart(){
-				
 			$('input:checkbox:checked').each(function(i){
 				console.log($(this).parent().closest('.videoSeq').remove());
 			});
 			// 전체 선택 체크 해제 
 			$("input:checkbox[id='checkAll']").prop("checked", false); /* by ID */  
-			
 		}
+		
 		function selectAll(selectAll) {
 			const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 			
@@ -849,6 +862,7 @@ $(document).ready(function(){
 				checkbox.checked = selectAll.checked;
 			})
 		}
+		
 		function changeCardSize(){
 			$("#searchArea").children().eq(0).attr('class', 'selectedPlaylist col-lg-6 card');
 		}
@@ -857,6 +871,26 @@ $(document).ready(function(){
 		function closeSidebar(){
 			$('.ui-theme-settings').attr('class', 'ui-theme-settings');
 		}
+
+		// 바깥영역 클릭시 안보이게 하기 
+		$('body').on('click', function(e) {
+	        if($(e.target).closest('#TooltipDemo').length == 0) {
+	        	$('.ui-theme-settings').attr('class', 'ui-theme-settings');
+	        }
+	    });
+
+		/* var menu = $('.ui-theme-settings');
+
+		document.addEventListener("click", function(){
+		    // Hide the menus
+			$('.ui-theme-settings').attr('class', 'ui-theme-settings');
+		}, false);
+
+		document.getElementByClassName("ui-theme-settings").addEventListener("click", function(e){
+		    // Show the menus
+		    $('.ui-theme-settings').attr('class', 'ui-theme-settings settings-open');
+		    e.stopPropagation();
+		}, false); */
 
 		function insertVideo(){ 	// video들 저장 		
 				event.preventDefault(); // avoid to execute the actual submit of the form.
@@ -911,22 +945,20 @@ $(document).ready(function(){
 					'contentType' : "application/json",
 					success : function(data) {
 						console.log("ajax video저장 완료!");
-						if(!confirm("플레이리스트가 저장되었습니다! 더 추가하시겠습니까?")){
-							var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
-							location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/';
+						if(!confirm("playlist에 비디오가 추가되었습니다. playlist 화면으로 이동 하시겠습니까?")){
+							deleteFromCart();
 						}
 						else{
-							deleteFromCart();
+							var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
+							location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/';
 							return false;
 						}
 					},
 					error : function(error) {
-						
 						//getAlMyPlaylist();
 						console.log("ajax video저장 실패!" + error);
 					} 
 				});
-
 				//confirmSearch();
 				return false;
 		}
