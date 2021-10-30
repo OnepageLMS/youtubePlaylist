@@ -13,6 +13,7 @@ public interface ClassesService {
 	public int updateInstructorNull(int id);
 	public int updateActive(int id);
 	public int deleteClassroom(int id);
+	public int updateTotalStudent(int id);
 	public String getClassName(int id);
 	public ClassesVO getClass(int id);
 	public ClassesVO getClassInfoForCopy(int id);

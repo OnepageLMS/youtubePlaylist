@@ -64,4 +64,12 @@
 		select entryCode from lms_class
 	</select>
 	
+	<update id="updateTotalStudent">
+		update lms_class 
+		set totalStudent = ( select count(id)
+					from lms_takes
+					where classID = #{classID} and status="accepted")
+		where id = #{classID}
+	</update>
+	
 </mapper>

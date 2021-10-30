@@ -46,6 +46,11 @@ public class ClassesServiceImpl implements ClassesService {
 	public int deleteClassroom(int id) {
 		return classesDAO.deleteClassroom(id);
 	}
+
+	@Override
+	public int updateTotalStudent(int id) {
+		return classesDAO.updateTotalStudent(id);
+	}
 	
 	@Override
 	public String getClassName(int id) {
@@ -81,5 +86,6 @@ public class ClassesServiceImpl implements ClassesService {
 	public List<String> getAllEntryCodes() {
 		return classesDAO.getAllEntryCodes();
 	}
+
 }
 

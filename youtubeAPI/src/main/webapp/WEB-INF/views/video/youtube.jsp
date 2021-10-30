@@ -152,6 +152,7 @@ $(document).ready(function(){
 	var dislikeCount = [ maxResults ];
 	var durationCount = [ maxResults ];
 	var count = 0;
+	
 	function fnGetList(sGetToken) { // youtube api로 검색결과 가져오기 
 		count = 0;
 		var $getval = $("#search_box").val(); 
@@ -258,6 +259,7 @@ $(document).ready(function(){
 			var id = idList[i];
 			var view = viewCount[i];
 			var title = titleList[i].replace("'", "\\'").replace("\"","\\\"");
+			/* title = `${title}`; */
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 100%; height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
 			+ '\'' + ',\'' + title + '\''
@@ -285,7 +287,7 @@ $(document).ready(function(){
 								/* + '<div class="col-sm-1"> </div>' */
 								+ '<div class="col-sm-8 " style="display: flex; align-items: center;">'
 									+ '<div onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
-									+ '\'' + ',\'' + title + '\''
+									+ '\'' + ',\'' + `${title}` + '\''
 									+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" style="cursor: pointer; ">'
 										+ '<h5>' + title + '</h5>'
 										+ '<div>'
