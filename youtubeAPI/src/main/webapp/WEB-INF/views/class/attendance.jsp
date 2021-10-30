@@ -190,7 +190,6 @@ function showAllStudentInfo(){
 	       								+ '<input type="hidden" id="studentID" value="${person.studentID }" />'
 	      								+ '<p class="col-sm-12 mb-0">' + value.studentName + ' </p>'
 	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
-	       								+ '<p class="col-sm-12 mb-0">' + value.phone + '</p>'
 	    							+ '</div>'
 								+ '</div>'
 								+ '<div class="col-sm-4">'
@@ -265,18 +264,12 @@ function showAllStudentInfo(){
                                             </thead>
                                             
                                             <tbody>
-                                            
-                                            
 	                                             <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 		                                            <tr>
 		                                                <th scope="row${status.index}" rowspan=2>${status.index+1}. ${takes[status.index].studentName}</th>
-		                                                
-		                                                
-			                                            
 		                                            </tr>
 		                                            
-		                                             <tr>
-		                                            
+		                                            <tr>
 		                                            	 <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
 		                                            	 	<td id = "take${status2.index}" style="text-align:center" > 출석 </td>
 		                                                	<td id = "take${status2.index}" style="text-align:center"> 0% </td>
@@ -304,7 +297,7 @@ function showAllStudentInfo(){
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
+					<h5 class="modal-title" id="editContentModalLabel"> <span style="font-weight: bold;"> ${classInfo.className} </span> : 구성원 관리</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">×</span>
@@ -370,18 +363,19 @@ function showAllStudentInfo(){
 										<div class="row">
 											<div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>
 											<div class="titles col-sm-4 ">
-											<div class="row">
-												<p class="col-sm-12 mb-0">${person.studentName } </p>
-												<p class="col-sm-12 mb-0">${person.email } </p>
+												<div class="row">
+													<p class="col-sm-12 mb-0">${person.studentName } </p>
+													<p class="col-sm-12 mb-0">${person.email } </p>
+												</div>
 											</div>
 											<div class="col-sm-4">
 												<div class="row">
 													<p class="col-sm-12 mb-0" style="text-align:center">등록일자  </p>
 													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.modDate} </p>
-												</div>
+												</div> 
 											 </div> 
 											<div class="col-sm-2"><button class="btn btn-transition btn-danger" onclick="deleteRequest(${person.studentID}, 2)" > 삭제  </button></div>
-										</div>	
+										</div>
 									</li>
 								</c:if>
 							</c:forEach>

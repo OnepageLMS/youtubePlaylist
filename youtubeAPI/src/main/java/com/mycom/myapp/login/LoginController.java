@@ -36,8 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberServiceImpl;
-import com.mycompany.myapp.member.GoogleOAuthRequest;
-import com.mycompany.myapp.member.GoogleOAuthResponse;
 
 @Controller
 @RequestMapping(value = "/login")
