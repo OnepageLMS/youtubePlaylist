@@ -38,7 +38,7 @@ import net.sf.json.JSONArray;
 @RequestMapping(value="/student/class")
 public class Stu_ClassController{
 	@Autowired
-	private ClassesService classService;
+	private ClassesService classService;	//나중에 아래랑 이름 구분하기! 
 	
 	@Autowired
 	private Stu_ClassesService classesService;
@@ -90,6 +90,22 @@ public class Stu_ClassController{
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
 		studentId = (Integer)session.getAttribute("userID");
 		return "class/dashboard_Stu";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getAllClass", method = RequestMethod.POST)
+	public Object getAllInactiveNotices(
+							@RequestParam(value = "active") int active,
+							@RequestParam(value = "order") String order) {
+		ClassesVO vo = new ClassesVO();
+		vo.setStudentID(studentId);
+		vo.setActive(active);
+		vo.setOrder(order);
+
+		List<ClassesVO> list = classesService.getAllClass(vo);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		return map;
 	}
 	
 	@ResponseBody

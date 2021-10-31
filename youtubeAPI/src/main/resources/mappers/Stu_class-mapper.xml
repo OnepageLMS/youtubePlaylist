@@ -11,6 +11,13 @@
 		where C.id=#{id}
 	</select>
 	
+	<select id="getAllClass" resultType="classes">	<!-- 나중에 아래 두개 지우기!! -->
+		select *
+		from lms_class C join lms_takes T on C.id = T.classID
+		where studentID=#{studentID} and active=#{active}
+		order by C.${order}
+	</select>
+	
 	<select id="getAllMyClass" resultType="classes">
 		select *
 		from lms_class C join lms_takes T on C.id = T.classID

@@ -61,6 +61,10 @@ public class ClassesDAO {
 		return sqlSession.selectOne("Classes.getClassInfoForCopy", id);
 	}
 	
+	public List<ClassesVO> getAllClass(ClassesVO vo){	//아래 함수를 중복사용가능한 ver.
+		return sqlSession.selectList("Classes.getAllClass", vo);
+	}
+	
 	public List<ClassesVO> getAllMyActiveClass(int instructorID){
 		return sqlSession.selectList("Classes.getAllMyActiveClass", instructorID);
 	}
@@ -69,7 +73,7 @@ public class ClassesDAO {
 		return sqlSession.selectList("Classes.getAllMyInactiveClass", instructorID);
 	}
 	
-	public List<ClassesVO> getAllMyClass(int instructorID){
+	public List<ClassesVO> getAllMyClass(int instructorID){	//이것도 나중에 지워야할듯?!!
 		return sqlSession.selectList("Classes.getAllMyClass", instructorID);
 	}
 

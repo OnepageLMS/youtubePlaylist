@@ -23,6 +23,11 @@ public class Stu_ClassesServiceImpl implements Stu_ClassesService{
 	}
 	
 	@Override
+	public List<ClassesVO> getAllClass(ClassesVO vo){
+		return classesDAO.getAllClass(vo);
+	}
+	
+	@Override
 	public List<ClassesVO> getAllMyClass(int id){
 		return classesDAO.getAllMyClass(id);
 	}

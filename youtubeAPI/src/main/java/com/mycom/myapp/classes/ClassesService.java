@@ -17,6 +17,7 @@ public interface ClassesService {
 	public String getClassName(int id);
 	public ClassesVO getClass(int id);
 	public ClassesVO getClassInfoForCopy(int id);
+	public List<ClassesVO> getAllClass(ClassesVO vo);
 	public List<ClassesVO> getAllMyActiveClass(int instructorID);
 	public List<ClassesVO> getAllMyInactiveClass(int instructorID);
 	public List<ClassesVO> getAllMyClass(int instructorID);

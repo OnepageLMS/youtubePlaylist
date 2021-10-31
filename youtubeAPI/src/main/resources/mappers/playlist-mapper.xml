@@ -40,7 +40,7 @@
 	<select id="getAllMyPlaylist" resultType="playlist"> 
 		select * from lms_playlist 
 		where instructorID=#{instructorID}
-		order by playlistName desc
+		order by playlistName
 	</select>
 	
 	<select id="getPlaylistCount" resultType="int">
