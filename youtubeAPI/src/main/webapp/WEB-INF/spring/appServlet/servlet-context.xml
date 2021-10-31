@@ -49,7 +49,7 @@
 	</beans:bean>
 	
 	<!-- login interceptor -->
-	<!--  <beans:bean id="LoginCheckInterceptor"
+	<beans:bean id="LoginCheckInterceptor"
 		class="com.mycom.myapp.login.LoginCheckInterceptor" />
 
 	<interceptors>
@@ -58,9 +58,15 @@
 			<exclude-mapping path="/resources/**" />
 			<exclude-mapping path="/img/**" />
 			<exclude-mapping path="/login/*" />
+			<exclude-mapping path="/test" />
+			<exclude-mapping path="/test/**" />
+			
+			<!-- 아래는 나중에 지우기!! -->
+			<exclude-mapping path="/student/class/test/dashboard/**"/>
+			<exclude-mapping path="/attendCSV" />
+			<exclude-mapping path="/entryCode" />
 			<beans:ref bean="LoginCheckInterceptor" />
 		</interceptor>
 	</interceptors>
-	-->
 	
 </beans:beans>

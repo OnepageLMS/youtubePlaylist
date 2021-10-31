@@ -83,6 +83,12 @@ public class HomeController {
 		return "home";
 	}
 	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)	//개발 test용
+	public String test_home() {
+
+		return "home";
+	}
+	
 	@RequestMapping(value = "/example", method = RequestMethod.GET)
 	public String example(Model model) {
 		int instructorID = 1;	//로그인 정보 가져오는걸로 수정하기 !
