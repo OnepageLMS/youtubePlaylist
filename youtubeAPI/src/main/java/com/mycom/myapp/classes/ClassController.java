@@ -75,6 +75,22 @@ public class ClassController {
 		return map;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/getAllClass", method = RequestMethod.POST)
+	public Object getAllInactiveNotices(
+							@RequestParam(value = "active") int active,
+							@RequestParam(value = "order") String order) {
+		ClassesVO vo = new ClassesVO();
+		vo.setInstructorID(instructorID);
+		vo.setActive(active);
+		vo.setOrder(order);
+
+		List<ClassesVO> list = classService.getAllClass(vo);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		return map;
+	}
+	
 	@RequestMapping(value = "/addDays", method = RequestMethod.POST) 
 	public String addContent(ClassesVO vo) {
 		if (classService.updateDays(vo) != 0)

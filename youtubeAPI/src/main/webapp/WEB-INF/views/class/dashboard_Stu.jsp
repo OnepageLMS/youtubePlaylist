@@ -49,6 +49,99 @@ $(document).ready(function(){
 	getAllMyClass();
 });
 
+function getAllClass(act, order){
+	var i = 0;
+	var classType;
+
+	if(act == 1) classType = '.activeClassList';
+	else classType = '.inactiveClassList';
+
+	$.ajax({
+		type: 'post',
+		url: "${pageContext.request.contextPath}/student/class/getAllClass",
+		data: {
+			active: act,
+			order: order
+			},
+		success: function(data){
+			$(classType).empty();
+			list = data.list;
+
+			if(list.length == 0){
+				$(classType).append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
+				return false;
+			}
+
+			$(list).each(function(){
+				var classID = this.id;
+				var classNoticeURL = 'moveToNotice(' + classID + ')';
+				var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
+				var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
+				var newNotice = this.newNotice;
+				var html;
+				
+				if(newNotice == 1)
+					newNotice = '<span class="badge badge-primary">NEW</span>';
+				else
+					newNotice = '';
+				
+				if(act == 1){
+					var cardColor = active_colors[i%(active_colors.length)];
+					html = '<div class="col-sm-6 col-md-3 col-lg-3">'
+						+ '<div class="mb-3 card">'
+							+ '<div class="card-header ' + cardColor + '">' 
+								+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
+								+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+									+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+							+ '</div>'
+							+ '<div class="card-body">'
+								+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지' 
+									+ newNotice
+								+ '</button>'
+								+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+								+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+                       		+ '</div>'
+                       		+ '<div class="card-footer">'
+                       			+ '<div class="row col">'
+                        			+ '<div class="widget-subheading col-12">학습 진행</div>'
+									+ '<div class="col-12">'
+										+ '<div class="mb-3 progress">'
+                                           	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+                                           + '</div>'
+									+ '</div>'
+								+ '</div>'
+							+ '</div>'
+                       	'</div>'
+                       + '</div>';
+				}
+				
+				else{
+					var cardColor = inactive_colors[i%(inactive_colors.length)]; 
+					html = '<div class="col-sm-6 col-md-3 col-lg-3">'
+											+ '<div class="mb-3 card">'
+												+ '<div class="card-header ' + cardColor + '">' 
+													+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
+													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+												+ '</div>'
+												+ '<div class="card-body">'
+													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
+													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+								        		+ '</div>'
+								        	+ '</div>'
+								        + '</div>';
+				}
+				i++;
+				$(classType).append(html);
+			});
+		},
+		error: function(data, status,error){
+			console.log('ajax dashboard 가져오기 실패!');
+		}
+	});
+}
+
 function getAllMyClass(){
 	var i=0;
 	var active, inactive;
@@ -165,7 +258,6 @@ function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항
 }
 
 $(document).on("click", ".setClassroomBtn", function () {	// set classroom btn 눌렀을 때 modal에 데이터 전송
-
 	var classID = $(this).attr('classID');
 	$('#setClassID').val(classID);
 
@@ -236,8 +328,8 @@ function submitDeleteClassroom(){
                         		<div class="dropdown d-inline-block">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-		                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
-		                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
+		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'regDate');">개설일순</button>
+		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'className');">이름순</button>
 		                           </div>
 		                       </div>
                        		</div>
@@ -249,8 +341,8 @@ function submitDeleteClassroom(){
                         		<div class="dropdown d-inline-block">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-		                               <button type="button" tabindex="0" class="dropdown-item">개설일순</button>
-		                               <button type="button" tabindex="0" class="dropdown-item">이름순</button>
+		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(0, 'regDate');">개설일순</button>
+		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(0, 'className');">이름순</button>
 		                           </div>
 		                       </div>
                        		</div>

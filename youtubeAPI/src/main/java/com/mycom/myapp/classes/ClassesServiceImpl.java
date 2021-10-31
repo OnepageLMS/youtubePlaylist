@@ -68,6 +68,11 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
+	public List<ClassesVO> getAllClass(ClassesVO vo){
+		return classesDAO.getAllClass(vo);
+	}
+	
+	@Override
 	public List<ClassesVO> getAllMyActiveClass(int instructorID){
 		return classesDAO.getAllMyActiveClass(instructorID);
 	}

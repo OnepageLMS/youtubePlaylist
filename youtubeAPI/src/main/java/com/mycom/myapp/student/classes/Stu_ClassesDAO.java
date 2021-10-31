@@ -14,27 +14,26 @@ public class Stu_ClassesDAO {
 	SqlSession sqlSession;
 	
 	public ClassesVO getClass(int id) {
-		ClassesVO vo = sqlSession.selectOne("Stu_Classes.getClass", id);
-		return vo;
+		return sqlSession.selectOne("Stu_Classes.getClass", id);
 	}
 	
 	public ClassesVO getClassInfo(int id) {
-		ClassesVO result = sqlSession.selectOne("Stu_Classes.getClassInfo", id);
-		return result;
+		return sqlSession.selectOne("Stu_Classes.getClassInfo", id);
 	}
 	
-	public List<ClassesVO> getAllMyClass(int id){
-		List<ClassesVO> result = sqlSession.selectList("Stu_Classes.getAllMyClass", id);
-		return result;
+	public List<ClassesVO> getAllClass(ClassesVO vo){
+		return sqlSession.selectList("Stu_Classes.getAllClass", vo);
+	}
+	
+	public List<ClassesVO> getAllMyClass(int id){	//이거랑 아래 나중에지우기(위에껄로 대체!)
+		return sqlSession.selectList("Stu_Classes.getAllMyClass", id);
 	}
 	
 	public List<ClassesVO> getAllMyInactiveClass(int id){
-		List<ClassesVO> result = sqlSession.selectList("Stu_Classes.getAllMyInactiveClass", id);
-		return result;
+		return sqlSession.selectList("Stu_Classes.getAllMyInactiveClass", id);
 	}
 	
 	public int deleteClassroom(ClassesVO vo) {
-		int result = sqlSession.delete("Stu_Classes.deleteClassroom", vo);
-		return result;
+		return sqlSession.delete("Stu_Classes.deleteClassroom", vo);
 	}
 }

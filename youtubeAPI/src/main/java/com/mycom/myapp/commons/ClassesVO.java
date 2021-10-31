@@ -19,6 +19,8 @@ public class ClassesVO {
 	
 	private int newNotice;	//학생 dashboard에서 새로운 공지 표시
 	
+	private String order;	//강의실 리스트 정렬
+	
 	public int getId() {
 		return id;
 	}
@@ -111,5 +113,12 @@ public class ClassesVO {
 	}
 	public void setNewNotice(int newNotice) {
 		this.newNotice = newNotice;
+	}
+	
+	public String getOrder() {
+		return order;
+	}
+	public void setOrder(String order) {
+		this.order = order;
 	}
 }
