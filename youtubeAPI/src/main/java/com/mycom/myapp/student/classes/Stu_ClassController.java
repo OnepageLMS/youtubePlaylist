@@ -83,7 +83,7 @@ public class Stu_ClassController{
 		return "class/dashboard_Stu";
 	}
 	
-	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+	@RequestMapping(value = "/dashboard", method =  {RequestMethod.GET,RequestMethod.POST})
 	public String dashboard(HttpSession session) {
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경

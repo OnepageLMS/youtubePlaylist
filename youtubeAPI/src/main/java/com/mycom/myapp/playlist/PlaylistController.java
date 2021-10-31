@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,14 +35,14 @@ public class PlaylistController {
 	@Autowired
 	private MemberService memberService;
 	
-	private int instructorID = 1;
+	//private int instructorID = 1;
+	private int instructorID = 0;
 	
 	@RequestMapping(value = "/myPlaylist", method = {RequestMethod.GET, RequestMethod.POST}) 
-	public String myPlaylist(Model model) {
-		model.addAttribute("instructorID", instructorID);	//이거 지우기
+	public String myPlaylist(Model model, HttpSession session) {
+		instructorID = (Integer)session.getAttribute("userID");
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "playlist/myPlaylist_noShare";
 	}
 	
@@ -81,7 +82,7 @@ public class PlaylistController {
 	@ResponseBody
 	public Object getAllMyPlaylist() {
 		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
-		playlists = playlistService.getAllMyPlaylist(instructorID); //playlist의 모든 video 가져오기
+		playlists = playlistService.getAllMyPlaylist(instructorID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("allMyPlaylist", playlists);

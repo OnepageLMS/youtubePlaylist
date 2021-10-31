@@ -86,12 +86,9 @@ var instructorID;
 
 $(document).ready(function(){
 	getAllMyPlaylist(); 
-
-	$('.myplaylistLink').addClass('text-primary');	//outer_top.jsp에서 '학습컨텐츠보관함' nav-link 색깔 변경
-	
+	$('.myplaylistLink').addClass('text-primary');
 });
 
-//왼쪽 내 playlist 목록 가져오기
 function getAllMyPlaylist(){
 	$.ajax({
 		type : 'post',
@@ -99,35 +96,37 @@ function getAllMyPlaylist(){
 		success : function(result){
 			playlists = result.allMyPlaylist;
 
-			$('.myPlaylist').empty();
-
-			if (playlists == null)
-				$('.myPlaylist').append('저장된 playlist가 없습니다.');
-
-			else{
-				var setFormat = '<div class="card">'
-									+ '<div class="card-body" style="min-height: 600px; overflow:auto;">'
-									+ '<div class="card-title input-group">'
-										+ '<div class="input-group-prepend">'
-											+ '<button class="btn btn-outline-secondary">전체</button>'
-											+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
-											+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;"><h6 tabindex="-1" class="dropdown-header">Header</h6>'
-												+ '<button type="button" tabindex="-1" class="dropdown-item">Playlist 이름</button>'
-												+ '<button type="button" tabindex="0" class="dropdown-item">Video 제목</button>'
-												+ '<button type="button" tabindex="0" class="dropdown-item">태그</button>'
-											+ '</div>'
-										+ '</div>'
-										+ '<input placeholder="playlist 검색" type="text" class="form-control">'
-										+ ' <div class="input-group-append">'
-											+ '<button class="btn btn-secondary">검색</button>'
+			$('.allPlaylist').empty();
+			/*
+			var setFormat = '<div class="card">'
+								+ '<div class="card-body" style="min-height: 600px; overflow:auto;">'
+								+ '<div class="card-title input-group">'
+									+ '<div class="input-group-prepend">'
+										+ '<button class="btn btn-outline-secondary">전체</button>'
+										+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
+										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;">'
+											+ '<button type="button" tabindex="0" class="dropdown-item">Playlist 이름</button>'
+											+ '<button type="button" tabindex="1" class="dropdown-item">Video 제목</button>'
+											+ '<button type="button" tabindex="2" class="dropdown-item">태그</button>'
 										+ '</div>'
 									+ '</div>'
-									+ '<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>'
-									+ '<div><ul class="allPlaylist list-group"></div></div>'
+									+ '<input placeholder="playlist 검색" type="text" class="form-control">'
+									+ ' <div class="input-group-append">'
+										+ '<button class="btn btn-secondary">검색</button>'
+									+ '</div>'
 								+ '</div>'
-							+ '</div>';
-				$('.myPlaylist').append(setFormat);
+								+ '<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>'
+								+ '<div><ul class="allPlaylist list-group"></div></div>'
+							+ '</div>'
+						+ '</div>';
+				//$('.myPlaylist').append(setFormat);
+				*/
 
+			if(playlists.length == 0){
+				$('.allPlaylist').append('<p class="text-center">저장된 playlist가 없습니다.</p>');
+			}
+
+			else{
 				$.each(playlists, function( index, value ){	
 					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' 
 												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
@@ -350,12 +349,12 @@ function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 �
 	      success  : function(data) {
 		     	getPlaylistInfo(playlistID, $('#playlistInfo').attr('displayIdx'));
 	  	  		getAllVideo(playlistID); //새로 정렬한 뒤 video 새로 불러와서 출력하기
-	  	  		getAllMyPlaylist(instructorID);
+	  	  		getAllMyPlaylist();
 	    	  
 	      }, error:function(request,status,error){
 	    	  	getPlaylistInfo(playlistID, $('#playlistInfo').attr('displayIdx'));
 	  	  		getAllVideo(playlistID);
-	  	  		getAllMyPlaylist(instructorID);
+	  	  		getAllMyPlaylist();
 	       }
 	    });
 }
@@ -390,6 +389,10 @@ function convertTotalLength(seconds){ //시분초로 시간 변환
 	var seconds_mm = Math.floor(seconds % 3600 / 60);
 	var seconds_ss = parseInt(seconds % 3600 % 60); //소숫점단위 안보여주기
 	var result = "";
+
+	if((seconds_hh + '').length < 2) seconds_hh = '0'+seconds_hh;
+	if((seconds_mm + '').length < 2) seconds_mm = '0'+seconds_mm;
+	if((seconds_ss + '').length < 2) seconds_ss = '0'+seconds_ss;
 	
 	if (seconds_hh > 0)
 		result = seconds_hh + ":";
@@ -497,7 +500,7 @@ function submitDeletePlaylist(){
 	    	 
              <div class="app-main__outer">                         
                 <div class="app-main__inner">
-					<div class="app-page-title">
+					<div class="app-page-title mb-0">
 		 				<div class="page-title-wrapper">
                             <div class="page-title-heading">
                             	<h4 style="padding-bottom: 2%;">내 학습컨텐츠</h4>
@@ -507,7 +510,30 @@ function submitDeletePlaylist(){
 
                     	<div class="row">
 			                <div class="col-md-4 col-lg-3">
-								<div class="myPlaylist"></div>
+								<div class="myPlaylist">
+									<div class="card">
+										<div class="card-body" style="min-height: 600px; overflow:auto;">
+										<div class="card-title input-group">
+											<div class="input-group-prepend">
+												<button class="btn btn-outline-secondary">전체</button>
+												<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>
+												<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;">
+													<button type="button" tabindex="0" class="dropdown-item">Playlist 이름</button>
+													<button type="button" tabindex="1" class="dropdown-item">Video 제목</button>
+													<button type="button" tabindex="2" class="dropdown-item">태그</button>
+												</div>
+											</div>
+											<input placeholder="" type="text" class="form-control">
+											<div class="input-group-append">
+												<button class="btn btn-secondary">검색</button>
+											</div>
+										</div>
+										<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>
+										<div><ul class="allPlaylist list-group"></ul></div>
+									</div>
+								</div>
+								
+								</div>
 							</div>
 			
 							<div class="selectedPlaylist col-md-8 col-lg-9 card" style="min-height: 600px;">
@@ -562,7 +588,7 @@ function submitDeletePlaylist(){
 		               	</div>
 	                   	<div class="position-relative form-group">
 		               		<label for="inputPlaylistTag" class="">태그</label>
-		               		<input name="tag" id="inputPlaylistTag" placeholder="ex) spring, 웹개발초보" type="text" class="form-control">
+		               		<input name="tag" id="inputPlaylistTag" placeholder="" type="text" class="form-control">
 		               	</div>
 					</form>
 				</div>
