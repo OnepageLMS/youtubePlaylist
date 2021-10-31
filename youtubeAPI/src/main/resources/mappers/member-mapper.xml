@@ -19,12 +19,12 @@
 		select name from lms_student where id=#{id}
 	</select>
 	
-	<select id="getInstructorID" resultType="int">
-		select id from lms_instructor where email=#{email}
+	<select id="getInstructor" resultType="member">
+		select id, name, email from lms_instructor where email=#{email}
 	</select>
 	
-	<select id="getStudentID" resultType="int">
-		select id from lms_student where email=#{email}
+	<select id="getStudent" resultType="member">
+		select id, name, email from lms_student where email=#{email}
 	</select>
 	
 </mapper>

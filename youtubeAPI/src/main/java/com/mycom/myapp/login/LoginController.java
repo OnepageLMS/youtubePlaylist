@@ -113,26 +113,26 @@ public class LoginController {
 		});
 		model.addAllAttributes(userInfo);
 		model.addAttribute("token", result.getAccessToken()); //token 저장
-
-        //DB 저장 or check
-        String email = userInfo.get("email");
-        String name = userInfo.get("family_name") + userInfo.get("given_name");
-        MemberVO checkvo = new MemberVO();
-		checkvo.setEmail(email);
-		checkvo.setName(name);
+        
+		String email = userInfo.get("email");
+		String name = userInfo.get("family_name") + userInfo.get("given_name");
 		
+		MemberVO checkvo = new MemberVO();
+		MemberVO loginVO = new MemberVO();	//최종 로그인한 유저 정보 저장
+		String returnURL = "";
+		int userID = 0;
+        
 		if (session.getAttribute("login") != null) { 
 			session.removeAttribute("login");
 		}
 		
-		String returnURL = "";
-		int userID = 0;
-		
 		if(loginMode.equals("tea")) {	
-			userID = memberService.getInstructorID(email);
-			if(userID < 0) {
+			loginVO = memberService.getInstructor(email);
+			if(loginVO == null) {
+				checkvo.setName(name);
+				checkvo.setEmail(email);
 				userID = memberService.insertInstructor(checkvo);
-				if(userID > 0)
+				if(userID > 0) 
 					System.out.println("회원가입 성공:)");
 				else {
 					System.out.println("회원가입 실패:(");
@@ -142,10 +142,12 @@ public class LoginController {
 			returnURL = "redirect:/dashboard";
 		}
 		else if(loginMode == "stu") {
-			userID = memberService.getStudentID(email);
-			if(userID < 0) {
+			loginVO = memberService.getStudent(email);
+			if(loginVO == null) {
+				checkvo.setName(name);
+				checkvo.setEmail(email);
 				userID = memberService.insertStudent(checkvo);
-				if(userID > 0)
+				if(userID > 0) 
 					System.out.println("회원가입 성공!");
 				else {
 					System.out.println("회원가입 실패:(");
@@ -155,11 +157,17 @@ public class LoginController {
 			returnURL = "redirect:/student/class/dashboard";
 		}
 		
-		checkvo.setId(userID);
+		if(userID > 0) {
+			loginVO = new MemberVO();
+			loginVO.setEmail(email);
+			loginVO.setId(userID);
+			loginVO.setName(name);
+		}
+		
 		session.setAttribute("userName", name);
-		session.setAttribute("userID", userID);
+		session.setAttribute("userID", loginVO.getId());
 		session.setAttribute("userEmail", email);
-		session.setAttribute("login", checkvo);
+		session.setAttribute("login", loginVO);
  
 		return returnURL;
 	}

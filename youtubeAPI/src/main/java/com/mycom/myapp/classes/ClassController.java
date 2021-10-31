@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.classContent.ClassContentService;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
+import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberService;
 
 import net.sf.json.JSONArray;
@@ -36,10 +37,21 @@ public class ClassController {
 	@Autowired
 	private MemberService memberService;
 	
-	private int instructorID = 1;
+	private int instructorID = 0;
 	
-	@RequestMapping(value = "/dashboard",  method = { RequestMethod.GET, RequestMethod.POST })
-	public String dashboard(Model model) {
+	@RequestMapping(value = "/test/dashboard",  method = {RequestMethod.GET,RequestMethod.POST})	//개발 test용.
+	public String dashboard_Test(Model model, HttpSession session) {
+		MemberVO vo = memberService.getInstructor("test@handong.edu");
+		session.setAttribute("login", vo);
+		session.setAttribute("userName", "TEST");
+		session.setAttribute("userID", 1); //instructorID = 1은 test용
+		instructorID = 1;
+		return "class/dashboard";
+	}
+
+	@RequestMapping(value = "/dashboard",  method = {RequestMethod.GET,RequestMethod.POST})
+	public String dashboard(Model model, HttpSession session) {
+		instructorID = (Integer)session.getAttribute("userID");
 		return "class/dashboard";
 	}	
 	
@@ -53,9 +65,9 @@ public class ClassController {
 	@ResponseBody
 	@RequestMapping(value = "/getAllMyClass", method = RequestMethod.POST)
 	public Object getAllNotices(HttpSession session) {
-		//int instructorID = (Integer)session.getAttribute("login");
-		List<ClassesVO> list = classService.getAllMyActiveClass(1);
-		List<ClassesVO> inactiveList = classService.getAllMyInactiveClass(1);
+		//int instructorID = (Integer)session.getAttribute("userID");
+		List<ClassesVO> list = classService.getAllMyActiveClass(instructorID);
+		List<ClassesVO> inactiveList = classService.getAllMyInactiveClass(instructorID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("active", list);
@@ -72,8 +84,7 @@ public class ClassController {
 		
 		return "ok";
 	}
-	
-	// (jw) entryCode 생성에 사용함. 
+
 	@ResponseBody
 	@RequestMapping(value = "/createEntryCode", method = RequestMethod.POST)	
 	public String createEntryCode() {
@@ -99,7 +110,7 @@ public class ClassController {
 		return result;
 	}
 	
-	@RequestMapping(value="/insertClassroom", method = RequestMethod.POST)
+	@RequestMapping(value="/insertClassroom", method = {RequestMethod.GET,RequestMethod.POST})
 	public String insertClassroom(@ModelAttribute ClassesVO vo, @RequestParam(value = "code") String entryCode) {
 		vo.setInstructorID(instructorID);
 		vo.setEntryCode(entryCode);
@@ -112,8 +123,8 @@ public class ClassController {
 		
 	}
 	
-	
-	@RequestMapping(value="/editClassroom", method = {RequestMethod.GET,RequestMethod.POST})	//classroom 생성 처리
+	@ResponseBody
+	@RequestMapping(value="/editClassroom", method = RequestMethod.POST)	//classroom 생성 처리
 	public String editClassroom(@ModelAttribute ClassesVO vo) {
 		if (classService.updateClassroom(vo) != 0) {
 			System.out.println("controller 강의실 수정 성공");
