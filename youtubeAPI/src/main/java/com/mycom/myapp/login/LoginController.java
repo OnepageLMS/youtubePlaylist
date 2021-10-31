@@ -141,7 +141,7 @@ public class LoginController {
 			}
 			returnURL = "redirect:/dashboard";
 		}
-		else if(loginMode == "stu") {
+		else if(loginMode.equals("stu")) {
 			loginVO = memberService.getStudent(email);
 			if(loginVO == null) {
 				checkvo.setName(name);
@@ -168,7 +168,6 @@ public class LoginController {
 		session.setAttribute("userID", loginVO.getId());
 		session.setAttribute("userEmail", email);
 		session.setAttribute("login", loginVO);
- 
 		return returnURL;
 	}
 	

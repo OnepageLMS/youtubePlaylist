@@ -58,62 +58,62 @@ function getAllMyClass(){
 				$('.dashboardClass').append('<p class="col text-center">생성된 강의실이 없습니다.</p>');
 				$('.classActive').hide();
 				$('.classInactive').hide();
+				return false;
 			}
-			else{
-				if(active.length == 0)
-					$('.activeClassList').append('<p class="col text-center">진행중인 강의실이 없습니다! </p>');
-				else {
-					$(active).each(function(){
-						var classID = this.id;
-						var className = this.className;
-						
-						var classNoticeURL = 'moveToNotice(' + classID + ')';
-						var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
-						var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
-						var regDate = this.regDate.split(' ')[0];
-						var closeDate = this.closeDate;
-						var cardColor = active_colors[i%(active_colors.length)]; 
+			
+			if(active.length == 0)
+				$('.activeClassList').append('<p class="col text-center">진행중인 강의실이 없습니다! </p>');
+			else {
+				$(active).each(function(){
+					var classID = this.id;
+					var className = this.className;
+					
+					var classNoticeURL = 'moveToNotice(' + classID + ')';
+					var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
+					var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
+					var regDate = this.regDate.split(' ')[0];
+					var closeDate = this.closeDate;
+					var cardColor = active_colors[i%(active_colors.length)]; 
 
-						if(closeDate == '9999-12-31') closeDate = '';
-						
-						var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
-												+ '<div class="mb-3 card classCard">'
-													+ '<div class="card-header ' + cardColor + '">' 
-														+ '<div class="col-sm-10">' +  className + ' (' + this.days + ' 차시)' + '</div>'
-														+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
-															+ '<i class="nav-link-icon fa fa-share"></i>'
-														+ '</a>'
-														+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
-															+ '<i class="nav-link-icon fa fa-cog"></i>'
-														+ '</a>'
-													+ '</div>'
-													+ '<div class="card-body">'
-														+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-														+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
-																+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
-														+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-														+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-						                        	+ '</div>'
-					                        		+ '<div class="divider m-0 p-0"></div>'
-						                        	+ '<div class="card-body">'
-														+ '<div class="row">'
-															+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
-															+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + closeDate + ' </div>'
-															+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
-															+ '<div class="col-12">'
-																+ '<div class="mb-3 progress">'
-												                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
-												                + '</div>'
-															+ '</div>'
-														+ '</div>'
-													 + '</div>'
+					if(closeDate == '9999-12-31') closeDate = '';
+					
+					var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
+											+ '<div class="mb-3 card classCard">'
+												+ '<div class="card-header ' + cardColor + '">' 
+													+ '<div class="col-sm-10">' +  className + ' (' + this.days + ' 차시)' + '</div>'
+													+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+														+ '<i class="nav-link-icon fa fa-share"></i>'
+													+ '</a>'
+													+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+														+ '<i class="nav-link-icon fa fa-cog"></i>'
+													+ '</a>'
+												+ '</div>'
+												+ '<div class="card-body">'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
+															+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
+													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 					                        	+ '</div>'
-					                        + '</div>';
-											
-							$('.activeClassList').append(dashboardCard);
-							i++;
-					});
-				}
+				                        		+ '<div class="divider m-0 p-0"></div>'
+					                        	+ '<div class="card-body">'
+													+ '<div class="row">'
+														+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
+														+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + closeDate + ' </div>'
+														+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
+														+ '<div class="col-12">'
+															+ '<div class="mb-3 progress">'
+											                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+											                + '</div>'
+														+ '</div>'
+													+ '</div>'
+												 + '</div>'
+				                        	+ '</div>'
+				                        + '</div>';
+										
+						$('.activeClassList').append(dashboardCard);
+						i++;
+				});
 				
 				if(inactive.length == 0)
 					$('.inactiveClassList').append('<p class="col text-center">비활성화된 강의실이 없습니다! </p>');
@@ -238,38 +238,25 @@ function submitAddClassroom(){
 		$('#customSwitch1').val(0);
 	
 	if($('#inputCloseDate').val() == '')
-		$('#inputCloseDate').val('9999-12-31');	//null이나 '' 가 들어가면 에러난다. --> 이부분 수정필요??
+		$('#inputCloseDate').val('9999-12-31');
 
-	var code;
 	$.ajax({
 		type: 'post',
-		url: '${pageContext.request.contextPath}/createEntryCode',
+		url: '${pageContext.request.contextPath}/insertClassroom',
+		data: $('#formAddClassroom').serialize(),
+		datatype: 'json',
 		success: function(data){
-			code = data;
-			$.ajax({
-				type: 'post',
-				url: '${pageContext.request.contextPath}/insertClassroom',
-				data: $('#formAddClassroom').serialize() + "&code=" + code,
-				datatype: 'json',
-				success: function(data){
-					if(data == 'ok')
-						console.log('강의실 생성 완료!');
-					else
-						console.log('강의실 생성 실패! ');
-					location.reload();
-				},
-				error: function(data, status,error){
-					alert('강의실 생성 실패! ');
-					return;
-				}
-			});	
+			if(data == 'ok')
+				console.log('강의실 생성 완료!');
+			else
+				console.log('강의실 생성 실패! ');
+			location.reload();
 		},
-		error: function(){
-			alert("error");
+		error: function(data, status,error){
+			alert('강의실 생성 실패! ');
+			return;
 		}
-	});
-
-	
+	});	
 }
 function submitEditClassroom(){	//미완성 (classDays 현재 강의컨텐츠의 갯수 넘지 않도록 체크)
 	if ($('#editClassName').val() == '') return false;
@@ -287,7 +274,6 @@ function submitEditClassroom(){	//미완성 (classDays 현재 강의컨텐츠의
 	if($('#customSwitch2').is(':checked') && (today >= closeDate)){
 		if(confirm('강의실 종료일이 오늘 날짜보다 빠르거나 같습니다. 지금 바로 강의실을 비활성화 하시겠습니까? \n취소 버튼을 누르시면 강의실 설정폼으로 돌아갑니다.'))
 			$('#customSwitch2').removeAttr('checked');
-		
 		else return false;
 	}
 	

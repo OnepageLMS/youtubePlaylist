@@ -85,8 +85,6 @@ public class ClassController {
 		return "ok";
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/createEntryCode", method = RequestMethod.POST)	
 	public String createEntryCode() {
 		List<String> list = classService.getAllEntryCodes();
 		StringBuilder entryCode = new StringBuilder();
@@ -111,9 +109,9 @@ public class ClassController {
 	}
 	
 	@RequestMapping(value="/insertClassroom", method = {RequestMethod.GET,RequestMethod.POST})
-	public String insertClassroom(@ModelAttribute ClassesVO vo, @RequestParam(value = "code") String entryCode) {
+	public String insertClassroom(@ModelAttribute ClassesVO vo) {
 		vo.setInstructorID(instructorID);
-		vo.setEntryCode(entryCode);
+		vo.setEntryCode(createEntryCode());
 
 		if (classService.insertClassroom(vo) >= 0) 
 			System.out.println("controller 강의실 생성 성공"); 
