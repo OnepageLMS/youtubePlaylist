@@ -31,12 +31,12 @@ public class MemberServiceImpl implements MemberService{
 	}
 	
 	@Override
-	public int getInstructorID(String email) {
-		return memberDAO.getInstructorID(email);
+	public MemberVO getInstructor(String email) {
+		return memberDAO.getInstructor(email);
 	}
 	
 	@Override
-	public int getStudentID(String email) {
-		return memberDAO.getStudentID(email);
+	public MemberVO getStudent(String email) {
+		return memberDAO.getStudent(email);
 	}
 }

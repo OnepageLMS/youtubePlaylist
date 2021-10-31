@@ -46,6 +46,12 @@
 	}
 }
 </style>
+<script>
+	function checkLoginMode(){
+		if($("input[name='mode']:checked").val() == null) return false;
+	}
+</script>
+
 <body>
 	<section class="vh-100" style="background-color: #F0F0F0;">
 		<div class="container py-5 h-100">
@@ -62,13 +68,13 @@
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
 									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0">로그인 모드를 선택해주세요</span>
+										<span class="h1 fw-bold mb-0">Learntube LMS에 오신걸 환영합니다!</span>
 									</div>
-									<form action='${pageContext.request.contextPath}/login/google' method='post'>
+									<form class="needs-validation" action='${pageContext.request.contextPath}/login/google' onsubmit='checkLoginMode();' method='post' novalidate>
 										<fieldset class="position-relative form-group">
 											<div class="position-relative form-check">
 												<label class="form-check-label"> 
-													<input name="mode" type="radio" class="form-check-input" value="tea">
+													<input name="mode" type="radio" class="form-check-input" value="tea" required>
 													선생님
 												</label>
 											</div>
@@ -79,6 +85,7 @@
 												</label>
 											</div>
 										</fieldset>
+										<div class="invalid-feedback">로그인 모드를 선택해주세요</div>	
 										<div class="pt-1 mb-4">
 										<button class="btn btn-lg btn-block btn-danger" type="submit">
 											<i class="fab fa-google me-2"></i> Google로 로그인
@@ -95,5 +102,25 @@
 			</div>
 		</div>
 	</section>
+	<script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        } 
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+	</script>
 </body>
 </html>

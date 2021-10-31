@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
+import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
@@ -59,26 +61,34 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_NoticeService noticeService;
 	
-	private int studentId;
+	private int studentId = 0;
 	
-	@RequestMapping(value = "/{studentID}", method = RequestMethod.GET)	//이제사용x (10/30)
-	public String studentDashboard(@PathVariable("studentID") int studentID, Model model) {
-		studentId = studentID;
-		// select id, className, startDate from lms_class where instructorID=#{instructorID}
-		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
-		// takes테이블을 통해 가져올 수 있도록 해야겠다..
+	@RequestMapping(value = "/test/dashboard/{studentID}",  method = RequestMethod.GET)	//개발 test용. 나중에 지우기!!
+	public String dashboard_Test(@PathVariable("studentID") int id, Model model, HttpSession session) {
+		String email, name = "";
+		if(id == 1) {
+			email = "jinwoo@gmail.com";
+			name = "TEST1";
+		}
+		else {
+			email = "hayeong@gmail.com";
+			name = "TEST2";
+		}
 		
+		MemberVO vo = memberService.getStudent(email);
+		session.setAttribute("login", vo);
+		session.setAttribute("userName", name);
+		session.setAttribute("userID", id);
+		studentId = id;
 		return "class/dashboard_Stu";
 	}
 	
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-	public String dashboard(Model model) {
-		
-		model.addAttribute("myName", memberService.getStudentName(studentId));
+	public String dashboard(HttpSession session) {
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
-		
+		studentId = (Integer)session.getAttribute("userID");
 		return "class/dashboard_Stu";
 	}
 	

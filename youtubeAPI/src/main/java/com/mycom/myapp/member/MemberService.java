@@ -7,7 +7,7 @@ public interface MemberService {
 	public int insertStudent(MemberVO vo);
 	public String getInstructorName(int id);
 	public String getStudentName(int id);
-	public int getInstructorID(String email);
-	public int getStudentID(String email);
+	public MemberVO getInstructor(String email);
+	public MemberVO getStudent(String email);
 
 }
