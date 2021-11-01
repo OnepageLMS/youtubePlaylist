@@ -9,10 +9,8 @@
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Dashboard</title>
-    
-    <!--favicon 설정 -->
-    <link rel=" shortcut icon" href="resources/img/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="resources/img/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
+	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
 	
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">

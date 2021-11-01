@@ -6,10 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Sign-in</title>
-<link rel="shortcut icon"
-	href="${pageContext.request.contextPath}/resources/img/favicon.ico">
-<link rel="icon"
-	href="${pageContext.request.contextPath}/resources/img/favicon.png">
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
+<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
 <link rel="icon" href="favicon-16.png" sizes="16x16">
 <link rel="icon" href="favicon-32.png" sizes="32x32">
 <link rel="icon" href="favicon-48.png" sizes="48x48">
