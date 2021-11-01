@@ -5,6 +5,7 @@ import java.util.List;
 import com.mycom.myapp.commons.AttendanceVO;
 
 public interface AttendanceCheckService {
+	public int insertExAttendanceCheck(AttendanceCheckVO vo);
 	public int insertAttendanceCheck(AttendanceCheckVO vo);
 	public int updateExAttendanceCheck(AttendanceCheckVO vo);
 	public int updateInAttendanceCheck(AttendanceCheckVO vo);

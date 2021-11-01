@@ -31,6 +31,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.mycom.myapp.attendance.AttendanceService;
+import com.mycom.myapp.attendanceCheck.AttendanceCheckService;
+import com.mycom.myapp.attendanceCheck.AttendanceCheckVO;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.member.MemberService;
@@ -71,7 +73,7 @@ public class HomeController {
 	private ClassesService classService;	//임의로 example 함수에 사용하려 추가함
 	
 	@Autowired
-	private AttendanceService attendanceService;
+	private AttendanceCheckService attendanceCheckService;
 	
 	
 	/**
@@ -225,8 +227,9 @@ public class HomeController {
 		//start_h ~ seq모두 jsp파일에서 받아오기 
 		
 		List<List<String>> csvList = new ArrayList<List<String>>();
-		String realPath = request.getSession().getServletContext().getRealPath("/");
-		
+		String realPath = request.getSession().getServletContext().getRealPath("/"); //이런식으로 경로지정을 하는건지 ?? 
+		//server에 저장되는 방법 
+		//System.out.println("realPath : " + realPath);
 		List<Integer> csvStartH = new ArrayList<Integer>();
 		List<Integer> csvStartM = new ArrayList<Integer>();
 		List<Integer> csvEndH = new ArrayList<Integer>();
@@ -238,7 +241,7 @@ public class HomeController {
 		try {
 			String line;
 			BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
-			int idx = 0;
+			//int idx = 0;
 			while((line=br.readLine()) != null) { 
 				List<String> aLine = new ArrayList<String>();
                 String[] lineArr = line.split(","); // 파일의 한 줄을 ,로 나누어 배열에 저장 후 리스트로 변환한다.
@@ -256,17 +259,17 @@ public class HomeController {
                // csvStartH.add()
                 aLine = Arrays.asList(lineArr);
                 csvList.add(aLine);
-                idx++;
+                //idx++;
 			}
 			
-			for(int i=0; i<csvStartH.size(); i++) {
+			/*for(int i=0; i<csvStartH.size(); i++) {
 				System.out.println(csvStartH.get(i));
-			}
+			}*/
 			
             List<Stu_TakesVO> data = stu_takesService.getStudentNum(1); //db에서 학생정보 가져오기 classID임의로 넣음 
             List<String> stuNameArr = new ArrayList<String>();
             for(int i=0; i<data.size(); i++) {
-            	stuNameArr.add(data.get(i).getStudentName()); //data에서 sudentName어떻게 가져올지,,
+            	stuNameArr.add(data.get(i).getStudentName()); //이 수업을 듣는 학생들의 목록을 조회 (db의 takes 테이블로부터) 
             }
             
 
@@ -276,12 +279,9 @@ public class HomeController {
             
     		//int stuNum = 0;
             for(int i=4; i<csvList.size(); i++) {
-            	//if(stuNum == stuNameArr.size() ) break;
     			for(int j=0; j<stuNameArr.size(); j++) {
-    				//System.out.println(csvList.get(i).get(0));
     				if(csvList.get(i).get(0).contains(stuNameArr.get(j)) ) { //csv파일 내에 이름이 있는 학생의 경우와
-    					//결석보다는 출석한 학생이 많으므로 우선 출석으로 넣어두고,
-    					System.out.println("학생이름이 있습니다. ");
+    					//결석보다는 출석한 학생이 많으므로 우선 출석으로 넣어두고
     					attendStu.add(stuNameArr.get(j));
     					
     					csvStartH.add( Integer.parseInt(csvList.get(i).get(2).charAt(11) + "" + csvList.get(i).get(2).charAt(12)));
@@ -293,18 +293,15 @@ public class HomeController {
     					//stuNum++;
     				}
     				else { // 미확인 학생들 
-    					/*System.out.println("학생이름이 없습니다. ");
-    					stuNum++;
-    					annonyStu.add(stuNameArr.get(j));*/
-    					//stuNum++;
     					continue;
     				}
     	
     			}
     		}
-            
+            //분으로 환산해서 하기
+            //System.out.println("출석학생 : " +attendStu.size());
             int count = 0;
-            for(int i=0; i<stuNameArr.size(); i++) {
+            for(int i=0; i<attendStu.size(); i++) {
             	if(start_h > csvStartH.get(i) ) {
             		if(end_h < csvEndH.get(i)) {
             			System.out.println("1");
@@ -323,8 +320,9 @@ public class HomeController {
             				//출석에서 빼고 결석에 넣기
             				// i번째의 학생이 attendStu의 list에서는 몇번재인지.,
             				System.out.println("3");
-            				attendStu.remove(count);
-            				absentStu.add(attendStu.get(count));
+            				absentStu.add(attendStu.get(i));
+            				attendStu.remove(i);
+            				//absentStu.add(attendStu.get(i));
             				
             			}
             		}
@@ -333,8 +331,9 @@ public class HomeController {
     					//결석 
             			//출석에서 빼고 결석에 넣기 
             			System.out.println("4");
-        				attendStu.remove(i);
-        				absentStu.add(attendStu.get(i));
+            			absentStu.add(attendStu.get(i));
+            			attendStu.remove(i);
+        				//absentStu.add(attendStu.get(i));
     				}
             	}
             	else if(start_h == csvStartH.get(i)) {
@@ -356,8 +355,9 @@ public class HomeController {
                     			//출석에서 빼고 결석에 넣기 
                 				System.out.println("7");
                 				System.out.println("attendStu.length " + attendStu.size());
+                				absentStu.add(attendStu.get(i));
                 				attendStu.remove(count);
-                				absentStu.add(attendStu.get(count));
+                				//absentStu.add(attendStu.get(count));
                 				System.out.println("attendStu.length " + attendStu.size());
                 			}
                 		}
@@ -366,8 +366,9 @@ public class HomeController {
                 			//결석 
                 			//출석에서 빼고 결석에 넣기 
                 			System.out.println("8");
-                			attendStu.remove(count);
-            				absentStu.add(attendStu.get(count));
+                			absentStu.add(attendStu.get(i));
+                			attendStu.remove(i);
+            				//absentStu.add(attendStu.get(i));
                 		}
             		}
             		
@@ -376,8 +377,9 @@ public class HomeController {
             			//출석에서 빼고 결석에 넣기 
             			System.out.println("9");
             			System.out.println("attendStu.length " + attendStu.size());
-        				attendStu.remove(count);
-        				absentStu.add(attendStu.get(count));
+            			absentStu.add(attendStu.get(i));
+            			attendStu.remove(i);
+        				//absentStu.add(attendStu.get(i));
         				System.out.println("attendStu.length " + attendStu.size());
             		}
             		
@@ -386,14 +388,20 @@ public class HomeController {
             		//결석 
         			//출석에서 빼고 결석에 넣기 
             		System.out.println("10");
-            		attendStu.remove(count);
-    				absentStu.add(attendStu.get(count));
+            		absentStu.add(attendStu.get(i));
+            		attendStu.remove(i);
+    				//absentStu.add(attendStu.get(i));
             	}
             	
             	count++;
             }
             
-            
+            for(int i=0; i<stuNameArr.size(); i++) {
+            	if(!attendStu.contains(stuNameArr.get(i)) && !absentStu.contains(stuNameArr.get(i)))
+            		annonyStu.add(stuNameArr.get(i));
+            	else
+            		continue;
+            }
             
             finalTakes.add(attendStu);
             finalTakes.add(absentStu);
@@ -417,23 +425,48 @@ public class HomeController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/whichAttendance", method = RequestMethod.POST)
-	public int whichAttendance(HttpServletRequest request) {
+	public int whichAttendance(HttpServletRequest request, @RequestParam(value="finalTakes[]")String[] finalTakes)  {
 		System.out.println("enter??");
 		int classID = Integer.parseInt(request.getParameter("classID"));
 		int instructorID = Integer.parseInt(request.getParameter("instructorID"));
 		int days = Integer.parseInt(request.getParameter("days"));
 		
-		AttendanceVO avo = new AttendanceVO();
-		avo.setClassID(classID);
-		avo.setInstructorID(instructorID);
-		avo.setDays(days);
+		for(int i=0; i<finalTakes.length; i++) {
+			AttendanceCheckVO avo = new AttendanceCheckVO();
+			avo.setAttendanceID(0);
+			avo.setExternal(Integer.parseInt(finalTakes[i]));
+			avo.setStudentID(i+1);
+			attendanceCheckService.insertExAttendanceCheck(avo);
+		}
 		
-		System.out.println(attendanceService.getAttendanceID(avo));
+		return 1;
 		
-		return attendanceService.getAttendanceID(avo).getId();
+		//System.out.println(attendanceService.getAttendanceID(avo));
+		
+		//return attendanceService.getAttendanceID(avo).getId();
 		
 		
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getAttendance", method = RequestMethod.POST)
+	public List<Integer> getAttendance(HttpServletRequest request)  {
+		List<Integer> storedAttend = new ArrayList<Integer>();
+		
+		for(int i=1; i<=3; i++) {
+			storedAttend.add(attendanceCheckService.getAttendanceCheck(i).getExternal());
+		}
+		
+		//System.out.println(attendanceService.getAttendanceID(avo));
+		
+		//return attendanceService.getAttendanceID(avo).getId();
+		//여기서 days, .... 가 담긴 list<list<integer>>를 보내준다.
+		//세부 list[0]에는 days, 그 뒤에는 list .... 
+		return storedAttend;
+		
+	}
+	
+	
 	
 //	@RequestMapping(value = "/deletePlaylist", method = RequestMethod.POST)
 //	@ResponseBody

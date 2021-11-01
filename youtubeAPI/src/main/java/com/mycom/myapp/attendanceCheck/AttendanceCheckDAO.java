@@ -14,6 +14,11 @@ public class AttendanceCheckDAO {
 	@Autowired
 	SqlSession sqlSession;
 	
+	public int insertExAttendanceCheck(AttendanceCheckVO vo) {
+		int result = sqlSession.insert("AttendanceCheck.insertExAttendanceCheck", vo);
+		return result;
+	}
+	
 	public int insertAttendanceCheck(AttendanceCheckVO vo) {
 		int result = sqlSession.insert("AttendanceCheck.insertAttendanceCheck", vo);
 		return result;

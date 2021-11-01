@@ -13,6 +13,11 @@ public class AttendanceCheckServiceImpl implements AttendanceCheckService {
 	AttendanceCheckDAO attendanceCheckDAO;
 	
 	@Override
+	public int insertExAttendanceCheck(AttendanceCheckVO vo) {
+		return attendanceCheckDAO.insertExAttendanceCheck(vo);
+	}
+	
+	@Override
 	public int insertAttendanceCheck(AttendanceCheckVO vo){
 		return attendanceCheckDAO.insertAttendanceCheck(vo);
 	}
