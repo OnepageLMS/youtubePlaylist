@@ -522,13 +522,6 @@ function publishNotice(){
                                 <div class="page-title-heading mr-3">
                                   	<h3>내 강의실</h3> 	
                                 </div>
-                               <div class="search-wrapper">
-				                    <div class="input-holder">
-				                        <input type="text" class="search-input" placeholder="강의실 검색">
-				                        <button class="search-icon"><span></span></button>
-				                    </div>
-				                    <button class="close"></button>
-				                </div> 
 				                <button class="btn btn-primary mr-3" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
                                	<b>+</b> 강의실 생성
                                </button>
@@ -569,6 +562,7 @@ function publishNotice(){
     </div>
    </div>
    
+   <!-- copy classroom -->
    <div class="modal fade bd-example-modal-sm" id="shareClassroomModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog modal-sm">
 	        <div class="modal-content">

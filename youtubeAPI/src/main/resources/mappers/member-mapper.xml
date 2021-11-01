@@ -20,11 +20,11 @@
 	</select>
 	
 	<select id="getInstructor" resultType="member">
-		select id, name, email from lms_instructor where email=#{email}
+		select id, name, email, regDate from lms_instructor where email=#{email}
 	</select>
 	
 	<select id="getStudent" resultType="member">
-		select id, name, email from lms_student where email=#{email}
+		select id, name, email, regDate from lms_student where email=#{email}
 	</select>
 	
 </mapper>

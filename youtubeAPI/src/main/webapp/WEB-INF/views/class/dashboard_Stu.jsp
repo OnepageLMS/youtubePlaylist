@@ -309,13 +309,6 @@ function submitDeleteClassroom(){
                                <div class="page-title-heading mr-3">
                                  	<h3>내 강의실</h3>
                                </div>
-                               <div class="search-wrapper">
-			                    <div class="input-holder">
-			                        <input type="text" class="search-input" placeholder="강의실 검색">
-			                        <button class="search-icon"><span></span></button>
-			                    </div>
-			                    <button class="close"></button>
-			                </div>
                          </div>
                        </div>            
                       

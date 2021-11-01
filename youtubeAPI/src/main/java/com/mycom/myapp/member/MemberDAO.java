@@ -38,6 +38,4 @@ public class MemberDAO {
 	public MemberVO getStudent(String email) {
 		return sqlSession.selectOne("Member.getStudent", email);
 	}
-	
-
 }

@@ -54,5 +54,34 @@
                 </div>        
             </div>
         </div>
-    </div>              
+    </div>         
+    
+    <div class="modal fade bd-example-modal-sm" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog modal-sm">
+	    	<form method="post" action="" novalidate>
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="exampleModalLongTitle">회원정보 관리</h5>
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                    <span aria-hidden="true">×</span>
+		                </button>
+		            </div>
+		            <div class="modal-body">
+		               <div class="position-relative form-group">
+							<label for="exampleEmail" class="">사용자 이름</label>
+		               		<input name="name" id="editName" type="text" value="${login.name}" class="form-control" required>
+		               </div>
+		               <p>이메일 <b>${login.email}</b></p>
+	                   <p>회원가입 <b>${login.regDate}</b></p>
+		            </div>
+		            <div class="divider m-0"></div>
+		            <button class="btn btn-sm btn-danger m-2" onclick="leaveSite();">회원탈퇴</button>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+		                <button type="submit" class="btn btn-primary">저장</button>
+		            </div>
+		        </div>
+	        </form>
+	    </div>
+	</div>     
 	

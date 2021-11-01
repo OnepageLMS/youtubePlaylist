@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.google.api.Google;
@@ -39,6 +40,7 @@ import com.mycom.myapp.member.MemberServiceImpl;
 
 @Controller
 @RequestMapping(value = "/login")
+@PropertySource("classpath:config.properties")
 public class LoginController {
 	
 	final static String GOOGLE_AUTH_BASE_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -47,12 +49,15 @@ public class LoginController {
 	
 	@Autowired
 	private MemberServiceImpl memberService;
-	@Autowired
-	private GoogleConnectionFactory googleConnectionFactory;
-	@Autowired
-	private OAuth2Parameters googleOAuth2Parameters;
+	
+	@Value("${oauth.clientID}")
+	private String clientID;
+	@Value("${oauth.clientSecret}")
+	private String clientSecret;
 	
 	private String loginMode = "";
+	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
+	
 	
 	@RequestMapping(value = "/signin", method = RequestMethod.GET)
 	public String login() {
@@ -64,10 +69,7 @@ public class LoginController {
 		System.out.println(mode);
 		loginMode = mode;
 			
-		//OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();	//구글 code 발행 
-		//String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);	//google 로그인페이지 이동 url생성
-		String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
-		String url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=681590312169-uqt06gfeq64jmh1unlprnc3toq97sv9j.apps.googleusercontent.com&"
+		String url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + clientID + "&"
 							+ "redirect_uri=" + redirectURL + "&response_type=code&scope=email%20profile%20openid&access_type=offline";
 		return "redirect:" + url;
 	}
@@ -81,11 +83,11 @@ public class LoginController {
 	
 		// Google OAuth Access Token 요청을 위한 파라미터 세팅
 		GoogleOAuthRequest googleOAuthRequestParam = new GoogleOAuthRequest();
-		googleOAuthRequestParam.setClientId("681590312169-uqt06gfeq64jmh1unlprnc3toq97sv9j.apps.googleusercontent.com");
-		googleOAuthRequestParam.setClientSecret("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");
+		googleOAuthRequestParam.setClientId(clientID);
+		googleOAuthRequestParam.setClientSecret(clientSecret);
 		googleOAuthRequestParam.setCode(authCode);
-		googleOAuthRequestParam.setRedirectUri("http://localhost:8080/myapp/login/oauth2callback"); 
-		// http://localhost:8080/myapp/login/oauth2callback // https://yewonproj.herokuapp.com/login/oauth2callback
+		googleOAuthRequestParam.setRedirectUri(redirectURL); 
+		// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 		googleOAuthRequestParam.setGrantType("authorization_code");
 	
 		// JSON 파싱을 위한 기본값 세팅
@@ -191,6 +193,5 @@ public class LoginController {
 		System.out.println("logged out!");
 		return "redirect:/login/signin";
 	}
-	
 
 }
