@@ -45,58 +45,40 @@
 <script>
 var takes;
 var takesStudentNum = 0;
-var stuNameList;
-var csvNameList = '';
-
-var csvStartH = new Array();
-var csvEndH = new Array();
-
-var csvStartM = new Array();
-var csvEndM = new Array();
 
 var attendStu = new Array();
-
+var absentStu = new Array();
+var annonyStu = new Array();
+var idx = 1;
 $(document).ready(function(){
-	/*$.ajax({ 
-		'type' : "post",
-		'url' : "${pageContext.request.contextPath}/readCSV",
-		'data' : {
-			
-		},
-		success : function(data){
-			csvNameList = data;
-			console.log(data);
-			console.log("length : " + csvNameList.length);
-			console.log("csvNameList : " +csvNameList[4][0] );
-		}, 
-		error : function(err){
-			alert("실패");
-		}
-	});*/
 	
-	$.ajax({ 
-		'type' : "post",
-		'url' : "${pageContext.request.contextPath}/attendance/takes",
-		'data' : {
-			classID : 1
+	$.ajax({
+		'url' : "${pageContext.request.contextPath}/getAttendance",
+		'processData' : false,
+		'contentType' : false,
+		'data' : "hello",
+		'type' : 'POST',
+		success: function(data){
+			
+			console.log(data.length);
+			console.log(data[0]);
+			console.log(data[1]);
+			 
 		},
-		success : function(data){
-			stuNameList = new Array();
-			
-			for(var i=0; i<data.length; i++)
-				stuNameList.push(data[i].studentName); //takes테이블에 있는 학생들의 이름
-			
-		}, 
 		error : function(err){
 			alert("실패");
-		}
+		},
 	});
+	
 	
 	$("#button").click(function(event){
 		event.preventDefault();
 		var form = $("#attendForm");
 		var formData = new FormData(form[0]);
 		formData.append("file", $("#exampleFile")[0].files[0]);
+		var seq = Number($('#seq').val())+1; //추후에 +1지우기 
+		console.log("seq : " + seq);
+		var table = document.getElementById('takes');
 
 		$.ajax({
 			'url' : "${pageContext.request.contextPath}/uploadCSV",
@@ -105,26 +87,48 @@ $(document).ready(function(){
 			'data' : formData,
 			'type' : 'POST',
 			success: function(data){
-				console.log(data[0]); //attendStuList
-				console.log(data[1]); //absentStuList
-				console.log(data[2]); //annonyStuList
 				
-				/*for(var i=0; i<data[0].length; i++){
-					console.log(data[0][i]);
-					$("showAttendance").append('<th> ' + data[0][i] +' </th>');
-				}
-				
-				for(var i=0; i<data.length; i++){
-					for(var j=0; j<data[0].length; j++){
-						$("showAttendance").append(data[i][j]);
+				for(var i=0; i<data[0].length; i++){
+					var rows = document.getElementById("stuName").getElementsByTagName("th");
+					for( var r=0; r<rows.length; r++ ){
+						var name = rows[r];
+						  console.log(data[0][0]);
+						  if(name.innerText == data[0][i]){
+						  		$(".takeZoom"+seq).eq(r).val(1).prop("selected", true); 
+						  		//document.getElementsByClassName('takeZoom'+seq).style.background = "blue";
+						  		break;
+						  }
+						  
 					}
 					
-				}*/
-				// $("showAttendance").append(data);
+				}
+				
+
+				for(var i=0; i<data[1].length; i++){
+					var rows = document.getElementById("stuName").getElementsByTagName("th");
+					for( var r=0; r<rows.length; r++ ){
+						var name = rows[r];
+						 console.log("name : "  +name.innerText+ "/ " +r);
+						  if(name.innerText == data[1][i]){
+							  	console.log(data[1][0]);
+						  		$(".takeZoom"+seq).eq(r).val(3).prop("selected", true);
+						  		//document.getElementsByClassName('takeZoom'+seq).style.background = "red";
+						  		//console.log("seq : " + seq + " r :" + r);
+						  		break;
+						  }
+						  
+					}
+					
+				}
+				
+				if(idx > 1){
+					$("showAttendance").empty();
+				}
+				
+				$("#showAttendance").append('출석 ' + data[0].length + '명 / 결석 ' + data[1].length + '명 / 미확인 ' + data[2].length + '명');
+				$("#showAttendance").show();
+				 idx ++;
 				 
-				whoIsAttend(csvNameList, stuNameList);
-				console.log("whoIsAttend실행 ");
-				timeLimit();
 			},
 			error : function(err){
 				alert("실패");
@@ -135,139 +139,37 @@ $(document).ready(function(){
 	
 });
 
+//시간에 따른 출석체크
+// 정해진 시 >  학생 입장 시 
+	// 정해진 시(10) < 학생 퇴장 시 (11) : 출석
+	// 정해진 시 = 학생 퇴장시 : 분 확인, 
+		// 정해진 분 <= 학생 퇴장 분 : 출석
+		// 그렇지 않으면 : 결석 
+	// 정해진 시 > 학생 퇴장 (전체 시간 확인해봐야 하는디,,)  : 우선 결석 
+// 정해진 시 = 학생 입장 시 (10 = 10)
+	// 분 확인, 정해진 분(5) >= 학생 입장 분(0) => 출석 
+	// 그렇지 않으면 결석 
+// 정해진 시 < 학생 입장 시	
+	// (전체 시간 확인해봐야 하는디,,) 우선 결석 
 
-function whoIsAttend(csv, stu){
 	
-	console.log("들어오긴 하니...?");
-	console.log("length : " + csv.length + " length : " + stu.length);
-	
-	for(var i=4; i<csv.length; i++){ //i를 4부터 하는 이유는, zoom csv에서 학생 이름이 idx 4번째부터 있기 때문이다..
-		for(var j=0; j<stu.length; j++){
-
-			if(csv[i][0].indexOf(stu[j]) != -1){ //csv파일에 학생 이름이 있을경우 
-				attendStu.push(stu[j]); //출석한 학생을 나타내는 배열에 학생 이름 추가 
-			
-				//학생의 출석시간을 배열에 추가 추후에 시간 비교를 위함
-				csvStartH.push(csv[i][2][11] + csv[i][2][12]); 
-				csvEndH.push(csv[i][3][11] + csv[i][3][12]);
-				
-				csvStartM.push(Number("" + csv[i][2][14] + csv[i][2][15]));
-				csvEndM.push(Number("" + csv[i][3][14] + csv[i][3][15]));
-				
-			}
-			else {
-				continue;
-			}
-		}
-	}
-	
-	//항목에 따라서 selectbox의 색이 다르게
-	//전체적으로 출/결여부를 바꾸어줄 수 있는대로 
-	//밑에 데이터 로드해서 보여주기보다는, 파일을 open하도록 하는 방식으로
-	//업로드했을때, 몇개가 check가 되었는지 미반영은 몇개인지 
-	
-	/*for(var i=0; i<attendStu.length; i++){
-		console.log("출석한 학생은 말이지 " + attendStu[i]); 
-	}
-	
-	for(var i=0; i<csvStartH.length; i++){
-		console.log("시작 : " +csvStartH[i] + " : "  +csvStartM[i]); 
-		console.log(" 끝 : " +csvEndH[i] + " : "  +csvEndM[i]);
-	}*/
-	
-}
-
-function timeLimit(){ //지금은 오전 10시와 오후 1시에 대해서는 시간비교가 잘 안되고 있다. 
-	console.log("들어옴!");
-	var start_h = $('#startTimeH').val(); // 10
-	var start_m = $('#startTimeM').val(); // 5
-	var end_h = $('#endTimeH').val(); // 11
-	var end_m = $('#endTimeM').val(); // 15  
-	var seq = $('#seq').val();
-	
-	console.log(start_h + " 시 " + start_m + "분 시작, " + end_h + " 시 " + end_m + "분 끝" + "차시 : " + seq);
-	
-	
-	var rows = document.getElementById("stuName").getElementsByTagName("th");
-	console.log("rows.length : " + rows.length);
-		
-	for(var i=0; i<attendStu.length; i++){
-		//시간에 따른 출석체크
-		// 정해진 시 >  학생 입장 시 
-			// 정해진 시(10) < 학생 퇴장 시 (11) : 출석
-			// 정해진 시 = 학생 퇴장시 : 분 확인, 
-				// 정해진 분 <= 학생 퇴장 분 : 출석
-				// 그렇지 않으면 : 결석 
-			// 정해진 시 > 학생 퇴장 (전체 시간 확인해봐야 하는디,,)  : 우선 결석 
-		// 정해진 시 = 학생 입장 시 (10 = 10)
-			// 분 확인, 정해진 분(5) >= 학생 입장 분(0) => 출석 
-			// 그렇지 않으면 결석 
-		// 정해진 시 < 학생 입장 시	
-			// (전체 시간 확인해봐야 하는디,,) 우선 결석 
-			
-		if(start_h > csvStartH[i] ) {
-			if(end_h < csvEndH[i]) {
-				console.log("1. 출석한 학생은 : " + attendStu[i]);
-			}
-			else if(end_h == csvEndH[i]){
-				if(end_m <= csvEndM[i]) {
-					
-					var rows = document.getElementById("stuName").getElementsByTagName("th");
-					console.log("rows.length : " + rows.length);
-					
-					for( var r=0; r<rows.length; r++ ){
-					      var name = rows[r];
-						  console.log(name.innerText);
-						  
-						  if(name.innerText == attendStu[i]){
-						  		$(".takeZoom"+seq).eq(r).val(1).prop("selected", true); 
-						  		break;
-						  }
-						  console.log(name.data);
-
-					}
-					
-					
-				}
-				else {
-					console.log("결석한 학생은 : " + attendStu[i]);
-				}
-			}
-			else{
-				console.log("결석한 학생은 : " + attendStu[i]);
-			}
-		}
-		else if(start_h == csvStartH[i]){
-			if(start_m >= csvStartM[i]) console.log("3. 출석한 학생은 : " +  attendStu[i]);
-			else {
-
-				var rows = document.getElementById("stuName").getElementsByTagName("th");
-				console.log("rows.length : " + rows.length);
-				
-				for( var r=0; r<rows.length; r++ ){
-				      var name = rows[r];
-					  console.log(name.innerText);
-					  
-					  if(name.innerText == attendStu[i]){
-					  		$(".takeZoom"+seq).eq(r).val(3).prop("selected", true); 
-					  		break;
-					  }
-
-				}
-				
-			}
-		}
-		else{
-			console.log("결석한 학생은 : " + attendStu[i]);
-		}
-			
-		
-	}
-}
-
 function updateAttendance(days){
 	//attendanceID를 알아야한다. 그러기 위해서는 classID, days, instructorID가 필요하다.
 	console.log("days : " + days);
+	//days의 $(".takeZoom"+seq).eq(r).val();을 리스트로 만들면되지 않을까  == //takeZoom(days+1)번째의 value들을 array에 저장하기
+	var rows = document.getElementById("stuName").getElementsByTagName("th");
+	var finalTakes = [];
+	var days = days+1;
+	console.log(rows);
+	for(var i=0; i<rows.length; i++){
+		console.log($(".takeZoom"+days).eq(i).val());
+		//if(i==0) 
+		finalTakes.push($(".takeZoom"+days).eq(i).val());
+	}
+	
+	for(var i=0; i<finalTakes.length; i++){
+		console.log(finalTakes[i]);
+	}
 	
 	$.ajax({ 
 		'type' : "post",
@@ -275,7 +177,8 @@ function updateAttendance(days){
 		'data' : { //나중에 수정 
 			classID : 1,
 			instructorID : 1,
-			days : days
+			days : days,
+			finalTakes : finalTakes
 		},
 		success : function(data){
 			attendanceID = data;
@@ -285,18 +188,14 @@ function updateAttendance(days){
 			alert("실패");
 		}
 	});
-	//takeZoom(days+1)번째의 value들을 array에 저장하기
-	var l = $(".takeZoom1").eq(days+1).val();
-	console.log(l);
-	//
 }
 
-backgroundCh = function() {
+/*backgroundCh = function() {
 	console.log(document.getElementById('sel'));
 	console.log(sel.className);
     var sel = document.getElementById('sel');
     sel.style.backgroundColor = sel.className;
-};
+};*/
 	
 	
 </script>
@@ -328,38 +227,6 @@ backgroundCh = function() {
                     </div>  
                     
                     <div class="row">
-	
-					<!--  	<div class="col-md-3">
-				        	<div class="main-card mb-3 card">
-				                 <div class="card-body"><h5 class="card-title">ZOOM 출석체크 !</h5>
-				                      <form id="attendForm" enctype="multipart/form-data">
-				                      	  <label for="startTime" class="">출석체크할 차시를 입력하세요 </label>
-				                          <div class="position-relative form-group input-group">
-				                          	<input name="seq" id="seq" class="form-control"  value="0"> 차시 
-				                          </div>
-				                          
-				                      	  <label for="startTime" class="">출석 인정시간을 입력하세요 </label>
-				                          <div class="position-relative form-group input-group">
-				                          	<input name="start" id="startTimeH" placeholder="시" class="form-control"  value="0"> 시
-				                          	<input name="start" id="startTimeM" placeholder="분" class="form-control"  value="0"> 분
-				                          </div>
-				                          
-				                          <label for="endTime" class="">출석 마감시간을 입력하세요 </label>
-				                          <div class="position-relative form-group input-group">
-				                          	<input name="end" id="endTimeH" placeholder="시" class="form-control"  value="0"> 시
-				                          	<input name="end" id="endTimeM" placeholder="분" class="form-control"  value="0"> 분
-				                          </div>
-				                          
-				                           <div class="position-relative form-group input-group">
-				                           	<input name="file" id="exampleFile" type="file" class="form-control-file">
-				                           </div>
-			
-				                         
-				                         <button id="button" type="submit" class="mt-1 btn btn-primary">Submit</button>
-				                     </form>
-				                  </div>
-				             </div>
-				         </div>-->
                     	
                     	<div class="col-lg-12">
                          	<div class="main-card mb-3 card">
@@ -404,7 +271,7 @@ backgroundCh = function() {
 		                                            	 <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
 		                                            	 	<td style="text-align:center" > 
 						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" onchange="backgroundCh();">
-																  <option selected>출결체크</option>
+																  <option selected value="0">출결체크</option>
 																  <option value="1" class="blue">출석</option>
 																  <option value="2" class="yellow">지각</option>
 																  <option value="3" class="red">결석</option>
@@ -428,7 +295,7 @@ backgroundCh = function() {
                    <div>
                    
 	                  	<div class="main-card mb-3 card">
-	                    	<div id="showAttendance" class="card-body"></div>
+	                    	<div id="showAttendance" class="card-body" style="display:none"></div>
 	                    </div>
                    </div>
         		</div>
