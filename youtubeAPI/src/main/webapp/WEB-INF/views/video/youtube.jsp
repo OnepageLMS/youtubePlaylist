@@ -340,11 +340,6 @@ $(document).ready(function(){
 		var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
 		location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/' + myEmail;
 	}
-
-/* 	function showToast(){
-		$('#toast-container').css("display", "block");
-	} */
-
 	
 </script>
 
@@ -382,17 +377,14 @@ $(document).ready(function(){
 		//var $element = $('#slider-range');
 		
 		function showToast(){
-		    //$('.toast').toast({delay: 1000});
-		   	var html = 
-		      '<div id="toast-container" class="toast-top-right">'
-				+ '<div class="toast toast-error" aria-live="assertive">'
-					+ '<div class="toast-message">I do not think that means what you think it means.</div>'
-				+ '</div>'
-			+ '</div>';
-
-			$('#playerBox').append(html);		
-		    
+			$('.toast').css("display", "block");
+			setTimeout("hideToast()", 3000);	
 		}	
+
+		function hideToast(){
+			$('.toast').css("display", "none");
+		}
+		
 		
 		function viewVideo2(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
 			console.log(id, title, duration, index);
@@ -432,7 +424,7 @@ $(document).ready(function(){
 								+ '<div class="col-sm-10"><input type="text" id="setTag" name="setTag" class="col-sm-11 form-control"> </div>'
 							+ '</div>' 
 						+ '</div>'
-						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\'); showToast();">' 
+						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\'); ">' 
 							+ '<i class="fas fa-plus-square"> 리스트에 추가 </i>'
 						+ '</button> </div>'
 					+ '</form>' 
@@ -580,8 +572,9 @@ $(document).ready(function(){
 				+ '<div id="running_time" style="display:inline" value="'+hhmmss+'"> duration ' + hhmmss + '</div>'
 				+ '</div> </div>'; 
 			//3. var html = $('#setVideosInCart').html();
-			$("#videosInCart").append(html); 				
-				
+			$("#videosInCart").append(html); 	
+
+			showToast(); 				
 		}
 
 		var start_hour, start_min, start_sec, end_hour, end_min, end_sec;
@@ -1127,6 +1120,11 @@ $(document).ready(function(){
 		</div>
 	</div>
 	
+	<div id="toast-container" class="toast-top-right">
+		<div class="toast toast-success" aria-live="assertive" aria-atomic="true" style="display: none;">
+			<div class="toast-message"> 동영상이 장바구니에 담겨졌습니다! </div>
+		</div>
+	</div>
 	
 	<!-- 동영상 추가시 나타나는 모달창  -->
 	<div class="modal fade" id="addVideoModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-modal="true">
