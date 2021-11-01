@@ -52,7 +52,7 @@ var annonyStu = new Array();
 var idx = 1;
 $(document).ready(function(){
 	
-	$.ajax({
+	/*$.ajax({
 		'url' : "${pageContext.request.contextPath}/getAttendance",
 		'processData' : false,
 		'contentType' : false,
@@ -68,7 +68,7 @@ $(document).ready(function(){
 		error : function(err){
 			alert("실패");
 		},
-	});
+	});*/
 	
 	
 	$("#button").click(function(event){
@@ -81,13 +81,13 @@ $(document).ready(function(){
 		var table = document.getElementById('takes');
 
 		$.ajax({
-			'url' : "${pageContext.request.contextPath}/uploadCSV",
+			'url' : "${pageContext.request.contextPath}/test/uploadCSV",
 			'processData' : false,
 			'contentType' : false,
 			'data' : formData,
 			'type' : 'POST',
 			success: function(data){
-				
+				console.log(data);
 				for(var i=0; i<data[0].length; i++){
 					var rows = document.getElementById("stuName").getElementsByTagName("th");
 					for( var r=0; r<rows.length; r++ ){
@@ -121,11 +121,22 @@ $(document).ready(function(){
 					
 				}
 				
-				if(idx > 1){
-					$("showAttendance").empty();
-				}
+				/*if(idx > 1){
+					$("#showAttendance").empty();
+				}*/
 				
-				$("#showAttendance").append('출석 ' + data[0].length + '명 / 결석 ' + data[1].length + '명 / 미확인 ' + data[2].length + '명');
+				$("#showAttendance").append('<div> 출석 ' + data[0].length + '명 / 결석 ' + data[1].length + '명 / 미확인 ' + data[2].length + '명 </div>');
+				
+				
+				for(var i=0; i<data[0].length; i++)
+					$("#showAttendance").append('<div> 출석 : ' +data[0][i] + '</div>');
+				
+				for(var i=0; i<data[1].length; i++)
+					$("#showAttendance").append('<div> 결석 : ' +data[1][i] + '</div>');
+				
+				for(var i=0; i<data[2].length; i++)
+					$("#showAttendance").append('<div> 미확인 : ' +data[2][i] + '</div>');
+				
 				$("#showAttendance").show();
 				 idx ++;
 				 

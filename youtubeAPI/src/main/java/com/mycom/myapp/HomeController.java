@@ -219,10 +219,11 @@ public class HomeController {
 	}*/
 	
 	@ResponseBody
-	@RequestMapping(value = "/uploadCSV", method = RequestMethod.POST)
+	@RequestMapping(value = "/test/uploadCSV", method = RequestMethod.POST)
 	public List<List<String>> uploadCSV(MultipartHttpServletRequest request, Model model) throws Exception {
 		//업로드된 파일에서 리스트 뽑은거랑, takes테이블에서 학생이름 가져오기
 		//데이터는 함수를 또 만들어서 넘겨주기 
+		System.out.println("!!!");
 		MultipartFile file = request.getFile("file");
 		String name = request.getParameter("name");
 		int start_h = 10;
