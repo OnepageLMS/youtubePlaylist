@@ -135,10 +135,7 @@ $(document).ready(function(){
 	console.log(localStorage.getItem("selectedPlaylistName"));
 	$("#playlistName").before('<h4 class="text-primary" style="display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');
 
-	$('#cartButton').click(function(){
-	    $('.toast').toast({delay: 1000});
-	    $('.toast').toast('show');
-	  });	
+	
 });
 </script>
 
@@ -384,6 +381,19 @@ $(document).ready(function(){
 
 		//var $element = $('#slider-range');
 		
+		function showToast(){
+		    //$('.toast').toast({delay: 1000});
+		   	var html = 
+		      '<div id="toast-container" class="toast-top-right">'
+				+ '<div class="toast toast-error" aria-live="assertive">'
+					+ '<div class="toast-message">I do not think that means what you think it means.</div>'
+				+ '</div>'
+			+ '</div>';
+
+			$('#playerBox').append(html);		
+		    
+		}	
+		
 		function viewVideo2(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
 			console.log(id, title, duration, index);
 
@@ -422,14 +432,25 @@ $(document).ready(function(){
 								+ '<div class="col-sm-10"><input type="text" id="setTag" name="setTag" class="col-sm-11 form-control"> </div>'
 							+ '</div>' 
 						+ '</div>'
-						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\')">' 
+						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\'); showToast();">' 
 							+ '<i class="fas fa-plus-square"> 리스트에 추가 </i>'
 						+ '</button> </div>'
 					+ '</form>' 
-						+ '<div class="toast">'
-							+ '<div class="toast-body">I do not think that means what you think it means.</div>'
+					/* + '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="display: hidden;">'
+						+ '<div class="toast-header">'
+							+ ' <strong class="mr-auto">Bootstrap</strong>'
+							+ ' <small class="text-muted">2 seconds ago</small>'
+							+ ' <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">'
+							+ '   <span aria-hidden="true">&times;</span>'
+							+ ' </button>'
 						+ '</div>'
-					+ '</div>'); 		
+						+ '<div class="toast-body">'
+							+ ' Heads up, toasts will stack automatically'
+						+ '</div>'
+					+ '</div>'	 */		
+
+					
+				+ '</div>'); 		
 			
 			
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
@@ -876,23 +897,10 @@ $(document).ready(function(){
 
 		// 바깥영역 클릭시 안보이게 하기 
 		$('body').on('click', function(e) {
-	        if($(e.target).closest('#TooltipDemo').length == 0) {
+	        if($(e.target).closest('.ui-theme-settings').length == 0) {
 	        	$('.ui-theme-settings').attr('class', 'ui-theme-settings');
-	        }
+	        }        
 	    });
-
-		/* var menu = $('.ui-theme-settings');
-
-		document.addEventListener("click", function(){
-		    // Hide the menus
-			$('.ui-theme-settings').attr('class', 'ui-theme-settings');
-		}, false);
-
-		document.getElementByClassName("ui-theme-settings").addEventListener("click", function(e){
-		    // Show the menus
-		    $('.ui-theme-settings').attr('class', 'ui-theme-settings settings-open');
-		    e.stopPropagation();
-		}, false); */
 
 		function insertVideo(){ 	// video들 저장 		
 				event.preventDefault(); // avoid to execute the actual submit of the form.
