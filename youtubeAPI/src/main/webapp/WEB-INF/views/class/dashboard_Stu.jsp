@@ -72,7 +72,7 @@ function getAllClass(act, order){
 
 			$(list).each(function(){
 				var classID = this.id;
-				var classNoticeURL = 'moveToNotice(' + classID + ')';
+				var classNoticeURL = "'${pageContext.request.contextPath}/student/notice/" + classID + "'";
 				var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 				var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
 				var newNotice = this.newNotice;
@@ -93,7 +93,7 @@ function getAllClass(act, order){
 									+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 							+ '</div>'
 							+ '<div class="card-body">'
-								+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지' 
+								+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지' 
 									+ newNotice
 								+ '</button>'
 								+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
@@ -163,7 +163,7 @@ function getAllMyClass(){
 			else{
 				$(active).each(function(){
 					var classID = this.id;
-					var classNoticeURL = 'moveToNotice(' + classID + ')';
+					var classNoticeURL = "'${pageContext.request.contextPath}/student/notice/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
 					var cardColor = active_colors[i%(active_colors.length)];
@@ -182,7 +182,7 @@ function getAllMyClass(){
 														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</div>'
 												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지' 
+													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지' 
 														+ newNotice
 													+ '</button>'
 													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
@@ -212,7 +212,7 @@ function getAllMyClass(){
 				i = 0;
 				$(inactive).each(function(){
 					var classID = this.id;
-					var classNoticeURL = 'moveToNotice(' + classID + ')';
+					var classNoticeURL = "'${pageContext.request.contextPath}/student/notice/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 					var classAttendanceURL = '#';
 					var cardColor = inactive_colors[i%(inactive_colors.length)]; 
@@ -225,7 +225,7 @@ function getAllMyClass(){
 														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</div>'
 												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
+													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
 													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 								        		+ '</div>'

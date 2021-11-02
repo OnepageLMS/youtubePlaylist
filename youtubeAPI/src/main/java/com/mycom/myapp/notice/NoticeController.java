@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classes.Stu_ClassesService;
@@ -27,7 +30,6 @@ import net.sf.json.JSONArray;
 
 @Controller
 public class NoticeController {
-	private int instructorID = 1;
 	
 	@Autowired
 	private NoticeService noticeService;
@@ -37,11 +39,21 @@ public class NoticeController {
 	private MemberService memberService;
 	@Autowired
 	private Stu_TakesService takesService;
+
+	private int instructorID = 0;
 	
-	private int classID;
-	
-	@RequestMapping(value="/notice", method = {RequestMethod.GET, RequestMethod.POST})
-	public String notice(@RequestParam(value="classID") int classID, Model model) {
+	@RequestMapping(value="/notice/{classID}", method = {RequestMethod.GET, RequestMethod.POST})
+	public String notice(@PathVariable(value="classID") int classID, Model model, HttpSession session) {
+		instructorID = (Integer)session.getAttribute("userID");
+		
+		ClassesVO vo = new ClassesVO();
+		vo.setId(classID);
+		vo.setInstructorID(instructorID);
+		
+		if(classService.checkAccessClass(vo) == 0) {
+			System.out.println("접근권한 없음!");
+			return "accessDenied";
+		}
 		model.addAttribute("classID", classID);
 		model.addAttribute("allMyClass", classService.getAllMyActiveClass(instructorID));
 		model.addAttribute("allMyInactiveClass", classService.getAllMyInactiveClass(instructorID));

@@ -68,7 +68,8 @@ function getAllClass(act, order){
 					var classID = this.id;
 					var className = this.className;
 					
-					var classNoticeURL = 'moveToNotice(' + classID + ')';
+					//var classNoticeURL = 'moveToNotice(' + classID + ')';
+					var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
 					var regDate = this.regDate.split(' ')[0];
@@ -92,7 +93,7 @@ function getAllClass(act, order){
 									+ '</a>'
 								+ '</div>'
 								+ '<div class="card-body">'
-									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 									+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
 											+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
@@ -129,7 +130,7 @@ function getAllClass(act, order){
 									+ '</a>'
 								+ '</div>'
 								+ '<div class="card-body">'
-									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 									+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
                         		+ '</div>'
@@ -181,7 +182,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 					var classID = this.id;
 					var className = this.className;
 					
-					var classNoticeURL = 'moveToNotice(' + classID + ')';
+					var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
 					var regDate = this.regDate.split(' ')[0];
@@ -202,7 +203,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 													+ '</a>'
 												+ '</div>'
 												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 													+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
 															+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
@@ -234,7 +235,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 					i=0;
 					$(inactive).each(function(){
 						var id = this.id;
-						var classNoticeURL = 'moveToNotice(' + this.id + ')';
+						var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
 						var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + id + "'";
 						var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 						var regDate = this.regDate.split(' ')[0];
@@ -255,7 +256,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 														+ '</a>'
 													+ '</div>'
 													+ '<div class="card-body">'
-														+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+														+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 														+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 														+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 					                        		+ '</div>'
@@ -276,18 +277,6 @@ function getAllMyClass(){	//위와 중복 제거하기
 			}
 		});
 	}
-
-function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
-	var html = '<input type="hidden" name="classID"  value="' + id + '">';
-
-	var goForm = $('<form>', {
-			method: 'post',
-			action: '${pageContext.request.contextPath}/notice',
-			html: html
-		}).appendTo('body'); 
-
-	goForm.submit();
-}
 
 function setPublishNotice(item){
 	var id = item.getAttribute('classID');

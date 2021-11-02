@@ -82,7 +82,7 @@ public class ClassController {
 	@RequestMapping(value = "/getAllClass", method = RequestMethod.POST)
 	public Object getAllInactiveNotices(
 							@RequestParam(value = "active") int active,
-							@RequestParam(value = "order") String order) {
+							@RequestParam(value = "order") String order) {	//active, inactive 선택적으로 가져오는 함수 (위에꺼 나중에 이걸로 사용?!)
 		ClassesVO vo = new ClassesVO();
 		vo.setInstructorID(instructorID);
 		vo.setActive(active);

@@ -80,6 +80,10 @@ public class ClassesDAO {
 	public List<String> getAllEntryCodes() {
 		return sqlSession.selectList("Classes.getAllEntryCodes");
 	}
+	
+	public int checkAccessClass(ClassesVO vo) {
+		return sqlSession.selectOne("Classes.checkAccessClass", vo);
+	}
 
 }
 

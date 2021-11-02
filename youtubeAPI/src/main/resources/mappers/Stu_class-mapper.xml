@@ -39,4 +39,10 @@
 		where studentID=#{studentID} and classID=#{id}
 	</delete>
 	
+	<select id="checkTakeClass" resultType="int">
+		select count(*) 
+		from lms_takes
+		where classID=#{id} and studentID=#{studentID}
+	</select>
+	
 </mapper>

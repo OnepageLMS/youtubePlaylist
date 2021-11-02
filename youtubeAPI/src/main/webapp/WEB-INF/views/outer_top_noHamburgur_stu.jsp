@@ -54,7 +54,7 @@
             <div class="app-header-left">
                 <ul class="header-menu nav">
                     <li class="nav-item">
-                        <a href="#" class="nav-link text-primary">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
+                        <a href="${pageContext.request.contextPath}/student/class/dashboard" class="nav-link text-primary">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
                             <i class="nav-link-icon fa fa-home"> </i>
                             대시보드
                         </a>

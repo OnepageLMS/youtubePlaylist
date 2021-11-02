@@ -78,4 +78,10 @@
 		where id = #{classID}
 	</update>
 	
+	<select id="checkAccessClass" resultType="int">
+		select count(*) 
+		from lms_class
+		where id=#{id} and instructorID=#{instructorID}
+	</select>
+	
 </mapper>
