@@ -1,19 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script>
-	function moveToNotice(id){
-		var html = '<input type="hidden" name="classID"  value="' + id + '">';
-
-		var goForm = $('<form>', {
-				method: 'post',
-				action: '${pageContext.request.contextPath}/notice',
-				html: html
-			}).appendTo('body'); 
-
-		goForm.submit();
-	}
-</script>
 <%
 	String className = request.getParameter("className");
 	String menu = request.getParameter("menu");
@@ -73,7 +60,7 @@
 			                           	
 			                           	<ul class="mm-collapse">
 											<li>
-												<a href="javascript:moveToNotice(${v.id});">
+												<a href="${pageContext.request.contextPath}/notice/${v.id}">
 			                                   		<i class="metismenu-icon"></i>
 			                                   		공지
 			                              		</a>
@@ -113,7 +100,7 @@
 	                           	</a>
 	                           	<ul class="mm-collapse">
 									<li>
-										<a href="javascript:moveToNotice(${u.id});">
+										<a href="${pageContext.request.contextPath}/notice/${u.id}">
 	                                   		<i class="metismenu-icon"></i>
 	                                   		공지
 	                              		</a>

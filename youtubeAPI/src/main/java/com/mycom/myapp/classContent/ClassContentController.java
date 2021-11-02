@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,11 +42,12 @@ public class ClassContentController {
 	@Autowired
 	private MemberService memberService;
   
-	private int instructorID = 1;
+	private int instructorID = 0;
 	private int classID;
 	
 	@RequestMapping(value = "/contentList/{classId}", method = RequestMethod.GET)
-	public String contentList(@PathVariable("classId") int classId, Model model) {
+	public String contentList(@PathVariable("classId") int classId, Model model, HttpSession session) {
+		instructorID = (Integer)session.getAttribute("userID");
 		classID = classId;
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
@@ -60,7 +62,7 @@ public class ClassContentController {
 	}
 
 	@RequestMapping(value = "/contentDetail/{id}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("id") int id, @PathVariable("daySeq") int daySeq, Model model) {
+	public String contentDetail(@PathVariable("id") int id, @PathVariable("daySeq") int daySeq, Model model) {	//post로 변경하기
 		//int classID = Integer.parseInt(request.getParameter("classID"));
 		
 		//ClassContentVO vo = classContentService.getOneContent(id);
@@ -124,8 +126,6 @@ public class ClassContentController {
 	    
 	    return vo;
 	}
-	
-
 	
 	/*
 	@ResponseBody

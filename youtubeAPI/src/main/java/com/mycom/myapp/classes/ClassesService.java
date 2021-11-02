@@ -22,5 +22,5 @@ public interface ClassesService {
 	public List<ClassesVO> getAllMyInactiveClass(int instructorID);
 	public List<ClassesVO> getAllMyClass(int instructorID);
 	public List<String> getAllEntryCodes();
-
+	public int checkAccessClass(ClassesVO vo);
 }

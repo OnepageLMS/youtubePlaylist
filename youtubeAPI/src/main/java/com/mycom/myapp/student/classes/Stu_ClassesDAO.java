@@ -36,4 +36,8 @@ public class Stu_ClassesDAO {
 	public int deleteClassroom(ClassesVO vo) {
 		return sqlSession.delete("Stu_Classes.deleteClassroom", vo);
 	}
+	
+	public int checkTakeClass(ClassesVO vo) {
+		return sqlSession.selectOne("Stu_Classes.checkTakeClass", vo);
+	}
 }

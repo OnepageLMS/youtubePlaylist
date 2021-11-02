@@ -11,4 +11,5 @@ public interface Stu_ClassesService {
 	public List<ClassesVO> getAllMyClass(int id);
 	public List<ClassesVO> getAllMyInactiveClass(int id);
 	public int deleteClassroom(ClassesVO vo);
+	public int checkTakeClass(ClassesVO vo);
 }

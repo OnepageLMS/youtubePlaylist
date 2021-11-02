@@ -41,4 +41,9 @@ public class Stu_ClassesServiceImpl implements Stu_ClassesService{
 	public int deleteClassroom(ClassesVO vo) {
 		return classesDAO.deleteClassroom(vo);
 	}
+	
+	@Override
+	public int checkTakeClass(ClassesVO vo) {
+		return classesDAO.checkTakeClass(vo);
+	}
 }

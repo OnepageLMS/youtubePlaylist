@@ -35,7 +35,7 @@ import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
 import net.sf.json.JSONArray;
 
 @Controller
-@RequestMapping(value="/student/class")
+@RequestMapping(value="/student/class")	//class 지우기!!
 public class Stu_ClassController{
 	@Autowired
 	private ClassesService classService;	//나중에 아래랑 이름 구분하기! 
@@ -158,26 +158,12 @@ public class Stu_ClassController{
 		
 	}
 	
-	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)
-	public String contentList(@PathVariable("classID") int classID, Model model) {
-		
-		ClassContentVO ccvo = new ClassContentVO();
-		ccvo.setClassID(classID); //임의로 1번 class 설정*/
-		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
-		//지금 studentID가 제대로 안들어간다..
-		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(1)));
-		
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
-		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
-		//return "t_contentsList_Stu";
-		return "class/contentsList_Stu";
-	}
-	
 	
 	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classID}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("playlistID") int playlistID, @PathVariable("id") int id, @PathVariable("classID") int classID, @PathVariable("daySeq") int daySeq, Model model) {
+	public String contentDetail(@PathVariable("playlistID") int playlistID, 
+								@PathVariable("id") int id, 
+								@PathVariable("classID") int classID, 
+								@PathVariable("daySeq") int daySeq, Model model) {
 		
 		VideoVO pvo = new VideoVO();
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();

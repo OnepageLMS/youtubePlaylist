@@ -39,7 +39,6 @@
 	var total_runningtime;
 	
 	$(document).ready(function(){
-		
 		var weekContents = JSON.parse('${weekContents}');
 		var allMyClass = JSON.parse('${realAllMyClass}');
 		//console.log("weekContents")
@@ -158,14 +157,17 @@
 		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="../outer_left_stu.jsp" flush="false"/>
+		 	<jsp:include page="../outer_left_stu.jsp" flush="false">
+		 		<jsp:param name="className" value="${className}"/>	
+		 		<jsp:param name="menu"  value="contentList"/>
+		 	</jsp:include>
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	${classInfo.className} - 강의컨텐츠<!-- 이부분 이름 바꾸기!! -->
+                            	<span class="text-primary">${classInfo.className}</span> - 강의컨텐츠
                             </div>
                         </div>
                     </div>    

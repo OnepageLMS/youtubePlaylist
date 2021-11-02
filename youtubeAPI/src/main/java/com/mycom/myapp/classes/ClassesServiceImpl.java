@@ -91,6 +91,11 @@ public class ClassesServiceImpl implements ClassesService {
 	public List<String> getAllEntryCodes() {
 		return classesDAO.getAllEntryCodes();
 	}
+	
+	@Override
+	public int checkAccessClass(ClassesVO vo) {
+		return classesDAO.checkAccessClass(vo);
+	}
 
 }
 
