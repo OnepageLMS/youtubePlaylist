@@ -2,10 +2,9 @@ package com.mycom.myapp.commons;
 
 public class AttendanceVO {
 	private int id;
-	private String className;
 	private int classID;
 	private int days;
-	private int instructorID;
+	private String fileName;
 	private String regDate;
 	private String modDate;
 	public int getId() {
@@ -14,12 +13,7 @@ public class AttendanceVO {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getClassName() {
-		return className;
-	}
-	public void setClassName(String className) {
-		this.className = className;
-	}
+	
 	public int getClassID() {
 		return classID;
 	}
@@ -32,11 +26,11 @@ public class AttendanceVO {
 	public void setDays(int days) {
 		this.days = days;
 	}
-	public int getInstructorID() {
-		return instructorID;
+	public String getFileName() {
+		return fileName;
 	}
-	public void setInstructorID(int instructorID) {
-		this.instructorID = instructorID;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	public String getRegDate() {
 		return regDate;

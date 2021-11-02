@@ -44,8 +44,18 @@ public class AttendanceCheckDAO {
 		return result;
 	}
 	
-	public AttendanceCheckVO getAttendanceCheck(int id) {
-		AttendanceCheckVO vo = sqlSession.selectOne("AttendanceCheck.getAttendanceCheck", id);
+	public AttendanceCheckVO getAttendanceCheck(AttendanceCheckVO vo) {
+		AttendanceCheckVO result = sqlSession.selectOne("AttendanceCheck.getAttendanceCheck", vo);
+		return result;
+	}
+	
+	public List<AttendanceCheckVO> getAttendanceCheckList(int attendanceID) {
+		List<AttendanceCheckVO> result = sqlSession.selectList("AttendanceCheck.getAttendanceCheck", attendanceID);
+		return result;
+	}
+	
+	public int getAttendanceCheckListCount(int attendanceID) {
+		int vo = sqlSession.selectOne("AttendanceCheck.getAttendanceCheckListCount", attendanceID);
 		return vo;
 	}
 	
