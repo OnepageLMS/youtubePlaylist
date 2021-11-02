@@ -13,6 +13,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	AttendanceDAO attendanceDAO;
 	
 	@Override
+	public int insertAttendanceNoFile(AttendanceVO vo) {
+		return attendanceDAO.insertAttendanceNoFile(vo);
+	}
+	
+	@Override
 	public int insertAttendance(AttendanceVO vo){
 		return attendanceDAO.insertAttendance(vo);
 	}
@@ -38,7 +43,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 	
 	@Override
-	public List<AttendanceVO> getAttendanceList(AttendanceVO vo){
-		return attendanceDAO.getAttendanceList(vo);
+	public List<AttendanceVO> getAttendanceList(int classID){
+		return attendanceDAO.getAttendanceList(classID);
+	}
+	
+	@Override
+	public int getAttendanceListCount(int classID) {
+		return attendanceDAO.getAttendanceListCount(classID);
 	}
 }

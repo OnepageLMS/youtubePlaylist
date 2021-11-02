@@ -43,8 +43,18 @@ public class AttendanceCheckServiceImpl implements AttendanceCheckService {
 	}
 	
 	@Override
-	public AttendanceCheckVO getAttendanceCheck(int id){
-		return attendanceCheckDAO.getAttendanceCheck(id);
+	public AttendanceCheckVO getAttendanceCheck(AttendanceCheckVO vo){
+		return attendanceCheckDAO.getAttendanceCheck(vo);
+	}
+	
+	@Override
+	public List<AttendanceCheckVO> getAttendanceCheckList(int attendanceID){
+		return attendanceCheckDAO.getAttendanceCheckList(attendanceID);
+	}
+	
+	@Override
+	public int getAttendanceCheckListCount(int attendanceID) {
+		return attendanceCheckDAO.getAttendanceCheckListCount(attendanceID);
 	}
 	
 	/*@Override

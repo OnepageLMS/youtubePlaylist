@@ -1,22 +1,30 @@
 package com.mycom.myapp.attendanceCheck;
 
 public class AttendanceCheckVO {
+	private int id;
 	private int attendanceID;
-	private int external;
+	private String external;
 	private int internal;
 	private int studentID;
 	private int days; //없어도 될듯
 	private String date; //없어도 될듯 
+	
+	public int getID() {
+		return id;
+	}
+	public void setID(int id) {
+		this.id = id;
+	}
 	public int getAttendanceID() {
 		return attendanceID;
 	}
 	public void setAttendanceID(int attendanceID) {
 		this.attendanceID = attendanceID;
 	}
-	public int getExternal() {
+	public String getExternal() {
 		return external;
 	}
-	public void setExternal(int external) {
+	public void setExternal(String external) {
 		this.external = external;
 	}
 	public int getInternal() {

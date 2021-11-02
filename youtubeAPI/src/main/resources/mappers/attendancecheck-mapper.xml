@@ -38,7 +38,16 @@
 	
 	<select id="getAttendanceCheck" resultType="AttendanceCheckVO">
 		select * from lms_attendanceCheck
-		where id=#{id}
+		where attendanceID=#{attendanceID} and studentID=#{studentID}
+	</select>
+	
+	<select id="getAttendanceCheckList" resultType="AttendanceCheckVO">
+		select * from lms_attendanceCheck
+		where attendanceID=#{attendanceID}
+	</select>
+	
+	<select id="getAttendanceCheckListCount" resultType="int">
+		select count(distinct attendanceID) from lms_attendanceCheck
 	</select>
 
 </mapper>

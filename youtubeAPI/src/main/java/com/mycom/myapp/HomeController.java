@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -71,6 +72,9 @@ public class HomeController {
 	
 	@Autowired
 	private ClassesService classService;	//임의로 example 함수에 사용하려 추가함
+	
+	@Autowired
+	private AttendanceService attendanceService;
 	
 	@Autowired
 	private AttendanceCheckService attendanceCheckService;
@@ -173,7 +177,15 @@ public class HomeController {
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(1));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(1).size());
+		model.addAttribute("file", attendanceCheckService.getAttendanceCheckList(8)); //attendanceID가 같은대로 가져왔는데,, ㅜㅜ
+		
+		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(7));
+		
 
+		System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(0).getExternal());
+		System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(1).getStudentID());
+		System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(2).getStudentID());
+		//model.addAttribute("fileNum", attendanceService.getAttendanceListCount(1));
 		return "attendCSV";
 	}
 	
@@ -225,18 +237,56 @@ public class HomeController {
 		//데이터는 함수를 또 만들어서 넘겨주기 
 		System.out.println("!!!");
 		MultipartFile file = request.getFile("file");
-		String name = request.getParameter("name");
-		int start_h = 10;
-		int start_m = 5;
-		int end_h = 11;
-		int end_m = 15;
-		int seq = 1; //차시 
-		//start_h ~ seq모두 jsp파일에서 받아오기 
 		
+		int start_h = Integer.parseInt(request.getParameter("start_h"));
+		int start_m = Integer.parseInt(request.getParameter("start_m"));
+		int end_h = Integer.parseInt(request.getParameter("end_h"));
+		int end_m = Integer.parseInt(request.getParameter("end_m"));
+		int days = Integer.parseInt(request.getParameter("daySeq"));
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		//start_h ~ seq모두 jsp파일에서 받아오기 --> done!done!
+		
+		UUID uuid = UUID.randomUUID();
+		String saveName = uuid + "_" + file.getOriginalFilename();
+		System.out.println("saveName : " + saveName);
+
 		List<List<String>> csvList = new ArrayList<List<String>>();
-		String realPath = request.getSession().getServletContext().getRealPath("/"); //이런식으로 경로지정을 하는건지 ?? 
-		//server에 저장되는 방법 
-		//System.out.println("realPath : " + realPath);
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/csv/"); //이런식으로 경로지정을 하는건지 ?? 
+		// realPath는 무슨 경로인가 ?  --> tomcat서버에서 어디에 저장이 되는지 
+		// 저장이 되면 realPath에 저장이 된다는거 아닌가 ? --> 맞아 
+		// 그럼 /myapp/resource/csv/,,, 이 주소와 다른점이 무엇일까 ? --> 이거는 내 WORkspace 
+		// 그럼 저장된 파일은 어떻게 불러오는거지,, --> 	파일 이름을 Db에  저장을 해두고 나중에 그 링크로 이동할 수 있도록 
+		File saveFile = new File(realPath, saveName);
+		
+		try{
+			file.transferTo(saveFile);
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+		//db(Attendace테이블)에 insert하기
+		AttendanceVO avo = new AttendanceVO();
+		avo.setClassID(classID);
+		avo.setDays(days);
+		avo.setFileName(saveName);
+		System.out.println("classID : " + classID + " days :" + days + " saveName : " + saveName);
+		//System.out.println(attendanceService.getAttendanceList(classID));
+		if(attendanceService.getAttendanceID(avo) != null) { //이미 해당 날짜에 대한 파일이 업로드되어있으면 업데이트 
+			System.out.println("already updated!");
+			attendanceService.updateAttendance(avo);
+		}
+		else {
+			if(attendanceService.insertAttendance(avo) != 0) { //없으면 insert 
+				System.out.println("attendance insert성공!");
+			}
+			else {
+				System.out.println("attendance insert실패!");
+			}
+		}
+		
 		List<Integer> csvStartH = new ArrayList<Integer>();
 		List<Integer> csvStartM = new ArrayList<Integer>();
 		List<Integer> csvEndH = new ArrayList<Integer>();
@@ -252,7 +302,7 @@ public class HomeController {
 			while((line=br.readLine()) != null) { 
 				List<String> aLine = new ArrayList<String>();
                 String[] lineArr = line.split(","); // 파일의 한 줄을 ,로 나누어 배열에 저장 후 리스트로 변환한다.
-                
+                //System.out.println(lineArr[idx]);
                /*if(idx > 3) {
                 	//System.out.println("lineArr: "  + Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12))); 
                 	csvStartH.add( Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12)));
@@ -409,7 +459,16 @@ public class HomeController {
             	else
             		continue;
             }
-            
+            System.out.println(attendStu.size() + ", " + absentStu.size() + " , " + annonyStu.size());
+            for(int i=0; i<attendStu.size(); i++) {
+            	System.out.println(attendStu.get(i));
+            }
+            for(int i=0; i<absentStu.size(); i++) {
+            	System.out.println(absentStu.get(i));
+            }
+            for(int i=0; i<annonyStu.size(); i++) {
+            	System.out.println(annonyStu.get(i));
+            }
             finalTakes.add(attendStu);
             finalTakes.add(absentStu);
             finalTakes.add(annonyStu);
@@ -431,19 +490,29 @@ public class HomeController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/whichAttendance", method = RequestMethod.POST)
+	@RequestMapping(value = "/test/whichAttendance", method = RequestMethod.POST)
 	public int whichAttendance(HttpServletRequest request, @RequestParam(value="finalTakes[]")String[] finalTakes)  {
 		System.out.println("enter??");
 		int classID = Integer.parseInt(request.getParameter("classID"));
-		int instructorID = Integer.parseInt(request.getParameter("instructorID"));
+		int attendanceID = Integer.parseInt(request.getParameter("attendanceID"));
 		int days = Integer.parseInt(request.getParameter("days"));
+		
 		
 		for(int i=0; i<finalTakes.length; i++) {
 			AttendanceCheckVO avo = new AttendanceCheckVO();
-			avo.setAttendanceID(0);
-			avo.setExternal(Integer.parseInt(finalTakes[i]));
-			avo.setStudentID(i+1);
-			attendanceCheckService.insertExAttendanceCheck(avo);
+			avo.setAttendanceID(attendanceID);
+			avo.setExternal(finalTakes[i]);
+			avo.setStudentID(i+1); //takes테이블에서 바로가져오도록 하면 될듯 
+			System.out.println("attendanceID" + attendanceID + " external "  + finalTakes[i] + " studentID " + (i+1));
+			if(attendanceCheckService.getAttendanceCheck(avo) != null) {
+				System.out.println("update ?");
+				attendanceCheckService.updateExAttendanceCheck(avo);
+			}
+			else {
+				System.out.println("insert!");
+				attendanceCheckService.insertExAttendanceCheck(avo);
+				
+			}
 		}
 		
 		return 1;
@@ -456,6 +525,29 @@ public class HomeController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/test/forAttendance", method = RequestMethod.POST)
+	public int forAttendance(HttpServletRequest request)  {
+		System.out.println("enter??");
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		int days = Integer.parseInt(request.getParameter("days"));
+		AttendanceVO avo = new AttendanceVO();
+		avo.setClassID(classID);
+		avo.setDays(days);
+		
+		if(attendanceService.getAttendanceID(avo) != null)
+			return attendanceService.getAttendanceID(avo).getId();
+		else {
+			return attendanceService.insertAttendanceNoFile(avo); //insert를 해서 그에 대한 Id를 가져와보기
+		}
+		
+		//System.out.println(attendanceService.getAttendanceID(avo));
+		
+		//return attendanceService.getAttendanceID(avo).getId();
+		
+		
+	}
+	
+	/*@ResponseBody
 	@RequestMapping(value = "/getAttendance", method = RequestMethod.POST)
 	public List<Integer> getAttendance(HttpServletRequest request)  {
 		List<Integer> storedAttend = new ArrayList<Integer>();
@@ -471,7 +563,7 @@ public class HomeController {
 		//세부 list[0]에는 days, 그 뒤에는 list .... 
 		return storedAttend;
 		
-	}
+	}*/
 	
 	
 	

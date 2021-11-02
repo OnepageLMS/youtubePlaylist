@@ -14,6 +14,13 @@ public class AttendanceDAO {
 	@Autowired
 	SqlSession sqlSession;
 	
+	public int insertAttendanceNoFile(AttendanceVO vo) {
+		int result = sqlSession.insert("Attendance.insertAttendanceNoFile", vo);
+		if(result > 0)
+			return vo.getId();
+		return result;
+	}
+	
 	public int insertAttendance(AttendanceVO vo) {
 		int result = sqlSession.insert("Attendance.insertAttendance", vo);
 		return result;
@@ -39,8 +46,13 @@ public class AttendanceDAO {
 		return result;
 	}
 	
-	public List<AttendanceVO> getAttendanceList(AttendanceVO vo){
-		List<AttendanceVO> result = sqlSession.selectList("Attendance.getAttendanceList", vo);
+	public List<AttendanceVO> getAttendanceList(int classID){
+		List<AttendanceVO> result = sqlSession.selectList("Attendance.getAttendanceList", classID);
+		return result;
+	}
+	
+	public int getAttendanceListCount(int classID){
+		int result = sqlSession.selectOne("Attendance.getAttendanceListCount", classID);
 		return result;
 	}
 	

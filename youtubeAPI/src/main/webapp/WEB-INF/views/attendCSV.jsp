@@ -45,7 +45,6 @@
 <script>
 var takes;
 var takesStudentNum = 0;
-
 var attendStu = new Array();
 var absentStu = new Array();
 var annonyStu = new Array();
@@ -74,12 +73,17 @@ $(document).ready(function(){
 	$("#button").click(function(event){
 		event.preventDefault();
 		var form = $("#attendForm");
-		var formData = new FormData(form[0]);
+		var seq = $('#seq').val(); //지우면 안돼 
+		var formData = new FormData(form[6]);
 		formData.append("file", $("#exampleFile")[0].files[0]);
-		var seq = Number($('#seq').val())+1; //추후에 +1지우기 
-		console.log("seq : " + seq);
+		formData.append("daySeq", $('#seq').val());
+		formData.append("start_h", $('#startTimeH').val());
+		formData.append("start_m", $('#startTimeM').val());
+		formData.append("end_h", $('#endTimeH').val());
+		formData.append("end_m", $('#endTimeM').val());
+		formData.append("classID", 1); //추후에 get방식으로 받은 classID를 넘겨주기 
 		var table = document.getElementById('takes');
-
+		
 		$.ajax({
 			'url' : "${pageContext.request.contextPath}/test/uploadCSV",
 			'processData' : false,
@@ -103,7 +107,6 @@ $(document).ready(function(){
 					
 				}
 				
-
 				for(var i=0; i<data[1].length; i++){
 					var rows = document.getElementById("stuName").getElementsByTagName("th");
 					for( var r=0; r<rows.length; r++ ){
@@ -149,7 +152,6 @@ $(document).ready(function(){
 	
 	
 });
-
 //시간에 따른 출석체크
 // 정해진 시 >  학생 입장 시 
 	// 정해진 시(10) < 학생 퇴장 시 (11) : 출석
@@ -162,45 +164,67 @@ $(document).ready(function(){
 	// 그렇지 않으면 결석 
 // 정해진 시 < 학생 입장 시	
 	// (전체 시간 확인해봐야 하는디,,) 우선 결석 
-
 	
 function updateAttendance(days){
 	//attendanceID를 알아야한다. 그러기 위해서는 classID, days, instructorID가 필요하다.
-	console.log("days : " + days);
 	//days의 $(".takeZoom"+seq).eq(r).val();을 리스트로 만들면되지 않을까  == //takeZoom(days+1)번째의 value들을 array에 저장하기
 	var rows = document.getElementById("stuName").getElementsByTagName("th");
 	var finalTakes = [];
-	var days = days+1;
-	console.log(rows);
+	var days = days + 1;
+	console.log("days : " + days);
+	var attendanceID = 0;
+	
 	for(var i=0; i<rows.length; i++){
-		console.log($(".takeZoom"+days).eq(i).val());
-		//if(i==0) 
-		finalTakes.push($(".takeZoom"+days).eq(i).val());
+		console.log(" i " + i + "  " + $(".takeZoom"+days).eq(i).val());
+		if($(".takeZoom"+days).eq(i).val() == 0){
+			alert("출결업데이트를 완료해주세요 ");
+			return ; 
+		}
+		if($(".takeZoom"+days).eq(i).val() == 1)
+			finalTakes.push("출석");
+		if($(".takeZoom"+days).eq(i).val() == 2)
+			finalTakes.push("지각");
+		if($(".takeZoom"+days).eq(i).val() == 3)
+			finalTakes.push("결석");
 	}
 	
-	for(var i=0; i<finalTakes.length; i++){
-		console.log(finalTakes[i]);
-	}
-	
-	$.ajax({ 
+	$.ajax({ //attendaceID를 위해 
 		'type' : "post",
-		'url' : "${pageContext.request.contextPath}/whichAttendance",
+		'url' : "${pageContext.request.contextPath}/test/forAttendance",
 		'data' : { //나중에 수정 
 			classID : 1,
-			instructorID : 1,
 			days : days,
-			finalTakes : finalTakes
 		},
 		success : function(data){
 			attendanceID = data;
+			console.log("attendance : " + data);
+			
+			$.ajax({ //여기서 studentID 리스트로 만들어서 넘겨야함,, 
+				'type' : "post",
+				'url' : "${pageContext.request.contextPath}/test/whichAttendance",
+				'data' : { //나중에 수정 
+					attendanceID : attendanceID,
+					classID : 1,
+					days : days,
+					finalTakes : finalTakes
+				},
+				success : function(data){
+					attendanceID = data;
+					
+				}, 
+				error : function(err){
+					alert("실패");
+				}
+			});
+			
 			
 		}, 
 		error : function(err){
-			alert("실패");
+			alert("파일 업로드를 해주세요 ");
 		}
 	});
+	
 }
-
 /*backgroundCh = function() {
 	console.log(document.getElementById('sel'));
 	console.log(sel.className);
@@ -255,11 +279,13 @@ function updateAttendance(days){
                                             </tr>
                                              
                                             <tr>
-                                            	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+                                            	<c:forEach  var="j" begin="1" end="${classInfo.days}" varStatus="status">
                                             		<td id="zoomAttend" style="text-align:center">
                                             			<a href="javascript:void(0);" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
                                             				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
                                             			</a>
+                                            			
+                                            			
                                             		</td>
 				                                    <td  id="lmsAttend" style="text-align:center"> LMS </td>
 				                                </c:forEach>
@@ -273,16 +299,17 @@ function updateAttendance(days){
 		                                            <tr>
 		                                                <th class = "row${status.index}" scope="row${status.index}" rowspan=2>${takes[status.index].studentName}</th>
 		                                                
-		                                                
-			                                            
 		                                            </tr>
 		                                            
 		                                             <tr>
-		                                            
-		                                            	 <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
+		                                           
+		                                           		 
+		                                           		
+															
+		                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 		                                            	 	<td style="text-align:center" > 
-						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" onchange="backgroundCh();">
-																  <option selected value="0">출결체크</option>
+						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
+																  <option selected value="0">${file[status.index].external}</option>
 																  <option value="1" class="blue">출석</option>
 																  <option value="2" class="yellow">지각</option>
 																  <option value="3" class="red">결석</option>
@@ -290,6 +317,20 @@ function updateAttendance(days){
 		                                            	 	</td>
 		                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
 		                                                </c:forEach>
+		                                                
+		                                                 <c:forEach var="i" begin="${fileNum}" end="${classInfo.days-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
+		                                            	 	<td style="text-align:center" > 
+						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
+																  <option selected value="0">출석체크 </option>
+																  <option value="1" class="blue">출석</option>
+																  <option value="2" class="yellow">지각</option>
+																  <option value="3" class="red">결석</option>
+																</select>
+		                                            	 	</td>
+		                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
+		                                                </c:forEach>
+		                                                
+		                                                
 		                                            </tr>  
 		                                              
 		                                            
@@ -371,8 +412,3 @@ function updateAttendance(days){
 
 
 </html>
-
-
-
-
-
