@@ -49,7 +49,6 @@ public class VideoController {
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "playlist/selectedPlaylist";
 	}
 		
@@ -58,7 +57,6 @@ public class VideoController {
 		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return "video/youtube";
 	}
 	
@@ -241,9 +239,6 @@ public class VideoController {
 				result = "error";
 			}
 	    }
-	    
-		
-		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		return result;
 		
 	}
@@ -300,8 +295,6 @@ public class VideoController {
 			else 
 				System.out.println("비디오 추가 실패 ");
 		}
-		
-		model.addAttribute("myName", memberService.getInstructorName(instructorID));
 		
 		return "youtube";
 	}

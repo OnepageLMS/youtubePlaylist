@@ -169,7 +169,6 @@ public class HomeController {
 		model.addAttribute("classInfo", classService.getClass(1)); 
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(1)));
-		model.addAttribute("myName", memberService.getInstructorName(1));
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(1));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(1).size());

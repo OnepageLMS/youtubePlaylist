@@ -38,7 +38,6 @@ public class Stu_NoticeController {
 		model.addAttribute("classID", id);
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService_stu.getAllMyClass(studentId)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService_stu.getAllMyInactiveClass(studentId)));
-		model.addAttribute("myName", memberService.getStudentName(studentId));
 		model.addAttribute("className", classService.getClassName(id));
 		return "class/notice_Stu";
 	}

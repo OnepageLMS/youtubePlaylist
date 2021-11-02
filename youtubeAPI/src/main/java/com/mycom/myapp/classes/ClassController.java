@@ -41,15 +41,18 @@ public class ClassController {
 	
 	@RequestMapping(value = "/test/dashboard",  method = {RequestMethod.GET,RequestMethod.POST})	//개발 test용.
 	public String dashboard_Test(Model model, HttpSession session) {
-		MemberVO vo = memberService.getInstructor("test@handong.edu");
+		MemberVO checkvo = new MemberVO();
+		checkvo.setEmail("test@handong.edu");
+		checkvo.setMode("lms_instructor");
+		MemberVO vo = memberService.getMember(checkvo);
+		
 		session.setAttribute("login", vo);
-		session.setAttribute("userName", "TEST");
 		session.setAttribute("userID", 1); //instructorID = 1은 test용
 		instructorID = 1;
 		return "class/dashboard";
 	}
 
-	@RequestMapping(value = "/dashboard",  method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/dashboard",  method = {RequestMethod.GET,RequestMethod.POST})	//학생이랑 선생님 같이 사용하도록 바꾸기!!
 	public String dashboard(Model model, HttpSession session) {
 		instructorID = (Integer)session.getAttribute("userID");
 		return "class/dashboard";

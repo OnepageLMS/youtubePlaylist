@@ -49,7 +49,9 @@
 	</select>
 	
 	<select id="getAllClass" resultType="classes">	<!-- 효율적인 코드로 변경ver. -->
-		select * from lms_class where instructorID=#{instructorID} and active=#{active} order by ${order}
+		select * from lms_class 
+		where instructorID=#{instructorID} and active=#{active} 
+		order by ${order}
 	</select>
 	
 	<select id="getAllMyActiveClass" resultType="classes">

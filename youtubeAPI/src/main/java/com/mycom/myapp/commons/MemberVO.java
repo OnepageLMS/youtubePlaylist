@@ -5,9 +5,9 @@ public class MemberVO {
 	private String name;
 	private String email;
 	private String regDate;
-
-	private String oauth_code;	//google 로그인시 oauth_code 저장
 	
+	private String mode;
+
 	public int getId() {
 		return id;
 	}
@@ -33,10 +33,10 @@ public class MemberVO {
 		this.regDate = regDate;
 	}
 	
-	public String getOauth_code() {
-		return oauth_code;
+	public String getMode() {
+		return mode;
 	}
-	public void setOauth_code(String oauth_code) {
-		this.oauth_code = oauth_code;
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 }

@@ -4,11 +4,64 @@
 <script>
 	function checkUpdateName(){
 		if($('#editName') == '' || $('#editName') == null) return false;
+		else {
+			$.ajax({
+				type: 'post',
+				url: "${pageContext.request.contextPath}/login/updateName",
+				data: { name:$('#editName').val() },
+				success: function(data){
+					location.reload();
+				},
+				error: function(data, status,error){
+					console.log('ajax 이름변경 실패!');
+				}
+			});
+		}
 	}
 	function leaveSite(){
-		
+		if(confirm('LMS를 탈퇴하시겠습니까?')){
+			if('${login.mode}' == 'lms_instructor'){
+				var deleteOpt;
+				if(confirm('생성한 모든 자료를 삭제하시겠습니까? 학생들에게도 더이상 보여지지 않습니다.'))
+					deleteOpt = 'all';
+				else
+					deleteOpt = 'onlyMe';
+				/*$.ajax({
+					type: 'post',
+					url: '${pageContext.request.contextPath}/login/deleteMember',
+					data: {deleteOpt : deleteOpt},
+					success: function(data){
+						alert('회원탈퇴가 완료되었습니다.');
+						location.replace('${pageContext.request.contextPath}/login/signin');
+					},
+					error: function(data, status,error){
+						console.log('강의실 수정 실패! ');
+					}
+				});*/
+			}
+		}
 	}
 </script>
+<script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        } 
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+	</script>
 	<div class="app-header header-shadow">
 		<div class="app-header__logo">
 			<div class="logo-src" style="background: url('${pageContext.request.contextPath}/resources/img/logo_Learntube.png')"></div>
@@ -58,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="widget-content-left  ml-3 header-user-info">
-                                <div class="widget-heading">
+                                <div class="widget-heading displayName">
                                    ${login.name}
                                 </div>
                                 <div class="widget-subheading">
@@ -74,7 +127,7 @@
 	
 	<div class="modal fade bd-example-modal-sm" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog modal-sm">
-	    	<form method="post" action="" novalidate>
+	    	<form class="needs-validation" method="post" onsubmit="return false;" novalidate>
 		        <div class="modal-content">
 		            <div class="modal-header">
 		                <h5 class="modal-title" id="exampleModalLongTitle">회원정보 관리</h5>
@@ -86,6 +139,7 @@
 		               <div class="position-relative form-group">
 							<label for="exampleEmail" class="">사용자 이름</label>
 		               		<input name="name" id="editName" type="text" value="${login.name}" class="form-control" required>
+		               		<div class="invalid-feedback">이름을 입력해 주세요</div>
 		               </div>
 		               <p>이메일 <b>${login.email}</b></p>
 	                   <p>회원가입 <b>${login.regDate}</b></p>
@@ -94,7 +148,7 @@
 		            <button class="btn btn-sm btn-danger m-2" onclick="leaveSite();">회원탈퇴</button>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-		                <button type="submit" class="btn btn-primary">저장</button>
+		                <button type="submit" class="btn btn-primary" onclick="checkUpdateName();">저장</button>
 		            </div>
 		        </div>
 	        </form>
