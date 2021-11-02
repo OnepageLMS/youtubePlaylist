@@ -19,14 +19,15 @@
 		}
 	}
 	function leaveSite(){
-		if(confirm('LMS를 탈퇴하시겠습니까?')){
-			if('${login.mode}' == 'lms_instructor'){
+			if(!confirm('LMS를 탈퇴하시겠습니까? 모든 자료가 삭제되고 학생들에게도 더이상 보여지지 않습니다.')){
+				return false;
+				/*
 				var deleteOpt;
 				if(confirm('생성한 모든 자료를 삭제하시겠습니까? 학생들에게도 더이상 보여지지 않습니다.'))
 					deleteOpt = 'all';
 				else
 					deleteOpt = 'onlyMe';
-				/*$.ajax({
+				$.ajax({
 					type: 'post',
 					url: '${pageContext.request.contextPath}/login/deleteMember',
 					data: {deleteOpt : deleteOpt},
@@ -39,7 +40,18 @@
 					}
 				});*/
 			}
-		}
+
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/login/deleteMember',
+			success: function(data){
+				alert('회원탈퇴가 완료되었습니다.');
+				location.replace('${pageContext.request.contextPath}/login/signin');
+			},
+			error: function(data, status,error){
+				alert('회원탈퇴에 실패했습니다!');
+			}
+		});	
 	}
 </script>
 <script>
@@ -145,7 +157,7 @@
 	                   <p>회원가입 <b>${login.regDate}</b></p>
 		            </div>
 		            <div class="divider m-0"></div>
-		            <button class="btn btn-sm btn-danger m-2" onclick="leaveSite();">회원탈퇴</button>
+		            <button class="btn btn-sm btn-danger m-2" type="button" onclick="leaveSite();">회원탈퇴</button>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
 		                <button type="submit" class="btn btn-primary" onclick="checkUpdateName();">저장</button>

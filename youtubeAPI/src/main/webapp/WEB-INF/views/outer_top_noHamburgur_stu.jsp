@@ -3,22 +3,38 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <script>
-function checkUpdateName(){
-	if($('#editName') == '' || $('#editName') == null) return false;
-	else {
+	function checkUpdateName(){
+		if($('#editName') == '' || $('#editName') == null) return false;
+		else {
+			$.ajax({
+				type: 'post',
+				url: "${pageContext.request.contextPath}/login/updateName",
+				data: { name:$('#editName').val() },
+				success: function(data){
+					location.reload();
+				},
+				error: function(data, status,error){
+					console.log('ajax 이름변경 실패!');
+				}
+			});
+		}
+	}
+	function leaveSite(){
+		if(!confirm('LMS를 탈퇴하시겠습니까? 모든 자료가 삭제됩니다.'))
+			return false;
+		
 		$.ajax({
 			type: 'post',
-			url: "${pageContext.request.contextPath}/login/updateName",
-			data: { name:$('#editName').val() },
+			url: '${pageContext.request.contextPath}/login/deleteMember',
 			success: function(data){
-				location.reload();
+				alert('회원탈퇴가 완료되었습니다.');
+				location.replace('${pageContext.request.contextPath}/login/signin');
 			},
-			error: function(data, status,error){
-				console.log('ajax 이름변경 실패!');
+			error: function(data, status,error) {
+				alert('회원탈퇴에 실패했습니다!');
 			}
-		});
+		});	
 	}
-}
 </script>
 
 	<div class="app-header header-shadow">
@@ -55,7 +71,7 @@ function checkUpdateName(){
                                         <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                     </a>
                                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                        <button type="button" tabindex="0" class="dropdown-item">회원정보 수정</button>
+                                        <button type="button" tabindex="0" class="dropdown-item" data-toggle="modal" data-target="#editUserModal">회원정보 수정</button>
                                         <button type="button" tabindex="0" class="dropdown-item" onclick="location.href='${pageContext.request.contextPath}/login/signout'">로그아웃</button>
                                     </div>
                                 </div>
@@ -95,7 +111,7 @@ function checkUpdateName(){
 	                   <p>회원가입 <b>${login.regDate}</b></p>
 		            </div>
 		            <div class="divider m-0"></div>
-		            <button class="btn btn-sm btn-danger m-2" onclick="leaveSite();">회원탈퇴</button>
+		            <button class="btn btn-sm btn-danger m-2" type="button" onclick="leaveSite();">회원탈퇴</button>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
 		                <button type="submit" class="btn btn-primary" onclick="checkUpdateName();">저장</button>
