@@ -2,6 +2,25 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<script>
+function checkUpdateName(){
+	if($('#editName') == '' || $('#editName') == null) return false;
+	else {
+		$.ajax({
+			type: 'post',
+			url: "${pageContext.request.contextPath}/login/updateName",
+			data: { name:$('#editName').val() },
+			success: function(data){
+				location.reload();
+			},
+			error: function(data, status,error){
+				console.log('ajax 이름변경 실패!');
+			}
+		});
+	}
+}
+</script>
+
 	<div class="app-header header-shadow">
 		<div class="app-header__logo">
 			<div class="logo-src" style="background: url('${pageContext.request.contextPath}/resources/img/logo_Learntube.png')"></div>
@@ -43,7 +62,7 @@
                             </div>
                             <div class="widget-content-left  ml-3 header-user-info">
                                 <div class="widget-heading">
-                                   ${userName}
+                                   ${login.name}
                                 </div>
                                 <div class="widget-subheading">
                                     학생
@@ -56,9 +75,9 @@
         </div>
     </div>         
     
-    <div class="modal fade bd-example-modal-sm" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+	<div class="modal fade bd-example-modal-sm" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog modal-sm">
-	    	<form method="post" action="" novalidate>
+	    	<form class="needs-validation" method="post" onsubmit="return false;" novalidate>
 		        <div class="modal-content">
 		            <div class="modal-header">
 		                <h5 class="modal-title" id="exampleModalLongTitle">회원정보 관리</h5>
@@ -70,6 +89,7 @@
 		               <div class="position-relative form-group">
 							<label for="exampleEmail" class="">사용자 이름</label>
 		               		<input name="name" id="editName" type="text" value="${login.name}" class="form-control" required>
+		               		<div class="invalid-feedback">이름을 입력해 주세요</div>
 		               </div>
 		               <p>이메일 <b>${login.email}</b></p>
 	                   <p>회원가입 <b>${login.regDate}</b></p>
@@ -78,10 +98,10 @@
 		            <button class="btn btn-sm btn-danger m-2" onclick="leaveSite();">회원탈퇴</button>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-		                <button type="submit" class="btn btn-primary">저장</button>
+		                <button type="submit" class="btn btn-primary" onclick="checkUpdateName();">저장</button>
 		            </div>
 		        </div>
 	        </form>
 	    </div>
-	</div>     
+	</div>  
 	

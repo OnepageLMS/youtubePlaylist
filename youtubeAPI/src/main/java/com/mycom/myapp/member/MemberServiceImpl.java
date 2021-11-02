@@ -11,32 +11,22 @@ public class MemberServiceImpl implements MemberService{
 	MemberDAO memberDAO;
 	
 	@Override
-	public int insertInstructor(MemberVO vo) {
-		return memberDAO.insertInstructor(vo);
+	public int insertMember(MemberVO vo){
+		return memberDAO.insertMember(vo);
 	}
 	
 	@Override
-	public int insertStudent(MemberVO vo) {
-		return memberDAO.insertStudent(vo);
+	public MemberVO getMember(MemberVO vo) {
+		return memberDAO.getMember(vo);
 	}
 	
 	@Override
-	public String getInstructorName(int id) {
-		return memberDAO.getInstructorName(id);
+	public int updateName(MemberVO vo) {
+		return memberDAO.updateName(vo);
 	}
 	
 	@Override
-	public String getStudentName(int id) {
-		return memberDAO.getStudentName(id);
-	}
-	
-	@Override
-	public MemberVO getInstructor(String email) {
-		return memberDAO.getInstructor(email);
-	}
-	
-	@Override
-	public MemberVO getStudent(String email) {
-		return memberDAO.getStudent(email);
+	public int deleteMember(MemberVO vo) {
+		return memberDAO.deleteMember(vo);
 	}
 }

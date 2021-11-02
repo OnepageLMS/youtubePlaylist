@@ -65,25 +65,23 @@ public class Stu_ClassController{
 	
 	@RequestMapping(value = "/test/dashboard/{studentID}",  method = RequestMethod.GET)	//개발 test용. 나중에 지우기!!
 	public String dashboard_Test(@PathVariable("studentID") int id, Model model, HttpSession session) {
-		String email, name = "";
-		if(id == 1) {
-			email = "jinwoo@gmail.com";
-			name = "TEST1";
-		}
-		else {
-			email = "hayeong@gmail.com";
-			name = "TEST2";
-		}
+		MemberVO checkvo = new MemberVO();
+		String email= "";
 		
-		MemberVO vo = memberService.getStudent(email);
+		if(id == 1) email = "jinwoo@gmail.com";
+		else email = "hayeong@gmail.com";
+		
+		checkvo.setEmail(email);
+		checkvo.setMode("lms_student");
+		MemberVO vo = memberService.getMember(checkvo);
+		
 		session.setAttribute("login", vo);
-		session.setAttribute("userName", name);
 		session.setAttribute("userID", id);
 		studentId = id;
 		return "class/dashboard_Stu";
 	}
 	
-	@RequestMapping(value = "/dashboard", method =  {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/dashboard", method =  {RequestMethod.GET,RequestMethod.POST})	//선생님 controller랑 합치기!
 	public String dashboard(HttpSession session) {
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
@@ -173,7 +171,6 @@ public class Stu_ClassController{
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));
-		model.addAttribute("myName", memberService.getStudentName(1));
 		//return "t_contentsList_Stu";
 		return "class/contentsList_Stu";
 	}
@@ -198,7 +195,6 @@ public class Stu_ClassController{
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
-		model.addAttribute("myName", memberService.getStudentName(1));
 		return "class/contentsDetail_Stu";
 		
 	}

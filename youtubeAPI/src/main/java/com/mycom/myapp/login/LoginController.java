@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -57,6 +58,7 @@ public class LoginController {
 	
 	private String loginMode = "";
 	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
+	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 	
 	
 	@RequestMapping(value = "/signin", method = RequestMethod.GET)
@@ -76,7 +78,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/oauth2callback", method = RequestMethod.GET)
 	public String googleAuth(Model model, @RequestParam(value = "code") String authCode, HttpServletRequest request,
-			HttpSession session, MemberVO vo, RedirectAttributes redirectAttributes) throws Exception {
+			HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
 		
 		// HTTP Request를 위한 RestTemplate
 		RestTemplate restTemplate = new RestTemplate();
@@ -87,7 +89,6 @@ public class LoginController {
 		googleOAuthRequestParam.setClientSecret(clientSecret);
 		googleOAuthRequestParam.setCode(authCode);
 		googleOAuthRequestParam.setRedirectUri(redirectURL); 
-		// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 		googleOAuthRequestParam.setGrantType("authorization_code");
 	
 		// JSON 파싱을 위한 기본값 세팅
@@ -120,56 +121,44 @@ public class LoginController {
 		String name = userInfo.get("family_name") + userInfo.get("given_name");
 		
 		MemberVO checkvo = new MemberVO();
-		MemberVO loginVO = new MemberVO();	//최종 로그인한 유저 정보 저장
+		MemberVO loginvo = new MemberVO();	//최종 로그인한 유저 정보 저장
 		String returnURL = "";
+		String mode = "";
 		int userID = 0;
         
 		if (session.getAttribute("login") != null) { 
 			session.removeAttribute("login");
 		}
 		
-		if(loginMode.equals("tea")) {	
-			loginVO = memberService.getInstructor(email);
-			if(loginVO == null) {
-				checkvo.setName(name);
-				checkvo.setEmail(email);
-				userID = memberService.insertInstructor(checkvo);
-				if(userID > 0) 
-					System.out.println("회원가입 성공:)");
-				else {
-					System.out.println("회원가입 실패:(");
-					return "redirect:/login/signin";
-				}
-			}
+		if(loginMode.equals("tea")) {
+			mode = "lms_instructor";
 			returnURL = "redirect:/dashboard";
 		}
-		else if(loginMode.equals("stu")) {
-			loginVO = memberService.getStudent(email);
-			if(loginVO == null) {
-				checkvo.setName(name);
-				checkvo.setEmail(email);
-				userID = memberService.insertStudent(checkvo);
-				if(userID > 0) 
-					System.out.println("회원가입 성공!");
-				else {
-					System.out.println("회원가입 실패:(");
-					return "redirect:/login/signin";
-				}		
-			}
+		else {
+			mode = "lms_student";
 			returnURL = "redirect:/student/class/dashboard";
 		}
+		checkvo.setMode(mode);
+		checkvo.setEmail(email);
 		
-		if(userID > 0) {
-			loginVO = new MemberVO();
-			loginVO.setEmail(email);
-			loginVO.setId(userID);
-			loginVO.setName(name);
+		loginvo = memberService.getMember(checkvo);
+		if(loginvo == null) {
+			loginvo = new MemberVO();
+			loginvo.setName(name);
+			loginvo.setEmail(email);
+			loginvo.setMode(mode);
+			userID = memberService.insertMember(loginvo);
+			loginvo.setId(userID);
+			if(userID > 0) 
+				System.out.println("회원가입 성공:)");
+			else {
+				System.out.println("회원가입 실패:(");
+				return "redirect:/login/signin";
+			}
 		}
 		
-		session.setAttribute("userName", name);
-		session.setAttribute("userID", loginVO.getId());
-		session.setAttribute("userEmail", email);
-		session.setAttribute("login", loginVO);
+		session.setAttribute("userID", loginvo.getId());
+		session.setAttribute("login", loginvo);
 		return returnURL;
 	}
 	
@@ -192,6 +181,64 @@ public class LoginController {
 		session.invalidate();
 		System.out.println("logged out!");
 		return "redirect:/login/signin";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteMember", method = RequestMethod.POST)
+	public void deleteMember(@RequestParam(value = "deleteOpt") String opt, HttpSession session) {
+		MemberVO vo = new MemberVO();
+		vo.setId((Integer)session.getAttribute("userID"));
+		if(loginMode.equals("tea")) vo.setMode("lms_instructor");
+		else vo.setMode("lms_student");
+		
+		/*선생님의 경우 
+		1. lms_instructor 삭제
+		case1. 기존 데이터 유지
+			2. foreignkey 되어있는곳 null
+			lms_class, attendance, playlist instructor=null
+		
+		case2. 기존 데이터 전체 삭제
+			lms_class 직접 삭제
+				- class 삭제시 아래 자동 삭제됨
+					- attendance 삭제 -> attendanceCheck 자동삭제
+					- classContent 삭제 -> playlist 삭제?!
+					- playlist 삭제 -> video, videoCheck, playlistCheck 자동 삭제
+					- notice 삭제 -> noticeCheck 삭제
+			
+		*/
+		
+		if(memberService.deleteMember(vo) != 0) {
+			System.out.println("회원 삭제 완료!");
+			if(opt == "all") {
+				
+			}
+			else {
+				
+			}
+		}
+		else
+			System.out.println("회원 삭제 실패!");
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/updateName", method = RequestMethod.POST)
+	public void updateName(@RequestParam(value = "name") String name, HttpSession session) {
+		MemberVO vo = new MemberVO();
+		vo.setId((Integer)session.getAttribute("userID"));
+		vo.setName(name);
+		
+		if(loginMode.equals("tea")) vo.setMode("lms_instructor");
+		else vo.setMode("lms_student");
+		
+		if(memberService.updateName(vo) != 0) {
+			System.out.println("이름 업데이트 성공!");
+			MemberVO newvo = (MemberVO)session.getAttribute("login");
+			newvo.setName(name);
+			session.setAttribute("loginvo", newvo);
+		}
+			
+		else
+			System.out.println("이름 업데이트 실패!");
 	}
 
 }

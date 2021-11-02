@@ -42,7 +42,6 @@ public class Stu_AttendanceController {
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
-		model.addAttribute("myName", memberService.getStudentName(1));
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());

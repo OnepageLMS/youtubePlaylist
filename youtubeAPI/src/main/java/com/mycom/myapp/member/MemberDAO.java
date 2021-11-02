@@ -11,31 +11,21 @@ public class MemberDAO {
 	@Autowired
 	SqlSession sqlSession;
 	
-	public int insertInstructor(MemberVO vo) {
-		if(sqlSession.insert("Member.insertInstructor", vo) >= 0)
+	public int insertMember(MemberVO vo) {
+		if(sqlSession.insert("Member.insertMember", vo) >= 0)
 			return vo.getId();
 		return -1;
 	}
-	
-	public int insertStudent(MemberVO vo) {
-		if(sqlSession.insert("Member.insertStudent", vo) >= 0)
-			return vo.getId();
-		return -1;
+		
+	public MemberVO getMember(MemberVO vo) {
+		return sqlSession.selectOne("Member.getMember", vo);
 	}
 	
-	public String getInstructorName(int id) {	//지우기 
-		return sqlSession.selectOne("Member.getInstructorName", id);
+	public int updateName(MemberVO vo) {
+		return sqlSession.update("Member.updateName", vo);
 	}
 	
-	public String getStudentName(int id) {	//지우기
-		return sqlSession.selectOne("Member.getStudentName", id);
-	}
-	
-	public MemberVO getInstructor(String email) {
-		return sqlSession.selectOne("Member.getInstructor", email);
-	}
-	
-	public MemberVO getStudent(String email) {
-		return sqlSession.selectOne("Member.getStudent", email);
+	public int deleteMember(MemberVO vo) {
+		return sqlSession.delete("Member.deleteMember", vo);
 	}
 }
