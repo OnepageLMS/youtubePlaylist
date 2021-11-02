@@ -226,8 +226,8 @@ function getAllMyClass(){	//위와 중복 제거하기
 										
 						$('.activeClassList').append(dashboardCard);
 						i++;
-				});
-				
+					});
+				}
 				if(inactive.length == 0)
 					$('.inactiveClassList').append('<p class="col text-center">비활성화된 강의실이 없습니다! </p>');
 				else {
@@ -274,9 +274,8 @@ function getAllMyClass(){	//위와 중복 제거하기
 					});
 				}
 			}
-		}
-	});
-}
+		});
+	}
 
 function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
 	var html = '<input type="hidden" name="classID"  value="' + id + '">';

@@ -156,6 +156,9 @@ public class LoginController {
 				return "redirect:/login/signin";
 			}
 		}
+		else {
+			loginvo.setMode(mode);
+		}
 		
 		session.setAttribute("userID", loginvo.getId());
 		session.setAttribute("login", loginvo);
@@ -184,6 +187,26 @@ public class LoginController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/deleteMember", method = RequestMethod.POST)	
+	public void deleteMember(HttpSession session) {
+		MemberVO loginvo = (MemberVO)session.getAttribute("login");
+		System.out.println(loginvo.getId() + "/" + loginvo.getMode());
+		if(memberService.deleteMember(loginvo) != 0) {
+			if(loginvo.getMode().equals("lms_instructor")) {
+				//class 자동삭제 -> attendance(+check) & classContent & notice(+check) & playlistCheck & videoCheck & takes 자동삭제
+				//playlist(+check) 자동삭제 -> video(+check)
+				System.out.println("선생남 탈퇴 완료!");
+			}
+			else {
+				//takes & attendanceCK & noticeCK & playlistCK & videoCK 자동삭제
+				System.out.println("학생 탈퇴 완료!");
+			}
+			
+		}
+	}
+	
+	/*
+	@ResponseBody
 	@RequestMapping(value = "/deleteMember", method = RequestMethod.POST)
 	public void deleteMember(@RequestParam(value = "deleteOpt") String opt, HttpSession session) {
 		MemberVO vo = new MemberVO();
@@ -191,11 +214,11 @@ public class LoginController {
 		if(loginMode.equals("tea")) vo.setMode("lms_instructor");
 		else vo.setMode("lms_student");
 		
-		/*선생님의 경우 
+		선생님의 경우 
 		1. lms_instructor 삭제
 		case1. 기존 데이터 유지
-			2. foreignkey 되어있는곳 null
-			lms_class, attendance, playlist instructor=null
+			2. foreign_key 되어있는곳 null
+			lms_class, playlist instructor=null
 		
 		case2. 기존 데이터 전체 삭제
 			lms_class 직접 삭제
@@ -204,8 +227,8 @@ public class LoginController {
 					- classContent 삭제 -> playlist 삭제?!
 					- playlist 삭제 -> video, videoCheck, playlistCheck 자동 삭제
 					- notice 삭제 -> noticeCheck 삭제
-			
-		*/
+		
+		- 사용중이지 않은 playlist삭제!
 		
 		if(memberService.deleteMember(vo) != 0) {
 			System.out.println("회원 삭제 완료!");
@@ -218,7 +241,7 @@ public class LoginController {
 		}
 		else
 			System.out.println("회원 삭제 실패!");
-	}
+	}*/
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateName", method = RequestMethod.POST)
