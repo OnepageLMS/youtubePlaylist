@@ -8,7 +8,7 @@ function checkUpdateName(){
 	else {
 		$.ajax({
 			type: 'post',
-			url: "${pageContext.request.contextPath}/login/updateName",
+			url: "${pageContext.request.contextPath}/member/updateName",
 			data: { name:$('#editName').val() },
 			success: function(data){
 				location.reload();
@@ -18,6 +18,23 @@ function checkUpdateName(){
 			}
 		});
 	}
+}
+
+function leaveSite(){
+	if(!confirm('LMS를 탈퇴하시겠습니까? 모든 자료가 삭제됩니다.'))
+		return false;
+	
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/member/deleteMember',
+		success: function(data){
+			alert('회원탈퇴가 완료되었습니다.');
+			location.replace('${pageContext.request.contextPath}/login/signin');
+		},
+		error: function(data, status,error) {
+			alert('회원탈퇴에 실패했습니다!');
+		}
+	});	
 }
 </script>
 

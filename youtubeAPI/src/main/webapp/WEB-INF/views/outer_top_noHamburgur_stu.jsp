@@ -8,7 +8,7 @@
 		else {
 			$.ajax({
 				type: 'post',
-				url: "${pageContext.request.contextPath}/login/updateName",
+				url: "${pageContext.request.contextPath}/member/updateName",
 				data: { name:$('#editName').val() },
 				success: function(data){
 					location.reload();
@@ -25,7 +25,7 @@
 		
 		$.ajax({
 			type: 'post',
-			url: '${pageContext.request.contextPath}/login/deleteMember',
+			url: '${pageContext.request.contextPath}/member/deleteMember',
 			success: function(data){
 				alert('회원탈퇴가 완료되었습니다.');
 				location.replace('${pageContext.request.contextPath}/login/signin');

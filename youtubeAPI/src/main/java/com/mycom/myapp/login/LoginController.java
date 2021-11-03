@@ -186,24 +186,7 @@ public class LoginController {
 		return "redirect:/login/signin";
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/deleteMember", method = RequestMethod.POST)	
-	public void deleteMember(HttpSession session) {
-		MemberVO loginvo = (MemberVO)session.getAttribute("login");
-		System.out.println(loginvo.getId() + "/" + loginvo.getMode());
-		if(memberService.deleteMember(loginvo) != 0) {
-			if(loginvo.getMode().equals("lms_instructor")) {
-				//class 자동삭제 -> attendance(+check) & classContent & notice(+check) & playlistCheck & videoCheck & takes 자동삭제
-				//playlist(+check) 자동삭제 -> video(+check)
-				System.out.println("선생남 탈퇴 완료!");
-			}
-			else {
-				//takes & attendanceCK & noticeCK & playlistCK & videoCK 자동삭제
-				System.out.println("학생 탈퇴 완료!");
-			}
-			
-		}
-	}
+	
 	
 	/*
 	@ResponseBody
@@ -243,25 +226,4 @@ public class LoginController {
 			System.out.println("회원 삭제 실패!");
 	}*/
 	
-	@ResponseBody
-	@RequestMapping(value = "/updateName", method = RequestMethod.POST)
-	public void updateName(@RequestParam(value = "name") String name, HttpSession session) {
-		MemberVO vo = new MemberVO();
-		vo.setId((Integer)session.getAttribute("userID"));
-		vo.setName(name);
-		
-		if(loginMode.equals("tea")) vo.setMode("lms_instructor");
-		else vo.setMode("lms_student");
-		
-		if(memberService.updateName(vo) != 0) {
-			System.out.println("이름 업데이트 성공!");
-			MemberVO newvo = (MemberVO)session.getAttribute("login");
-			newvo.setName(name);
-			session.setAttribute("loginvo", newvo);
-		}
-			
-		else
-			System.out.println("이름 업데이트 실패!");
-	}
-
 }

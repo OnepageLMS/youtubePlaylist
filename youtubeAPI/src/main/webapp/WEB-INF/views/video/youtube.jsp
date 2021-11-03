@@ -256,6 +256,9 @@ $(document).ready(function(){
 			var id = idList[i];
 			var view = viewCount[i];
 			var title = titleList[i].replace("'", "\\'").replace("\"","\\\"");
+
+			console.log(title);
+			console.log(`값 확인! ${title}`);
 			/* title = `${title}`; */
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 100%; height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
@@ -387,7 +390,7 @@ $(document).ready(function(){
 		
 		
 		function viewVideo2(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
-			console.log(id, title, duration, index);
+			console.log("여기 확인 => " + id, title, duration, index);
 
 			// (21/10/06) youtube 플레이어 띄워주고, 제목을 띄워준다. 이 부분은 <div> 태그로 감싸져서 초록색이 나타나게 되는데 영상구간 설정 부분까지 태그로 감싸지게 해야 전체가 초록색 배경이 될듯. 
 			var $div = $('<div id="playerBox" class="text-center" > <div class="iframe-container" id="player" style="width: 100%;"></div>'
@@ -395,7 +398,7 @@ $(document).ready(function(){
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative row form-group">'
 							+ '<label for="exampleEmail" class="col-sm-2 col-form-label">영상제목 설정</label>'
-							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value="'+ title +'"></div>'
+							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value="'+ `${title}` +'"></div>'
 						+ '</div>'
 						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete" >'
