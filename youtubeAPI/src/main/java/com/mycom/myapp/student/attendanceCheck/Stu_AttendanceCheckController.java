@@ -1,5 +1,6 @@
 package com.mycom.myapp.student.attendanceCheck;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.AttendanceCheckVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classes.Stu_ClassesService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
@@ -33,6 +35,9 @@ public class Stu_AttendanceCheckController {
 	@Autowired
 	private MemberService memberService;
 	
+	@Autowired
+	private Stu_AttendanceCheckService stu_attendanceCheckService;
+	
 	private int studentID = 01;
 	public int classID;
 	
@@ -47,6 +52,11 @@ public class Stu_AttendanceCheckController {
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
+		
+		List<String> file = new ArrayList<String>();
+		AttendanceCheckVO stu_avo = new AttendanceCheckVO();
+		
+		
 		return "class/attendance_Stu";
 	}	
 	
