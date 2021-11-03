@@ -102,52 +102,6 @@ public class HomeController {
 		return "t_example";
 		//return "outer";
 	}
-/*
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String google(RedirectAttributes rttr) {
-		String clientID = "99431484339-5lvpv4ieg4gd75l57g0k4inh10tiqkdj.apps.googleusercontent.com";
-		String url = "redirect:https://accounts.google.com/o/oauth2/v2/auth?client_id=" + clientID + "&redirect_uri=http://localhost:8080/myapp/oauth2callback"
-				+"&response_type=code"
-				+"&scope=email%20profile%20openid"+"%20https://www.googleapis.com/auth/youtube%20https://www.googleapis.com/auth/youtube.readonly"
-				+"&access_type=offline";
-
-		return url;
-	}*/
-
-	@RequestMapping(value = "/oauth2callback", method = RequestMethod.GET)
-	public String googleAuth(Model model, @RequestParam(value = "code") String authCode, HttpServletRequest request,
-			HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
-
-		// HTTP Request를 위한 RestTemplate
-		RestTemplate restTemplate = new RestTemplate();
-
-		// Google OAuth Access Token 요청을 위한 파라미터 세팅
-		GoogleOAuthRequest googleOAuthRequestParam = new GoogleOAuthRequest();
-		googleOAuthRequestParam.setClientId("99431484339-5lvpv4ieg4gd75l57g0k4inh10tiqkdj.apps.googleusercontent.com");
-		googleOAuthRequestParam.setClientSecret("NwHS9eyyrYE5LYVy7c0CDIkv");
-		googleOAuthRequestParam.setCode(authCode); // access token과 교환할 수 있는 임시 인증 코드
-		googleOAuthRequestParam.setRedirectUri("http://localhost:8080/myapp/oauth2callback");  //http://localhost:8080/myapp/oauth2callback
-		googleOAuthRequestParam.setGrantType("authorization_code");
-
-		// JSON 파싱을 위한 기본값 세팅
-		// 요청시 파라미터는 스네이크 케이스로 세팅되므로 Object mapper에 미리 설정해준다.
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-		mapper.setSerializationInclusion(Include.NON_NULL);
-
-		// AccessToken 발급 요청
-		ResponseEntity<String> resultEntity = restTemplate.postForEntity(GOOGLE_TOKEN_BASE_URL, googleOAuthRequestParam,
-				String.class);
-
-		// Token Request
-		GoogleOAuthResponse result = mapper.readValue(resultEntity.getBody(), new TypeReference<GoogleOAuthResponse>() {
-		});
-
-		accessToken = result.getAccessToken(); // accesss token 저장
-		refreshToken = result.getRefreshToken(); //사용자 정보와 함께 DB에 저장해야 한다 
-
-		return "redirect:/main";
-	}
 	
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String main(Model model, String keyword) {
@@ -165,8 +119,6 @@ public class HomeController {
 
 		return "main";
 	}
-	
-	
 	
 	
 //	@RequestMapping(value = "/deletePlaylist", method = RequestMethod.POST)

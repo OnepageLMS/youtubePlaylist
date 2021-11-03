@@ -28,7 +28,7 @@ function leaveSite(){
 		url: '${pageContext.request.contextPath}/member/deleteMember',
 		success: function(data){
 			alert('회원탈퇴가 완료되었습니다.');
-			location.replace('${pageContext.request.contextPath}/login/signin');
+			location.replace('${pageContext.request.contextPath}/signin');
 		},
 		error: function(data, status,error) {
 			alert('회원탈퇴에 실패했습니다!');
@@ -97,8 +97,8 @@ function leaveSite(){
                                         <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                     </a>
                                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                        <button type="button" tabindex="0" class="dropdown-item">회원정보 수정</button>
-                                        <button type="button" tabindex="0" class="dropdown-item" onclick="location.href='${pageContext.request.contextPath}/login/signout'">로그아웃</button>
+                                        <button type="button" tabindex="0" class="dropdown-item" data-toggle="modal" data-target="#editUserModal">회원정보 수정</button>
+                                        <button type="button" tabindex="0" class="dropdown-item" onclick="location.href='${pageContext.request.contextPath}/signout'">로그아웃</button>
                                     </div>
                                 </div>
                             </div>
