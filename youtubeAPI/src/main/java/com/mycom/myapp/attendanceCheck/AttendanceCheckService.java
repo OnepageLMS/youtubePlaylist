@@ -13,5 +13,5 @@ public interface AttendanceCheckService {
 	public int deleteAttendanceCheck(int id);
 	public AttendanceCheckVO getAttendanceCheck(AttendanceCheckVO vo);
 	public List<AttendanceCheckVO> getAttendanceCheckList(int attendanceID);
-	public int getAttendanceCheckListCount(int attendanceID) ;
+	public int getAttendanceCheckListCount(int classID) ;
 }

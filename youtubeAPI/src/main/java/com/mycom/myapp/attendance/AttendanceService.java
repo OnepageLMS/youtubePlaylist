@@ -13,4 +13,5 @@ public interface AttendanceService {
 	public AttendanceVO getAttendanceID(AttendanceVO vo);
 	public List<AttendanceVO> getAttendanceList(int classID);
 	public int getAttendanceListCount(int classID);
+	public List<AttendanceVO> getAttendanceFileName(int classID);
 }

@@ -177,17 +177,18 @@ public class HomeController {
 		model.addAttribute("takes", stu_takesService.getStudentNum(1));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(1).size());
 		//model.addAttribute("file", attendanceCheckService.getAttendanceCheckList(8)); //attendanceID를 알아야해 
-		model.addAttribute("file", attendanceCheckService.getAttendanceCheckList(8)); //attendanceID를 알아야해 
+		//model.addAttribute("file", attendanceCheckService.getAttendanceCheckList(8)); //attendanceID를 알아야해 
 		//attendance table에서 classID가 같은 distinct id를 가져온다 
 		//각 attendanceID에 맞는 external 결과를 가져온다.
 		
-		List<AttendanceVO> id = attendanceService.getAttendanceList(1);
+		List<AttendanceVO> id = attendanceService.getAttendanceList(1); //1대신 classID
+		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(1); //1대신 classID
 		List<List<String>> file = new ArrayList<List<String>>();
 		for(int i=0; i<id.size(); i++) {
 			List<String> fileList = new ArrayList<String>();
-			int attendanceID = id.get(i).getId(); // 7, 8, 9
-			System.out.println(attendanceID);
-			for(int j=0; j<id.size(); j++) {
+			int attendanceID = id.get(i).getId(); // 7, 8, 9, 10
+			System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(1).size());
+			for(int j=0; j<takes.size(); j++) { //id.size()이면 안되겠는걸.. 
 				//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				
@@ -202,7 +203,7 @@ public class HomeController {
 			}
 		}
 		model.addAttribute("file", file);
-		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(8));
+		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(1));
 		
 
 		//System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(0).getExternal());
@@ -515,21 +516,22 @@ public class HomeController {
 	@ResponseBody
 	@RequestMapping(value = "/test/whichAttendance", method = RequestMethod.POST)
 	public int whichAttendance(HttpServletRequest request, @RequestParam(value="finalTakes[]")String[] finalTakes)  {
-		System.out.println("enter??");
+		System.out.println("enter!!");
 		int classID = Integer.parseInt(request.getParameter("classID"));
 		int attendanceID = Integer.parseInt(request.getParameter("attendanceID"));
 		int days = Integer.parseInt(request.getParameter("days"));
-		
+		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(1); 
 		
 		for(int i=0; i<finalTakes.length; i++) {
 			AttendanceCheckVO avo = new AttendanceCheckVO();
 			avo.setAttendanceID(attendanceID);
 			avo.setExternal(finalTakes[i]);
-			avo.setStudentID(i+1); //takes테이블에서 바로가져오도록 하면 될듯 
-			System.out.println("attendanceID" + attendanceID + " external "  + finalTakes[i] + " studentID " + (i+1));
+			avo.setStudentID(takes.get(i).getStudentID()); //takes테이블에서 바로가져오도록 하면 될듯 
+			System.out.println("attendanceID" + attendanceID + " external "  + finalTakes[i] + " studentID " + takes.get(i).getStudentID());
 			if(attendanceCheckService.getAttendanceCheck(avo) != null) {
 				System.out.println("update ?");
 				attendanceCheckService.updateExAttendanceCheck(avo);
+				System.out.println("after update ?" + attendanceCheckService.getAttendanceCheck(avo).getExternal());
 			}
 			else {
 				System.out.println("insert!");
@@ -570,23 +572,12 @@ public class HomeController {
 		
 	}
 	
-	/*@ResponseBody
-	@RequestMapping(value = "/getAttendance", method = RequestMethod.POST)
-	public List<Integer> getAttendance(HttpServletRequest request)  {
-		List<Integer> storedAttend = new ArrayList<Integer>();
+	@ResponseBody
+	@RequestMapping(value = "/test/getfileName", method = RequestMethod.POST)
+	public List<AttendanceVO> getfileName(HttpServletRequest request)  {
+		return attendanceService.getAttendanceFileName(1);
 		
-		for(int i=1; i<=3; i++) {
-			storedAttend.add(attendanceCheckService.getAttendanceCheck(i).getExternal());
-		}
-		
-		//System.out.println(attendanceService.getAttendanceID(avo));
-		
-		//return attendanceService.getAttendanceID(avo).getId();
-		//여기서 days, .... 가 담긴 list<list<integer>>를 보내준다.
-		//세부 list[0]에는 days, 그 뒤에는 list .... 
-		return storedAttend;
-		
-	}*/
+	}
 	
 	
 	

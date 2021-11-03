@@ -53,8 +53,9 @@ public class AttendanceCheckServiceImpl implements AttendanceCheckService {
 	}
 	
 	@Override
-	public int getAttendanceCheckListCount(int attendanceID) {
-		return attendanceCheckDAO.getAttendanceCheckListCount(attendanceID);
+	public int getAttendanceCheckListCount(int classID) {
+		//System.out.println("몇개 ? " + attendanceCheckDAO.getAttendanceCheckListCount(classID));
+		return attendanceCheckDAO.getAttendanceCheckListCount(classID);
 	}
 	
 	/*@Override

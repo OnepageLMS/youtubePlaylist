@@ -51,4 +51,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public int getAttendanceListCount(int classID) {
 		return attendanceDAO.getAttendanceListCount(classID);
 	}
+	
+	@Override
+	public List<AttendanceVO> getAttendanceFileName(int classID){
+		return attendanceDAO.getAttendanceFileName(classID);
+	}
 }

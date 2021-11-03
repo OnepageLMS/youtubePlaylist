@@ -42,22 +42,105 @@
 var takes;
 var takesStudentNum = 0;
 $(document).ready(function(){
-	/*$.ajax({ 
-		'type' : "post",
-		'url' : "${pageContext.request.contextPath}/attendance/takes",
-		'data' : {
-			classID : ${classInfo.id}
+	$.ajax({
+		'url' : "${pageContext.request.contextPath}/attendance/getfileName",
+		'processData' : false,
+		'contentType' : false,
+		'data' : "hello", //classID보내야함 
+		'type' : 'POST',
+		success: function(data){
+			
+			for(var i=0; i<data.length; i++){
+				//console.log(data[i].fileName);
+				if(data[i] != null){
+					var element = document.getElementById('download'+(i+1));
+					element.innerHTML = '<a href="${pageContext.request.contextPath}/resources/csv/' +data[i].fileName+ '">업로드한 파일 다운받기</a>';
+				}
+				else continue;
+			}
+			
+			 
 		},
-		success : function(data){
-			takes = data;
-			takesStudentNum = data.length;
-			console.log("성공");
-			console.log(data.length);
-		}, 
 		error : function(err){
 			alert("실패");
-		}
-	}); */
+		},
+	});
+	
+	
+	$("#button").click(function(event){
+		event.preventDefault();
+		var form = $("#attendForm");
+		var seq = $('#seq').val(); //지우면 안돼 
+		var formData = new FormData(form[6]);
+		formData.append("file", $("#exampleFile")[0].files[0]);
+		formData.append("daySeq", $('#seq').val());
+		formData.append("start_h", $('#startTimeH').val());
+		formData.append("start_m", $('#startTimeM').val());
+		formData.append("end_h", $('#endTimeH').val());
+		formData.append("end_m", $('#endTimeM').val());
+		formData.append("classID", 1); //추후에 get방식으로 받은 classID를 넘겨주기 
+		var table = document.getElementById('takes');
+		
+		$.ajax({
+			'url' : "${pageContext.request.contextPath}/attendance/uploadCSV",
+			'processData' : false,
+			'contentType' : false,
+			'data' : formData,
+			'type' : 'POST',
+			success: function(data){
+				for(var i=0; i<data[0].length; i++){
+					var rows = document.getElementById("stuName").getElementsByTagName("th");
+					for( var r=0; r<rows.length; r++ ){
+						var name = rows[r];
+						  if(name.innerText == data[0][i]){
+						  		$(".takeZoom"+seq).eq(r).val(1).prop("selected", true); 
+						  		//document.getElementsByClassName('takeZoom'+seq).style.background = "blue";
+						  		break;
+						  }
+						  
+					}
+					
+				}
+				
+				for(var i=0; i<data[1].length; i++){
+					var rows = document.getElementById("stuName").getElementsByTagName("th");
+					for( var r=0; r<rows.length; r++ ){
+						var name = rows[r];
+						 console.log("name : "  +name.innerText+ "/ " +r);
+						  if(name.innerText == data[1][i]){
+							  	console.log(data[1][0]);
+						  		$(".takeZoom"+seq).eq(r).val(3).prop("selected", true);
+						  		//document.getElementsByClassName('takeZoom'+seq).style.background = "red";
+						  		//console.log("seq : " + seq + " r :" + r);
+						  		break;
+						  }
+						  
+					}
+					
+				}
+				
+				$("#showAttendance").append('<div> 출석 ' + data[0].length + '명 / 결석 ' + data[1].length + '명 / 미확인 ' + data[2].length + '명 </div>');
+				
+				
+				for(var i=0; i<data[0].length; i++)
+					$("#showAttendance").append('<div> 출석 : ' +data[0][i] + '</div>');
+				
+				for(var i=0; i<data[1].length; i++)
+					$("#showAttendance").append('<div> 결석 : ' +data[1][i] + '</div>');
+				
+				for(var i=0; i<data[2].length; i++)
+					$("#showAttendance").append('<div> 미확인 : ' +data[2][i] + '</div>');
+				
+				$("#showAttendance").show();
+				 idx ++;
+				 
+			},
+			error : function(err){
+				alert("실패");
+			},
+		});
+	});
+	
 	$("#addStudentModal").on("hidden.bs.modal", function () {
 		console.log("hi there");
 		$('.entryCode').hide();
@@ -214,6 +297,78 @@ function showAllStudentInfo(){
 	});
 }
 
+
+function updateAttendance(days){
+	//attendanceID를 알아야한다. 그러기 위해서는 classID, days, instructorID가 필요하다.
+	//days의 $(".takeZoom"+seq).eq(r).val();을 리스트로 만들면되지 않을까  == //takeZoom(days+1)번째의 value들을 array에 저장하기
+	var rows = document.getElementById("stuName").getElementsByTagName("th");
+	var finalTakes = [];
+	var days = days + 1;
+	console.log("days : " + days);
+	var attendanceID = 0;
+	
+	for(var i=0; i<rows.length; i++){
+		console.log(" i " + i + "  " + $(".takeZoom"+days).eq(i).val());
+		if($(".takeZoom"+days).eq(i).val() == -1){
+			alert("출결업데이트를 완료해주세요 ");
+			return ; 
+		}
+		if($(".takeZoom"+days).eq(i).val() == 0){
+			console.log($(".originVal"+days).eq(i).text());
+			finalTakes.push($(".originVal"+days).eq(i).text());
+		} //id를 두어서 innerText를 가져오는 방식으로 
+			//finalTakes.push("출석");
+		if($(".takeZoom"+days).eq(i).val() == 1)
+			finalTakes.push("출석");
+		if($(".takeZoom"+days).eq(i).val() == 2)
+			finalTakes.push("지각");
+		if($(".takeZoom"+days).eq(i).val() == 3)
+			finalTakes.push("결석");
+	}
+	
+	for(var i=0; i<rows.length; i++)
+		console.log("finalTakes: " + finalTakes[i]); //finalTakes에는 잘 들어감 
+	
+	$.ajax({ //attendaceID를 위해 
+		'type' : "post",
+		'url' : "${pageContext.request.contextPath}/attendance/forAttendance",
+		'data' : { //나중에 수정 
+			classID : 1,
+			days : days,
+		},
+		success : function(data){
+			attendanceID = data;
+			console.log("attendance : " + data);
+			
+			$.ajax({ //여기서 studentID 리스트로 만들어서 넘겨야함,, 
+				'type' : "post",
+				'url' : "${pageContext.request.contextPath}/attendance/whichAttendance",
+				'data' : { //나중에 수정 
+					attendanceID : attendanceID,
+					classID : 1,
+					days : days,
+					finalTakes : finalTakes
+				},
+				success : function(data){
+					attendanceID = data;
+					
+				}, 
+				error : function(err){
+					alert("실패");
+				},
+				complete : function(){
+					location.reload();
+				}
+			});
+			
+			
+		}, 
+		error : function(err){
+			alert("파일 업로드를 해주세요 ");
+		}
+	});
+	
+}
 	
 </script>
 <body>
@@ -251,39 +406,85 @@ function showAllStudentInfo(){
                                             	<!-- <th colspan="2"> # </th>-->
                                             	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
 	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-	                                                <th style="text-align:center" colspan=2>${j} 차시 </th>
+	                                                <th style="text-align:center" colspan=2>${j} 차시
+	                                                	<button type="button" class="btn btn-outline-primary" onclick="updateAttendance(${j}-1)" >저장</button>
+	                                                 </th>
 	                                            </c:forEach>
                                             </tr>
                                             
                                             <tr>
-                                            	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-                                            		<td style="text-align:center"><i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM </td>
-				                                    <td style="text-align:center"> LMS </td>
+                                            	<c:forEach  var="j" begin="1" end="${classInfo.days}" varStatus="status">
+                                            		<td id="zoomAttend" style="text-align:center">
+                                            			<a href="#" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
+                                            				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
+                                            			</a>
+                                            			
+                                            			
+                                            		</td>
+				                                    <td  id="lmsAttend" style="text-align:center"> LMS </td>
 				                                </c:forEach>
                                             </tr>
                                             </thead>
                                             
-                                            <tbody>
+                                            <tbody id = "stuName">
+                                            
+                                            
 	                                             <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 		                                            <tr>
-		                                                <th scope="row${status.index}" rowspan=2>${status.index+1}. ${takes[status.index].studentName}</th>
+		                                                <th class = "row${status.index}" scope="row${status.index}" rowspan=2>${takes[status.index].studentName}</th>
+		                                                
 		                                            </tr>
 		                                            
-		                                            <tr>
-		                                            	 <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
-		                                            	 	<td id = "take${status2.index}" style="text-align:center" > 출석 </td>
-		                                                	<td id = "take${status2.index}" style="text-align:center"> 0% </td>
+		                                             <tr>
+		                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
+		                                            	 	<td style="text-align:center" > 
+						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
+																  <option selected value="0" class="originVal${status2.index+1}">${file[status2.index][status.index]}</option>
+																  <option value="1" class="blue">출석</option>
+																  <option value="2" class="yellow">지각</option>
+																  <option value="3" class="red">결석</option>
+																</select>
+		                                            	 	</td>
+		                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
 		                                                </c:forEach>
+		                                                
+		                                                 <c:forEach var="i" begin="${fileNum}" end="${classInfo.days-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
+		                                            	 	<td style="text-align:center" > 
+						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
+																  <option style="backgroudcolor:yellow" selected value="-1" class="originVal${status2.index+1}" >출석체크 </option>
+																  <option value="1" class="blue">출석</option>
+																  <option value="2" class="yellow">지각</option>
+																  <option value="3" class="red">결석</option>
+																</select>
+		                                            	 	</td>
+		                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
+		                                                </c:forEach>
+		                                                
+		                                                
 		                                            </tr>  
 		                                              
 		                                            
 	                                            </c:forEach>
+	                                            
+	                                            <tr>
+	                                            	<td style="text-align:center" > 
+						                            	다운로드
+		                                           </td>
+		                                           
+		                                           <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
+		                                           	<td id = "download${status2.index+1}" style="text-align:center" colspan=2> / </td>
+		                                           </c:forEach>
+	                                            </tr>
+                                            
                                             </tbody>
                                         </table>
                                     </div>
                         	</div>
                     	</div>
-                    
+                    	
+                    	<div class="main-card mb-3 card">
+	                    	<div id="showAttendance" class="card-body" style="display:none"></div>
+	                    </div>
                     </div> 
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
@@ -391,64 +592,7 @@ function showAllStudentInfo(){
 		</div>
 	</div>
 	
-	<%-- <!-- 하영이가 원래 해놓은 부분 -->
-   <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">×</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-                        <div class="card-body" style="overflow-y:auto; height:600px;">
-                            <ul class="list-group">
-                            	<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
-                            		<li class="list-group-item" style="padding-top : 5px; padding-bottom: 30px">
-                            			<i class="pe-7s-close fa-lg" style="margin-right:30px"> </i>
-                            			${takes[status.index].studentName}
-                            		</li>
-	                            </c:forEach>
-                            </ul>
-                        </div>
-	            </div>
-	            <div class="modal-footer">
-	                <button id="modalSubmit" type="button" class="btn-transition btn btn-outline-secondary" onclick="#">구성원 추가</button>
-	            </div>
-	        </div>
-	    </div>
-	</div> --%>
 	
-    <%-- <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
-	    <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h5 class="modal-title" id="editContentModalLabel">구성원 관리</h5>
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                    <span aria-hidden="true">×</span>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-                        <div class="card-body" style="overflow-y:auto; height:600px;">
-                            <ul class="list-group">
-                            	<!-- 이 부분에서 ${takes[status.index].status} == accepted \\ pending 인지에 따라 따로 구분하여
-                            	보여질 수 있도록 하기 . foreach문을ㅡ 2개 만들어서 위에는 pending,. 아래는 accpeted하면 될듯. -->
-                            	<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
-                            		<li class="list-group-item" style="padding-top : 5px; padding-bottom: 30px">
-                            			<i class="pe-7s-close fa-lg" style="margin-right:30px"> </i>
-                            			${takes[status.index].studentName}
-                            		</li>
-	                            </c:forEach>
-                            </ul>
-                        </div>
-	            </div>
-	            <div class="modal-footer">
-	                <button id="modalSubmit" type="button" class="btn-transition btn btn-outline-secondary" onclick="#">구성원 추가</button>
-	            </div>
-	        </div>
-	    </div>
-	</div> --%>
    	
 </body>
 
