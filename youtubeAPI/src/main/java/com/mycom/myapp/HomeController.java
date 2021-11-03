@@ -176,14 +176,38 @@ public class HomeController {
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(1));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(1).size());
-		model.addAttribute("file", attendanceCheckService.getAttendanceCheckList(8)); //attendanceID가 같은대로 가져왔는데,, ㅜㅜ
+		//model.addAttribute("file", attendanceCheckService.getAttendanceCheckList(8)); //attendanceID를 알아야해 
+		model.addAttribute("file", attendanceCheckService.getAttendanceCheckList(8)); //attendanceID를 알아야해 
+		//attendance table에서 classID가 같은 distinct id를 가져온다 
+		//각 attendanceID에 맞는 external 결과를 가져온다.
 		
-		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(7));
+		List<AttendanceVO> id = attendanceService.getAttendanceList(1);
+		List<List<String>> file = new ArrayList<List<String>>();
+		for(int i=0; i<id.size(); i++) {
+			List<String> fileList = new ArrayList<String>();
+			int attendanceID = id.get(i).getId(); // 7, 8, 9
+			System.out.println(attendanceID);
+			for(int j=0; j<id.size(); j++) {
+				//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+				
+			}
+			file.add(fileList);
+	
+		}
+		
+		for(int i=0; i<file.size(); i++) {
+			for(int j=0; j<3; j++) {
+				System.out.println("출결 : i " +i + " j : " + j + " /"+ file.get(i).get(j));
+			}
+		}
+		model.addAttribute("file", file);
+		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(8));
 		
 
-		System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(0).getExternal());
-		System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(1).getStudentID());
-		System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(2).getStudentID());
+		//System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(0).getExternal());
+		//System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(1).getStudentID());
+		//System.out.println("db에 저장된 수강의 결과 : " + attendanceCheckService.getAttendanceCheckList(8).get(2).getStudentID());
 		//model.addAttribute("fileNum", attendanceService.getAttendanceListCount(1));
 		return "attendCSV";
 	}

@@ -50,7 +50,8 @@ public class AttendanceCheckDAO {
 	}
 	
 	public List<AttendanceCheckVO> getAttendanceCheckList(int attendanceID) {
-		List<AttendanceCheckVO> result = sqlSession.selectList("AttendanceCheck.getAttendanceCheck", attendanceID);
+		List<AttendanceCheckVO> result = sqlSession.selectList("AttendanceCheck.getAttendanceCheckList", attendanceID);
+		//System.out.println("dao : " +result.size());
 		return result;
 	}
 	
