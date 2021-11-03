@@ -56,16 +56,16 @@ public class LoginController {
 	private String clientSecret;
 	
 	private String loginMode = "";
-	private String redirectURL = "http://localhost:8080/myapp/oauth2callback";
-	// http://localhost:8080/myapp/oauth2callback // https://learntube.kr/oauth2callback
+	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
+	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 	
 	
-	@RequestMapping(value = "/signin", method = RequestMethod.GET)
+	@RequestMapping(value = "/login/signin", method = RequestMethod.GET)
 	public String login() {
 		return "intro/signin";
 	}
 	
-	@RequestMapping(value = "/google", method = RequestMethod.POST)
+	@RequestMapping(value = "/login/google", method = RequestMethod.POST)
 	public String google(@RequestParam(value = "mode") String mode) {
 		System.out.println(mode);
 		loginMode = mode;
@@ -75,7 +75,7 @@ public class LoginController {
 		return "redirect:" + url;
 	}
 	
-	@RequestMapping(value = "/oauth2callback", method = RequestMethod.GET)
+	@RequestMapping(value = "/login/oauth2callback", method = RequestMethod.GET)
 	public String googleAuth(Model model, @RequestParam(value = "code") String authCode, HttpServletRequest request,
 			HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
 		
@@ -152,7 +152,7 @@ public class LoginController {
 				System.out.println("회원가입 성공:)");
 			else {
 				System.out.println("회원가입 실패:(");
-				return "redirect:/signin";
+				return "redirect:/login/signin";
 			}
 		}
 		else {
@@ -164,7 +164,7 @@ public class LoginController {
 		return returnURL;
 	}
 	
-	@RequestMapping(value = "/revoketoken") //토큰 무효화
+	@RequestMapping(value = "/login/revoketoken") //토큰 무효화
 	public Map<String, String> revokeToken(@RequestParam(value = "token") String token) throws JsonProcessingException {
 
 		Map<String, String> result = new HashMap<>();
@@ -178,11 +178,11 @@ public class LoginController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/signout")
+	@RequestMapping(value = "/login/signout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		System.out.println("logged out!");
-		return "redirect:/signin";
+		return "redirect:/login/signin";
 	}
 	
 	

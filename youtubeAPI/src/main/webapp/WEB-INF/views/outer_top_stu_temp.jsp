@@ -98,7 +98,7 @@ function leaveSite(){
                                     </a>
                                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                         <button type="button" tabindex="0" class="dropdown-item" data-toggle="modal" data-target="#editUserModal">회원정보 수정</button>
-                                        <button type="button" tabindex="0" class="dropdown-item" onclick="location.href='${pageContext.request.contextPath}/signout'">로그아웃</button>
+                                        <button type="button" tabindex="0" class="dropdown-item" onclick="location.href='${pageContext.request.contextPath}/login/signout'">로그아웃</button>
                                     </div>
                                 </div>
                             </div>
