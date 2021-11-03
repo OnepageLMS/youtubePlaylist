@@ -3,10 +3,10 @@
 <mapper namespace="StuAttendanceCheck">
 	
 	
-	<select id="getStuAttendanceCheckList" resultType="AttendanceCheckVO">
-		SELECT external
-		FROM lms_takes join lms_attendanceCheck on lms_takes.studentID = lms_attendanceCheck.studentID
-		WHERE classID = #{classID} and lms_takes.studentID = #{studentID}
+	<select id="getStuAttendanceCheckList" parameterType="hashmap" resultType="AttendanceCheckVO">
+		select external
+		from lms_attendanceCheck join lms_attendance on lms_attendanceCheck.attendanceID = lms_attendance.id
+		where classID = #{classID} and lms_attendanceCheck.studentID = #{studentID}
 	</select>
 	
 	<select id="getAttendanceCheckListCount" resultType="int">

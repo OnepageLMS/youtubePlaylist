@@ -85,17 +85,20 @@ $(document).ready(function(){
 	                                             <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status">
 		                                            <tr>
 		                                            
-		                                            	<th scope="row${status.index}" style="text-align:center" rowspan=2 > ${status.index} 차시 </th>
+		                                            	<th scope="row${status.index}" style="text-align:center" rowspan=2 > ${status.index+1} 차시 </th>
 		                                                
                                                         
                                                     
                                                       	<td style="text-align:center"><i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM </td>
-		                                              	<td id = "take${status2.index}" style="text-align:center" > 출석 </td>
+                                                      	
+                                                      	<td id = "take${status.index}" style="text-align:center; text-weight:bold" > ${file[status.index]} </td>
+		                                              	
+
 		                                            </tr>  
 		                                              
 		                                            <tr>
 		                                            	<td style="text-align:center"> LMS </td>
-			                                            <td id = "take${status2.index}" style="text-align:center"> 0% </td>
+			                                            <td id = "take${status.index}" style="text-align:center"> 0% </td>
 		                                            </tr>
 		                                            
 		                                            

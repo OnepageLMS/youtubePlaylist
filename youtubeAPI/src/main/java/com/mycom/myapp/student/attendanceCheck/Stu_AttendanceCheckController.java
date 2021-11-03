@@ -1,7 +1,9 @@
 package com.mycom.myapp.student.attendanceCheck;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -52,10 +54,19 @@ public class Stu_AttendanceCheckController {
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
-		
 		List<String> file = new ArrayList<String>();
-		AttendanceCheckVO stu_avo = new AttendanceCheckVO();
+		Stu_TakesVO stu_avo = new Stu_TakesVO();
 		
+		stu_avo.setStudentID(studentID);
+		stu_avo.setClassID(classID);
+		//vo말고 map의 형태로 넘겨주기 
+		//stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo);
+		System.out.println("studentID : " + studentID + " classID : " + classID);
+		for(int i=0; i<stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo).size(); i++) {
+			System.out.println(i + " : " +stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo).get(i).getExternal());
+			file.add(stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo).get(i).getExternal());
+		}
+		model.addAttribute("file", file);
 		
 		return "class/attendance_Stu";
 	}	
