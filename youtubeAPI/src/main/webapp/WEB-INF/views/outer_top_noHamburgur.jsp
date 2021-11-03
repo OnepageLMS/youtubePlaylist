@@ -7,7 +7,7 @@
 		else {
 			$.ajax({
 				type: 'post',
-				url: "${pageContext.request.contextPath}/login/updateName",
+				url: "${pageContext.request.contextPath}/member/updateName",
 				data: { name:$('#editName').val() },
 				success: function(data){
 					location.reload();
