@@ -123,7 +123,7 @@ public class HomeController {
 		googleOAuthRequestParam.setClientId("99431484339-5lvpv4ieg4gd75l57g0k4inh10tiqkdj.apps.googleusercontent.com");
 		googleOAuthRequestParam.setClientSecret("NwHS9eyyrYE5LYVy7c0CDIkv");
 		googleOAuthRequestParam.setCode(authCode); // access token과 교환할 수 있는 임시 인증 코드
-		googleOAuthRequestParam.setRedirectUri("http://localhost:8080/myapp/oauth2callback");
+		googleOAuthRequestParam.setRedirectUri("http://localhost:8080/myapp/oauth2callback");  //http://localhost:8080/myapp/oauth2callback
 		googleOAuthRequestParam.setGrantType("authorization_code");
 
 		// JSON 파싱을 위한 기본값 세팅
