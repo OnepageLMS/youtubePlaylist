@@ -235,7 +235,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 					i=0;
 					$(inactive).each(function(){
 						var id = this.id;
-						var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
+						var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + id + "'";
 						var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + id + "'";
 						var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 						var regDate = this.regDate.split(' ')[0];
