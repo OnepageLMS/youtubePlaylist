@@ -40,7 +40,6 @@ import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberServiceImpl;
 
 @Controller
-@RequestMapping(value = "/login")
 @PropertySource("classpath:config.properties")
 public class LoginController {
 	
@@ -57,8 +56,8 @@ public class LoginController {
 	private String clientSecret;
 	
 	private String loginMode = "";
-	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
-	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
+	private String redirectURL = "http://localhost:8080/myapp/oauth2callback";
+	// http://localhost:8080/myapp/oauth2callback // https://learntube.kr/oauth2callback
 	
 	
 	@RequestMapping(value = "/signin", method = RequestMethod.GET)
@@ -153,7 +152,7 @@ public class LoginController {
 				System.out.println("회원가입 성공:)");
 			else {
 				System.out.println("회원가입 실패:(");
-				return "redirect:/login/signin";
+				return "redirect:/signin";
 			}
 		}
 		else {
@@ -183,7 +182,7 @@ public class LoginController {
 	public String logout(HttpSession session) {
 		session.invalidate();
 		System.out.println("logged out!");
-		return "redirect:/login/signin";
+		return "redirect:/signin";
 	}
 	
 	
