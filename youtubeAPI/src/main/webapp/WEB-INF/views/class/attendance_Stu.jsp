@@ -82,7 +82,7 @@ $(document).ready(function(){
                                             
                                             <tbody>
                                             
-	                                             <c:forEach var="i" begin="1" end="${classInfo.days}" varStatus="status">
+	                                             <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status">
 		                                            <tr>
 		                                            
 		                                            	<th scope="row${status.index}" style="text-align:center" rowspan=2 > ${status.index} 차시 </th>

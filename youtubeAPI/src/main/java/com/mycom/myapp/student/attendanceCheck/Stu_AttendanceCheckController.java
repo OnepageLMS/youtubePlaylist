@@ -1,4 +1,4 @@
-package com.mycom.myapp.student.attendance;
+package com.mycom.myapp.student.attendanceCheck;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import net.sf.json.JSONArray;
 
 @Controller
 @RequestMapping(value="/student/attendance")
-public class Stu_AttendanceController {
+public class Stu_AttendanceCheckController {
 	@Autowired
 	private Stu_ClassesService classesService;
 	

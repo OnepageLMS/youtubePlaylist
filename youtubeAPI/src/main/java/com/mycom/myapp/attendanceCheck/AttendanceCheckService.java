@@ -2,6 +2,7 @@ package com.mycom.myapp.attendanceCheck;
 
 import java.util.List;
 
+import com.mycom.myapp.commons.AttendanceCheckVO;
 import com.mycom.myapp.commons.AttendanceVO;
 
 public interface AttendanceCheckService {

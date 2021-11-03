@@ -333,7 +333,6 @@ function updateAttendance(days){
 		'type' : "post",
 		'url' : "${pageContext.request.contextPath}/attendance/forAttendance",
 		'data' : { //나중에 수정 
-			classID : 1,
 			days : days,
 		},
 		success : function(data){
@@ -345,7 +344,6 @@ function updateAttendance(days){
 				'url' : "${pageContext.request.contextPath}/attendance/whichAttendance",
 				'data' : { //나중에 수정 
 					attendanceID : attendanceID,
-					classID : 1,
 					days : days,
 					finalTakes : finalTakes
 				},
@@ -428,7 +426,7 @@ function updateAttendance(days){
                                             
                                             <tbody id = "stuName">
                                             
-                                            
+                                            	<c:if test="${!empty takes}">
 	                                             <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 		                                            <tr>
 		                                                <th class = "row${status.index}" scope="row${status.index}" rowspan=2>${takes[status.index].studentName}</th>
@@ -436,17 +434,19 @@ function updateAttendance(days){
 		                                            </tr>
 		                                            
 		                                             <tr>
-		                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
-		                                            	 	<td style="text-align:center" > 
-						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
-																  <option selected value="0" class="originVal${status2.index+1}">${file[status2.index][status.index]}</option>
-																  <option value="1" class="blue">출석</option>
-																  <option value="2" class="yellow">지각</option>
-																  <option value="3" class="red">결석</option>
-																</select>
-		                                            	 	</td>
-		                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
-		                                                </c:forEach>
+		                                             	<c:if test="${!empty file}">
+			                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
+			                                            	 	<td style="text-align:center" > 
+							                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
+																	  <option selected value="0" class="originVal${status2.index+1}">${file[status2.index][status.index]}</option>
+																	  <option value="1" class="blue">출석</option>
+																	  <option value="2" class="yellow">지각</option>
+																	  <option value="3" class="red">결석</option>
+																	</select>
+			                                            	 	</td>
+			                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
+			                                                </c:forEach>
+		                                                </c:if>
 		                                                
 		                                                 <c:forEach var="i" begin="${fileNum}" end="${classInfo.days-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 		                                            	 	<td style="text-align:center" > 
@@ -465,14 +465,14 @@ function updateAttendance(days){
 		                                              
 		                                            
 	                                            </c:forEach>
-	                                            
+	                                            </c:if>
 	                                            <tr>
 	                                            	<td style="text-align:center" > 
 						                            	다운로드
 		                                           </td>
 		                                           
 		                                           <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
-		                                           	<td id = "download${status2.index+1}" style="text-align:center" colspan=2> / </td>
+		                                           	<td id = "download${status2.index+1}" style="text-align:center" colspan=2> 다운받을 파일이 없습니다. </td>
 		                                           </c:forEach>
 	                                            </tr>
                                             
@@ -481,11 +481,13 @@ function updateAttendance(days){
                                     </div>
                         	</div>
                     	</div>
-                    	
+                    </div> 
+                    
+                    <div>
                     	<div class="main-card mb-3 card">
 	                    	<div id="showAttendance" class="card-body" style="display:none"></div>
 	                    </div>
-                    </div> 
+                    </div>
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
@@ -590,6 +592,54 @@ function updateAttendance(days){
 				</div> -->
 			</div>
 		</div>
+	</div>
+	
+	<!-- upload csv file modal -->
+    <div class="modal fade" id="editAttendance" tabindex="-1" role="dialog" aria-labelledby="editAttendance" aria-hidden="true" style="display: none;">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="editAttendanceLabel">ZOOM 출석체크</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">×</span>
+	                </button>
+	            </div>
+	            
+	            <form id="attendForm" enctype="multipart/form-data">
+		            <div class="modal-body">
+		               <div class="position-relative form-group">
+		               		<label for="editAttendanceSequence" class="">출석체크할 차시를 입력하세요 </label>
+		               		<input name="seq" id="seq" class="form-control"  value="0"> 차시 
+		               </div>
+				             
+				             <label for="startTime" class="">출석을 인정할 시작시간을 입력하세요</label>             
+		               <div class="position-relative form-group">
+		               		
+		               		<input name="start" id="startTimeH" placeholder="시" class="form-control"> 
+		               		<input name="start" id="startTimeM" placeholder="분" class="form-control"> 
+		               </div>
+		               
+		               <div class="position-relative form-group">
+		               		<label for="endTime" class="">출석을 인정할 마감시간을 입력하세요</label>
+					      	<input name="end" id="endTimeH" placeholder="시" class="form-control"> 
+					        <input name="end" id="endTimeM" placeholder="분" class="form-control"> 
+		               </div>
+		               
+		               
+					  <div class="position-relative form-group input-group">
+					       <input name="file" id="exampleFile" type="file" class="form-control-file">
+					  </div>
+		               
+		               
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+		            	<button id="button" type="submit" class="mt-1 btn btn-primary" data-dismiss="modal">Submit</button>
+		            </div>
+	            
+	           </form>
+	        </div>
+	    </div>
 	</div>
 	
 	

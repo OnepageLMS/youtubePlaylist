@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.mycom.myapp.attendanceCheck.AttendanceCheckService;
-import com.mycom.myapp.attendanceCheck.AttendanceCheckVO;
+import com.mycom.myapp.commons.AttendanceCheckVO;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.commons.ClassContentVO;
@@ -73,15 +73,16 @@ public class AttendanceController {
 		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classId));
 		
 		// attendance csv (hy)
-		List<AttendanceVO> id = attendanceService.getAttendanceList(classID); //1대신 classID
-		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID); //1대신 classID
+		List<AttendanceVO> id = attendanceService.getAttendanceList(classID); //해당 classID를 가진 attribute의 개수 (해당 수업에서 업로드된 파일의 개수) 
+		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID); //해당 classID를 가진 수업을 수강하는 학생 수 
 		List<List<String>> file = new ArrayList<List<String>>();
-		for(int i=0; i<id.size(); i++) {
+		for(int i=0; i<id.size(); i++) { 
 			List<String> fileList = new ArrayList<String>();
 			int attendanceID = id.get(i).getId(); // 7, 8, 9, 10
 			System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(classID).size());
 			for(int j=0; j<takes.size(); j++) { //id.size()이면 안되겠는걸.. 
 				//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+			if(attendanceCheckService.getAttendanceCheckList(attendanceID).size() != 0)
 				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				
 			}
@@ -90,8 +91,8 @@ public class AttendanceController {
 		}
 		
 		model.addAttribute("file", file);
-		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(1));
-		
+		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(classID));
+		System.out.println("classID" + classID + "fileNum " + attendanceCheckService.getAttendanceCheckListCount(classID));
 		return "class/attendance";
 	}	
 	
@@ -432,7 +433,7 @@ public class AttendanceController {
 	@ResponseBody
 	@RequestMapping(value = "/forAttendance", method = RequestMethod.POST)
 	public int forAttendance(HttpServletRequest request)  {
-		int classID = Integer.parseInt(request.getParameter("classID"));
+		//int classID = Integer.parseInt(request.getParameter("classID"));
 		int days = Integer.parseInt(request.getParameter("days"));
 		AttendanceVO avo = new AttendanceVO();
 		avo.setClassID(classID);
