@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.myapp.commons.AttendanceCheckVO;
 import com.mycom.myapp.commons.AttendanceVO;
 
 @Service

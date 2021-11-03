@@ -6,8 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.mycom.myapp.commons.AttendanceVO;
-import com.mycom.myapp.commons.ClassesVO;
+import com.mycom.myapp.commons.AttendanceCheckVO;
 
 @Repository
 public class AttendanceCheckDAO {

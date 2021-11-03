@@ -48,7 +48,7 @@
 	
 	<select id="getAttendanceCheckListCount" resultType="int">
 		select count(distinct attendanceID) 
-		from lms_attendanceCheck join lms_attendance
+		from lms_attendanceCheck join lms_attendance on lms_attendanceCheck.attendanceID = lms_attendance.id
 		where lms_attendance.classID = #{classID}
 	</select>
 

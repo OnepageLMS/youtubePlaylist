@@ -1,4 +1,4 @@
-package com.mycom.myapp.attendanceCheck;
+package com.mycom.myapp.commons;
 
 public class AttendanceCheckVO {
 	private int id;
