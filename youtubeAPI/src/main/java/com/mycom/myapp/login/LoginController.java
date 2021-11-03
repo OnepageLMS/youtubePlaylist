@@ -40,7 +40,6 @@ import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberServiceImpl;
 
 @Controller
-@RequestMapping(value = "/login")
 @PropertySource("classpath:config.properties")
 public class LoginController {
 	
@@ -61,12 +60,12 @@ public class LoginController {
 	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 	
 	
-	@RequestMapping(value = "/signin", method = RequestMethod.GET)
+	@RequestMapping(value = "/login/signin", method = RequestMethod.GET)
 	public String login() {
 		return "intro/signin";
 	}
 	
-	@RequestMapping(value = "/google", method = RequestMethod.POST)
+	@RequestMapping(value = "/login/google", method = RequestMethod.POST)
 	public String google(@RequestParam(value = "mode") String mode) {
 		System.out.println(mode);
 		loginMode = mode;
@@ -76,7 +75,7 @@ public class LoginController {
 		return "redirect:" + url;
 	}
 	
-	@RequestMapping(value = "/oauth2callback", method = RequestMethod.GET)
+	@RequestMapping(value = "/login/oauth2callback", method = RequestMethod.GET)
 	public String googleAuth(Model model, @RequestParam(value = "code") String authCode, HttpServletRequest request,
 			HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
 		
@@ -165,7 +164,7 @@ public class LoginController {
 		return returnURL;
 	}
 	
-	@RequestMapping(value = "/revoketoken") //토큰 무효화
+	@RequestMapping(value = "/login/revoketoken") //토큰 무효화
 	public Map<String, String> revokeToken(@RequestParam(value = "token") String token) throws JsonProcessingException {
 
 		Map<String, String> result = new HashMap<>();
@@ -179,7 +178,7 @@ public class LoginController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/signout")
+	@RequestMapping(value = "/login/signout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		System.out.println("logged out!");
