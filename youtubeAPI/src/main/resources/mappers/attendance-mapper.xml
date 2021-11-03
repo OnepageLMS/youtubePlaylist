@@ -44,5 +44,12 @@
 		where classID=#{classID}
 	</select>
 	
+	<select id="getAttendanceFileName" resultType="attendance">
+		select fileName from lms_attendance
+		where classID=#{classID}
+	</select>
+	
+	
+	
 
 </mapper>

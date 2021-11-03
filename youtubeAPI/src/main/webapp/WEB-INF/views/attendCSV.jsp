@@ -30,44 +30,46 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
-<script src="http://code.jquery.com/jquery-3.5.1.js"
-	integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-	crossorigin="anonymous"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 
 <style>
 </style>
 
 <script>
-var takes;
-var takesStudentNum = 0;
+//var takes;
+//var takesStudentNum = 0;
 var attendStu = new Array();
 var absentStu = new Array();
 var annonyStu = new Array();
 var idx = 1;
 $(document).ready(function(){
 	
-	/*$.ajax({
-		'url' : "${pageContext.request.contextPath}/getAttendance",
+	$.ajax({
+		'url' : "${pageContext.request.contextPath}/test/getfileName",
 		'processData' : false,
 		'contentType' : false,
-		'data' : "hello",
+		'data' : "hello", //classID보내야함 
 		'type' : 'POST',
 		success: function(data){
 			
-			console.log(data.length);
-			console.log(data[0]);
-			console.log(data[1]);
+			for(var i=0; i<data.length; i++){
+				//console.log(data[i].fileName);
+				if(data[i] != null){
+					var element = document.getElementById('download'+(i+1));
+					element.innerHTML = '<a href="${pageContext.request.contextPath}/resources/csv/' +data[i].fileName+ '">업로드한 파일 다운받기</a>';
+				}
+				else continue;
+			}
+			
 			 
 		},
 		error : function(err){
 			alert("실패");
 		},
-	});*/
+	});
 	
 	
 	$("#button").click(function(event){
@@ -176,10 +178,15 @@ function updateAttendance(days){
 	
 	for(var i=0; i<rows.length; i++){
 		console.log(" i " + i + "  " + $(".takeZoom"+days).eq(i).val());
-		if($(".takeZoom"+days).eq(i).val() == 0){
+		if($(".takeZoom"+days).eq(i).val() == -1){
 			alert("출결업데이트를 완료해주세요 ");
 			return ; 
 		}
+		if($(".takeZoom"+days).eq(i).val() == 0){
+			console.log($(".originVal"+days).eq(i).text());
+			finalTakes.push($(".originVal"+days).eq(i).text());
+		} //id를 두어서 innerText를 가져오는 방식으로 
+			//finalTakes.push("출석");
 		if($(".takeZoom"+days).eq(i).val() == 1)
 			finalTakes.push("출석");
 		if($(".takeZoom"+days).eq(i).val() == 2)
@@ -187,6 +194,9 @@ function updateAttendance(days){
 		if($(".takeZoom"+days).eq(i).val() == 3)
 			finalTakes.push("결석");
 	}
+	
+	for(var i=0; i<rows.length; i++)
+		console.log("finalTakes: " + finalTakes[i]); //finalTakes에는 잘 들어감 
 	
 	$.ajax({ //attendaceID를 위해 
 		'type' : "post",
@@ -214,6 +224,9 @@ function updateAttendance(days){
 				}, 
 				error : function(err){
 					alert("실패");
+				},
+				complete : function(){
+					location.reload();
 				}
 			});
 			
@@ -273,7 +286,7 @@ function updateAttendance(days){
                                             	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
 	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 	                                                <th style="text-align:center" colspan=2>${j} 차시
-	                                                	<button type="button" class="btn btn-secondary" onclick="updateAttendance(${j}-1)" >업데이트</button>
+	                                                	<button type="button" class="btn btn-outline-primary" onclick="updateAttendance(${j}-1)" >저장</button>
 	                                                 </th>
 	                                            </c:forEach>
                                             </tr>
@@ -281,7 +294,7 @@ function updateAttendance(days){
                                             <tr>
                                             	<c:forEach  var="j" begin="1" end="${classInfo.days}" varStatus="status">
                                             		<td id="zoomAttend" style="text-align:center">
-                                            			<a href="javascript:void(0);" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
+                                            			<a href="#" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
                                             				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
                                             			</a>
                                             			
@@ -302,14 +315,10 @@ function updateAttendance(days){
 		                                            </tr>
 		                                            
 		                                             <tr>
-		                                           
-		                                           		 
-		                                           		
-															
 		                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 		                                            	 	<td style="text-align:center" > 
 						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
-																  <option selected value="0">${file[status2.index][status.index]}</option>
+																  <option selected value="0" class="originVal${status2.index+1}">${file[status2.index][status.index]}</option>
 																  <option value="1" class="blue">출석</option>
 																  <option value="2" class="yellow">지각</option>
 																  <option value="3" class="red">결석</option>
@@ -321,7 +330,7 @@ function updateAttendance(days){
 		                                                 <c:forEach var="i" begin="${fileNum}" end="${classInfo.days-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 		                                            	 	<td style="text-align:center" > 
 						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
-																  <option selected value="0">출석체크 </option>
+																  <option style="backgroudcolor:yellow" selected value="-1" class="originVal${status2.index+1}" >출석체크 </option>
 																  <option value="1" class="blue">출석</option>
 																  <option value="2" class="yellow">지각</option>
 																  <option value="3" class="red">결석</option>
@@ -335,6 +344,16 @@ function updateAttendance(days){
 		                                              
 		                                            
 	                                            </c:forEach>
+	                                            
+	                                            <tr>
+	                                            	<td style="text-align:center" > 
+						                            	다운로드
+		                                           </td>
+		                                           
+		                                           <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
+		                                           	<td id = "download${status2.index+1}" style="text-align:center" colspan=2> / </td>
+		                                           </c:forEach>
+	                                            </tr>
                                             
                                             </tbody>
                                         </table>

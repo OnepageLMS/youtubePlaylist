@@ -17,7 +17,7 @@
 	<update id="updateExAttendanceCheck">
 		update lms_attendanceCheck
 		set attendanceID=#{attendanceID}, external=#{external}, studentID=#{studentID}
-		where id=#{id}
+		where attendanceID=#{attendanceID} and studentID=#{studentID}
 	</update>
 	
 	<update id="updateInAttendanceCheck">
@@ -47,7 +47,9 @@
 	</select>
 	
 	<select id="getAttendanceCheckListCount" resultType="int">
-		select count(distinct attendanceID) from lms_attendanceCheck
+		select count(distinct attendanceID) 
+		from lms_attendanceCheck join lms_attendance
+		where lms_attendance.classID = #{classID}
 	</select>
 
 </mapper>

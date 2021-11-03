@@ -56,4 +56,9 @@ public class AttendanceDAO {
 		return result;
 	}
 	
+	public List<AttendanceVO> getAttendanceFileName(int classID){
+		List<AttendanceVO> result = sqlSession.selectList("Attendance.getAttendanceFileName", classID);
+		return result;
+	}
+	
 }

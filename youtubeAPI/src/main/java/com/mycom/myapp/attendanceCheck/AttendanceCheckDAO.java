@@ -55,8 +55,10 @@ public class AttendanceCheckDAO {
 		return result;
 	}
 	
-	public int getAttendanceCheckListCount(int attendanceID) {
-		int vo = sqlSession.selectOne("AttendanceCheck.getAttendanceCheckListCount", attendanceID);
+	public int getAttendanceCheckListCount(int classID) {
+		//System.out.println("classID : " + classID);
+		int vo = sqlSession.selectOne("AttendanceCheck.getAttendanceCheckListCount", classID);
+		//System.out.println("몇개 ? " +vo);
 		return vo;
 	}
 	
