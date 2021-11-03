@@ -3,6 +3,7 @@ package com.mycom.myapp.student.attendance;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,16 +33,17 @@ public class Stu_AttendanceController {
 	@Autowired
 	private MemberService memberService;
 	
-	private int instructorID = 1;
+	private int studentID = 01;
 	public int classID;
 	
 	@RequestMapping(value = "/{classId}", method = RequestMethod.GET)
-	public String attendancehome(@PathVariable("classId") int classId, Model model) {
+	public String attendancehome(@PathVariable("classId") int classId, Model model, HttpSession session) {
+		studentID = (Integer)session.getAttribute("userID");
 		classID = classId;
 		model.addAttribute("classInfo", classesService.getClass(classID)); 
 		
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
