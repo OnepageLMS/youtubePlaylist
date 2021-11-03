@@ -1,6 +1,9 @@
 package com.mycom.myapp.student.attendanceCheck;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.AttendanceCheckVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classes.Stu_ClassesService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
@@ -33,6 +37,9 @@ public class Stu_AttendanceCheckController {
 	@Autowired
 	private MemberService memberService;
 	
+	@Autowired
+	private Stu_AttendanceCheckService stu_attendanceCheckService;
+	
 	private int studentID = 01;
 	public int classID;
 	
@@ -47,6 +54,20 @@ public class Stu_AttendanceCheckController {
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
+		List<String> file = new ArrayList<String>();
+		Stu_TakesVO stu_avo = new Stu_TakesVO();
+		
+		stu_avo.setStudentID(studentID);
+		stu_avo.setClassID(classID);
+		//vo말고 map의 형태로 넘겨주기 
+		//stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo);
+		System.out.println("studentID : " + studentID + " classID : " + classID);
+		for(int i=0; i<stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo).size(); i++) {
+			System.out.println(i + " : " +stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo).get(i).getExternal());
+			file.add(stu_attendanceCheckService.getStuAttendanceCheckList(stu_avo).get(i).getExternal());
+		}
+		model.addAttribute("file", file);
+		
 		return "class/attendance_Stu";
 	}	
 	
