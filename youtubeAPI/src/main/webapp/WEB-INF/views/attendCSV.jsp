@@ -309,7 +309,7 @@ function updateAttendance(days){
 		                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 		                                            	 	<td style="text-align:center" > 
 						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
-																  <option selected value="0">${file[status.index].external}</option>
+																  <option selected value="0">${file[status2.index][status.index]}</option>
 																  <option value="1" class="blue">출석</option>
 																  <option value="2" class="yellow">지각</option>
 																  <option value="3" class="red">결석</option>

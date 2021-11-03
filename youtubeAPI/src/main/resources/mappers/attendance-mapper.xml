@@ -35,7 +35,7 @@
 	</select>
 	
 	<select id="getAttendanceList" resultType="attendance">
-		select * from lms_attendance
+		select distinct id from lms_attendance
 		where classID=#{classID}
 	</select>
 	
