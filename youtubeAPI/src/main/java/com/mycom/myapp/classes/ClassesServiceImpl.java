@@ -68,6 +68,11 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
+	public ClassesVO getClassByEntryCode(String entryCode) {
+		return classesDAO.getClassByEntryCode(entryCode);
+	}
+	
+	@Override
 	public List<ClassesVO> getAllClass(ClassesVO vo){
 		return classesDAO.getAllClass(vo);
 	}
