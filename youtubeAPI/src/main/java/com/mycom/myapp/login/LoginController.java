@@ -23,6 +23,7 @@ import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +37,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.mycom.myapp.classes.ClassesServiceImpl;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberServiceImpl;
 
@@ -50,6 +52,9 @@ public class LoginController {
 	@Autowired
 	private MemberServiceImpl memberService;
 	
+	@Autowired
+	private ClassesServiceImpl classesService;
+	
 	@Value("${oauth.clientID}")
 	private String clientID;
 	@Value("${oauth.clientSecret}")
@@ -59,6 +64,14 @@ public class LoginController {
 	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
 	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 	
+	private String entryCode = null;
+	
+	//(jw)
+	@RequestMapping(value = "/login/{entryCode}", method = RequestMethod.GET)
+	public String entry(@PathVariable String entryCode, Model model) {
+		this.entryCode = entryCode;
+		return "intro/entry";
+	}
 	
 	@RequestMapping(value = "/login/signin", method = RequestMethod.GET)
 	public String login() {
@@ -161,6 +174,11 @@ public class LoginController {
 		
 		session.setAttribute("userID", loginvo.getId());
 		session.setAttribute("login", loginvo);
+		
+		//(jw)
+		if(entryCode != null) {
+			
+		}
 		return returnURL;
 	}
 	

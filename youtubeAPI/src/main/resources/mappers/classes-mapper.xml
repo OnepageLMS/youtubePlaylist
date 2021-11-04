@@ -66,8 +66,8 @@
 		select * from lms_class where instructorID=#{instructorID}
 	</select>
 	
-	<select id="getAllEntryCodes" resultType="String">
-		select entryCode from lms_class
+	<select id="getAllEntryCodes" resultType="classes">
+		select * from lms_class where entryCode=#{entryCode}
 	</select>
 	
 	<update id="updateTotalStudent">

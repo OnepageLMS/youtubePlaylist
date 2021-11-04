@@ -1,21 +1,37 @@
 package com.mycom.myapp.member;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.MemberVO;
+import com.mycom.myapp.student.takes.Stu_TakesService;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 @Controller
 @RequestMapping(value = "/member")
 public class MemberController {
 	@Autowired
 	private MemberServiceImpl memberService;
+	
+	@Autowired
+	private ClassesService classService;
+	
+	@Autowired
+	private Stu_TakesService stu_takesService;
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateName", method = RequestMethod.POST)
@@ -54,4 +70,47 @@ public class MemberController {
 			
 		}
 	}
+	
+	//(jw) 
+	@ResponseBody
+	@RequestMapping(value ="/allowTakes", method = RequestMethod.POST)
+	public int allowTakes(@RequestBody Stu_TakesVO vo) {
+		int result = stu_takesService.updateStatus(vo);
+		
+		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
+			System.out.println("totalStudent 업데이트 성공!");
+		else 
+			System.out.println("totalStudent 업데이트 실패 ");
+
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value ="/deleteTakes" , method = RequestMethod.POST)
+	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
+		System.out.println(vo.getClassID() + vo.getStudentID());
+		int result = stu_takesService.deleteStudent(vo);
+		
+		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
+			System.out.println("totalStudent 업데이트 성공!");
+		else
+			System.out.println("totalStudent 업데이트 실패 ");	
+				
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/updateTakesList", method = RequestMethod.GET)
+	public Object updateList(@RequestParam(value = "classID") int classID, Model model) {
+//			model.addAttribute("classInfo", classService.getClass(classID));
+//			model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classID));
+		
+		List<Stu_TakesVO> takesList = new ArrayList<Stu_TakesVO>();
+		takesList = stu_takesService.getStudentInfo(classID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("studentInfo", takesList);
+
+		return map; 
+	}
+	
 }
