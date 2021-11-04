@@ -87,7 +87,6 @@ public class AttendanceController {
 				
 			}
 			file.add(fileList);
-	
 		}
 		
 		model.addAttribute("file", file);
@@ -101,50 +100,7 @@ public class AttendanceController {
 	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {
 		
 		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
-	}
-	
-	//(jw) 
-	@ResponseBody
-	@RequestMapping(value ="/allowTakes", method = RequestMethod.POST)
-	public int allowTakes(@RequestBody Stu_TakesVO vo) {
-		int result = stu_takesService.updateStatus(vo);
-		
-		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
-			System.out.println("totalStudent 업데이트 성공!");
-		else 
-			System.out.println("totalStudent 업데이트 실패 ");
-
-		return result;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value ="/deleteTakes" , method = RequestMethod.POST)
-	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
-		System.out.println(vo.getClassID() + vo.getStudentID());
-		int result = stu_takesService.deleteStudent(vo);
-		
-		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
-			System.out.println("totalStudent 업데이트 성공!");
-		else
-			System.out.println("totalStudent 업데이트 실패 ");	
-				
-		return result;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value="/updateTakesList", method = RequestMethod.GET)
-	public Object updateList(@RequestParam(value = "classID") int classID, Model model) {
-//		model.addAttribute("classInfo", classService.getClass(classID));
-//		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classID));
-		
-		List<Stu_TakesVO> takesList = new ArrayList<Stu_TakesVO>();
-		takesList = stu_takesService.getStudentInfo(classID);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("studentInfo", takesList);
-
-		return map; 
-	}
-	
+	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/uploadCSV", method = RequestMethod.POST)
