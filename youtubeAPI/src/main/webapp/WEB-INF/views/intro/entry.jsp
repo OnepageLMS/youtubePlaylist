@@ -61,7 +61,7 @@
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
 									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0">${className}에 입장하시겠습니까? </span>
+										<span class="h1 fw-bold mb-0">${classInfo.className} 강의실에 입장하시겠습니까? </span>
 									</div>
 									
 									<form class="needs-validation" action='${pageContext.request.contextPath}/google' method='post'>

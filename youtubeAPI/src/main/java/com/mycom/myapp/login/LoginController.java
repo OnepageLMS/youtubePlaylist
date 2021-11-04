@@ -38,6 +38,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.mycom.myapp.classes.ClassesServiceImpl;
+import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberServiceImpl;
 
@@ -70,6 +71,8 @@ public class LoginController {
 	@RequestMapping(value = "/login/{entryCode}", method = RequestMethod.GET)
 	public String entry(@PathVariable String entryCode, Model model) {
 		this.entryCode = entryCode;
+		ClassesVO classInfo = classesService.getClassByEntryCode(entryCode);
+		model.addAttribute("classInfo", classInfo);
 		return "intro/entry";
 	}
 	

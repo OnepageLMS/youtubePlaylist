@@ -48,6 +48,10 @@
 		select className, description, days, tag from lms_class where id=#{id}
 	</select>
 	
+	<select id="getClassByEntryCode" resultType="classes">
+		select * from lms_class where entryCode=#{entryCode}
+	</select>
+	
 	<select id="getAllClass" resultType="classes">	<!-- 효율적인 코드로 변경ver. -->
 		select * from lms_class 
 		where instructorID=#{instructorID} and active=#{active} 

@@ -61,6 +61,10 @@ public class ClassesDAO {
 		return sqlSession.selectOne("Classes.getClassInfoForCopy", id);
 	}
 	
+	public ClassesVO getClassByEntryCode(String entryCode) {
+		return sqlSession.selectOne("Classes.getClassByEntryCode", entryCode);
+	}
+	
 	public List<ClassesVO> getAllClass(ClassesVO vo){	//아래 함수를 중복사용가능한 ver.
 		return sqlSession.selectList("Classes.getAllClass", vo);
 	}
