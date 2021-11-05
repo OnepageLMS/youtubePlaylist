@@ -26,18 +26,19 @@
     -->
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css" integrity="sha512-SZgE3m1he0aEF3tIxxnz/3mXu/u/wlMNxQSnE0Cni9j/O8Gs+TjM9tm1NX34nRQ7GiLwUEzwuE3Wv2FLz2667w==" crossorigin="anonymous" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous"></script>
 	
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="/resources/demos/style.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-		<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+
+	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+	
 	
 	<style>
 		.videoPic {
@@ -92,6 +93,7 @@ $(document).ready(function(){
 
 	getPlaylistInfo();
 	getAllVideo();
+	setSlider();
 
 });
 
@@ -212,11 +214,8 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 			    						+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
 			    						+ '<button type="button" onclick="deleteVideo(' + value.id + ')" class="dropdown-item"><p class="text-danger">삭제</p></button>'
 			    					+ '</div>'
-							
 							+ '</div>';
 							
-						//+ '<div class="videoLine"></div>';
-						
 				$('.videos').append(html); 
 			});
 		}
@@ -224,7 +223,6 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 }
 
 function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클릭했을 때 실행 (처음 이 페이지가 불러와질때 제외)
-//console.log(item);
 	$('.displayVideo').attr('videoID', item.getAttribute('videoID'));
 	var seq = item.getAttribute('seq');
 	
@@ -339,60 +337,54 @@ function onPlayerStateChange(state) {
 	}
 }
 
-// Youtube player 특정 위치로 재생 위치 이동 : 
-function seekTo1() {
-	// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
-	var start_hh = $('#start_hh').val();
-	var start_mm = $('#start_mm').val();
-	var start_ss = $('#start_ss').val();
-	start_time = start_hh * 3600.00 + start_mm * 60.00 + start_ss
-			* 1.00;
-	player.seekTo(start_time);
-}
+function getCurrentPlayTime(e, obj) {
+	e.preventDefault();
 
-function seekTo2() {
-	var end_hh = $('#end_hh').val();
-	var end_mm = $('#end_mm').val();
-	var end_ss = $('#end_ss').val();
-	end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
-	player.seekTo(end_time);
+	values = $( "#slider-range" ).slider( "option", "values" );
+	console.log("check initial values =>> ", values[0], values[1]);
+	
+	if(!validation()){
+		return;
+	}
+	var h = Math.floor(d / 3600);
+	var m = Math.floor(d % 3600 / 60);
+	var s = parseFloat(d % 3600 % 60).toFixed(2);
+
+	// 시작 버튼 클릭시: 
+	if($(obj).text() == "시작"){
+		// Setter 
+		$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
+		start_hour = h;
+		start_min = m;
+		start_sec = s;
+
+		$( "#amount" ).val( "시작: " + h + "시" + m  + "분" + s + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+		
+		start_time = parseFloat(d).toFixed(2);
+		start_time *= 1.00;
+	}
+	
+	// 끝 버튼 클릭시: 
+	else{
+		// Setter 
+		$( "#slider-range" ).slider( "option", "values", [ values[0], d ] );
+		end_hour = h;
+		end_min = m;
+		end_sec = s;
+		
+		$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + s + "초"  );
+
+		end_time = parseFloat(d).toFixed(2);
+		end_time *= 1.00;
+	}
+
+	return false;
 }
 
 
 // 재생 구간 유효성 검사: 
-function validation(event) { //video 추가 form 제출하면 실행되는 함수
-	event.preventDefault();
-	document.getElementById("warning1").innerHTML = "";
-	document.getElementById("warning2").innerHTML = "";
+function validation(event) { //video 수정 form 제출하면 실행되는 함수
 	
-	// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
-	var start_hh = $('#start_hh').val();
-	var start_mm = $('#start_mm').val();
-	var start_ss = $('#start_ss').val();
-	start_time = start_hh * 3600 + start_mm * 60 + start_ss* 1;
-	$('#start_s').val(start_time);
-	console.log(start_time);
-	
-	var end_hh = $('#end_hh').val();
-	var end_mm = $('#end_mm').val();
-	var end_ss = $('#end_ss').val();
-	end_time = end_hh * 3600 + end_mm * 60 + end_ss * 1;
-	$('#end_s').val(end_time);
-	console.log(end_time);
-	
-	$('#duration').val(parseInt(end_time - start_time));
-	
-	if (start_time > end_time) {
-		document.getElementById("warning1").innerHTML = "시작시간은 끝시간보다 크지 않아야 합니다.";
-		document.getElementById("start_ss").focus();
-		return false;
-	}
-	if (end_time > limit) {
-		document.getElementById("warning2").innerHTML = "끝시간은 영상 길이보다 크지 않아야 합니다.";
-		document.getElementById("end_ss").focus();
-		return false;
-	} 
-	else 
 		return updateVideo(event);
 }
 
@@ -410,6 +402,7 @@ function convertTotalLength(seconds){
 }
 
 function updateVideo(){ // video 정보 수정		
+	alert('clicked!');
 	event.preventDefault(); // avoid to execute the actual submit of the form.
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
@@ -457,20 +450,57 @@ function deleteVideo(videoID){ // video 삭제
 	}
 	else false;
 }
-</script>
-<script>	//시작, 끝 시간 설정 bar
-	$( function() {
-		$( "#slider-range" ).slider({
-			range: true,
-			min: 0,
-			max: 500,
-			values: [ 0, 3000 ],
-			slide: function( event, ui ) {
-				$( "#amount" ).val( "시작: " + ui.values[ 0 ] + "초 - 끝: " + ui.values[ 1 ] + "초" );
-			}
-		});
-		$( "#amount" ).val( "시작: " + $( "#slider-range" ).slider( "values", 0 ) + "초 - 끝: " + $( "#slider-range" ).slider( "values", 1 ) + "초");
-	} );
+
+var start_hour, start_min, start_sec, end_hour, end_min, end_sec;
+
+function showSlider(){
+	$( "#slider-range" ).slider({
+		range: true,
+		min: 0,
+		max: 500,
+		/* values: [ 75, 300 ], */
+		slide: function( event, ui ) {
+			//$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
+
+			start_hour = Math.floor(ui.values[ 0 ] / 3600);
+		    start_min = Math.floor(ui.values[ 0 ] % 3600 / 60);
+		    start_sec = ui.values[ 0 ] % 60;
+
+		    end_hour = Math.floor(ui.values[ 1 ] / 3600);
+		    end_min = Math.floor(ui.values[ 1 ] % 3600 / 60);
+		    end_sec = ui.values[ 1 ] % 60;
+
+		    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+		}
+	});    
+}
+
+function setSlider() {
+	console.log("limit값 확인 !! ", limit);
+	/* $("#slider-range").slider("destroy"); */
+	/*var attributes = {
+		max: limit
+	}
+	// update attributes
+	$element.attr(attributes);
+
+	// pass updated attributes to rangeslider.js
+	$element.rangeslider('update', true); */
+	$('#slider-range').slider( "option", "min", 0);
+	$('#slider-range').slider( "option", "max", limit);
+
+	$( "#slider-range" ).slider( "option", "values", [ 0, limit ] );
+	//$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
+	
+	start_hour= start_min = start_sec = 0;
+
+    end_hour = Math.floor(limit / 3600);
+    end_min = Math.floor(limit % 3600 / 60);
+    end_sec = limit % 60;
+
+	
+	$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+}
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -537,51 +567,62 @@ function deleteVideo(videoID){ // video 삭제
                                             </div>
                                             
                                             <div class="form-row">
+                                            
+	                                            <div class="setTimeRange input-group">
+	                                            	<div class="col-md-2 input-group-prepend">
+	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
+	                                            	</div><div class="col-md-8"> 
+	                                            		<div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+	                                            			<div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div>
+	                                            			<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span>
+	                                            			<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 100%;"></span>
+	                                            		</div> 
+	                                            	</div>
+	                                            	<div class="col-md-2 input-group-append">
+	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
+	                                            	</div>
+	                                            </div>
+	                                            <div class="position-relative row col form-group">
+	                                            	<label for="amount" class="col-form-label"><b>설정된시간</b></label>
+	                                            	<div class="col-sm-10"> 
+	                                            		<input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> 
+	                                            	</div>
+	                                            </div>
+	                                            <div class="position-relative row form-group" style="display: none;">
+	                                            	<div class="col-sm-2">
+	                                            		<div class="col-sm-10"> 
+	                                            			<div id="warning1"></div> 
+	                                            		</div>
+	                                            	</div>
+	                                            </div>
+                                                <!--  
                                                 <div class="setTimeRange input-group">
+                                                
 													<div class="col-md-2 input-group-prepend">
-														<button class="btn btn-outline-secondary">시작</button>
+														<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
 													</div>
 													<div class="col-md-8">
 														<div id="slider-range"></div>
 													</div>
 													<div class="col-md-2 input-group-append">
-														<button class="btn btn-outline-secondary">끝</button>
+														<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
 													</div>
 													<div class="col">
 														<div class="position-relative row form-group">
 															<label for="amount" class="col-sm-2 col-form-label"><b>설정된 시간</b></label>
 															<div class="col-sm-10"> 
-																<input type="text" id="amount" class="text-center col-sm-11 form-control" readonly="" style="border:0;"> 
+																<input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> 
 															</div>
 														</div>
 													</div>
 												</div>
+												-->
                                             </div>
                                             
 											<div class="col">
 												<div class="divider"></div>
 												<button form="videoForm" type="submit" class="btn btn-sm btn-primary float-right mb-3">업데이트</button>
 											</div>
-											
-											<!-- 
-											<div>
-												<button onclick="getCurrentPlayTime1()" type="button" class="btn btn-sm btn-light"> start time </button> : 
-												<input type="text" id="start_hh" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
-												<input type="text" id="start_mm" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
-												<input type="text" id="start_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초 
-												<button onclick="seekTo1()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button>
-												<span id=warning1 style="color:red;"></span> <br>
-											</div>
-													
-											<div>
-												<button onclick="getCurrentPlayTime2()" type="button" class="btn btn-sm btn-light"> end time </button> : 
-												<input type="text" id="end_hh" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 시 
-												<input type="text" id="end_mm" max="" maxlength="2" size="2" style="border: none; background: transparent;"> 분 
-												<input type="text" id="end_ss" maxlength="5" size="2" style="border: none; background: transparent;"> 초     
-												<button onclick="seekTo2()" type="button" class="btn btn-sm btn-light"> <i class="fa fa-share" aria-hidden="true"></i> </button> 
-												<span id=warning2 style="color:red;"></span> <br>
-											</div>
-											 -->
 										</div>
 									</form>
 								</div>
