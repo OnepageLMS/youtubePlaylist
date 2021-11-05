@@ -68,7 +68,6 @@ function getAllClass(act, order){
 					var classID = this.id;
 					var className = this.className;
 					
-					//var classNoticeURL = 'moveToNotice(' + classID + ')';
 					var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
@@ -168,14 +167,14 @@ function getAllMyClass(){	//위와 중복 제거하기
 			active = data.active;
 			inactive = data.inactive;
 
-			if(active.length+inactive.length == 0){
+			if(active == null && inactive == null){
 				$('.dashboardClass').append('<p class="col text-center">생성된 강의실이 없습니다.</p>');
 				$('.classActive').hide();
 				$('.classInactive').hide();
 				return false;
 			}
 			
-			if(active.length == 0)
+			if(active == null || active.length == 0)
 				$('.activeClassList').append('<p class="col text-center">진행중인 강의실이 없습니다! </p>');
 			else {
 				$(active).each(function(){
@@ -205,7 +204,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 												+ '<div class="card-body">'
 													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 													+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
-															+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
+															+ '공지작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 					                        	+ '</div>'
@@ -229,7 +228,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 						i++;
 					});
 				}
-				if(inactive.length == 0)
+				if(inactive == null || inactive.length == 0)
 					$('.inactiveClassList').append('<p class="col text-center">비활성화된 강의실이 없습니다! </p>');
 				else {
 					i=0;
@@ -499,10 +498,11 @@ function publishNotice(){
 }
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow">
-        <jsp:include page="../outer_top_noHamburgur.jsp" flush="true"/>       
+    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+        <jsp:include page="../outer_top.jsp" flush="true"/>       
              
         <div class="app-main">  
+        	<jsp:include page="../outer_left.jsp" flush="false"></jsp:include>
                  <div class="app-main__outer">
                     <div class="app-main__inner">
                         <div class="app-page-title">
@@ -518,9 +518,9 @@ function publishNotice(){
                        
                         <div class="dashboardClass">
                         	<div class="classActive row col">
-                        		<div class="col-12 row">
-                        			<h4 class="col-sm-5 col-md-2 mb-3">진행중인 강의실</h4>
-	                        		<div class="dropdown d-inline-block">
+                        		<div class="col-12 row m-1">
+                        			<h4 class="">진행중인 강의실</h4>
+	                        		<div class="dropdown d-inline-block pl-2">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
 			                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'regDate');">개설일순</button>
@@ -531,9 +531,9 @@ function publishNotice(){
                         		<div class="activeClassList col row"></div>
                         	</div>
                             <div class="classInactive row col">
-                            	<div class="col-12 row">
-                        			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
-	                        		<div class="dropdown d-inline-block">
+                            	<div class="col-12 row m-1">
+                        			<h4 class="">비활성화된 강의실</h4>
+	                        		<div class="dropdown d-inline-block pl-2">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
 			                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(0, 'regDate');">개설일순</button>

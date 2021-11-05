@@ -397,8 +397,8 @@ function updateAttendance(days){
                     <div class="row">
                     	<div class="col-lg-12">
                          	<div class="main-card mb-3 card">
-                                    <div class="card-body">
-                                        <table class="mb-0 table table-bordered takes">
+                                    <div class="card-body table-responsive">
+                                        <table class="mb-0 table table-striped table-bordered takes">
                                             <thead>   
                                             <tr>
                                             	<!-- <th colspan="2"> # </th>-->

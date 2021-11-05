@@ -84,7 +84,13 @@
 </head>
 
 <script>
-var instructorID;
+
+var limit;
+var start_s;
+var end_s;
+var youtubeID;
+var values; // slider handles 
+var d; // var for current playtime
 
 $(document).ready(function(){
 	getAllMyPlaylist(); 

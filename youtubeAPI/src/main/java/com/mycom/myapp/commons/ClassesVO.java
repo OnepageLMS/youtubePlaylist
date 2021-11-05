@@ -7,7 +7,6 @@ public class ClassesVO {
 	private String description;
 	private int days = 0;
 	private String tag;
-	private String startDate;
 	private String closeDate;
 	private String entryCode;
 	private int totalStudent;
@@ -56,12 +55,6 @@ public class ClassesVO {
 	}
 	public void setTag(String tag) {
 		this.tag = tag;
-	}
-	public String getStartDate() {
-		return startDate;
-	}
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
 	}
 	public String getCloseDate() {
 		return closeDate;

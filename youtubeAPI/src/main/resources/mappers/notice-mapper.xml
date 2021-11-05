@@ -17,7 +17,8 @@
 	</delete>
 	
 	<select id="getAllNotice" resultType="notice">
-		select * from lms_notice
+		select id, title, content, pin, viewCount, regDate 
+		from lms_notice
 		where lms_notice.classID=#{classID} order by id desc
 	</select>
 	
