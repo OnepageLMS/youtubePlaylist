@@ -49,12 +49,16 @@ public class ClassController {
 		session.setAttribute("login", vo);
 		session.setAttribute("userID", 1); //instructorID = 1은 test용
 		instructorID = 1;
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		return "class/dashboard";
 	}
 
 	@RequestMapping(value = "/dashboard",  method = {RequestMethod.GET,RequestMethod.POST})	//학생이랑 선생님 같이 사용하도록 바꾸기!!
 	public String dashboard(Model model, HttpSession session) {
 		instructorID = (Integer)session.getAttribute("userID");
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		return "class/dashboard";
 	}	
 	

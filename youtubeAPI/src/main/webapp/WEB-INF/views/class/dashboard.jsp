@@ -498,10 +498,11 @@ function publishNotice(){
 }
 </script>
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow">
-        <jsp:include page="../outer_top_noHamburgur.jsp" flush="true"/>       
+    <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+        <jsp:include page="../outer_top.jsp" flush="true"/>       
              
         <div class="app-main">  
+        	<jsp:include page="../outer_left.jsp" flush="false"></jsp:include>
                  <div class="app-main__outer">
                     <div class="app-main__inner">
                         <div class="app-page-title">
