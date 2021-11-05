@@ -57,4 +57,9 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 		return stu_TakesDAO.updateStatus(vo);
 	}
 
+	@Override
+	public Stu_TakesVO checkIfAlreadyEnrolled(Stu_TakesVO vo) {
+		return stu_TakesDAO.checkIfAlreadyEnrolled(vo);
+	}
+
 }

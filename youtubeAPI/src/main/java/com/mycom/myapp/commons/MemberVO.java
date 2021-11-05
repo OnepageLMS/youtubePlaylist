@@ -4,6 +4,7 @@ public class MemberVO {
 	private int id;
 	private String name;
 	private String email;
+	private int instructorID;
 	private String regDate;
 	
 	private String mode;
@@ -25,6 +26,12 @@ public class MemberVO {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public int getInstructorID() {
+		return instructorID;
+	}
+	public void setInstructorID(int instructorID) {
+		this.instructorID = instructorID;
 	}
 	public String getRegDate() {
 		return regDate;

@@ -23,6 +23,10 @@ public class Stu_TakesDAO {
 	public int updateStudent(Stu_TakesVO vo) {
 		return sqlSession.update("Takes.updateTakes", vo);
 	}
+	
+	public Stu_TakesVO checkIfAlreadyEnrolled(Stu_TakesVO vo) {
+		return sqlSession.selectOne("Takes.checkIfAlreadyEnrolled", vo);
+	}
 
 	public Stu_TakesVO getStudent(int id) {
 		return sqlSession.selectOne("Takes.getTakes", id);

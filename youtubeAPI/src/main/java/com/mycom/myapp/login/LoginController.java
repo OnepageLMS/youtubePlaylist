@@ -1,6 +1,7 @@
 package com.mycom.myapp.login;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -41,6 +43,8 @@ import com.mycom.myapp.classes.ClassesServiceImpl;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberServiceImpl;
+import com.mycom.myapp.student.takes.Stu_TakesServiceImpl;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 @Controller
 @PropertySource("classpath:config.properties")
@@ -56,6 +60,9 @@ public class LoginController {
 	@Autowired
 	private ClassesServiceImpl classesService;
 	
+	@Autowired
+	private Stu_TakesServiceImpl takesService;
+	
 	@Value("${oauth.clientID}")
 	private String clientID;
 	@Value("${oauth.clientSecret}")
@@ -66,14 +73,65 @@ public class LoginController {
 	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 	
 	private String entryCode = null;
+	private ClassesVO classInfo;
+	private Stu_TakesVO takes;
+	public MemberVO loginVO;
 	
 	//(jw)
+	@RequestMapping(value="/enroll" , method = RequestMethod.GET)
+	public String enroll() {
+		//takes.setStudentID(loginvo.getId());
+		takes.setStudentName(loginVO.getName());
+		takes.setClassName(classInfo.getClassName()); 
+		takes.setStatus("pending");
+		if(takesService.insertStudent(takes) == 1) {
+			System.out.println("학생 등록 요청 완료~!");
+		}
+		else System.out.println("학생 등록 요청 실패");
+		
+		return "redirect:/student/class/dashboard";
+	}	
+	
 	@RequestMapping(value = "/login/{entryCode}", method = RequestMethod.GET)
-	public String entry(@PathVariable String entryCode, Model model) {
+	public String entry(@PathVariable String entryCode, Model model, HttpSession session) { //@SessionAttribute("login") MemberVO loginVO) { //
 		this.entryCode = entryCode;
-		ClassesVO classInfo = classesService.getClassByEntryCode(entryCode);
+		takes = new Stu_TakesVO();
+		
+		classInfo = classesService.getClassByEntryCode(entryCode);
 		model.addAttribute("classInfo", classInfo);
-		return "intro/entry";
+		
+		int flag=0; // 이미 등록되어 있는지 여부 확인용  
+		loginVO = (MemberVO)session.getAttribute("login");
+		if(loginVO != null) {
+			if(checkIfAlreadyEnrolled(loginVO, classInfo) == 0) {
+				flag = 0;
+			}
+			else {
+				flag = 1;
+			}
+		}
+		model.addAttribute("login", loginVO);
+		model.addAttribute("alreadyEnrolled", flag);
+		
+		return "intro/entry"; 
+	}
+	
+	public int checkIfAlreadyEnrolled(MemberVO loginVO, ClassesVO classInfo) {
+		System.out.println(classInfo.getId() + ": " + loginVO.getId());
+		//Stu_TakesVO result = null;
+		takes.setClassID(classInfo.getId());
+		takes.setStudentID(loginVO.getId());
+		System.out.println(takes.getClassID() + ": " + takes.getStudentID());
+		Stu_TakesVO result  = takesService.checkIfAlreadyEnrolled(takes);
+		if(loginVO.getMode().equals("lms_teacher")) { // result 결과는 학생만 확인함. 
+			loginVO.setInstructorID(loginVO.getId());
+			List<ClassesVO> classes = classesService.getAllMyClass(loginVO.getInstructorID());
+			for(ClassesVO oneClass : classes) {
+				if(oneClass.getId() == classInfo.getId()) return 1; 
+			}
+		}
+		if(result == null) return 0;
+		else return 1;
 	}
 	
 	@RequestMapping(value = "/login/signin", method = RequestMethod.GET)
@@ -180,7 +238,16 @@ public class LoginController {
 		
 		//(jw)
 		if(entryCode != null) {
-			
+			if(checkIfAlreadyEnrolled(loginvo, classInfo) == 0) {
+				//takes.setStudentID(loginvo.getId());
+				takes.setStudentName(loginvo.getName());
+				takes.setClassName(classInfo.getClassName());
+				takes.setStatus("pending");
+				if(takesService.insertStudent(takes) == 1) {
+					System.out.println("학생 등록 요청 완료~!");
+				}
+				else System.out.println("학생 등록 요청 실패");
+			}
 		}
 		return returnURL;
 	}

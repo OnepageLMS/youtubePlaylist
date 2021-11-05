@@ -4,9 +4,9 @@
 
 	<!-- pass -> status로 바뀌어야 하지 않나?  -->
 	<insert id="insertTakes">
-		insert into lms_takes(studentID, studentName, className, classID, pass)
+		insert into lms_takes(studentID, studentName, className, classID, status)
 		values
-		(#{studentID}, #{studentName}, #{className}, #{classID}, #{pass})
+		(#{studentID}, #{studentName}, #{className}, #{classID}, #{status})
 	</insert>
 	
  	<update id="updateTakes">
@@ -32,6 +32,11 @@
 	<select id="getAllClassStudent" resultType="TakesVO">
 		select id, studentID from lms_takes
 		where classID=#{classID}
+	</select>
+	
+	<select id="checkIfAlreadyEnrolled" resultType="TakesVO">
+		select * from lms_takes
+		where classID=#{classID} and studentID=#{studentID}
 	</select>
 	
 	<select id="getStudentInfo" resultType="TakesVO">
