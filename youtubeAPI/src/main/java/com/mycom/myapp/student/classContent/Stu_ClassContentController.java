@@ -49,7 +49,7 @@ public class Stu_ClassContentController {
 	@RequestMapping(value = "/contentList/{classID}", method = RequestMethod.GET)	
 	public String contentList(@PathVariable("classID") int classID, Model model, HttpSession session) {
 		studentID = (Integer)session.getAttribute("userID");
-		
+		System.out.println("studentID ?? " + studentID);
 		//권한 가지고 있는지 check!!
 		
 		ClassContentVO ccvo = new ClassContentVO();
@@ -57,7 +57,7 @@ public class Stu_ClassContentController {
 		model.addAttribute("classInfo", classesService.getClass(classID)); //class테이블에서 classID가 같은 모든 것을 가져온다.
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		//지금 studentID가 제대로 안들어간다..
-		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(studentID)));
+		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
