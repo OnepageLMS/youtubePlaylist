@@ -187,13 +187,18 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 			//var modDate = convertTime(result.modDate);
 			var totalVideoLength = convertTotalLength(result.totalVideoLength);
 			var description = result.description;
+			var tags = result.tag;
 			if (result.description == null || result.description == '') description = "설명 없음";
-			if (result.tag != null && result.tag.length > 0){
-		    	var tags = result.tag.replace(', ', ' #');
-	    		tags = '#'+ tags;
+
+			if (tags != null && tags != ""){
+				tags = tags.split(" ");
+				if(tags.length > 1){
+		    		tags = "#" + tags.join(" #");
+				}
+				else tags = "#" + tags;
 	    	}
 	    	else 
-		    	var tags = ' ';
+		    	tags = '';
 
 			var info = '<div class="info">' 
 							+ '<div>'
@@ -249,18 +254,17 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 			    	var thumbnail = '<img src="https://img.youtube.com/vi/' + value.youtubeID + '/0.jpg" class="videoPic img-fluid">';
 	
 			    	if (value.tag != null && value.tag.length > 0){
-				    	var tags = value.tag.replace(', ', ' #');
-			    		tags = '#'+ tags;
+			    		var tags = value.tag.split(" ");
+			    		tags = "#" + tags.join(" #");
 			    	}
 			    	else 
 				    	var tags = ' ';
 	
-			    	var address = "'${pageContext.request.contextPath}/video/" + value.playlistID + '/' + value.id + "'";
+			    	//var address = "'${pageContext.request.contextPath}/video/" + value.playlistID + '/' + value.id + "'";
 			    	var passData = 'moveToVideoDetail(' + value.playlistID + ', ' + value.id + ');';
 			    	
 			    	if (index == 0){
-				    	var forButton = 'location.href=' + address + '';
-						$("#playAllVideo").attr("onclick", forButton);
+						$("#playAllVideo").attr("onclick", passData);
 					} 
 					
 					var html = '<div class="row list-group-item-action list-group-item">'
