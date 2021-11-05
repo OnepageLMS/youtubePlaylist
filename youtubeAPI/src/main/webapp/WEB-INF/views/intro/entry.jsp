@@ -52,9 +52,12 @@
 		if(flag == 1){
 			console.log("check => ${login.mode }");
 			alert("이미 수강신청하였거나 참여중인 공간입니다.");
-			if("${login.mode } === 'lms_teacher'") window.location.replace('${pageContext.request.contextPath}/dashboard');
+			if('${login.mode }' === 'lms_teacher') window.location.replace('${pageContext.request.contextPath}/dashboard');
 			else window.location.replace('${pageContext.request.contextPath}/student/class/dashboard');
 		}
+	}
+	function showAlert(){
+		alert("수강신청이 성공적으로 완료되었습니다!! :) ");
 	}
 </script>
 
@@ -78,8 +81,6 @@
 									<div class="d-flex align-items-center mb-3 pb-1">
 										<span class="h1 fw-bold mb-0"> <span class="text-primary"> ${classInfo.className} </span> 강의실에 입장하시겠습니까? </span> 
 									</div>
-									
-									
 										
 										<c:choose>
 											<c:when test="${login.name == null}" >
