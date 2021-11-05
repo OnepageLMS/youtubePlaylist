@@ -57,9 +57,6 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		  url : "${pageContext.request.contextPath}/student/class/weekContents",
 		  type : "post",
 		  async : false,
-		  data : {	
-			  classID : classID
-		  },
 		  success : function(data) {
 			  weekContents = data;
 			  videoIdx = ${daySeq};
@@ -70,16 +67,19 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 	})
 	
 	
-	$.ajax({ //classID에 맞는 classContents를 보여주기 위함 (url까지 포함)
+	$.ajax({ //classID에 맞는 classContents를 보여주기 위함 (Playlist가 없는 경우를 위해서)
 		  url : "${pageContext.request.contextPath}/student/class/allContents",
 		  type : "post",
 		  async : false,
-		  data : {	
-			  classID : classID
-		  },
 		  success : function(data) {
 			  allContents = data;
-			  console.log("올콘 " + allContents.length);
+			  
+			  var element = document.getElementById("contentsTitle");
+			  element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + allContents[videoIdx].title;
+
+			  var elementD = document.getElementById("contentsDescription");
+			  elementD.innerText = allContents[videoIdx].description;
+				
 		  },
 		  error : function() {
 		  	alert("error");
@@ -95,7 +95,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 				playlistID : allContents[videoIdx].playlistID
 			},
 			success : function(data) {
-				playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
+				playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
 				console.log("playlist.length : " + playlist.length);
 				ori_videoID = playlist[0].id; //첫 videoID는 선택된 classContent의 Playlist의 첫번째 영상
 				ori_playlistID = allContents[videoIdx].playlistID;
@@ -107,26 +107,21 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		})	
 	}
 			
-	$.ajax({ //비디오 영상에 대한 제목과 설명가져오기 //weekContent에서 id만 알면 할 수 있다..
+	/*$.ajax({ //비디오 영상에 대한 제목과 설명가져오기 //weekContent에서 id만 알면 할 수 있다..
 		url : "${pageContext.request.contextPath}/student/class/changeID",
 		type : "post",
 		async : false,
-		data : {	
-			id: ${id}
-		},
 		success : function(data) {
-			console.log("id : " + ${id});
-			console.log(data.title);
 			var element = document.getElementById("contentsTitle");
 			element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
-			//element.innerText = data.title;
+
 			var elementD = document.getElementById("contentsDescription");
 			elementD.innerText = data.description;
 		},
 		error : function() {
 			alert("error");
 		}
-	})
+	})*/
 	
 	
 	// 초기화면 세팅 시작!!
@@ -137,7 +132,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		var symbol;
 		
 		
-		if(allContents[i].playlistID == 0){
+		if(allContents[i].playlistID == 0){ //NOT Playlist
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
 			if(videoIdx == i) {
 				document.getElementById("onepageLMS").style.display = "none";
@@ -204,7 +199,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			
 		}
 		
-		else{
+		else{ //Playlist 
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
 			//document.getElementById("onepageLMS").style.display = "";//
 			for(var k=0; k<weekContents.length; k++){
@@ -564,10 +559,22 @@ var player;
 
 function onYouTubeIframeAPIReady() { 
 	//var playerID = 'onepageLMS' + n;
+	console.log("videoIdx : " + videoIdx);
 	if(allContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
+	{
 		videoId =  weekContents[0].thumbnailID;
+		console.log("playlist가 없네요 !" + videoId);
+	}
 	else //영상을 클릭했을 때
-		videoId = weekContents[videoIdx].thumbnailID;
+	{	
+		console.log(weekContents);
+		console.log("0 " + weekContents[0]);
+		console.log("5 " + weekContents[5]);
+		videoId = weekContents[videoIdx].thumbnailID; //videoIdx만하면 범위를 넘어선다. => url을 포함할 때 
+		
+		//videoId = weekContents[videoIdx].thumbnailID; playlist만 있을 때 
+		console.log("playlist가 없네요 !" + videoId);
+	}
 	player = new YT.Player('onepageLMS', {
 	       height: '480',            // <iframe> 태그 지정시 필요없음
 	       width: '854',             // <iframe> 태그 지정시 필요없음
@@ -695,12 +702,12 @@ function onPlayerStateChange(event) {
 		
 		$.ajax({
 			'type' : "post",
-			'url' : "../../../../changewatch",
+			'url' : "${pageContext.request.contextPath}/student/class/changewatch",
 			'data' : {
 						lastTime : player.getDuration(), //lastTime에 영상의 마지막 시간을 넣어주기
 						studentID : studentEmail, //studentID 그대로
 						videoID : playlist[ori_index].id, //videoID 그대로
-						timer : time + parseInt(playlist[ori_index].timer), //timer도 업데이트를 위해 필요
+						timer : 0, //timer도 업데이트를 위해 필요
 						watch : 1, //영상을 다 보았으니 시청여부는 1로(출석) 업데이트!
 						playlistID : playlist[0].playlistID,
 						classPlaylistID : classContentID,

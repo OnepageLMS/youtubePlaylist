@@ -62,6 +62,10 @@ public class Stu_ClassController{
 	private Stu_NoticeService noticeService;
 	
 	private int studentId = 0;
+	private int playlistID = 0; 
+	private int id = 0;
+	private int classID = 0;
+	private int daySeq = 0;
 	
 	@RequestMapping(value = "/test/dashboard/{studentID}",  method = RequestMethod.GET)	//개발 test용. 나중에 지우기!!
 	public String dashboard_Test(@PathVariable("studentID") int id, Model model, HttpSession session) {
@@ -160,10 +164,15 @@ public class Stu_ClassController{
 	
 	
 	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classID}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("playlistID") int playlistID, 
-								@PathVariable("id") int id, 
-								@PathVariable("classID") int classID, 
-								@PathVariable("daySeq") int daySeq, Model model) {
+	public String contentDetail(@PathVariable("playlistID") int playlistId, 
+								@PathVariable("id") int ID, 
+								@PathVariable("classID") int classId, 
+								@PathVariable("daySeq") int day, Model model) {
+		
+		playlistID = playlistId;
+		id = ID;
+		classID = classId;
+		daySeq = day;
 		
 		VideoVO pvo = new VideoVO();
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
@@ -179,8 +188,8 @@ public class Stu_ClassController{
 		model.addAttribute("vo", classContentService.getOneContent(id));
 		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
 		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(1)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(1)));
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(classID))); // 1=>classID
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(classID))); // 1 => classID
 		return "class/contentsDetail_Stu";
 		
 	}
@@ -188,8 +197,8 @@ public class Stu_ClassController{
 	@ResponseBody
 	@RequestMapping(value = "/weekContents", method = RequestMethod.POST)
 	public List<ClassContentVO> weekContents(HttpServletRequest request, Model model) throws Exception {
-		
-	    return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
+		System.out.println("classID : " + classID);
+	    return classContentService.getWeekClassContent(classID); // 정해진 classID를 가지고 Publish된 수업들 가져오기 (classContent와 Playlist테이블 join)
 		//return classContentService.getAllClassContent(Integer.parseInt(request.getParameter("classID")));
 	}
 	
@@ -198,7 +207,27 @@ public class Stu_ClassController{
 	public List<ClassContentVO> allContents(HttpServletRequest request, Model model) throws Exception {
 		
 	    //return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
-		return classContentService.getAllClassContent(Integer.parseInt(request.getParameter("classID")));
+		return classContentService.getAllClassContent(classID); //classContents테이블에서 가져오기 
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
+	public List<VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
+		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		
+	    VideoVO vo = new VideoVO();
+	    vo.setPlaylistID(playlistID);
+	    
+	    return videoService.getVideoList(vo);
+	}
+	
+
+	@ResponseBody
+	@RequestMapping(value = "/changeID", method = RequestMethod.POST)
+	public ClassContentVO changeID(HttpServletRequest request, Model model) throws Exception {
+		ClassContentVO vo = classContentService.getOneContent(id);
+	    
+	    return vo;
 	}
 	
 	
@@ -222,28 +251,6 @@ public class Stu_ClassController{
 	    return map;
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/changeID", method = RequestMethod.POST)
-	public ClassContentVO changeID(HttpServletRequest request, Model model) throws Exception {
-		ClassContentVO vo = classContentService.getOneContent(Integer.parseInt(request.getParameter("id")));
-	    
-	    return vo;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
-	public List<VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
-		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		//int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
-	    VideoVO vo = new VideoVO();
-	    vo.setPlaylistID(playlistID);
-	    //Stu_VideoCheckVO vco = new Stu_VideoCheckVO();
-	    //vco.setClassPlaylistID(classPlaylistID);
-	    //model.addAttribute("totalVideo", playlistcheckService.getTotalVideo(playlistID));
-	    //System.out.println("totalVideo 가 잘 나오니? " + playlistcheckService.getTotalVideo(playlistID));
-	    
-	    return videoService.getVideoList(vo);
-	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/forClassInformation", method = RequestMethod.POST)
@@ -365,7 +372,8 @@ public class Stu_ClassController{
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
 		int classID = Integer.parseInt(request.getParameter("classID"));
-		
+		System.out.println("lastTime : " + lastTime+" timer : " + timer + " studentID :  " + studentID);
+		System.out.println("videoID : " + videoID+" watch : " + watch + " playlistID :  " + playlistID + " classPlaylistID : " + classPlaylistID+  " classID : " + classID);
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);

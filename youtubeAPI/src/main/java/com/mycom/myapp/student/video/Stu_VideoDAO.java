@@ -20,7 +20,6 @@ public class Stu_VideoDAO {
 	}
 	
 	public List<VideoVO> getVideoList(VideoVO vo) {
-		//System.out.println("dao!");
 		return sqlSession.selectList("Stu_Video.getVideoList", vo);
 	}
 	/*public PlaylistVO getPlaylist (int id) {
