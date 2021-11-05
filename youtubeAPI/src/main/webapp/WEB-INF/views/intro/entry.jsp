@@ -25,7 +25,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://kit.fontawesome.com/3daf17ae22.js"
 	crossorigin="anonymous"></script>
-</head>
+
 <style>
 .divider:after, .divider:before {
 	content: "";
@@ -45,6 +45,21 @@
 }
 </style>
 
+<script>
+	window.onload = function(){
+		var flag = ${alreadyEnrolled};
+		console.log("flag값 확인" + flag);
+		if(flag == 1){
+			console.log("check => ${login.mode }");
+			alert("이미 수강신청하였거나 참여중인 공간입니다.");
+			if("${login.mode } === 'lms_teacher'") window.location.replace('${pageContext.request.contextPath}/dashboard');
+			else window.location.replace('${pageContext.request.contextPath}/student/class/dashboard');
+		}
+	}
+</script>
+
+</head>
+
 <body>
 	<section class="vh-100" style="background-color: #F0F0F0;">
 		<div class="container py-5 h-100">
@@ -61,17 +76,45 @@
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
 									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0">${classInfo.className} 강의실에 입장하시겠습니까? </span>
+										<span class="h1 fw-bold mb-0"> <span class="text-primary"> ${classInfo.className} </span> 강의실에 입장하시겠습니까? </span> 
 									</div>
 									
-									<form class="needs-validation" action='${pageContext.request.contextPath}/google' method='post'>
-										<div class="pt-1 mb-4">
-											<button class="btn btn-lg btn-block btn-danger" type="submit">
-												<i class="fab fa-google me-2"></i> Google로 로그인
-											</button>
-										</div>
-									</form>
-									<p class="small text-muted">&copy;Everyday</p>
+									
+										
+										<c:choose>
+											<c:when test="${login.name == null}" >
+												<form class="needs-validation" action='${pageContext.request.contextPath}/login/google' onsubmit='checkLoginMode();' method='post' novalidate>
+													<fieldset class="position-relative form-group">
+														<div class="position-relative form-check">
+															<label class="form-check-label"> 
+																<input name="mode" type="radio" class="form-check-input" value="tea" required>
+																선생님
+															</label>
+														</div>
+														<div class="position-relative form-check">
+															<label class="form-check-label"> 
+															<input name="mode" type="radio" class="form-check-input" value="stu">
+																학생
+															</label>
+														</div>
+													</fieldset>
+													<div class="invalid-feedback">로그인 모드를 선택해주세요</div>	
+													<div class="pt-1 mb-4">
+														<button class="btn btn-lg btn-block btn-danger" type="submit" >
+															<i class="fab fa-google me-2"></i> Google로 로그인
+														</button>
+													</div>
+												</form>
+											</c:when>
+											<c:otherwise>
+												<button class="btn btn-lg btn-block btn-danger" type="submit" onclick="location.href = '${pageContext.request.contextPath}/enroll '" >
+													수업 신청하기 
+												</button>
+											</c:otherwise>
+										</c:choose>
+											
+										
+									<p class="small text-muted	">&copy;Everyday</p>
 								</div>
 							</div>
 						</div>
