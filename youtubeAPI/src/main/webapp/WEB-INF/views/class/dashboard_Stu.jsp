@@ -150,8 +150,8 @@ function getAllMyClass(){
 			 $('.activeClassList').empty();
 			active = data.active;
 			inactive = data.inactive;
-
-			if(active.length+inactive.length == 0){
+	
+			if(active == null && inactive == null){
 				$('.dashboardClass').append('<p class="col text-center">참여중인 강의실이 없습니다.</p>');
 				$('.classActive').hide();
 				$('.classInactive').hide();

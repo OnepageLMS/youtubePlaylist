@@ -69,13 +69,12 @@
 				$.each(data, function( index, value){
 					var collapseID = "collapse" + index;
 					var regDate = value.regDate.split(" ")[0];
-					var important = value.important;
-					var viewCount = (value.viewCount/totalStudent) * 100;
-
-					if (important == 1)	important = '<span class="text-danger"> [중요] </span>'; //지금 사용안함
-					else important = '';
+					var viewCount = value.viewCount;
 
 					if (viewCount == null)	viewCount = '0';
+					else {
+						viewCount = (viewCount/totalStudent) * 100;
+					}
 						
 					var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 						+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
@@ -126,22 +125,20 @@
 					$('.noticeList').append('게시된 공지사항이 없습니다.');
 
 				else {
-					$.each(notices, function( idx, value){
+					$.each(notices, function( idx, value ){
 						var index = last + idx;
 						var collapseID = "collapse" + index;
 						var regDate = value.regDate.split(" ")[0];
-						var important = value.important;
 						var pin = value.pin;
-						var viewCount = (value.viewCount/totalStudent) * 100;
-
-						if (important == 1)	important = '<span class="text-danger"> [중요] </span>'; //지금 사용안함
-						else important = '';
+						var viewCount = value.viewCount;
 
 						if(pin != 1) pin = 'onclick="setPin(' + value.id + ');">상단고정';
 						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해재';
 
 						if (viewCount == null)	viewCount = '0';
-
+						else {
+							viewCount = (viewCount/totalStudent) * 100;
+						}
 							
 						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
 							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'

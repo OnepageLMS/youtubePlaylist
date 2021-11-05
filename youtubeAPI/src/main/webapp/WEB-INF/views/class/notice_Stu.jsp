@@ -48,13 +48,9 @@
 				$.each(data, function( index, value){
 					var collapseID = "collapse" + index;
 					var regDate = value.regDate.split(" ")[0];
-					var important = value.important;
 					var viewCheck = value.studentID;	//학생이 읽지 않은 공지는 색상 다르게
 					var viewdClass = '';
 					var updateView = '';
-
-					if (important == 1)	important = '<span class="text-danger"> [중요] </span>';	//지금 사용안하는 버전
-					else important = '';
 					
 					if (viewCheck == 0 || viewCheck == null) {
 						viewCheck = '<span class="badge badge-primary viewCheck">NEW</span>';
@@ -106,13 +102,9 @@
 						var index = last + idx;
 						var collapseID = "collapse" + index;
 						var regDate = value.regDate.split(" ")[0];
-						var important = value.important;
 						var viewCheck = value.studentID;	//학생이 읽지 않은 공지는 색상 다르게
 						var updateView = '';
 						var viewdClass = '';
-						
-						if (important == 1)	important = '<span class="text-danger"> [중요] </span>';
-						else important = '';
 						
 						if (viewCheck == 0 || viewCheck == null) {
 							updateView = 'onclick="updateView(' + index + ',' + value.id + ');" ';
@@ -175,9 +167,10 @@
 							
 							var elements = $('.title');
 							$.each(elements, function(idx, value){	//같은 공지사항이 있으면 같이 'new' 뱃지 제거
-								if(value.getAttribute('id') == noticeID && value != $('.title:eq(' + index + ')'))
+								if(value.getAttribute('id') == noticeID && value != $('.title:eq(' + index + ')')){
 									$('.title:eq(' + idx + ')').addClass('viewdClass');
 									$('.title:eq(' + idx + ')').children('span').remove();
+								}
 							});
 							return false;
 						}
