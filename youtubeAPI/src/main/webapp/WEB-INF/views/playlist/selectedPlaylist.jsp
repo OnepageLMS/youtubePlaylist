@@ -206,7 +206,6 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 										+ '</p>'
 									+ '</div>'
 								+ '</div>'
-								
 									+ '<button type="button" class="videoEditBtn col-lg-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
 		    							+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
 			    					+ '</button>'
