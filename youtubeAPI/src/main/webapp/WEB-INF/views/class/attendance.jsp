@@ -517,7 +517,7 @@ function updateAttendance(days){
 								추가</button>
 							</div>
 							<div class="entryCode col-md-8" style="position:relative; display:none;">
-								<span id=link style="position: absolute; margin: 0; top:20%;"> 초대링크: www.onepageLMS.com/${classInfo.entryCode} </span>
+								<span id=link style="position: absolute; margin: 0; top:20%;"> 초대링크: learntube.kr/invite/${classInfo.entryCode} </span>
 								<div class="entryCode float-right" style="display:none;">
 									<button class="btn btn-transition btn-primary" onclick="copyToClipboard('#link')" data-container="body" data-toggle="popover" data-placement="bottom" data-content="링크가 복사되었습니다!"> 복사하기 </button>
 								</div>

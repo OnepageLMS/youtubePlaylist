@@ -92,7 +92,7 @@ public class LoginController {
 		return "redirect:/student/class/dashboard";
 	}	
 	
-	@RequestMapping(value = "/login/{entryCode}", method = RequestMethod.GET)
+	@RequestMapping(value = "/invite/{entryCode}", method = RequestMethod.GET)
 	public String entry(@PathVariable String entryCode, Model model, HttpSession session) { //@SessionAttribute("login") MemberVO loginVO) { //
 		this.entryCode = entryCode;
 		takes = new Stu_TakesVO();
