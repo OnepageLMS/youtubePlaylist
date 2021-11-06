@@ -92,8 +92,6 @@ var email;
 $(document).ready(function(){
 	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
 	
-	// 좌측 사이드 바 어떻게 할건지 알고 작업하기 (jw: 2021/09/14)
-	
 	//getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
 	
 	//var allMyClass = JSON.parse('${allMyClass}');
@@ -240,34 +238,29 @@ $(document).ready(function(){
 				});
 	}
 	
-	/* // 카트에 영상 담기 할 시에 player 새로고침 되는거 방지하는 코드인데, 작동이 안됨. (21/09/05) 
-	이제 이 코드 없애도 될듯. (jw 21/09/26)
-	$(".searchedVideo fas").click(function(e){
-		e.stopPropagation();
-	}); */
 	function viewPlayer(){
 		$('.playerForm').css({display: "block"});
-		
-	}
-	
+	}	
 	
 	function displayResultList() { //페이지별로 video 정보가 다 가져와지면 이 함수를 통해 결과 list 출력
 		for (var i = 0; i < maxResults; i++) {
 			var id = idList[i];
 			var view = viewCount[i];
-			var title = titleList[i].replace("'", "\\'").replace("\"","\\\"");
+			var title = titleList[i].replace("'", "&apos;").replace("\"","&quot;");
 
 			console.log(title);
-			console.log(`값 확인! ${title}`);
+			console.log(typeof title);
+			console.log(`값 확인! \${title}`);
+			
 			/* title = `${title}`; */
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 100%; height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
-			+ '\'' + ',\'' + title + '\''
+			+ '\'' + ',\'' + `\${title}` + '\''
 			+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" >';
 			//var url = '<a href="https://youtu.be/' + id + '">';
 			var link = "'${pageContext.request.contextPath}/player";
 			link = link + "?id=" + id.toString();
-			link = link + "?title=" + title;
+			link = link + "?title=" + `\${title}`;
 			link = link + "?duration=" + durationCount[i] + "'";
 			$("#get_view").append(					
 					/* '<div class="searchedVideo" onclick="$(#form2).submit();">' */
@@ -287,9 +280,9 @@ $(document).ready(function(){
 								/* + '<div class="col-sm-1"> </div>' */
 								+ '<div class="col-sm-8 " style="display: flex; align-items: center;">'
 									+ '<div onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
-									+ '\'' + ',\'' + `${title}` + '\''
+									+ '\'' + ',\'' + `\${title}` + '\''
 									+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" style="cursor: pointer; ">'
-										+ '<h5>' + title + '</h5>'
+										+ '<h5>' + `\${title}` + '</h5>'
 										+ '<div>'
 											+ '<span class="info m-0"> published: <b>' + dateList[i]
 											+ '</b> view: <b>' + view
@@ -398,7 +391,7 @@ $(document).ready(function(){
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative row form-group">'
 							+ '<label for="exampleEmail" class="col-sm-2 col-form-label">영상제목 설정</label>'
-							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value="'+ `${title}` +'"></div>'
+							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value="'+ `\${title}` +'"></div>'
 						+ '</div>'
 						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete" >'
@@ -758,11 +751,8 @@ $(document).ready(function(){
 			var m = Math.floor(d % 3600 / 60);
 			var s = parseFloat(d % 3600 % 60).toFixed(2);
 
-
 			// 시작 버튼 클릭시: 
 			if($(obj).text() == "시작"){
-				
-				
 				// Setter 
 				$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
 				start_hour = h;
@@ -1087,27 +1077,7 @@ $(document).ready(function(){
 									</div>
 								</div>
 							</div> 
-						</div>
-
-						
-						<!-- 우측 카트 완전히 완료되면 지울 것  
-						<div class="playerForm col-lg-6" style="display:none;">
-							<div class="main-card card sticky-top" id="rightCard">
-								<div class="card-title m-0"> 
-									<h6 style="font-weight: bold; margin: 10px 20px;"> 선택된 비디오 리스트 </h6>
-									<input type="checkbox" style="margin-left: 20px;" id="checkAll" onclick="selectAll(this)"> <label class="form-check-label"> 전체 선택 </label>  
-									<button onclick='deleteFromCart()' class="mr-2 btn-transition btn btn-danger float-right" style="float-right;">선택 항목 삭제</button>
-								</div>
-								<div class="card-footer">
-									<div style="overflow: auto; height: 700px;">
-										<div id="videosInCart"
-											class="scrollbar-container ps--active-y ps"></div>
-									</div>
-								</div>
-							</div>
-						</div> -->
-						
-						
+						</div>						
 						
 						<div class="playerForm col-lg-6 form-class" style="display:none;">
 							<div class="main-card card pb-3">

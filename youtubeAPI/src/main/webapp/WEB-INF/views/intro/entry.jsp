@@ -55,6 +55,13 @@
 			if('${login.mode }' === 'lms_teacher') window.location.replace('${pageContext.request.contextPath}/dashboard');
 			else window.location.replace('${pageContext.request.contextPath}/student/class/dashboard');
 		}
+
+		let a = 20;
+		let b = 8;
+		let c = '자바스크립트';
+		let str = `저는 ${a+b}살이고 \${c}를 좋아합니다.`;
+		console.log(str);   //저는 28살이고 자바스크립트를 좋아합니다.
+		
 	}
 	function showAlert(){
 		alert("수강신청이 성공적으로 완료되었습니다!! :) ");

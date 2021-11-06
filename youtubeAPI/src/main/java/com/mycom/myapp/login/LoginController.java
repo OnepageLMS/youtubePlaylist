@@ -103,6 +103,7 @@ public class LoginController {
 		int flag=0; // 이미 등록되어 있는지 여부 확인용  
 		loginVO = (MemberVO)session.getAttribute("login");
 		if(loginVO != null) {
+			System.out.println(loginVO.getId());
 			if(checkIfAlreadyEnrolled(loginVO, classInfo) == 0) {
 				flag = 0;
 			}
