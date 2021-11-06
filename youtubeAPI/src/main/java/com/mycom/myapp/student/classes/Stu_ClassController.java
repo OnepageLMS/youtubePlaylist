@@ -225,7 +225,7 @@ public class Stu_ClassController{
 	@ResponseBody
 	@RequestMapping(value = "/changeID", method = RequestMethod.POST)
 	public ClassContentVO changeID(HttpServletRequest request, Model model) throws Exception {
-		ClassContentVO vo = classContentService.getOneContent(id);
+		ClassContentVO vo = classContentService.getOneContent(Integer.parseInt(request.getParameter("id")));
 	    
 	    return vo;
 	}
@@ -311,12 +311,12 @@ public class Stu_ClassController{
 	@ResponseBody
 	public Map<Double, Double> videoCheck(HttpServletRequest request) {
 		Map<Double, Double> map = new HashMap<Double, Double>();
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
+		//int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
-		vo.setStudentID(studentID);
+		vo.setStudentID(studentId);
 		vo.setvideoID(videoID);
 		
 		if (videoCheckService.getTime(vo) != null) {
@@ -334,7 +334,7 @@ public class Stu_ClassController{
 	public List<Stu_VideoCheckVO> changeVideoOK(HttpServletRequest request) {
 		double lastTime = Double.parseDouble(request.getParameter("lastTime"));
 		double timer = Double.parseDouble(request.getParameter("timer"));
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
+		//int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classID = Integer.parseInt(request.getParameter("classID"));
@@ -343,7 +343,7 @@ public class Stu_ClassController{
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);
-		vo.setStudentID(studentID);
+		vo.setStudentID(studentId);
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
 		vo.setPlaylistID(playlistID);
@@ -366,33 +366,34 @@ public class Stu_ClassController{
 	public String changeWatchOK(HttpServletRequest request) {
 		double lastTime = Double.parseDouble(request.getParameter("lastTime"));
 		double timer = Double.parseDouble(request.getParameter("timer"));
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
+		//int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int watch = Integer.parseInt(request.getParameter("watch"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
-		int classID = Integer.parseInt(request.getParameter("classID"));
-		System.out.println("lastTime : " + lastTime+" timer : " + timer + " studentID :  " + studentID);
-		System.out.println("videoID : " + videoID+" watch : " + watch + " playlistID :  " + playlistID + " classPlaylistID : " + classPlaylistID+  " classID : " + classID);
+		//int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+		//int classID = Integer.parseInt(request.getParameter("classID"));
+		//System.out.println("classPlaylistID : " + classPlaylistID + " id : " + id);
+		System.out.println("lastTime : " + lastTime+" timer : " + timer + " studentID :  " + studentId);
+		System.out.println("videoID : " + videoID+" watch : " + watch + " playlistID :  " + playlistID + " classPlaylistID : " + id+  " classID : " + classID);
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);
-		vo.setStudentID(studentID);
+		vo.setStudentID(studentId);
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
 		vo.setClassID(classID);
-		vo.setClassContentID(classPlaylistID);
+		vo.setClassContentID(id);
 		
 		Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
 		vo.setWatched(watch);
 		
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 		
-		pcvo.setStudentID(studentID);
+		pcvo.setStudentID(studentId);
 		pcvo.setPlaylistID(playlistID);
 		//pcvo.setVideoID(videoID);
 		//pcvo.setClassContentID(classPlaylistID);
-		pcvo.setClassContentID(classPlaylistID);
+		pcvo.setClassContentID(id);
 		pcvo.setClassID(classID);
 		//pcvo.set
 		

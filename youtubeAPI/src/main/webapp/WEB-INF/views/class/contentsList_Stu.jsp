@@ -63,11 +63,11 @@
 				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
 				var symbol;
-				if(allMyClass[i].playlistID == 0){
+				if(allMyClass[i].playlistID == 0){ //playlist없이 description만 올림 
 					symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
 					videoLength = '';
 				}
-				else{
+				else{ //playlist 올림 
 					symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
 					
 					for(var j=0; j<weekContents.length; j++){
@@ -100,41 +100,6 @@
 									+ '</div>'
 								+ '</div>');
 			}
-
-	 		/*for(var i=0; i<weekContents.length; i++){
-				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
-				var day = weekContents[i].days;
-				var endDate = weekContents[i].endDate; //timestamp -> actural time
-				console.log("date : " + endDate);
-				//var result_date = convertTotalLength(date);
-				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
-				
-				
-				var onclickDetail = "location.href='../contentDetail/" + weekContents[i].playlistID + "/" +weekContents[i].id + "/" +classInfo+ "/" + i +  "'";
-				
-				var content = $('.day:eq(' + day + ')');
-				
-				content.append(
-						 "<div class='content list-group-item-action list-group-item' seq='" + weekContents[i].daySeq + "'>"
-									//+ '<div class="row col d-flex justify-content-between align-items-center">'
-									+ '<div class="row col d-flex align-items-center">'
-										+ '<div class="index col-sm-1 ">' + (weekContents[i].daySeq+1) + '. </div>'
-										+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
-										+ "<div class='col-sm-8 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
-											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
-												+ weekContents[i].title + "  [" + convertTotalLength(weekContents[i].totalVideoLength)  + "]"
-											+ '</div>'
-											
-											+ '<div class="col-sm-12 align-items-center" style=" height: 50%; font-size: 15px; padding: 5px 0px 0px;">'
-												+ '<div class="contentInfoBorder"></div>'
-												+ '<div class="contentInfoBorder"></div>'
-												+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
-											+ '</div>'
-										
-										+ '</div>'
-									+ '</div>'
-								+ '</div>');
-				}*/
 	 		
 	});
 	
@@ -184,33 +149,9 @@
                        	</div>
                         
                        	<div class="contents col-sm-12" classID="${classInfo.id}">
-							<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-								<!-- <div class="day card list-group list-group-flush" day="${status.index}">
-									 <div class="card-header lecture">
-										   <a style="display: inline;" name= "target${j}">${j} 차시</a>  
-											
-									</div>
-								</div>-->
-								
-								<!--  <div class="main-card mb-3 card">
-                                	<div class="card-header">
-                                		<a style="display: inline;" name= "target${j}">${j} 차시</a> 
-                                	</div>
-                                    <div class="card-body day" day="${status.index}">
-                                        	
-                                    </div>
-                                </div>-->
-                                
+							<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">                                
                                 
                                 <div class="main-card mb-3 card">
-                                    <!--  <div class="card-body">
-										<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
-	                                    <div class="list-group day" day="${status.index}">
-	                                        	
-	                                    </div>
-                                   </div> -->
-                                   
-                                   
                                     <div class="card-body">
                                     	<div class="card-title" style="display: inline;" >
                                     		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
