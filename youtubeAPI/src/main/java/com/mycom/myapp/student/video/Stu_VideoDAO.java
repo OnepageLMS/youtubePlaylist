@@ -22,6 +22,10 @@ public class Stu_VideoDAO {
 	public List<VideoVO> getVideoList(VideoVO vo) {
 		return sqlSession.selectList("Stu_Video.getVideoList", vo);
 	}
+	
+	public List<VideoVO> getVideoCheckList(VideoVO vo) {
+		return sqlSession.selectList("Stu_Video.getVideoCheckList", vo);
+	}
 	/*public PlaylistVO getPlaylist (int id) {
 		return sqlSession.selectOne("Playlist.getPlaylist", id);
 	}*/

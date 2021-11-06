@@ -34,7 +34,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <script>
-var studentEmail = 2; //우선 임의로 넣기
+var studentEmail = 1; //우선 임의로 넣기
 //var classPlaylistID = 0;
 var classID =  ${classInfo.id};
 //var playlistSameCheck = ${playlistSameCheck};
@@ -60,14 +60,6 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		  success : function(data) {
 			  weekContents = data;
 			  videoIdx = ${daySeq};
-			  console.log(weekContents);
-			  console.log("weekContents.legth : " + weekContents.length);
-			  console.log("playlistID : " + weekContents[videoIdx].playlistID);
-			  var element = document.getElementById("contentsTitle");
-			  element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + weekContents[videoIdx].title;
-
-			  var elementD = document.getElementById("contentsDescription");
-			  elementD.innerText = weekContents[videoIdx].description;
 		  },
 		  error : function() {
 		  	alert("error");
@@ -75,19 +67,39 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 	})
 	
 	
-	if(weekContents[videoIdx].playlistID != 0) {
+	$.ajax({ //classID에 맞는 classContents를 보여주기 위함 (Playlist가 없는 경우를 위해서)
+		  url : "${pageContext.request.contextPath}/student/class/allContents",
+		  type : "post",
+		  async : false,
+		  success : function(data) {
+			  allContents = data;
+			  
+			  var element = document.getElementById("contentsTitle");
+			  element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + allContents[videoIdx].title;
+
+			  var elementD = document.getElementById("contentsDescription");
+			  elementD.innerText = allContents[videoIdx].description;
+				
+		  },
+		  error : function() {
+		  	alert("error");
+		  }
+	})
+	
+	if(allContents[videoIdx].playlistID != 0) {
 		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
 			url : "${pageContext.request.contextPath}/student/class/forVideoInformation",
 			type : "post",
 			async : false,
 			data : {	
-				playlistID : weekContents[videoIdx].playlistID
+				playlistID : allContents[videoIdx].playlistID
 			},
 			success : function(data) {
 				playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+				console.log("playlist.length : " + playlist.length);
 				ori_videoID = playlist[0].id; //첫 videoID는 선택된 classContent의 Playlist의 첫번째 영상
-				ori_playlistID = weekContents[videoIdx].playlistID;
-				ori_classContentID = weekContents[videoIdx].id;
+				ori_playlistID = allContents[videoIdx].playlistID;
+				ori_classContentID = allContents[videoIdx].id;
 			},
 			error : function() {
 				 alert("error");
@@ -95,25 +107,42 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		})	
 	}
 			
+	/*$.ajax({ //비디오 영상에 대한 제목과 설명가져오기 //weekContent에서 id만 알면 할 수 있다..
+		url : "${pageContext.request.contextPath}/student/class/changeID",
+		type : "post",
+		async : false,
+		success : function(data) {
+			var element = document.getElementById("contentsTitle");
+			element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
+
+			var elementD = document.getElementById("contentsDescription");
+			elementD.innerText = data.description;
+		},
+		error : function() {
+			alert("error");
+		}
+	})*/
 	
 	
 	// 초기화면 세팅 시작!!
 	
-	for(var i=0; i<weekContents.length; i++){
+	var urlContent='';
+	for(var i=0; i<allContents.length; i++){
 		
 		var symbol;
 		
 		
-		if(weekContents[i].playlistID == 0){ //NOT Playlist
+		if(allContents[i].playlistID == 0){ //NOT Playlist
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
+			if(videoIdx == i) {
+				document.getElementById("onepageLMS").style.display = "none";
+			}
 			
-			var day = weekContents[i].days;
-			var endDate = weekContents[i].endDate; //timestamp -> actural time
+			var day = allContents[i].days;
+			var endDate = allContents[i].endDate; //timestamp -> actural time
 			
 			//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
 			if(i == videoIdx){
-				document.getElementById("onepageLMS").style.display = "none";
-				
 				var area_expanded = true;
 				var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
 				var showing = 'class="collapse show"';
@@ -127,15 +156,15 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			var content = $('.day:eq(' + day + ')');
 			content.append("<div id=\'heading" +(i+1)+ "\'>"
 		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
-						+ weekContents[i].playlistID + ','   + weekContents[i].id + ',' + classID + ',' + (i+1) +')"'
+						+ allContents[i].playlistID + ','   + allContents[i].id + ',' + classID + ',' + (i+1) +')"'
 		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
+			               + "<div class='content card align-items-center list-group-item' seq='" + allContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
 							+ '<div class="row col d-flex align-items-center">'
 								+ "<div class='index col-1 col-sm-1'>" + symbol + "</div>"
 									
 								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
 									+ "<div class='col-12 col-sm-12 card-title'>"
-										+ weekContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
+										+ allContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
 									+ '</div>'
 									+ '<div class="col-sm-12">'
 										+ '<div class="contentInfoBorder"></div>'
@@ -172,12 +201,17 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		
 		else{ //Playlist 
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
+			//document.getElementById("onepageLMS").style.display = "";//
+			for(var k=0; k<weekContents.length; k++){
+			
+			
+			if(allContents[i].playlistID == weekContents[k].playlistID){
 				
-				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
-				var day = weekContents[i].days;
-				var endDate = weekContents[i].endDate; //timestamp -> actural time
+				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[k].thumbnailID + '/1.jpg">';
+				var day = weekContents[k].days;
+				var endDate = weekContents[k].endDate; //timestamp -> actural time
 		
-				classContentID = weekContents[i].id; // classContent의 id //여기 수정
+				classContentID = weekContents[k].id; // classContent의 id //여기 수정
 				
 				
 				//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
@@ -195,7 +229,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			
 			var innerText ='';
 			
-			//if(allContents[videoIdx].playlistID != 0){
+			if(allContents[videoIdx].playlistID != 0){
 				for(var j=0; j<playlist.length; j++){ //classcontent내에 들어있는 비디오 개수
 					
 					var newTitle = playlist[j].newTitle;
@@ -238,21 +272,21 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 								
 						//ori_videoID = playlist[0].id;
 				}
-			//}
+			}
 			
 			
 			var content = $('.day:eq(' + day + ')');
 			content.append("<div id=\'heading" +(i+1)+ "\'>"
 		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
-						+ weekContents[i].playlistID + ','   + weekContents[i].id + ',' + classID + ',' + (i+1) +')"'
+						+ weekContents[k].playlistID + ','   + weekContents[k].id + ',' + classID + ',' + (i+1) +')"'
 		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
+			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[k].daySeq + "' style='padding: 10px 0px 0px;' >"
 							+ '<div class="row col d-flex align-items-center">'
 								+ '<div class="index col-1 col-sm-1 ">' + symbol + '</div>'
 									
 								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
 									+ "<div class='col-12 col-sm-12 card-title'>"
-										+ weekContents[i].title  + '  [' + convertTotalLength(weekContents[i].totalVideoLength) + ']' 
+										+ weekContents[k].title  + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
 									+ '</div>'
 									+ '<div class="col-sm-12">'
 										+ '<div class="contentInfoBorder"></div>'
@@ -283,10 +317,20 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 					       	+'</div>'
 						+ '</div>'
 	  			+ '</div>');
+			}
 			
+			/*else{// allContents[i].playlistID != weekContents[k] 가 다른경우 이렇게 아면 안될거같은데,,
+				
+				
+			}*/
+			
+
+		}
 	}
 		
 }	
+	
+	//content.append(urlContent);
 		
 });
 
@@ -308,7 +352,7 @@ var playlistVideo;
 function showLecture(playlistID, id, classInfo, idx){ //새로운 playlist를 선택했을 때 실행되는 함수
 	//console.log("id: " + id + " idx : " + idx);
 	
-	if(weekContents[idx-1].playlistID != 0)
+	if(allContents[idx-1].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
 		document.getElementById("onepageLMS").style.display = "none";
@@ -340,7 +384,7 @@ function showLecture(playlistID, id, classInfo, idx){ //새로운 playlist를 �
 				  id: id
 			  },
 			  success : function(data) {
-				 console.log("changeID 성공!!!! id : " + id);
+				 console.log("changeID 성공!!!!");
 				 console.log(data);
 
 				var element = document.getElementById("contentsTitle");
@@ -357,7 +401,7 @@ function showLecture(playlistID, id, classInfo, idx){ //새로운 playlist를 �
 }
 
 function myThumbnail(classContentID, idx){
-	if(weekContents[idx-1].playlistID == 0) return;
+	if(allContents[idx-1].playlistID == 0) return;
 	var className = '#get_view' + idx;
 	$(className).empty();
 	
@@ -413,7 +457,7 @@ function myThumbnail(classContentID, idx){
 var visited = 0;
 function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
 	
-	if(weekContents[seq].playlistID != 0)
+	if(allContents[seq].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
 		document.getElementById("onepageLMS").style.display = "none";
@@ -444,6 +488,7 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 				'url' : "${pageContext.request.contextPath}/student/class/changevideo",
 				'data' : {
 							lastTime : player.getCurrentTime(),
+							studentID : studentEmail, //studentEmail
 							videoID : ori_videoID, // 원래 비디오 id
 							classID : classID, //classID
 							playlistID :ori_playlistID,
@@ -515,7 +560,7 @@ var player;
 function onYouTubeIframeAPIReady() { 
 	//var playerID = 'onepageLMS' + n;
 	console.log("videoIdx : " + videoIdx);
-	if(weekContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
+	if(allContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
 	{
 		videoId =  weekContents[0].thumbnailID;
 		console.log("playlist가 없네요 !" + videoId);
@@ -548,14 +593,14 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) { 
 	//이거는 플레이리스트의 첫번째 영상이 실행되면서 진행되는 코드 (영상클릭없이 페이지 딱 처음 로딩되었을 )
-	if(weekContents[videoIdx].playlistID == 0) return;
+	if(allContents[videoIdx].playlistID == 0) return;
   console.log('onPlayerReady 실행');
   $('.videoTitle').text(playlist[ori_index].newTitle);
   $.ajax({
 		'type' : "post",
 		'url' : "${pageContext.request.contextPath}/student/class/videocheck",
 		'data' : {
-			//studentID : studentEmail, //학생ID(email)
+			studentID : studentEmail, //학생ID(email)
 			videoID : playlist[0].id //현재 재생중인 (플레이리스트 첫번째 영상의 ) id
 		},
 		success : function(data){
@@ -566,7 +611,7 @@ function onPlayerReady(event) {
 				console.log("처음아님!!");
 			}
 			else{ //처음보는 영상이면 지정된 start_s부터 시작
-				player.seekTo(playlist[0].start_s, true);
+				player.seekTo(playlsit[0].start_s, true);
 				console.log("처음!");
 			}
 	        player.pauseVideo();
@@ -660,12 +705,12 @@ function onPlayerStateChange(event) {
 			'url' : "${pageContext.request.contextPath}/student/class/changewatch",
 			'data' : {
 						lastTime : player.getDuration(), //lastTime에 영상의 마지막 시간을 넣어주기
-						//studentID : studentEmail, //studentID 그대로
+						studentID : studentEmail, //studentID 그대로
 						videoID : playlist[ori_index].id, //videoID 그대로
 						timer : 0, //timer도 업데이트를 위해 필요
 						watch : 1, //영상을 다 보았으니 시청여부는 1로(출석) 업데이트!
 						playlistID : playlist[0].playlistID,
-						//classPlaylistID : classContentID,
+						classPlaylistID : classContentID,
 						classID : classID
 			},
 			

@@ -82,7 +82,7 @@ public class AttendanceController {
 			System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(classID).size());
 			for(int j=0; j<takes.size(); j++) { //id.size()이면 안되겠는걸.. 
 				//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
-			if(attendanceCheckService.getAttendanceCheckList(attendanceID).size() != 0)
+			if(attendanceCheckService.getAttendanceCheckList(attendanceID).size() != 0 || attendanceCheckService.getAttendanceCheckList(attendanceID).get(j) != null)
 				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				
 			}

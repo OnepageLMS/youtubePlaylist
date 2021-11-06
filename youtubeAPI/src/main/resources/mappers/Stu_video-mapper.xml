@@ -8,9 +8,9 @@
 		order by seq ASC
 	</select>
 	
-	<select id="getVideoList2" resultType="video">
+	<select id="getVideoCheckList" resultType="video">
 		select * from lms_video left join lms_videoCheck on lms_video.id = lms_videoCheck.videoID
-		where lms_video.playlistID=#{playlistID} 
+		where lms_video.playlistID=#{playlistID} and lms_videoCheck.studentID = #{studentID}
 		order by seq ASC
 	</select>
 

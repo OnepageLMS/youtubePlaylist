@@ -22,4 +22,9 @@ public class Stu_VideoServiceImpl implements Stu_VideoService{
 	public List<VideoVO> getVideoList(VideoVO vo) {
 		return videoDAO.getVideoList(vo);
 	}
+	
+	@Override
+	public List<VideoVO> getVideoCheckList(VideoVO vo) {
+		return videoDAO.getVideoCheckList(vo);
+	}
 }
