@@ -54,14 +54,7 @@
 			alert("이미 수강신청하였거나 참여중인 공간입니다.");
 			if('${login.mode }' === 'lms_teacher') window.location.replace('${pageContext.request.contextPath}/dashboard');
 			else window.location.replace('${pageContext.request.contextPath}/student/class/dashboard');
-		}
-
-		let a = 20;
-		let b = 8;
-		let c = '자바스크립트';
-		let str = `저는 ${a+b}살이고 \${c}를 좋아합니다.`;
-		console.log(str);   //저는 28살이고 자바스크립트를 좋아합니다.
-		
+		}		
 	}
 	function showAlert(){
 		alert("수강신청이 성공적으로 완료되었습니다!! :) ");
@@ -92,21 +85,7 @@
 										<c:choose>
 											<c:when test="${login.name == null}" >
 												<form class="needs-validation" action='${pageContext.request.contextPath}/login/google' onsubmit='checkLoginMode();' method='post' novalidate>
-													<fieldset class="position-relative form-group">
-														<div class="position-relative form-check">
-															<label class="form-check-label"> 
-																<input name="mode" type="radio" class="form-check-input" value="tea" required>
-																선생님
-															</label>
-														</div>
-														<div class="position-relative form-check">
-															<label class="form-check-label"> 
-															<input name="mode" type="radio" class="form-check-input" value="stu">
-																학생
-															</label>
-														</div>
-													</fieldset>
-													<div class="invalid-feedback">로그인 모드를 선택해주세요</div>	
+													<input name="mode" class="form-check-input" value="stu" style="display:none;">
 													<div class="pt-1 mb-4">
 														<button class="btn btn-lg btn-block btn-danger" type="submit" >
 															<i class="fab fa-google me-2"></i> Google로 로그인
