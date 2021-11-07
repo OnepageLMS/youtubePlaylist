@@ -13,7 +13,6 @@
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
 	
     <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
@@ -25,7 +24,11 @@
 </head>
 <style>
 	.text-black{
-		color: #495057;
+		color: rgba(13,27,62,0.7);
+	}
+	
+	.font-header {
+		font-size: .88rem;
 	}
 </style>
 <script>
@@ -61,24 +64,29 @@
 						viewdClass = 'viewClass';
 					}
 
-					var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
-						+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
-							+ '<div class="card">'
-								+ '<div id="headingOne" class="card-header">'
-									+ '<button type="button" ' + updateView + 'class="col-9 text-left m-0 p-0 btn btn-link btn-block collapsed" '
-													+ 'data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne">'
-										+ '<h5 class="title m-0 p-0 ' + viewdClass + '" id="' + value.id + '"><i class="pe-7s-pin"></i> ' + value.title + viewCheck + '</h5>'
-									+ '</button>'
-									+ '<div>작성일 ' + regDate + '</div>'
+					var html = '<div class="w-100 col-md-12 col-lg-10 col-auto ">'
+								+ '<div id="accordion" class="accordion-wrapper">'
+									+ '<div class="card">'
+										+ '<div id="headingOne" class="card-header">'
+											+ '<button type="button" ' + updateView + 'class="text-left m-0 p-0 btn btn-link btn-block collapsed font-header" '
+															+ 'data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne">'
+												+ '<div class="row">'
+													+ '<div class="title col-md-8 font-weight-bold ' + viewdClass + '" id="' + value.id + '"><i class="pe-7s-pin"></i> ' 
+															+ value.title + viewCheck + '</div>'
+													+ '<div class="col-md-4 col-xs-12 text-black">작성일 ' + regDate + '</div>'
+												+ '</div>'
+											+ '</button>'
+										+ '</div>'
+										+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+											+ '<div class="card-body">' + value.content + '</div>'
+										+ '</div>'
+									+ '</div>'
 								+ '</div>'
-								+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
-									+ '<div class="card-body">' + value.content + '</div>'
-								+ '</div>'
-							+ '</div>'
-						+ '</div>'
-					+ '</div>';
+							+ '</div>';
 
 					$('.noticeList').append(html);
+					if(index == (data.length-1))
+						$('.noticeList').append('<div class="divider col-md-10 col-xs-11 m-2"></div>');
 				});
 				getAllNotices(data.length);
 			}
@@ -114,15 +122,17 @@
 							viewCheck = '';
 							viewdClass = 'viewClass';
 						}
-						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
-							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
+						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto">'
+							+ '<div id="accordion" class="accordion-wrapper">'
 								+ '<div class="card">'
 									+ '<div id="headingOne" class="card-header">'
-										+ '<button type="button" ' + updateView + 'class="col-9 text-left m-0 p-0 btn btn-link btn-block collapsed" '
+										+ '<button type="button" ' + updateView + 'class="text-left m-0 p-0 btn btn-link btn-block collapsed font-header" '
 														+ 'data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne">'
-											+ '<h5 class="title text-black m-0 p-0 ' + viewdClass + '" id="' + value.id + '">' + value.title + viewCheck + '</h5>'
+											+ '<div class="row">'
+												+ '<div class="title col-md-8 text-black font-weight-bold ' + viewdClass + '" id="' + value.id + '">' + value.title + viewCheck + '</div>'
+												+ '<div class="col-md-3 col-xs-12 text-black" >작성일 ' + regDate + '</div>'
+											+ '</div>'
 										+ '</button>'
-										+ '<div>작성일 ' + regDate + '</div>'
 									+ '</div>'
 									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
 										+ '<div class="card-body">' + value.content + '</div>'
@@ -144,7 +154,6 @@
 	function updateView(index, noticeID){
 		if($('.title:eq(' + index + ')').hasClass('viewdClass') == true) 
 			return false;
-		
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/student/notice/insertView',
@@ -199,19 +208,22 @@
         			<div class="app-page-title">
                     	<div class="page-title-wrapper align-items-center ">
                         	<div class="page-title-heading mr-3">
-                            	<span class="text-primary">${className}</span> - 공지	
+                            	<h4><span class="text-primary">${className}</span> - 공지</h4>
                             </div>
-                            <div class="search-wrapper ml-3">
-			                    <div class="input-holder">
-			                        <input type="text" class="search-input" placeholder="공지 검색">
-			                        <button class="search-icon"><span></span></button>
-			                    </div>
-			                    <button class="close"></button>
-			                </div>
+                            <div class="page-title-actions">
+	                           <div class="search-wrapper d-flex justify-content-end active">
+				                    <div class="input-holder active">
+				                        <input type="text" class="search-input" placeholder="공지 검색">
+				                        <button class="search-icon"><span></span></button>
+				                    </div>
+				                   
+								</div>
+                            </div>
                         </div>
                     </div>            
-                    <div class="row">
-                    	<div class="col-12 row justify-content-center noticeList">
+                    <div class="row justify-content-center noticeList">
+                   		
+                   	</div>
                     		<!--  
                     		<c:forEach var="item" items="${allNotices}" varStatus="status">
                     			<div class="col-md-12 col-lg-10 col-md-12 col-auto ">
@@ -231,8 +243,6 @@
 	                         </div>
                     		</c:forEach>
                     		-->
-                    	</div>
-                    </div>	
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
