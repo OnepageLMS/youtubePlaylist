@@ -33,11 +33,11 @@
 </head>
 
 <style>
-.name
-{
+.name {
   position:sticky;
   left:0px;
   background-color: #dbd7d7;
+  min-width: 90px;
 }
 </style>
 
@@ -57,12 +57,10 @@ $(document).ready(function(){
 				//console.log(data[i].fileName);
 				if(data[i] != null){
 					var element = document.getElementById('download'+(i+1));
-					element.innerHTML = '<a href="${pageContext.request.contextPath}/resources/csv/' +data[i].fileName+ '">업로드한 파일 다운받기</a>';
+					element.innerHTML = '<a href="${pageContext.request.contextPath}/resources/csv/' +data[i].fileName+ '">Download</a>';
 				}
 				else continue;
 			}
-			
-			 
 		},
 		error : function(err){
 			alert("실패");
@@ -230,7 +228,7 @@ function showAllStudentInfo(){
 			$('.studentList').empty();
 			var list = data.studentInfo;
 			console.log(list);
-			var updatedStudentList = '<p class="text-primary mt-3"> 허락 대기중 인원 </p>';
+			var updatedStudentList = '<p class="text-primary mt-3"> 허락 대기중인 학생 </p>';
 			
 			$.each(list, function(index, value){
         			if(value.status == "pending"){
@@ -262,7 +260,7 @@ function showAllStudentInfo(){
         			}
 			});
 
-			updatedStudentList += '<p class="text-primary mt-3"> 등록된 인원 </p>';
+			updatedStudentList += '<p class="text-primary mt-3"> 등록된 학생</p>';
 			
 			$.each(list, function(index, value){
 	    			if(value.status == "accepted"){
@@ -298,6 +296,11 @@ function showAllStudentInfo(){
 	    	alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 	    }
 	});
+}
+
+function setAttendanceModal(daySeq){
+	$('#inputSeq').val(daySeq);
+	$('.displayDaySeq').text(daySeq + '차시');
 }
 
 
@@ -388,9 +391,9 @@ function updateAttendance(days){
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
                             	<h4><span class="text-primary">${classInfo.className}</span> - 출석/학습현황</h4>
-                                <a href="javascript:void(0);" data-toggle="modal" data-target="#addStudentModal" class="nav-link editPlaylistBtn" style="display:inline;">       
-	                            	<button class="mb-2 mr-2 btn-transition btn btn-outline-secondary" style="float: right; margin-top:5px"> 
-	                                		<i class="pe-7s-add-user fa-lg" style="margin-right:5px;"> </i>  구성원 관리
+                                <a href="#" data-toggle="modal" data-target="#addStudentModal" class="nav-link editPlaylistBtn" style="display:inline;">       
+	                            	<button class="btn-transition btn btn-outline-secondary"> 
+	                                		<i class="pe-7s-add-user fa-lg"> </i>  구성원 관리
 	                                </button>
                                 </a>
                             </div>
@@ -400,7 +403,8 @@ function updateAttendance(days){
                     <div class="row">
                     	<div class="col-lg-12">
                          	<div class="main-card mb-3 card">
-                                    <div class="card-body table-responsive">
+                                    <div class="card-body ">
+                                    	<div class="table-responsive">
                                         <table class="mb-0 table table-striped table-bordered takes">
                                             <thead>   
 	                                            <tr>
@@ -408,29 +412,29 @@ function updateAttendance(days){
 	                                            	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
 		                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 		                                                <th style="text-align:center" colspan=2>${j} 차시
-		                                                	<button type="button" class="btn btn-outline-primary" onclick="updateAttendance(${j}-1)" >저장</button>
+		                                                	<button type="button" class="btn btn-outline-primary btn-sm" onclick="updateAttendance(${j}-1)" >저장</button>
 		                                                 </th>
 		                                            </c:forEach>
 	                                            </tr>
 	                                            <tr>
 	                                            	<c:forEach  var="j" begin="1" end="${classInfo.days}" varStatus="status">
-	                                            		<td id="zoomAttend" style="text-align:center">
-	                                            			<a href="#" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
+	                                            		<td class="zoomAttend p-0" style="text-align:center; min-width: 80px">
+	                                            			<a href="#" onclick="setAttendanceModal(${j});" data-toggle="modal" data-target="#editAttendance" class="nav-link p-0" style="display:inline;">
 	                                            				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
 	                                            			</a>
 	                                            		</td>
-					                                    <td  id="lmsAttend" style="text-align:center"> LMS </td>
+					                                    <td  id="lmsAttend text-center" style="font-weight:bold;">LMS</td>
 					                                </c:forEach>
 	                                            </tr>
                                             </thead>
                                             
-                                            <tbody id = "stuName">
+                                            <tbody id ="stuName">
 												<c:if test="${!empty takes}">
 													<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 			                                            <tr>
 			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].studentName}</th>
 			                                            </tr>
-			                                             <tr>
+														<tr>
 			                                             	<c:if test="${!empty file}">
 				                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 				                                            	 	<td style="text-align:center" > 
@@ -461,14 +465,15 @@ function updateAttendance(days){
 	                                            </c:if>
 	                                            <tr>
 	                                            	<td style="text-align:center" > 
-						                            	다운로드
+						                            	업로드한 파일
 		                                           </td>
 		                                           <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
-		                                           		<td id = "download${status2.index+1}" style="text-align:center" colspan=2> 다운받을 파일이 없습니다. </td>
+		                                           		<td id = "download${status2.index+1}" style="text-align:center" colspan=2> </td>
 		                                           </c:forEach>
 	                                            </tr>
                                             </tbody>
                                         </table>
+                                        </div>
                                     </div>
                         	</div>
                     	</div>
@@ -480,6 +485,7 @@ function updateAttendance(days){
 	                    </div>
                     </div>
         		</div>
+
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
@@ -491,29 +497,26 @@ function updateAttendance(days){
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="editContentModalLabel"> <span style="font-weight: bold;"> ${classInfo.className} </span> : 구성원 관리</h5>
+					<h5 class="modal-title" id="editContentModalLabel"> <span class="text-primary" style="font-weight: bold;">${classInfo.className}</span> - 구성원 관리</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
+				
 				<div class="modal-body">
-
-
 					<div class="card-body" style="overflow-y: auto; height: 600px;">
-						<div class="row">
+						<div class="row align-items-center">
 							<div class="col-md-2 pr-0">
 								<button id="modalSubmit" type="button"
-								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">구성원
-								추가</button>
+								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">초대링크 생성</button>
 							</div>
-							<div class="entryCode col-md-8" style="position:relative; display:none;">
-								<span id=link style="position: absolute; margin: 0; top:20%;"> 초대링크: learntube.kr/invite/${classInfo.entryCode} </span>
-								<div class="entryCode float-right" style="display:none;">
-									<button class="btn btn-transition btn-primary" onclick="copyToClipboard('#link')" data-container="body" data-toggle="popover" data-placement="bottom" data-content="링크가 복사되었습니다!"> 복사하기 </button>
+							<div class="entryCode col-md-8 row ml-1 align-items-center" style="display:none;">
+								<span id="link" class="mr-4"> learntube.kr/invite/${classInfo.entryCode} </span>
+								<div class="entryCode row" style="display:none;">
+									<button class="btn btn-transition btn-success btn-sm" onclick="copyToClipboard('#link')" data-container="body" data-toggle="popover" data-placement="bottom" data-content="링크가 복사되었습니다!"> 복사</button>
 								</div>
 							</div>
-							
 						</div>
 						
 
@@ -521,14 +524,15 @@ function updateAttendance(days){
 							<p class="text-primary mt-3"> 허락 대기중 인원 </p>
 							<c:forEach var="person" items="${studentInfo}" varStatus="status">
                             	<c:if test="${person.status == 'pending'}" >
-                            		<li class="list-group-item d-sm-inline-block"  
-										style="padding-top: 5px; padding-bottom: 30px">
-										<div class="row">
+                            		<li class="list-group-item d-sm-inline-block">
+										<div class="row align-items-center">
+											<!--  
 											<div class="thumbnailBox col-sm-1 row ml-1 mr-1">
 												<span onclick="deleteRequest(${person.studentID}, 1)">
 													<i class="pe-7s-close fa-lg" style="margin-right: 30px; cursor:pointer"> </i>
 												</span>
 											</div>
+											-->
 											<div class="titles col-sm-4 ">
 												<div class="row">
 													<p class="col-sm-12 mb-0">${person.studentName} </p>
@@ -536,14 +540,16 @@ function updateAttendance(days){
 												</div>
 											</div>
 											<div class="col-sm-4">
-												<div class="row">
-													<p class="col-sm-12 mb-0" style="text-align:center"> 신청일자  </p>
+												<p class="mb-0">신청일 ${person.regDate}</p>
+												
 													<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
 													<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
-													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.regDate} </p>
-												</div>
+	
 											 </div> 
-											<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent(${person.studentID});"> 추가 </button></div>
+											<div class="col-sm-2">
+												<button class="btn btn-primary btn-sm mr-1" onclick="allowStudent(${person.studentID});">등록</button>
+												<button class="btn btn-danger btn-sm" onclick="deleteRequest(${person.studentID}, 1);">삭제</button>
+											</div>
 										</div> 
                             		</li> 
                             	</c:if>
@@ -552,35 +558,28 @@ function updateAttendance(days){
 							 <p class="text-primary mt-3"> 등록된 인원 </p>
 							 <c:forEach var="person" items="${studentInfo}" varStatus="status">
 							 	<c:if test="${person.status == 'accepted'}" >
-							 		<li class="list-group-item d-sm-inline-block"
-									style="padding-top: 5px; padding-bottom: 30px"> 
+							 		<li class="list-group-item d-sm-inline-block"> 
 										<div class="row">
-											<div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>
+											<!--  <div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>-->
 											<div class="titles col-sm-4 ">
 												<div class="row">
-													<p class="col-sm-12 mb-0">${person.studentName } </p>
-													<p class="col-sm-12 mb-0">${person.email } </p>
+													<p class="col-sm-12 mb-0">${person.studentName} </p>
+													<p class="col-sm-12 mb-0">${person.email} </p>
 												</div>
 											</div>
 											<div class="col-sm-4">
-												<div class="row">
-													<p class="col-sm-12 mb-0" style="text-align:center">등록일자  </p>
-													<p class="col-sm-12 mb-0" style="text-align:center"> ${person.modDate} </p>
-												</div> 
+												<p class="mb-0">등록일 ${person.modDate}</p>
 											 </div> 
-											<div class="col-sm-2"><button class="btn btn-transition btn-danger" onclick="deleteRequest(${person.studentID}, 2)" > 삭제  </button></div>
+											<div class="col-sm-2">
+												<button class="btn btn-danger btn-sm" onclick="deleteRequest(${person.studentID}, 2)">삭제</button>
+											</div>
 										</div>
 									</li>
 								</c:if>
 							</c:forEach>
-							</ul>
+						</ul>
 					</div>
 				</div>
-				<!-- <div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">취소</button>
-					<button type="button" class="btn btn-primary">저장</button>
-				</div> -->
 			</div>
 		</div>
 	</div>
@@ -590,45 +589,40 @@ function updateAttendance(days){
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="editAttendanceLabel">ZOOM 출석체크</h5>
+	                <h5 class="modal-title" id="editAttendanceLabel"><span class="text-primary displayDaySeq"></span> ZOOM 출석파일 업로드</h5>
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
-	            
-	            <form id="attendForm" enctype="multipart/form-data">
+	            <form id="attendForm">
 		            <div class="modal-body">
-		               <div class="position-relative form-group">
-		               		<label for="editAttendanceSequence" class="">출석체크할 차시를 입력하세요 </label>
-		               		<input name="seq" id="seq" class="form-control"  value="0"> 차시 
-		               </div>
-				             
-				             <label for="startTime" class="">출석을 인정할 시작시간을 입력하세요</label>             
-		               <div class="position-relative form-group">
-		               		
-		               		<input name="start" id="startTimeH" placeholder="시" class="form-control"> 
-		               		<input name="start" id="startTimeM" placeholder="분" class="form-control"> 
-		               </div>
-		               
-		               <div class="position-relative form-group">
-		               		<label for="endTime" class="">출석을 인정할 마감시간을 입력하세요</label>
-					      	<input name="end" id="endTimeH" placeholder="시" class="form-control"> 
-					        <input name="end" id="endTimeM" placeholder="분" class="form-control"> 
-		               </div>
-		               
-		               
-					  <div class="position-relative form-group input-group">
+		            
+		            	<input name="seq" id="inputSeq" type="hidden">
+				       <div class="form-row">
+							<div class="col-3 mt-2">출석인정 시작시간</div>
+                           	<input name="start" id="startTimeH" type="number" class="form-control col-1">
+                           	<div class="col-1 mt-2">시</div>
+                           	<input name="start" id="startTimeM" type="number" class="form-control col-1">
+                           	<div class="col-1 mt-2">분</div>
+                       </div>
+				       <div class="form-row mt-2">
+							<div class="col-3 mt-2">출석인정 마감시간</div>
+                           	<input name="end" id="endTimeH" type="number" class="form-control col-1">
+                           	<div class="col-1 mt-2">시</div>
+                           	<input name="end" id="endTimeM" type="number" class="form-control col-1">
+                           	<div class="col-1 mt-2">분</div>
+                       </div>                 
+					  <div class="position-relative form-group input-group mt-2">
 					       <input name="file" id="exampleFile" type="file" class="form-control-file">
 					  </div>
-		               
-		               
 		            </div>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-		            	<button id="button" type="submit" class="mt-1 btn btn-primary" data-dismiss="modal">Submit</button>
+		            	<button type="submit" id="button" class="btn btn-primary" data-dismiss="modal">파일등록</button>
 		            </div>
 	            
 	           </form>
+	            
 	        </div>
 	    </div>
 	</div>
