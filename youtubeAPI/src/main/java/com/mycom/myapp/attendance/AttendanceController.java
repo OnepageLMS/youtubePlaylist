@@ -69,7 +69,7 @@ public class AttendanceController {
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
-		// 학생 email, phone 정보 (jw)
+		// 학생 정보 (jw)
 		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classId));
 		
 		// attendance csv (hy)

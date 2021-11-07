@@ -48,8 +48,4 @@
 		select fileName from lms_attendance
 		where classID=#{classID}
 	</select>
-	
-	
-	
-
 </mapper>
