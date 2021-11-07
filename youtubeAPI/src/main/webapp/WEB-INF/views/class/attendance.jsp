@@ -33,9 +33,12 @@
 </head>
 
 <style>
-
-
-
+.name
+{
+  position:sticky;
+  left:0px;
+  background-color: #dbd7d7;
+}
 </style>
 
 <script>
@@ -384,7 +387,7 @@ function updateAttendance(days){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<span class="text-primary">${classInfo.className}</span> - 출석/학습현황 
+                            	<h4><span class="text-primary">${classInfo.className}</span> - 출석/학습현황</h4>
                                 <a href="javascript:void(0);" data-toggle="modal" data-target="#addStudentModal" class="nav-link editPlaylistBtn" style="display:inline;">       
 	                            	<button class="mb-2 mr-2 btn-transition btn btn-outline-secondary" style="float: right; margin-top:5px"> 
 	                                		<i class="pe-7s-add-user fa-lg" style="margin-right:5px;"> </i>  구성원 관리
@@ -400,45 +403,52 @@ function updateAttendance(days){
                                     <div class="card-body table-responsive">
                                         <table class="mb-0 table table-striped table-bordered takes">
                                             <thead>   
-                                            <tr>
-                                            	<!-- <th colspan="2"> # </th>-->
-                                            	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
-	                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-	                                                <th style="text-align:center" colspan=2>${j} 차시
-	                                                	<button type="button" class="btn btn-outline-primary" onclick="updateAttendance(${j}-1)" >저장</button>
-	                                                 </th>
-	                                            </c:forEach>
-                                            </tr>
-                                            
-                                            <tr>
-                                            	<c:forEach  var="j" begin="1" end="${classInfo.days}" varStatus="status">
-                                            		<td id="zoomAttend" style="text-align:center">
-                                            			<a href="#" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
-                                            				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
-                                            			</a>
-                                            			
-                                            			
-                                            		</td>
-				                                    <td  id="lmsAttend" style="text-align:center"> LMS </td>
-				                                </c:forEach>
-                                            </tr>
+	                                            <tr>
+	                                            	<!-- <th colspan="2"> # </th>-->
+	                                            	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
+		                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+		                                                <th style="text-align:center" colspan=2>${j} 차시
+		                                                	<button type="button" class="btn btn-outline-primary" onclick="updateAttendance(${j}-1)" >저장</button>
+		                                                 </th>
+		                                            </c:forEach>
+	                                            </tr>
+	                                            <tr>
+	                                            	<c:forEach  var="j" begin="1" end="${classInfo.days}" varStatus="status">
+	                                            		<td id="zoomAttend" style="text-align:center">
+	                                            			<a href="#" data-toggle="modal" data-target="#editAttendance" class="nav-link" style="display:inline;">
+	                                            				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
+	                                            			</a>
+	                                            		</td>
+					                                    <td  id="lmsAttend" style="text-align:center"> LMS </td>
+					                                </c:forEach>
+	                                            </tr>
                                             </thead>
                                             
                                             <tbody id = "stuName">
-                                            
-                                            	<c:if test="${!empty takes}">
-	                                             <c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
-		                                            <tr>
-		                                                <th class = "row${status.index}" scope="row${status.index}" rowspan=2>${takes[status.index].studentName}</th>
-		                                                
-		                                            </tr>
-		                                            
-		                                             <tr>
-		                                             	<c:if test="${!empty file}">
-			                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
+												<c:if test="${!empty takes}">
+													<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
+			                                            <tr>
+			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].studentName}</th>
+			                                            </tr>
+			                                             <tr>
+			                                             	<c:if test="${!empty file}">
+				                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
+				                                            	 	<td style="text-align:center" > 
+								                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
+																		  <option selected value="0" class="originVal${status2.index+1}">${file[status2.index][status.index]}</option>
+																		  <option value="1" class="blue">출석</option>
+																		  <option value="2" class="yellow">지각</option>
+																		  <option value="3" class="red">결석</option>
+																		</select>
+				                                            	 	</td>
+				                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
+				                                                </c:forEach>
+			                                                </c:if>
+			                                                
+			                                                 <c:forEach var="i" begin="${fileNum}" end="${classInfo.days-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 			                                            	 	<td style="text-align:center" > 
 							                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
-																	  <option selected value="0" class="originVal${status2.index+1}">${file[status2.index][status.index]}</option>
+																	  <option style="backgroudcolor:yellow" selected value="-1" class="originVal${status2.index+1}" >출석체크 </option>
 																	  <option value="1" class="blue">출석</option>
 																	  <option value="2" class="yellow">지각</option>
 																	  <option value="3" class="red">결석</option>
@@ -446,36 +456,17 @@ function updateAttendance(days){
 			                                            	 	</td>
 			                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
 			                                                </c:forEach>
-		                                                </c:if>
-		                                                
-		                                                 <c:forEach var="i" begin="${fileNum}" end="${classInfo.days-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
-		                                            	 	<td style="text-align:center" > 
-						                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
-																  <option style="backgroudcolor:yellow" selected value="-1" class="originVal${status2.index+1}" >출석체크 </option>
-																  <option value="1" class="blue">출석</option>
-																  <option value="2" class="yellow">지각</option>
-																  <option value="3" class="red">결석</option>
-																</select>
-		                                            	 	</td>
-		                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
-		                                                </c:forEach>
-		                                                
-		                                                
-		                                            </tr>  
-		                                              
-		                                            
-	                                            </c:forEach>
+			                                            </tr>  
+	                                            	</c:forEach>
 	                                            </c:if>
 	                                            <tr>
 	                                            	<td style="text-align:center" > 
 						                            	다운로드
 		                                           </td>
-		                                           
 		                                           <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
-		                                           	<td id = "download${status2.index+1}" style="text-align:center" colspan=2> 다운받을 파일이 없습니다. </td>
+		                                           		<td id = "download${status2.index+1}" style="text-align:center" colspan=2> 다운받을 파일이 없습니다. </td>
 		                                           </c:forEach>
 	                                            </tr>
-                                            
                                             </tbody>
                                         </table>
                                     </div>
