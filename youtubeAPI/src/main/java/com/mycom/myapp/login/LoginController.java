@@ -114,7 +114,7 @@ public class LoginController {
 		model.addAttribute("login", loginVO);
 		model.addAttribute("alreadyEnrolled", flag);
 		
-		return "intro/entry"; 
+		return "intro/invite"; 
 	}
 	
 	public int checkIfAlreadyEnrolled(MemberVO loginVO, ClassesVO classInfo) {
