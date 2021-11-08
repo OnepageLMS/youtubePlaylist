@@ -45,6 +45,7 @@ var inactive_colors = ["border-primary", "border-warning", "border-success", "bo
 
 $(document).ready(function(){
 	getAllMyClass();
+	showAlert();
 });
 
 function getAllClass(act, order){
@@ -243,6 +244,12 @@ function getAllMyClass(){
 	});
 }
 
+function showAlert(){
+	var flag = '${enroll}';  
+	console.log("플래그 값 확인! ==>" + flag);
+	if(flag == 1) alert("성공적으로 강의실 신청이 완료되었습니다! :) ");
+}
+
 function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
 	var html = '<input type="hidden" name="classID"  value="' + id + '">';
 
@@ -309,6 +316,11 @@ function submitDeleteClassroom(){
                            <div class="page-title-wrapper">
                                <div class="page-title-heading mr-3">
                                  	<h3>내 강의실</h3>
+                               </div>
+                               <div class="d-inline-block ml-5">
+                                   <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                                       수강대기현황 
+                                   </button>
                                </div>
                          </div>
                        </div>            
@@ -391,6 +403,41 @@ function submitDeleteClassroom(){
 			</div>
 		</div>
 	</div>
+	
+	<!-- 강의실 대기 현황 모달 -->
+	<div class="modal fade show" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" style="display: none;" aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <c:forEach var="v" items="${allPendingClass }">
+                	<div class="row">
+                		<c:choose>
+	                		<c:when test="${v.status eq 'pending'}">
+		                		<div class="col-sm-4 ml-3">
+		                			<p> ${v.className} </p>
+		                		</div>
+		                		<div class="col-sm-1"></div>
+		                		<div class="col-sm-6">
+		                			<p> 허락 대기중 </p>
+		                		</div>
+	                		</c:when>
+                		</c:choose>
+                	</div>
+                </c:forEach>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+        </div>
+    </div>
+</div>
    
 </body>
 </html>

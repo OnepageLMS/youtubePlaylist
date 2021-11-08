@@ -19,9 +19,9 @@
 		delete from lms_takes where studentID=#{studentID} and classID=#{classID} 
 	</delete>
 	
-	<select id="getTakes" resultType="TakesVO">
+	<select id="getStudent" resultType="TakesVO">
 		select * from lms_takes
-		where id=#{id}
+		where studentID=#{studentId}
 	</select>
 	
 	<select id="getTakesNum" resultType="TakesVO">

@@ -79,15 +79,18 @@ public class LoginController {
 	
 	//(jw)
 	@RequestMapping(value="/enroll" , method = RequestMethod.GET)
-	public String enroll() {
+	public String enroll(Model model) {
 		//takes.setStudentID(loginvo.getId());
 		takes.setStudentName(loginVO.getName());
 		takes.setClassName(classInfo.getClassName()); 
 		takes.setStatus("pending");
 		if(takesService.insertStudent(takes) == 1) {
 			System.out.println("학생 등록 요청 완료~!");
+			model.addAttribute("enroll", 1); // 
 		}
-		else System.out.println("학생 등록 요청 실패");
+		else {
+			System.out.println("학생 등록 요청 실패");
+		}
 		
 		return "redirect:/student/class/dashboard";
 	}	
@@ -103,7 +106,7 @@ public class LoginController {
 		int flag=0; // 이미 등록되어 있는지 여부 확인용  
 		loginVO = (MemberVO)session.getAttribute("login");
 		if(loginVO != null) {
-			System.out.println(loginVO.getId());
+			System.out.println("로그인된 아이디 확인 => " + loginVO.getId());
 			if(checkIfAlreadyEnrolled(loginVO, classInfo) == 0) {
 				flag = 0;
 			}
@@ -246,6 +249,7 @@ public class LoginController {
 				takes.setStatus("pending");
 				if(takesService.insertStudent(takes) == 1) {
 					System.out.println("학생 등록 요청 완료~!");
+					model.addAttribute("enroll", 1);
 				}
 				else System.out.println("학생 등록 요청 실패");
 			}
