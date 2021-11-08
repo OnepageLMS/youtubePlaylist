@@ -31,6 +31,10 @@
 	.font-header {
 		font-size: .88rem;
 	}
+	
+	.card {
+		user-select: text;
+	}
 </style>
 <script>
 	var classID = ${classID};
@@ -74,8 +78,8 @@
 					var collapseID = "collapse" + index;
 					var regDate = value.regDate.split(" ")[0];
 					var viewCount = value.viewCount;
-
-					if (viewCount == null)	viewCount = '0';
+					
+					if (viewCount == null)	viewCount = '0';	//이부분 수정하기 !!! (NAN이 나온다!!)
 					else {
 						viewCount = (viewCount/totalStudent) * 100;
 					}
