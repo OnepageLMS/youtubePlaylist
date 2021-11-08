@@ -10,7 +10,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>출결/학습 현황</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
     <!--
     =========================================================
@@ -48,7 +47,7 @@ $(document).ready(function(){
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
+		<jsp:include page="../outer_top_stu.jsp" flush="false"/>
 
 		<div class="app-main">
 		 	<jsp:include page="../outer_left_stu.jsp" flush="false">
@@ -61,7 +60,7 @@ $(document).ready(function(){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<span class="text-primary">${classInfo.className}</span> - 출석/학습현황 
+                            	<h4><span class="text-primary">${classInfo.className}</span> - 출석/학습현황</h4>
                             </div>
                         </div>
                     </div>  
@@ -81,30 +80,17 @@ $(document).ready(function(){
                                             </thead>
                                             
                                             <tbody>
-                                            
 	                                             <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status">
 		                                            <tr>
-		                                            
 		                                            	<th scope="row${status.index}" style="text-align:center" rowspan=2 > ${status.index+1} 차시 </th>
-		                                                
-                                                        
-                                                    
                                                       	<td style="text-align:center"><i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM </td>
-                                                      	
                                                       	<td id = "take${status.index}" style="text-align:center; text-weight:bold" > ${file[status.index]} </td>
-		                                              	
-
 		                                            </tr>  
-		                                              
 		                                            <tr>
 		                                            	<td style="text-align:center"> LMS </td>
 			                                            <td id = "take${status.index}" style="text-align:center"> 0% </td>
 		                                            </tr>
-		                                            
-		                                            
 	                                            </c:forEach>
-	                                            
-	                                            
                                             </tbody>
                                         </table>
                                     </div>

@@ -45,6 +45,7 @@ public class ClassController {
 		checkvo.setEmail("test@handong.edu");
 		checkvo.setMode("lms_instructor");
 		MemberVO vo = memberService.getMember(checkvo);
+		vo.setMode("lms_instructor");
 		
 		session.setAttribute("login", vo);
 		session.setAttribute("userID", 1); //instructorID = 1은 test용

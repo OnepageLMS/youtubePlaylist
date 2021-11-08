@@ -25,7 +25,10 @@
 	</select>
 	
 	<select id="getTakesNum" resultType="TakesVO">
-		select * from lms_takes
+		<!--  select * from lms_takes
+		where classID=#{classID} and status="accepted" order by studentName
+		-->
+		select * from lms_takes join lms_student on lms_takes.studentID = lms_student.id
 		where classID=#{classID} and status="accepted" order by studentName
 	</select>
 	

@@ -85,11 +85,11 @@ function getAllClass(act, order){
 				
 				if(act == 1){
 					var cardColor = active_colors[i%(active_colors.length)];
-					html = '<div class="col-sm-6 col-md-3 col-lg-3">'
+					html = '<div class="col-sm-12 col-md-6 col-lg-3">'
 						+ '<div class="mb-3 card">'
 							+ '<div class="card-header ' + cardColor + '">' 
 								+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-								+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+								+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn float-right">'
 									+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 							+ '</div>'
 							+ '<div class="card-body">'
@@ -100,8 +100,8 @@ function getAllClass(act, order){
 								+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
                        		+ '</div>'
                        		+ '<div class="card-footer">'
-                       			+ '<div class="row col">'
-                        			+ '<div class="widget-subheading col-12">학습 진행</div>'
+                       			+ '<div class="row w-100">'
+                        			+ '<div class="widget-subheading col-12">학습 진행도</div>'
 									+ '<div class="col-12">'
 										+ '<div class="mb-3 progress">'
                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
@@ -115,11 +115,11 @@ function getAllClass(act, order){
 				
 				else{
 					var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-					html = '<div class="col-sm-6 col-md-3 col-lg-3">'
+					html = '<div class="col-sm-12 col-md-6 col-lg-3">'
 											+ '<div class="mb-3 card">'
 												+ '<div class="card-header ' + cardColor + '">' 
 													+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn float-right">'
 														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</div>'
 												+ '<div class="card-body">'
@@ -151,7 +151,7 @@ function getAllMyClass(){
 			active = data.active;
 			inactive = data.inactive;
 	
-			if(active == null && inactive == null){
+			if((active.length + inactive.length) == 0){
 				$('.dashboardClass').append('<p class="col text-center">참여중인 강의실이 없습니다.</p>');
 				$('.classActive').hide();
 				$('.classInactive').hide();
@@ -178,7 +178,7 @@ function getAllMyClass(){
 											+ '<div class="mb-3 card">'
 												+ '<div class="card-header ' + cardColor + '">' 
 													+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn float-right">'
 														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</div>'
 												+ '<div class="card-body">'
@@ -189,8 +189,8 @@ function getAllMyClass(){
 													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 				                        		+ '</div>'
 				                        		+ '<div class="card-footer">'
-				                        			+ '<div class="row col">'
-					                        			+ '<div class="widget-subheading col-12">학습 진행</div>'
+				                        			+ '<div class="row w-100">'
+					                        			+ '<div class="widget-subheading col-12">학습 진행도</div>'
 														+ '<div class="col-12">'
 															+ '<div class="mb-3 progress">'
 				                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
@@ -220,8 +220,8 @@ function getAllMyClass(){
 					var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
 											+ '<div class="mb-3 card">'
 												+ '<div class="card-header ' + cardColor + '">' 
-													+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn">'
+													+ '<div class="col-md-10">' +  this.className + ' (' + this.days + ' 차시)</div>' 
+													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn float-right">'
 														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</div>'
 												+ '<div class="card-body">'
@@ -232,7 +232,7 @@ function getAllMyClass(){
 								        	+ '</div>'
 								        + '</div>';
 										
-						$('.classInactive').append(dashboardCard);
+						$('.inactiveClassList').append(dashboardCard);
 						i++;
 				});
 			}
@@ -314,10 +314,10 @@ function submitDeleteClassroom(){
                        </div>            
                       
                        <div class="dashboardClass">
-                       	<div class="classActive row col">
-                       		<div class="col-12 row">
-                       			<h4 class="col-sm-5 col-md-2">진행중인 강의실</h4>
-                        		<div class="dropdown d-inline-block">
+                       	<div class="classActive row">
+                       		<div class="col-12 row m-1">
+                       			<h4 class="">진행중인 강의실</h4>
+                        		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
 		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'regDate');">개설일순</button>
@@ -327,10 +327,10 @@ function submitDeleteClassroom(){
                        		</div>
                        		<div class="activeClassList col row"></div>
                        	</div>
-                       	<div class="classInactive row col">
-                       		<div class="col-12 row">
-                       			<h4 class="col-sm-5 col-md-2">비활성화된 강의실</h4>
-                        		<div class="dropdown d-inline-block">
+                       	<div class="classInactive row">
+                       		<div class="col-12 row m-1">
+                       			<h4 class="">비활성화된 강의실</h4>
+                        		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
 		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(0, 'regDate');">개설일순</button>

@@ -78,6 +78,7 @@ public class Stu_ClassController{
 		checkvo.setEmail(email);
 		checkvo.setMode("lms_student");
 		MemberVO vo = memberService.getMember(checkvo);
+		vo.setMode("lms_student");
 		
 		session.setAttribute("login", vo);
 		session.setAttribute("userID", id);
