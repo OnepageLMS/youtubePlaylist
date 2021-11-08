@@ -412,16 +412,21 @@ function updateAttendance(days){
 	                                            	<th width = "10% " rowspan=2 style="padding-bottom : 20px"> 차시 </th>
 		                                            <c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 		                                                <th style="text-align:center" colspan=2>${j} 차시
-		                                                	<button type="button" class="btn btn-outline-primary btn-sm" onclick="updateAttendance(${j}-1)" >저장</button>
+		                                                	<button type="button" class="btn btn-success btn-sm" onclick="updateAttendance(${j}-1)" >저장</button>
 		                                                 </th>
 		                                            </c:forEach>
 	                                            </tr>
 	                                            <tr>
 	                                            	<c:forEach  var="j" begin="1" end="${classInfo.days}" varStatus="status">
 	                                            		<td class="zoomAttend p-0" style="text-align:center; min-width: 80px">
-	                                            			<a href="#" onclick="setAttendanceModal(${j});" data-toggle="modal" data-target="#editAttendance" class="nav-link p-0" style="display:inline;">
+	                                            			<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary" onclick="setAttendanceModal(${j});" 
+	                                            								data-toggle="modal" data-target="#editAttendance" class="nav-link p-0" style="display:inline;">
+	                                            				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
+	                                            			</button>
+	                                            			<!--  <a href="#" onclick="setAttendanceModal(${j});" data-toggle="modal" data-target="#editAttendance" class="nav-link p-0" style="display:inline;">
 	                                            				<i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM 
 	                                            			</a>
+	                                            			-->
 	                                            		</td>
 					                                    <td  id="lmsAttend text-center" style="font-weight:bold;">LMS</td>
 					                                </c:forEach>
@@ -432,7 +437,7 @@ function updateAttendance(days){
 												<c:if test="${!empty takes}">
 													<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 			                                            <tr>
-			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].studentName}</th>
+			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].studentName} ${takes[status.index].email}</th>
 			                                            </tr>
 														<tr>
 			                                             	<c:if test="${!empty file}">
@@ -465,7 +470,7 @@ function updateAttendance(days){
 	                                            </c:if>
 	                                            <tr>
 	                                            	<td style="text-align:center" > 
-						                            	업로드한 파일
+						                            	업로드 파일
 		                                           </td>
 		                                           <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
 		                                           		<td id = "download${status2.index+1}" style="text-align:center" colspan=2> </td>
