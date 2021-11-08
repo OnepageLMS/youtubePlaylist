@@ -31,6 +31,8 @@ import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
+import com.mycom.myapp.student.takes.Stu_TakesService;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 import net.sf.json.JSONArray;
 
@@ -61,6 +63,9 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_NoticeService noticeService;
 	
+	@Autowired
+	private Stu_TakesService takesService;
+	
 	private int studentId = 0;
 	private int playlistID = 0; 
 	private int id = 0;
@@ -82,8 +87,13 @@ public class Stu_ClassController{
 		session.setAttribute("login", vo);
 		session.setAttribute("userID", id);
 		studentId = id;
+		
+		Stu_TakesVO takesvo = new Stu_TakesVO();
+		takesvo.setStudentID(studentId);
+		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
+		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getStudent(studentId)));
 		return "class/dashboard_Stu";
 	}
 	
@@ -95,6 +105,7 @@ public class Stu_ClassController{
 		studentId = (Integer)session.getAttribute("userID");
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
+		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getStudent(studentId)));
 		return "class/dashboard_Stu";
 	}
 	

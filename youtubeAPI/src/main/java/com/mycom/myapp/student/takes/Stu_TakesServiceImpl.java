@@ -32,9 +32,9 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 	}
 
 	@Override
-	public Stu_TakesVO getStudent(int id) {
+	public List<Stu_TakesVO> getStudent(int studentID) {
 		// TODO Auto-generated method stub
-		return stu_TakesDAO.getStudent(id);
+		return stu_TakesDAO.getStudent(studentID);
 	}
 	
 	@Override
