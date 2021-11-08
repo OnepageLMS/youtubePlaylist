@@ -30,6 +30,10 @@
 	.font-header {
 		font-size: .88rem;
 	}
+	
+	.card {
+		user-select: text;
+	}
 </style>
 <script>
 	var classID = ${classID};
