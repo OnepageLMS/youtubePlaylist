@@ -173,7 +173,7 @@ function allowStudent(studentID){
 
 	$.ajax({
 		'type' : 'POST',
-		'url' : '${pageContext.request.contextPath}/attendance/allowTakes',
+		'url' : '${pageContext.request.contextPath}/member/allowTakes',
 		'data' : JSON.stringify(objParams),
 		'contentType' : "application/json",
 		'dataType' : "text",
@@ -207,7 +207,7 @@ function deleteRequest(studentID, option){
 	
 	$.ajax({
 		'type' : 'POST',
-		'url' : '${pageContext.request.contextPath}/attendance/deleteTakes',
+		'url' : '${pageContext.request.contextPath}/member/deleteTakes',
 		'data' : JSON.stringify(objParams),
 		'contentType' : "application/json",
 		success : function(data){
@@ -222,7 +222,7 @@ function deleteRequest(studentID, option){
 function showAllStudentInfo(){
 	$.ajax({
 		'type' : 'GET',
-		'url' : '${pageContext.request.contextPath}/attendance/updateTakesList',
+		'url' : '${pageContext.request.contextPath}/member/updateTakesList',
 		'data' : {classID : ${classInfo.id}},
 		success : function(data) {
 			$('.studentList').empty();
