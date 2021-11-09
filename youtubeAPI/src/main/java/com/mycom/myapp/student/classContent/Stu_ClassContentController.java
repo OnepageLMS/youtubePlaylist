@@ -58,7 +58,7 @@ public class Stu_ClassContentController {
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		//지금 studentID가 제대로 안들어간다..
 		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
-		
+		System.out.println("playlistID : " + classContentService.getAllClassContent(classID).get(2).getPlaylistID());
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));

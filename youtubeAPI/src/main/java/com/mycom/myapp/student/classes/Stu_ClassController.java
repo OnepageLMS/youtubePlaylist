@@ -185,6 +185,7 @@ public class Stu_ClassController{
 								@PathVariable("classID") int classId, 
 								@PathVariable("daySeq") int day, Model model) {
 		
+		
 		playlistID = playlistId;
 		id = ID;
 		classID = classId;
@@ -230,10 +231,10 @@ public class Stu_ClassController{
 	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
 	public List<VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		
+		//int id = Integer.parseInt(request.getParameter("id"));
 	    VideoVO vo = new VideoVO();
 	    vo.setPlaylistID(playlistID);
-	    
+	    //vo.setId(id);
 	    return videoService.getVideoList(vo);
 	}
 	
@@ -323,7 +324,7 @@ public class Stu_ClassController{
 		}
 	}
 	
-	@RequestMapping(value = "/videocheck", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/videocheck", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<Double, Double> videoCheck(HttpServletRequest request) {
 		Map<Double, Double> map = new HashMap<Double, Double>();
@@ -334,7 +335,7 @@ public class Stu_ClassController{
 		
 		vo.setStudentID(studentId);
 		vo.setvideoID(videoID);
-		
+		System.out.println("videoID : " + videoID + " ,studentID : " + studentId);
 		if (videoCheckService.getTime(vo) != null) {
 			map.put(videoCheckService.getTime(vo).getLastTime(), videoCheckService.getTime(vo).getTimer());
 		}
@@ -343,7 +344,32 @@ public class Stu_ClassController{
 			map.put(-1.0, -1.0); //시간이 음수가 될 수 는 없으니
 		}
 		return map;
+	}*/
+	
+	@RequestMapping(value = "/videocheck", method = RequestMethod.POST)
+	@ResponseBody
+	public double videoCheck(HttpServletRequest request) {
+		//Map<Double, Double> map = new HashMap<Double, Double>();
+		//int studentID = Integer.parseInt(request.getParameter("studentID"));
+		int videoID = Integer.parseInt(request.getParameter("videoID"));
+		
+		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
+		
+		vo.setStudentID(studentId);
+		vo.setvideoID(videoID);
+		//System.out.println("videoID : " + videoID + " ,studentID : " + studentId);
+		if (videoCheckService.getTime(vo) != null) {
+			//map.put(videoCheckService.getTime(vo).getLastTime(), videoCheckService.getTime(vo).getTimer());
+			System.out.println(videoCheckService.getTime(vo).getLastTime());
+			return videoCheckService.getTime(vo).getLastTime();
+		}
+		else {
+			System.out.println("처음입니다 !!!");
+			//map.put(-1.0, -1.0); //시간이 음수가 될 수 는 없으니
+			return -1.0;
+		}
 	}
+	
 	
 	@RequestMapping(value = "/changevideo", method = RequestMethod.POST)
 	@ResponseBody
