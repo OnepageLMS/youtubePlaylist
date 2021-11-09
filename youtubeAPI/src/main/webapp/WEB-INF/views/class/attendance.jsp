@@ -42,8 +42,8 @@
 </style>
 
 <script>
-var takes;
-var takesStudentNum = 0;
+//var takes;
+//var takesStudentNum = 0;
 $(document).ready(function(){
 	$.ajax({
 		'url' : "${pageContext.request.contextPath}/attendance/getfileName",
@@ -69,12 +69,13 @@ $(document).ready(function(){
 	
 	
 	$("#button").click(function(event){
+		console.log("daySeq :" + $("#inputSeq").val());
 		event.preventDefault();
 		var form = $("#attendForm");
-		var seq = $('#seq').val(); //지우면 안돼 
+		var seq = $("#inputSeq").val(); //지우면 안돼 
 		var formData = new FormData(form[6]);
 		formData.append("file", $("#exampleFile")[0].files[0]);
-		formData.append("daySeq", $('#seq').val());
+		formData.append("daySeq", $("#inputSeq").val());
 		formData.append("start_h", $('#startTimeH').val());
 		formData.append("start_m", $('#startTimeM').val());
 		formData.append("end_h", $('#endTimeH').val());
@@ -119,7 +120,7 @@ $(document).ready(function(){
 					}
 					
 				}
-				
+				$("#showAttendance").empty();
 				$("#showAttendance").append('<div> 출석 ' + data[0].length + '명 / 결석 ' + data[1].length + '명 / 미확인 ' + data[2].length + '명 </div>');
 				
 				
@@ -133,7 +134,7 @@ $(document).ready(function(){
 					$("#showAttendance").append('<div> 미확인 : ' +data[2][i] + '</div>');
 				
 				$("#showAttendance").show();
-				 idx ++;
+				 //idx ++;
 				 
 			},
 			error : function(err){
@@ -147,30 +148,24 @@ $(document).ready(function(){
 		$('.entryCode').hide();
 	});
 });
-
 function displayEntryCode(){
 	$('.entryCode').show();
 }
-
 function copyToClipboard(element) {
 	 navigator.clipboard.writeText($(element).text());
 }
-
 function allowStudent(studentID){
 	/* var studentID = $(obj).parent().parent().children(); */
 /* 	var studentID = $(obj).closest("div.row").find("input[id='studentID']").val();
 	console.log("check studentID ==>" , studentID); */
-
 	console.log("studentID ==> " + studentID);	
 	console.log("classID ==> " + ${classInfo.id});	
 	var classID = ${classInfo.id};
-
 	var objParams = {
 		studentID : studentID,
 		status : "accepted",
 		classID : classID,
 	};
-
 	$.ajax({
 		'type' : 'POST',
 		'url' : '${pageContext.request.contextPath}/member/allowTakes',
@@ -186,7 +181,6 @@ function allowStudent(studentID){
 	    }	
 	});
 }
-
 function deleteRequest(studentID, option){
 	console.log("삭제 버튼 되는지 확인 => ", studentID);
 	if(option == 1){
@@ -218,7 +212,6 @@ function deleteRequest(studentID, option){
 	    }	
 	});
 }
-
 function showAllStudentInfo(){
 	$.ajax({
 		'type' : 'GET',
@@ -259,7 +252,7 @@ function showAllStudentInfo(){
     					+ '</li>';
         			}
 			});
-
+			
 			updatedStudentList += '<p class="text-primary mt-3"> 등록된 학생</p>';
 			
 			$.each(list, function(index, value){
@@ -302,6 +295,13 @@ function setAttendanceModal(daySeq){
 	$('#inputSeq').val(daySeq);
 	$('.displayDaySeq').text(daySeq + '차시');
 }
+
+
+function setAttendanceModal(daySeq){
+	$('#inputSeq').val(daySeq);
+	$('.displayDaySeq').text(daySeq + '차시');
+}
+
 
 
 function updateAttendance(days){
@@ -638,8 +638,3 @@ function updateAttendance(days){
 
 	
 </html>
-
-
-
-
-
