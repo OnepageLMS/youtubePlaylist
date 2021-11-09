@@ -75,16 +75,17 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 	})
 	
 	
-	if(weekContents[videoIdx].playlistID != 0) {
+	//if(weekContents[videoIdx].playlistID != 0) {
 		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
 			url : "${pageContext.request.contextPath}/student/class/forVideoInformation",
 			type : "post",
 			async : false,
 			data : {	
-				playlistID : weekContents[videoIdx].playlistID
+				playlistID : weekContents[videoIdx].playlistID,
 			},
 			success : function(data) {
 				playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+				console.log("forVideoInfo : " + playlist[0].id);
 				ori_videoID = playlist[0].id; //첫 videoID는 선택된 classContent의 Playlist의 첫번째 영상
 				ori_playlistID = weekContents[videoIdx].playlistID;
 				ori_classContentID = weekContents[videoIdx].id;
@@ -93,7 +94,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 				 alert("error");
 			}
 		})	
-	}
+	//}
 			
 	
 	
@@ -560,9 +561,11 @@ function onPlayerReady(event) {
 		},
 		success : function(data){
 			// 여기 Playlist로 해둬야하는거 아닌가?
-			console.log("학생이 봤는지 안봤는지 확인중");
-			if(playlist[0].lastTime >= 0.0) { //보던 영상이라면 lastTime부터 시작
-				player.seekTo(playlist[0].lastTime, true);
+			
+			console.log("학생이 봤는지 안봤는지 확인중 " + data);
+			if(data >= 0.0) { //보던 영상이라면 lastTime부터 시작
+				console.log("lastTime : " + playlist[0].lastTime + " id : " + playlist[0].id+ " start_time " + playlist[0].start_s);
+				player.seekTo(data, true);
 				console.log("처음아님!!");
 			}
 			else{ //처음보는 영상이면 지정된 start_s부터 시작
@@ -673,6 +676,7 @@ function onPlayerStateChange(event) {
 				//영상을 잘 봤다면, 다음 영상으로 자동재생하도록
 				ori_index++;
 				$('.videoTitle').text(playlist[ori_index].newTitle);
+				//$('.videoTitle').text(playlist[ori_index].title);
 				
 				if(playlist[ori_index].lastTime >= 0.0){//보던 영상이라는 의미
 					player.loadVideoById({'videoId': playlist[ori_index].youtubeID,

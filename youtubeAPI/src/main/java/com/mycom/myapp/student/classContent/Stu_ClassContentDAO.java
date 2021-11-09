@@ -30,6 +30,7 @@ import com.mycom.myapp.commons.ClassContentVO;
  	
  	public List<ClassContentVO> getAllClassContent(int classID){
  		List<ClassContentVO> result = sqlSession.selectList("Stu_ClassContent.getAllClassContent", classID);
+ 		System.out.println("dao - " + result.get(2).getPlaylistID()); //db에서 playlistID가 Null이면 0이 들어온다. 
  		return result;
  	}
  	
