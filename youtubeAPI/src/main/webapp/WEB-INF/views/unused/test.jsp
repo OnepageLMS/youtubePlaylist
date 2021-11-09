@@ -14,6 +14,6 @@
 	crossorigin="anonymous"></script>
 
 <body>
-	<jsp:include page="outer.jsp" flush="false"/>
+	
 </body>
 </html>

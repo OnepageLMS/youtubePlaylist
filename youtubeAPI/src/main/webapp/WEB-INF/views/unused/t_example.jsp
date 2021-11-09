@@ -34,10 +34,10 @@
 <script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="outer_top.jsp" flush="false"/>
+		
 
 		<div class="app-main">
-		 	<jsp:include page="outer_left.jsp" flush="false"/>
+		 	
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
@@ -53,7 +53,7 @@
                     	<!-- 여기 기존 jsp파일 내용 넣기 -->
                     </div>	
         		</div>
-        		<jsp:include page="outer_bottom.jsp" flush="false"/>
+        		
 	   		</div>
 	   	</div>
    	</div>

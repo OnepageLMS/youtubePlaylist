@@ -229,7 +229,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 					});
 				}
 				if(inactive == null || inactive.length == 0)
-					$('.inactiveClassList').append('<p class="col text-center">비활성화된 강의실이 없습니다! </p>');
+					$('.inactiveClassList').append('<p class="col text-center">종료된 강의실이 없습니다! </p>');
 				else {
 					i=0;
 					$(inactive).each(function(){
@@ -415,7 +415,7 @@ function submitDeleteClassroom(){
 	}
 
 	if(opt == 'forMe'){
-		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 비공개 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
+		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 종료된 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
 			$.ajax({
 				type: 'post',
 				url: '${pageContext.request.contextPath}/deleteForMe',
@@ -533,7 +533,7 @@ function publishNotice(){
                         	</div>
                             <div class="classInactive row">
                             	<div class="col-12 row m-1">
-                        			<h4 class="">비활성화된 강의실</h4>
+                        			<h4 class="">종료된 강의실</h4>
 	                        		<div class="dropdown d-inline-block pl-2">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">

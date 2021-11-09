@@ -17,7 +17,7 @@
 <script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="outer_top_noHamburgur.jsp" flush="false"/>
+		<jsp:include page="outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
         	<div class="app-main__outer">

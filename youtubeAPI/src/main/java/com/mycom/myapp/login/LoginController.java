@@ -273,6 +273,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login/signout")
 	public String logout(HttpSession session) {
+		session.removeAttribute("login");
 		session.invalidate();
 		System.out.println("logged out!");
 		return "redirect:/login/signin";
