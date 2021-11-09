@@ -79,9 +79,10 @@
 					var regDate = value.regDate.split(" ")[0];
 					var viewCount = value.viewCount;
 					
-					if (viewCount == null)	viewCount = '0';	//이부분 수정하기 !!! (NAN이 나온다!!)
+					if (viewCount == null || totalStudent == 0)	viewCount = '0';	//이부분 수정하기 !!! (NAN이 나온다!!)
 					else {
 						viewCount = (viewCount/totalStudent) * 100;
+						viewCount = Math.round(viewCount);
 					}
 					var html = '<div class="w-100 col-md-12 col-lg-10 col-auto ">'
 								+ '<div id="accordion" class="accordion-wrapper">'
@@ -150,9 +151,11 @@
 						if(pin != 1) pin = 'onclick="setPin(' + value.id + ');">상단고정';
 						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해재';
 
-						if (viewCount == null)	viewCount = '0';
+						
+						if (viewCount == null || totalStudent == 0) viewCount = '0';
 						else {
 							viewCount = (viewCount/totalStudent) * 100;
+							viewCount = Math.round(viewCount);
 						}
 							
 						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto ">'

@@ -91,8 +91,8 @@ function leaveSite(){
                     <li class="nav-item">
                     	<!-- url /myplaylist 뒤에 instructorID 지움. controller에서 따로 설정!!! (9/20 예원) -->
                         <a href="${pageContext.request.contextPath}/playlist/myPlaylist" class="nav-link myplaylistLink">
-                            <i class="nav-link-icon fa fa-archive"></i>
-                            학습컨텐츠 보관함
+                            <i class="nav-link-icon fa fa-film"></i>
+                            Learntube Studio
                         </a>
                     </li>
                 </ul>  

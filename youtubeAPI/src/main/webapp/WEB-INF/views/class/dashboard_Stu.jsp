@@ -160,7 +160,7 @@ function getAllMyClass(){
 			}
 
 			if(active.length == 0)
-				$('.activeClassList').append('<p class="col text-center">진행중인 강의실이 없습니다! </p>');
+				$('.activeClassList').append('<p class="col text-center">참여중인 강의실이 없습니다! </p>');
 			else{
 				$(active).each(function(){
 					var classID = this.id;
@@ -208,7 +208,7 @@ function getAllMyClass(){
 			}
 
 			if(inactive.length == 0)
-				$('.inactiveClassList').append('<p class="col text-center">비활성화된 강의실이 없습니다! </p>');
+				$('.inactiveClassList').append('<p class="col text-center">종료된 강의실이 없습니다!</p>');
 			else{
 				i = 0;
 				$(inactive).each(function(){
@@ -328,7 +328,7 @@ function submitDeleteClassroom(){
                        <div class="dashboardClass">
                        	<div class="classActive row">
                        		<div class="col-12 row m-1">
-                       			<h4 class="">진행중인 강의실</h4>
+                       			<h4 class="">참여중인 강의실</h4>
                         		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -341,7 +341,7 @@ function submitDeleteClassroom(){
                        	</div>
                        	<div class="classInactive row">
                        		<div class="col-12 row m-1">
-                       			<h4 class="">비활성화된 강의실</h4>
+                       			<h4 class="">종료된 강의실</h4>
                         		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
