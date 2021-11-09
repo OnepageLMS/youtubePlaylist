@@ -45,6 +45,7 @@
 			<exclude-mapping path="/login/*" />
 			<exclude-mapping path="/test" />
 			<exclude-mapping path="/test/**" />
+			<exclude-mapping path="/invite/**" />
 			
 			<!-- 아래는 나중에 지우기!! -->
 			<exclude-mapping path="/student/class/test/dashboard/**"/>

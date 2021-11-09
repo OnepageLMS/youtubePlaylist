@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <script>
 function checkUpdateName(){
 	if($('#editName') == '' || $('#editName') == null) return false;
@@ -29,7 +28,7 @@ function leaveSite(){
 		url: '${pageContext.request.contextPath}/member/deleteMember',
 		success: function(data){
 			alert('회원탈퇴가 완료되었습니다.');
-			location.replace('${pageContext.request.contextPath}/login/signin');
+			location.replace('${pageContext.request.contextPath}/signin');
 		},
 		error: function(data, status,error) {
 			alert('회원탈퇴에 실패했습니다!');
@@ -37,7 +36,6 @@ function leaveSite(){
 	});	
 }
 </script>
-
 	<div class="app-header header-shadow">
         <div class="app-header__logo">
         	<div class="logo-src" style="background: url('${pageContext.request.contextPath}/resources/img/logo_Learntube.png')"></div>
@@ -71,28 +69,11 @@ function leaveSite(){
         </div>    
         <div class="app-header__content">
             <div class="app-header-left">
-            <!--  
-                <div class="search-wrapper">
-                    <div class="input-holder">
-                        <input type="text" class="search-input" placeholder="Type to search">
-                        <button class="search-icon"><span></span></button>
-                    </div>
-                    <button class="close"></button>
-                </div>
-                -->
                 <ul class="header-menu nav">
                     <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
+                        <a href="${pageContext.request.contextPath}/student/class/dashboard" class="nav-link">	<!-- 상단의 대시보드/학습컨텐츠보관함의 파랑색글씨 설정 class -->
                             <i class="nav-link-icon fa fa-home"> </i>
                             대시보드
-                        </a>
-                    </li>
-                   
-                    <li class="nav-item">
-                    	<!-- url /myplaylist 뒤에 instructorID 지움. controller에서 따로 설정!!! (9/20 예원) -->
-                        <a href="${pageContext.request.contextPath}/playlist/myPlaylist" class="nav-link myplaylistLink">
-                            <i class="nav-link-icon fa fa-film"></i>
-                            Learntube Studio
                         </a>
                     </li>
                 </ul>  
@@ -114,10 +95,10 @@ function leaveSite(){
                             </div>
                             <div class="widget-content-left  ml-3 header-user-info">
                                 <div class="widget-heading">
-                                  ${login.name}
+                                    ${login.name}
                                 </div>
                                 <div class="widget-subheading">
-                                    선생님
+                                   	학생
                                 </div>
                             </div>
                         </div>
@@ -125,9 +106,9 @@ function leaveSite(){
                 </div>        
             </div>
         </div>
-    </div>     
-    
-    <div class="modal fade bd-example-modal-sm" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+    </div>              
+	
+	<div class="modal fade bd-example-modal-sm" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog modal-sm">
 	    	<form class="needs-validation" method="post" onsubmit="return false;" novalidate>
 		        <div class="modal-content">
@@ -155,5 +136,4 @@ function leaveSite(){
 		        </div>
 	        </form>
 	    </div>
-	</div>         
-	
+	</div>

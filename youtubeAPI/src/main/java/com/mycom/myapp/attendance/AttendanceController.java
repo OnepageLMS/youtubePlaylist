@@ -67,9 +67,9 @@ public class AttendanceController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
-		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
+		model.addAttribute("takes", stu_takesService.getStudentNum(classID));	//이름이 모호함 (number를 가져오는 이름같아)
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
-		// 학생 email, phone 정보 (jw)
+		// 학생 정보 (jw)
 		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classId));
 		
 		// attendance csv (hy)
@@ -97,7 +97,7 @@ public class AttendanceController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/takes", method = RequestMethod.POST)
-	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {
+	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
 		
 		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
 	}	

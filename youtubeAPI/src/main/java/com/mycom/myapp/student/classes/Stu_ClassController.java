@@ -31,6 +31,8 @@ import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
+import com.mycom.myapp.student.takes.Stu_TakesService;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 import net.sf.json.JSONArray;
 
@@ -61,6 +63,9 @@ public class Stu_ClassController{
 	@Autowired
 	private Stu_NoticeService noticeService;
 	
+	@Autowired
+	private Stu_TakesService takesService;
+	
 	private int studentId = 0;
 	private int playlistID = 0; 
 	private int id = 0;
@@ -78,19 +83,30 @@ public class Stu_ClassController{
 		checkvo.setEmail(email);
 		checkvo.setMode("lms_student");
 		MemberVO vo = memberService.getMember(checkvo);
+		vo.setMode("lms_student");
 		
 		session.setAttribute("login", vo);
 		session.setAttribute("userID", id);
 		studentId = id;
+		
+		Stu_TakesVO takesvo = new Stu_TakesVO();
+		takesvo.setStudentID(studentId);
+		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
+		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getStudent(studentId)));
 		return "class/dashboard_Stu";
 	}
 	
 	@RequestMapping(value = "/dashboard", method =  {RequestMethod.GET,RequestMethod.POST})	//선생님 controller랑 합치기!
-	public String dashboard(HttpSession session) {
+	public String dashboard(HttpSession session, Model model) {
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
 		studentId = (Integer)session.getAttribute("userID");
+		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
+		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getStudent(studentId)));
 		return "class/dashboard_Stu";
 	}
 	

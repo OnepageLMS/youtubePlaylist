@@ -25,7 +25,15 @@
 </head>
 <style>
 	.text-black{
-		color: #495057;
+		color: rgba(13,27,62,0.7);
+	}
+	
+	.font-header {
+		font-size: .88rem;
+	}
+	
+	.card {
+		user-select: text;
 	}
 </style>
 <script>
@@ -70,43 +78,51 @@
 					var collapseID = "collapse" + index;
 					var regDate = value.regDate.split(" ")[0];
 					var viewCount = value.viewCount;
-
-					if (viewCount == null)	viewCount = '0';
+					
+					if (viewCount == null || totalStudent == 0)	viewCount = '0';	//이부분 수정하기 !!! (NAN이 나온다!!)
 					else {
 						viewCount = (viewCount/totalStudent) * 100;
+						viewCount = Math.round(viewCount);
 					}
-						
-					var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
-						+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
-							+ '<div class="card">'
-								+ '<div id="headingOne" class="card-header">'
-									+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
-																													+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
-										+ '<h5 class="m-0 p-0"><i class="pe-7s-pin"></i> ' + value.title + ' </h5>'
-									+ '</button>'
-									+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '% 읽음</div>'
-									+ '<div class="col-3">작성일 ' + regDate + '</div>'
-									+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 btn">'
-										+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
-									+ '</button>'
-									+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
-										+ '<button type="button" class="dropdown-item" onclick="unsetPin(' + value.id + ');">상단고정 해재</button>' 
-                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
-                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
-                                   	+ '</div>'
-								+ '</div>'
-								+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
-									+ '<div class="card-body">' 
-										
-										+ '<div>' + value.content + '</div>'
+					var html = '<div class="w-100 col-md-12 col-lg-10 col-auto ">'
+								+ '<div id="accordion" class="accordion-wrapper">'
+									+ '<div class="card">'
+										+ '<div id="headingOne" class="card-header p-2">'
+											+ '<div class="row col">'
+												+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
+																																+ 'class="col-11 text-left m-0 pl-2 btn btn-link btn-block collapsed font-header font-weight-bold">'
+													+ '<div class="row align-items-center">'
+														+ '<div class="col-md-7"><i class="pe-7s-pin"></i> ' + value.title + ' </div>'
+														+ '<div class="col-md-2 col-xs-12 text-success">' + viewCount + '% 읽음</div>'
+														+ '<div class="col-md-3 col-xs-12 text-black">작성일 ' + regDate + '</div>'
+													+ '</div>'
+												+ '</button>'
+												+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 p-0 btn">'
+													+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+												+ '</button>'
+												+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
+													+ '<button type="button" class="dropdown-item" onclick="unsetPin(' + value.id + ');">상단고정 해재</button>' 
+			                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
+			                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
+				                                   	+ '</div>'
+											+ '</div>'
+										+ '</div>'
+										+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+											+ '<div class="card-body">' 
+												
+												+ '<div>' + value.content + '</div>'
+											+ '</div>'
+										+ '</div>'
 									+ '</div>'
 								+ '</div>'
-							+ '</div>'
-						+ '</div>'
-					+ '</div>';
+							+ '</div>';
 
 					$('.noticeList').append(html);
+
+					if(index == (data.length-1))
+						$('.noticeList').append('<div class="divider col-md-10 col-xs-11 m-2"></div>');
 				});
+				
 				getAllNotices(data.length);
 			}
 		});
@@ -135,38 +151,44 @@
 						if(pin != 1) pin = 'onclick="setPin(' + value.id + ');">상단고정';
 						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해재';
 
-						if (viewCount == null)	viewCount = '0';
+						
+						if (viewCount == null || totalStudent == 0) viewCount = '0';
 						else {
 							viewCount = (viewCount/totalStudent) * 100;
+							viewCount = Math.round(viewCount);
 						}
 							
-						var html = '<div class="col-md-12 col-lg-10 col-sm-12 col-auto ">'
-							+ '<div id="accordion" class="accordion-wrapper ml-5 mr-5 mb-3">'
-								+ '<div class="card">'
-									+ '<div id="headingOne" class="card-header">'
-										+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
-																														+ 'class="col-6 text-left m-0 p-0 btn btn-link btn-block collapsed">'
-											+ '<h5 class="m-0 p-0 text-black">' + value.title + ' </h5>'
-										+ '</button>'
-										+ '<div class="text-success col-2 pl-5 pr-0">' + viewCount + '% 읽음</div>'
-										+ '<div class="col-3">작성일 ' + regDate + '</div>'
-										+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 btn">'
-											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
-										+ '</button>'
-										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
-											+ '<button type="button" class="dropdown-item"' + pin + '</button>' 
-	                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
-	                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
-                                    	+ '</div>'
-									+ '</div>'
-									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
-										+ '<div class="card-body">' 
-											+ '<div>' + value.content + '</div>'
+						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto ">'
+									+ '<div id="accordion" class="accordion-wrapper">'
+										+ '<div class="card">'
+											+ '<div id="headingOne" class="card-header p-2">'
+												+ '<div class="row col">'
+													+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
+																																	+ 'class="col-11 text-left m-0 pl-2 btn btn-link btn-block collapsed font-header">'
+													+ '<div class="row align-items-center">'
+														+ '<div class="col-md-7 text-black font-weight-bold">' + value.title + ' </div>'
+														+ '<div class="col-md-2 col-xs-12 text-success ">' + viewCount + '% 읽음</div>'
+														+ '<div class="col-md-3 col-xs-12 text-black">작성일 ' + regDate + '</div>'
+													+ '</div>'
+													+ '</button>'
+													+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 p-0 btn">'
+														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+													+ '</button>'
+													+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
+														+ '<button type="button" class="dropdown-item"' + pin + '</button>' 
+				                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
+				                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
+			                                    	+ '</div>'
+			                                    + '</div>'
+											+ '</div>'
+											+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+												+ '<div class="card-body">' 
+													+ '<div>' + value.content + '</div>'
+												+ '</div>'
+											+ '</div>'
 										+ '</div>'
 									+ '</div>'
-								+ '</div>'
-							+ '</div>'
-						+ '</div>';
+								+ '</div>';
 
 						$('.noticeList').append(html);
 					});
@@ -298,7 +320,6 @@
 		<jsp:include page="../outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
-			<!-- outer_left.jsp에 데이터 전송 -->
 		 	<jsp:include page="../outer_left.jsp" flush="false">
 		 		<jsp:param name="className" value="${className}"/>	
 		 		<jsp:param name="menu"  value="notice"/>
@@ -309,25 +330,30 @@
         			<div class="app-page-title">
                     	<div class="page-title-wrapper align-items-center">
                         	<div class="page-title-heading mr-3">
-                            	<h4><span class="text-primary displayClassName">${className}</span> - 공지</h4>	
+                            	<h4>
+                            		<span class="text-primary displayClassName">${className}</span> 
+                            		- 공지
+                            		<button type="button" id="publishNoticeBtn" class="btn ml-2 mb-2 btn-primary float-right" 
+				                						data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
+                            	</h4>	
                             </div>
-                            <div class="search-wrapper">
-			                    <div class="input-holder">
-			                        <input type="text" class="search-input" placeholder="공지 검색">
-			                        <button class="search-icon"><span></span></button>
-			                    </div>
-			                    <button class="close"></button>
-			                </div>
-			                <button type="button" id="publishNoticeBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target=".publishNoticeModal">공지 작성</button>
+                            
+                            <div class="page-title-actions">
+	                           <div class="search-wrapper d-flex justify-content-end active">
+				                    <div class="input-holder active">
+				                        <input type="text" class="search-input" placeholder="공지 검색">
+				                        <button class="search-icon"><span></span></button>
+				                    </div>
+				                   
+								</div>
+                            </div>
                         </div>
                     </div>            
-                    <div class="row">
-                    	<div class="col-12">
-                    		<div class="col-10">
-                    		</div>
-                    	</div>
-                    	<div class="col-12 row justify-content-center noticeList"></div>
-                    </div>	
+                    
+                   	<div class="row justify-content-center noticeList">
+                   		
+                   	</div>
+                    
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>

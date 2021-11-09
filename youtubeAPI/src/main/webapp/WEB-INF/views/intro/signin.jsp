@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Sign-in</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">    
 <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 <link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
 <link rel="icon" href="favicon-16.png" sizes="16x16">
@@ -26,24 +27,6 @@
 <script src="https://kit.fontawesome.com/3daf17ae22.js"
 	crossorigin="anonymous"></script>
 </head>
-<style>
-.divider:after, .divider:before {
-	content: "";
-	flex: 1;
-	height: 1px;
-	background: #eee;
-}
-
-.h-custom {
-	height: calc(100% - 73px);
-}
-
-@media ( max-width : 450px) {
-	.h-custom {
-		height: 100%;
-	}
-}
-</style>
 <script>
 	function checkLoginMode(){
 		if($("input[name='mode']:checked").val() == null) return false;
@@ -52,22 +35,22 @@
 
 <body>
 	<section class="vh-100" style="background-color: #F0F0F0;">
-		<div class="container py-5 h-100">
-			<div
-				class="row d-flex justify-content-center align-items-center h-100">
+		<div class="container h-100">
+			<div class="row d-flex justify-content-center align-items-center h-100">
 				<div class="col col-xl-10">
 					<div class="card" style="border-radius: 1rem;">
 						<div class="row g-0">
-							<div class="col-md-6 col-lg-5 d-none d-md-block">
+							<div class="col-md-6 col-lg-5 d-md-block">
 								<img src="${pageContext.request.contextPath}/resources/img/Learntube-logos_transparent.png"
 									alt="login form" class="img-fluid"
 									style="border-radius: 1rem 0 0 1rem;" />
 							</div>
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
-									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0">Learntube에 오신걸 환영합니다!</span>
+									<div class="d-flex align-items-center mb-3">
+										<span class="h1 fw-bold mb-0">Welcome to Learntube!</span>
 									</div>
+									<p class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">로그인 모드를 선택해주세요</p>
 									<form class="needs-validation" action='${pageContext.request.contextPath}/login/google' onsubmit='checkLoginMode();' method='post' novalidate>
 										<fieldset class="position-relative form-group">
 											<div class="position-relative form-check">
@@ -85,15 +68,14 @@
 										</fieldset>
 										<div class="invalid-feedback">로그인 모드를 선택해주세요</div>	
 										<div class="pt-1 mb-4">
-										<button class="btn btn-lg btn-block btn-danger" type="submit">
-											<i class="fab fa-google me-2"></i> Google로 로그인
-										</button>
-									</div>
+											<button class="btn btn-lg btn-block btn-danger mt-3" type="submit">
+												<i class="fab fa-google me-2"></i> Google로 로그인
+											</button>
+										</div>
 									</form>
-									
-									<p class="small text-muted">&copy;Everyday</p>
 								</div>
 							</div>
+							<p class="small text-center text-muted">&copy;Everyday</p>
 						</div>
 					</div>
 				</div>

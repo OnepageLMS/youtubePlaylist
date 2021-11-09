@@ -83,11 +83,11 @@ function getAllClass(act, order){
 						html = '<div class="col-sm-12 col-md-6 col-lg-3">'
 							+ '<div class="mb-3 card classCard">'
 								+ '<div class="card-header ' + cardColor + '">' 
-									+ '<div class="col-sm-10">' +  className + ' (' + this.days + ' 차시)' + '</div>'
-									+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+									+ '<div class="col-sm-8 pr-1">' +  className + ' (' + this.days + ' 차시)' + '</div>'
+									+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 										+ '<i class="nav-link-icon fa fa-share"></i>'
 									+ '</a>'
-									+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+									+ '<a class="col-sm-2" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
 										+ '<i class="nav-link-icon fa fa-cog"></i>'
 									+ '</a>'
 								+ '</div>'
@@ -120,11 +120,11 @@ function getAllClass(act, order){
 						html = '<div class="col-sm-12 col-md-6 col-lg-3">'
 							+ '<div class="mb-3 card classCard">'
 								+ '<div class="card-header ' + cardColor + '">' 
-									+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-										+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+									+ '<div class="col-sm-8 pr-1">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
+										+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 										+ '<i class="nav-link-icon fa fa-share"></i>'
 									+ '</a>'
-									+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+									+ '<a class="col-sm-2" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
 										+ '<i class="nav-link-icon fa fa-cog"></i>'
 									+ '</a>'
 								+ '</div>'
@@ -193,18 +193,18 @@ function getAllMyClass(){	//위와 중복 제거하기
 					var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 											+ '<div class="mb-3 card classCard">'
 												+ '<div class="card-header ' + cardColor + '">' 
-													+ '<div class="col-sm-10">' +  className + ' (' + this.days + ' 차시)' + '</div>'
-													+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+													+ '<div class="col-sm-8 pr-1">' +  className + ' (' + this.days + ' 차시)' + '</div>'
+													+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 														+ '<i class="nav-link-icon fa fa-share"></i>'
 													+ '</a>'
-													+ '<a class="col-sm-1" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+													+ '<a class="col-sm-2" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
 														+ '<i class="nav-link-icon fa fa-cog"></i>'
 													+ '</a>'
 												+ '</div>'
 												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-													+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
-															+ '공지작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
+													+ '<button class="btn btn-outline-focus col-8 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
+													+ '<button class="btn btn-outline-focus col-4 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
+															+ '<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
 													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
 													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 					                        	+ '</div>'
@@ -229,7 +229,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 					});
 				}
 				if(inactive == null || inactive.length == 0)
-					$('.inactiveClassList').append('<p class="col text-center">비활성화된 강의실이 없습니다! </p>');
+					$('.inactiveClassList').append('<p class="col text-center">종료된 강의실이 없습니다! </p>');
 				else {
 					i=0;
 					$(inactive).each(function(){
@@ -246,11 +246,11 @@ function getAllMyClass(){	//위와 중복 제거하기
 						var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 												+ '<div class="mb-3 card classCard">'
 													+ '<div class="card-header ' + cardColor + '">' 
-														+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-															+ '<a class="col-xs-1" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+														+ '<div class="col-sm-8 pr-1">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
+															+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 															+ '<i class="nav-link-icon fa fa-share"></i>'
 														+ '</a>'
-														+ '<a class="col-sm-1" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+														+ '<a class="col-sm-2" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
 															+ '<i class="nav-link-icon fa fa-cog"></i>'
 														+ '</a>'
 													+ '</div>'
@@ -415,7 +415,7 @@ function submitDeleteClassroom(){
 	}
 
 	if(opt == 'forMe'){
-		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 비공개 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
+		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 종료된 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
 			$.ajax({
 				type: 'post',
 				url: '${pageContext.request.contextPath}/deleteForMe',
@@ -508,16 +508,17 @@ function publishNotice(){
                         <div class="app-page-title">
                             <div class="page-title-wrapper">
                                 <div class="page-title-heading mr-3">
-                                  	<h3>내 강의실</h3> 	
+                                  	<h3>내 강의실
+                                  		<button class="btn btn-primary mr-3" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
+		                            		<b>+</b> 강의실 생성
+		                               </button>
+                                  	</h3> 	
                                 </div>
-				                <button class="btn btn-primary mr-3" data-toggle="modal" data-target="#addClassroomModal" id="addClassroomBtn">
-                               	<b>+</b> 강의실 생성
-                               </button>
-                          </div>
+                          	</div>
                         </div>      
                        
                         <div class="dashboardClass">
-                        	<div class="classActive row col">
+                        	<div class="classActive row">
                         		<div class="col-12 row m-1">
                         			<h4 class="">진행중인 강의실</h4>
 	                        		<div class="dropdown d-inline-block pl-2">
@@ -528,11 +529,11 @@ function publishNotice(){
 			                           </div>
 			                       </div>
                         		</div>
-                        		<div class="activeClassList col row"></div>
+                        		<div class="activeClassList row col"></div>
                         	</div>
-                            <div class="classInactive row col">
+                            <div class="classInactive row">
                             	<div class="col-12 row m-1">
-                        			<h4 class="">비활성화된 강의실</h4>
+                        			<h4 class="">종료된 강의실</h4>
 	                        		<div class="dropdown d-inline-block pl-2">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -541,8 +542,8 @@ function publishNotice(){
 			                           </div>
 			                       </div>
                             	</div>
-	                            <div class="inactiveClassList col row"></div>
-	                        </div>	<!-- 대시보드 안 box 끝 !! -->
+	                            <div class="inactiveClassList row col"></div>
+	                        </div>
                     	</div>
                    <jsp:include page="../outer_bottom.jsp" flush="true"/>
               </div>

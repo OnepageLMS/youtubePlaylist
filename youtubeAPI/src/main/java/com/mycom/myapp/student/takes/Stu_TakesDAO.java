@@ -28,8 +28,8 @@ public class Stu_TakesDAO {
 		return sqlSession.selectOne("Takes.checkIfAlreadyEnrolled", vo);
 	}
 
-	public Stu_TakesVO getStudent(int id) {
-		return sqlSession.selectOne("Takes.getTakes", id);
+	public List<Stu_TakesVO> getStudent(int studentID) {
+		return sqlSession.selectList("Takes.getStudent", studentID);
 	}
 	
 	public List<Stu_TakesVO> getStudentNum(int classID) {

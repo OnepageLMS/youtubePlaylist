@@ -515,11 +515,9 @@ function submitDeletePlaylist(){
 					<div class="app-page-title mb-0">
 		 				<div class="page-title-wrapper">
                             <div class="page-title-heading">
-                            	<h4 style="padding-bottom: 2%;">내 학습컨텐츠</h4>
+                            	<h4 class="p-2">Learntube Studio</h4>
                             </div>
-                            
                 		</div>
-
                     	<div class="row">
 			                <div class="col-md-4 col-lg-3">
 								<div class="myPlaylist">
