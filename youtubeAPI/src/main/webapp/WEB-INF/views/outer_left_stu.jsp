@@ -63,6 +63,12 @@
                               		</a>
                                	</li>
                                	<li>
+									<a href="${pageContext.request.contextPath}/student/calendar/${v.id}">
+                                   		<i class="metismenu-icon"></i>
+                                   		캘린더
+                              		</a>
+                               	</li>
+                               	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>
                                        	강의컨텐츠
@@ -101,6 +107,12 @@
                                    		공지
                               		</a>
                                	</li> 
+                               	<li>
+									<a href="${pageContext.request.contextPath}/student/calendar/${v.id}">
+                                  		<i class="metismenu-icon"></i>
+                                  		캘린더
+                             		</a>
+                              	</li>
                                	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>

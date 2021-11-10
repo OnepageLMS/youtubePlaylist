@@ -45,7 +45,7 @@
 	</select>
 	
 	<select id="getClassInfoForCopy" resultType="classes">
-		select className, description, days, tag from lms_class where id=#{id}
+		select className, description, days, tag, entryCode from lms_class where id=#{id}
 	</select>
 	
 	<select id="getClassByEntryCode" resultType="classes">

@@ -183,7 +183,7 @@ public class ClassController {
 	
 	@ResponseBody
 	@RequestMapping(value="/copyClassroom", method = RequestMethod.POST)
-	public int copyClassroom(@RequestParam(value = "id") int classID) {
+	public int copyClassroom(@RequestParam(value = "id") int classID) {	//종료날짜?! 에러난다!!!
 		
 		ClassesVO vo = classService.getClassInfoForCopy(classID);	//Copy할 기존 강의실 데이터 가져오기
 		vo.setInstructorID(instructorID);
@@ -207,7 +207,7 @@ public class ClassController {
 		}	
 	
 		// 새로 생성된 classID에 다 넣기
-		if(classContentService.insertCopiedClassContents(original) != 0) //transaction 필요
+		if(classContentService.insertCopiedClassContents(original) != 0)
 			System.out.println("class contents 복사 완료!");
 		else {
 			System.out.println("class contents 복사 실패!");
