@@ -3,8 +3,9 @@ package com.mycom.myapp.student.takes;
 public class Stu_TakesVO {
 	private int id;
 	private int studentID;
-	private String studentName;
-	private String className;
+	private String studentName;	//지우기
+	private String name;
+	private String className;	//사용안하도록 변경하고 지우기
 	private int classID;
 	private String status;
 	private boolean pass; //db에는 varchar로 선언
@@ -25,16 +26,23 @@ public class Stu_TakesVO {
 	public void setStudentID(int studentID) {
 		this.studentID = studentID;
 	}
-	public String getStudentName() {
+	
+	public String getStudentName() {	//지우기
 		return studentName;
 	}
-	public void setStudentName(String studentName) {
+	public void setStudentName(String studentName) {	//지우기
 		this.studentName = studentName;
 	}
-	public String getClassName() {
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getClassName() {	//지우기 + 설정변경
 		return className;
 	}
-	public void setClassName(String className) {
+	public void setClassName(String className) {	//지우기 + 설정변경
 		this.className = className;
 	}
 	public int getClassID() {
