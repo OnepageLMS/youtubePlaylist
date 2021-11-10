@@ -235,7 +235,7 @@ function showAllStudentInfo(){
        							+ '</div>'
        							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
-	      								+ '<p class="col-sm-12 mb-0">' + value.studentName + ' </p>'
+	      								+ '<p class="col-sm-12 mb-0">' + value.name + ' </p>'
 	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
 	    							+ '</div>'
     							+ '</div>'
@@ -265,7 +265,7 @@ function showAllStudentInfo(){
 	   							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
 	       								+ '<input type="hidden" id="studentID" value="${person.studentID }" />'
-	      								+ '<p class="col-sm-12 mb-0">' + value.studentName + ' </p>'
+	      								+ '<p class="col-sm-12 mb-0">' + value.name + ' </p>'
 	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
 	    							+ '</div>'
 								+ '</div>'
@@ -437,7 +437,7 @@ function updateAttendance(days){
 												<c:if test="${!empty takes}">
 													<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 			                                            <tr>
-			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].studentName} ${takes[status.index].email}</th>
+			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].name} <br>${takes[status.index].email}</th>
 			                                            </tr>
 														<tr>
 			                                             	<c:if test="${!empty file}">
@@ -496,9 +496,7 @@ function updateAttendance(days){
 	   	</div>
    	</div>
 	 
-	<div class="modal fade" id="addStudentModal" tabindex="-1"
-		role="dialog" aria-labelledby="editContentModal" aria-hidden="true"
-		style="display: none;">
+	<div class="modal fade" id="addStudentModal" tabindex="-1"role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -540,7 +538,7 @@ function updateAttendance(days){
 											-->
 											<div class="titles col-sm-4 ">
 												<div class="row">
-													<p class="col-sm-12 mb-0">${person.studentName} </p>
+													<p class="col-sm-12 mb-0">${person.name} </p>
 													<p class="col-sm-12 mb-0">${person.email} </p>
 												</div>
 											</div>
@@ -568,7 +566,7 @@ function updateAttendance(days){
 											<!--  <div class="thumbnailBox col-sm-1 row ml-1 mr-1"></div>-->
 											<div class="titles col-sm-4 ">
 												<div class="row">
-													<p class="col-sm-12 mb-0">${person.studentName} </p>
+													<p class="col-sm-12 mb-0">${person.name} </p>
 													<p class="col-sm-12 mb-0">${person.email} </p>
 												</div>
 											</div>

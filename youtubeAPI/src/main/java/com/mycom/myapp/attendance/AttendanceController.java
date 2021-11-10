@@ -59,7 +59,7 @@ public class AttendanceController {
 	private int instructorID = 0;
 	public int classID;
 	
-	@RequestMapping(value = "/{classId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{classId}", method = RequestMethod.GET)	//접근권한 추가하기!!!
 	public String attendancehome(@PathVariable("classId") int classId, Model model, HttpSession session) {
 		instructorID = (Integer)session.getAttribute("userID");
 		classID = classId;
@@ -67,7 +67,7 @@ public class AttendanceController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
-		model.addAttribute("takes", stu_takesService.getStudentNum(classID));	//이름이 모호함 (number를 가져오는 이름같아)
+		model.addAttribute("takes", stu_takesService.getStudentNum(classID));	//이름이 모호함
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
 		// 학생 정보 (jw)
 		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classId));

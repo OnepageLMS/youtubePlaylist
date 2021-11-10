@@ -27,11 +27,6 @@
 <script src="https://kit.fontawesome.com/3daf17ae22.js"
 	crossorigin="anonymous"></script>
 </head>
-<script>
-	function checkLoginMode(){
-		if($("input[name='mode']:checked").val() == null) return false;
-	}
-</script>
 
 <body>
 	<section class="vh-100" style="background-color: #F0F0F0;">
@@ -50,26 +45,16 @@
 									<div class="d-flex align-items-center mb-3">
 										<span class="h1 fw-bold mb-0">Welcome to Learntube!</span>
 									</div>
-									<p class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">로그인 모드를 선택해주세요</p>
-									<form class="needs-validation" action='${pageContext.request.contextPath}/login/google' onsubmit='checkLoginMode();' method='post' novalidate>
-										<fieldset class="position-relative form-group">
-											<div class="position-relative form-check">
-												<label class="form-check-label"> 
-													<input name="mode" type="radio" class="form-check-input" value="tea" required>
-													선생님
-												</label>
-											</div>
-											<div class="position-relative form-check">
-												<label class="form-check-label"> 
-												<input name="mode" type="radio" class="form-check-input" value="stu">
-													학생
-												</label>
-											</div>
-										</fieldset>
-										<div class="invalid-feedback">로그인 모드를 선택해주세요</div>	
+									<p class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">로그인을 해주세요</p>
+									
+									<form action='${pageContext.request.contextPath}/login/google' method='post'>
+
 										<div class="pt-1 mb-4">
-											<button class="btn btn-lg btn-block btn-danger mt-3" type="submit">
-												<i class="fab fa-google me-2"></i> Google로 로그인
+											<button class="btn btn-lg btn-block btn-success m-1" type="submit" value="tea" name="mode">
+												<i class="fab fa-google me-2"></i>선생님 로그인
+											</button>
+											<button class="btn btn-lg btn-block btn-primary m-1 px-4" type="submit" value="stu"  name="mode">
+												<i class="fab fa-google me-2"></i>학생 로그인 
 											</button>
 										</div>
 									</form>
@@ -82,25 +67,5 @@
 			</div>
 		</div>
 	</section>
-	<script>
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
-                // Loop over them and prevent submission
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        } 
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-	</script>
 </body>
 </html>

@@ -37,7 +37,7 @@
 <script>
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
-var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-alternate"];
+var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-strong-bliss", "bg-arielle-smile", "bg-night-fade", "bg-sunny-morning"];
 
 $(document).ready(function(){
 	getAllMyClass();
@@ -332,13 +332,10 @@ function submitAddClassroom(){
 	if($('#inputClassDays').val() == '')
 		$('#inputClassDays').val(0);
 	
-	if($('#customSwitch1').is(':checked'))
-		$('#customSwitch1').val(1);
-	else
-		$('#customSwitch1').val(0);
-	
 	if($('#inputCloseDate').val() == '')
 		$('#inputCloseDate').val('9999-12-31');
+
+	$('#customSwitch1').val(1);
 
 	$.ajax({
 		type: 'post',
@@ -372,7 +369,7 @@ function submitEditClassroom(){	//미완성 (classDays 현재 강의컨텐츠의
 	var closeDate = $('#editCloseDate').val();
 	
 	if($('#customSwitch2').is(':checked') && (today >= closeDate)){
-		if(confirm('강의실 종료일이 오늘 날짜보다 빠르거나 같습니다. 지금 바로 강의실을 비활성화 하시겠습니까? \n취소 버튼을 누르시면 강의실 설정폼으로 돌아갑니다.'))
+		if(confirm('강의실 종료일이 오늘 날짜보다 빠르거나 같습니다. 지금 바로 강의실을 종료 하시겠습니까? \n취소 버튼을 누르시면 강의실 설정으로 돌아갑니다.'))
 			$('#customSwitch2').removeAttr('checked');
 		else return false;
 	}
@@ -630,10 +627,6 @@ function publishNotice(){
 			        		<label for="inputCloseDate">강의실 게시 종료일</label>
 			        		<input type="date" name="closeDate" class="form-control" id="inputCloseDate"/>
 			        	</div> 
-	                   <div class="form-group custom-control custom-switch">
-				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch1">
-				            <label class="custom-control-label" for="customSwitch1">강의실 활성화</label>
-				        </div>
 		            </div>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
@@ -684,12 +677,12 @@ function publishNotice(){
 	                   </div>
 	                   
 	                   <div class="form-group"> 
-			        		<label for="inputCloseClassroom">강의실 게시 종료일</label>
+			        		<label for="inputCloseClassroom">강의실 종료 예약</label>
 			        		<input type="date" name="closeDate" class="form-control" id="editCloseDate"/>
 			        	</div> 
 			        	<div class="custom-control custom-switch">
 				            <input type="checkbox" checked="" name="active" class="custom-control-input" id="customSwitch2">
-				            <label class="custom-control-label" for="customSwitch2">강의실 활성화</label>
+				            <label class="custom-control-label" for="customSwitch2">강의실 진행중</label>
 				        </div>
 				    </div>
 				    <div class="modal-footer">
@@ -699,18 +692,18 @@ function publishNotice(){
 	            </form>
 	            
                    <div class="modal-body">
-			        	<div class=""><h6 class="text-danger">Danger Zone - 강의실 삭제</h6></div>
+			        	<div class=""><h6 class="text-danger">Danger Zone - 강의실 나가기</h6></div>
 			        	<div class="border border-danger p-3">
 				        	<form id="deleteForm" class="needs-validation" novalidate>
 					        	<div class="position-relative form-group">
 	                                 <div>
 	                                     <div class="custom-radio custom-control">
 	                                     	<input type="radio" id="exampleCustomRadio" name="deleteOpt" class="custom-control-input" value="forMe" required>
-	                                     	<label class="custom-control-label" for="exampleCustomRadio">나에게만 삭제 - 학생들에게는 비공개 강의실로 보여집니다.</label>
+	                                     	<label class="custom-control-label" for="exampleCustomRadio">나에게만 삭제 - 학생들에게는 종료된 강의실로 보여집니다.</label>
 	                                     </div>
 	                                     <div class="custom-radio custom-control">
 	                                     	<input type="radio" id="exampleCustomRadio2" name="deleteOpt" class="custom-control-input" value="forAll">
-	                                     	<label class="custom-control-label" for="exampleCustomRadio2">모든 데이터 삭제 - 학생들에게도 강의실이 보이지 않습니다.</label>
+	                                     	<label class="custom-control-label" for="exampleCustomRadio2">모든 데이터 삭제 - 학생들에게도 강의실이 삭제됩니다.</label>
 	                                     </div>
 	                                 </div>
 	                             </div>
