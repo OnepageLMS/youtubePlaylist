@@ -8,6 +8,12 @@
 		(#{studentID}, #{className}, #{classID}, #{status})
 	</insert>
 	
+ 	<update id="updateTakes">
+		update lms_takes
+		set studentID=#{studentID}, className=#{className}, classID=#{classID}, pass=#{pass}
+		where id=#{id}
+	</update>
+	
 	<delete id="deleteTakes">
 		delete from lms_takes where studentID=#{studentID} and classID=#{classID} 
 	</delete>
