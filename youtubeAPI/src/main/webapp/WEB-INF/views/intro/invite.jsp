@@ -37,7 +37,8 @@
 			if('${login.mode }' === 'lms_teacher') window.location.replace('${pageContext.request.contextPath}/dashboard');
 			else window.location.replace('${pageContext.request.contextPath}/student/class/dashboard');
 		}
-
+		
+		//아래부분 지웁시다....
 		let a = 20;
 		let b = 8;
 		let c = '자바스크립트';
@@ -46,10 +47,9 @@
 		
 	}
 	function showAlert(){
-		alert("수강신청이 성공적으로 완료되었습니다!! :) ");
+		alert("성공적으로 수강이 완료되었습니다!:)");
 	}
 </script>
-
 </head>
 
 <body>
@@ -72,11 +72,10 @@
 										
 									<c:choose>
 										<c:when test="${login.name == null}" >
-											<form class="needs-validation" action='${pageContext.request.contextPath}/login/google' method='post'>
-												<input name="mode" type="hidden" class="form-check-input" value="stu">
+											<form action='${pageContext.request.contextPath}/login/google' method='post'>
 												<div class="pt-1 mb-4">
-													<button class="btn btn-lg btn-block btn-danger" type="submit" >
-														<i class="fab fa-google me-2"></i> Google로 로그인
+													<button class="btn btn-lg btn-block btn-primary m-1 px-4" type="submit" value="stu"  name="mode">
+														<i class="fab fa-google me-2"></i>학생 로그인 
 													</button>
 												</div>
 											</form>

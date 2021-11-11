@@ -3,16 +3,10 @@
 <mapper namespace="Takes">
 
 	<insert id="insertTakes">
-		insert into lms_takes(studentID, studentName, className, classID, status)
+		insert into lms_takes(studentID, className, classID, status)
 		values
-		(#{studentID}, #{studentName}, #{className}, #{classID}, #{status})
+		(#{studentID}, #{className}, #{classID}, #{status})
 	</insert>
-	
- 	<update id="updateTakes">
-		update lms_takes
-		set studentID=#{studentID}, studentName=#{studentName}, className=#{className}, classID=#{classID}, pass=#{pass}
-		where id=#{id}
-	</update>
 	
 	<delete id="deleteTakes">
 		delete from lms_takes where studentID=#{studentID} and classID=#{classID} 

@@ -19,10 +19,6 @@ public class Stu_TakesDAO {
 	public int deleteStudent(Stu_TakesVO vo) {
 		return sqlSession.delete("Takes.deleteTakes", vo);
 	}
-
-	public int updateStudent(Stu_TakesVO vo) {
-		return sqlSession.update("Takes.updateTakes", vo);
-	}
 	
 	public Stu_TakesVO checkIfAlreadyEnrolled(Stu_TakesVO vo) {
 		return sqlSession.selectOne("Takes.checkIfAlreadyEnrolled", vo);

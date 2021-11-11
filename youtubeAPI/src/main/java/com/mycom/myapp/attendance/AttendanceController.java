@@ -198,7 +198,7 @@ public class AttendanceController {
             List<Stu_TakesVO> data = stu_takesService.getStudentNum(classID); //db에서 학생정보 가져오기 classID임의로 넣음 
             List<String> stuNameArr = new ArrayList<String>();
             for(int i=0; i<data.size(); i++) {
-            	stuNameArr.add(data.get(i).getStudentName()); //이 수업을 듣는 학생들의 목록을 조회 (db의 takes 테이블로부터) 
+            	stuNameArr.add(data.get(i).getName()); //이 수업을 듣는 학생들의 목록을 조회 (db의 takes 테이블로부터) 
             }
             
 

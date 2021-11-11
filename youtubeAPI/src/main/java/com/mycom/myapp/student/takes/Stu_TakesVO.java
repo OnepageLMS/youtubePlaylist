@@ -3,13 +3,11 @@ package com.mycom.myapp.student.takes;
 public class Stu_TakesVO {
 	private int id;
 	private int studentID;
-	private String studentName;	//지우기
 	private String name;
 	private String className;	//사용안하도록 변경하고 지우기
 	private int classID;
 	private String status;
-	private boolean pass; //db에는 varchar로 선언
-	
+
 	private String email;
 	private String regDate;
 	private String modDate;
@@ -25,13 +23,6 @@ public class Stu_TakesVO {
 	}
 	public void setStudentID(int studentID) {
 		this.studentID = studentID;
-	}
-	
-	public String getStudentName() {	//지우기
-		return studentName;
-	}
-	public void setStudentName(String studentName) {	//지우기
-		this.studentName = studentName;
 	}
 	public String getName() {
 		return name;
@@ -56,12 +47,6 @@ public class Stu_TakesVO {
 	}
 	public void setStatus(String status) {
 		this.status = status;
-	}
-	public boolean isPass() {
-		return pass;
-	}
-	public void setPass(boolean pass) {
-		this.pass = pass;
 	}
 	public String getEmail() {
 		return email;
