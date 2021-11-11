@@ -18,6 +18,11 @@ import com.mycom.myapp.commons.ClassContentVO;
  		return result;
  	}
  	
+ 	public int getPlaylistCount(int classID) {
+ 		int result = sqlSession.selectOne("Stu_ClassContent.getPlaylistCount", classID);
+ 		return result;
+ 	}
+ 	
  	public List<ClassContentVO> getWeekClassContent(int classID){
  		List<ClassContentVO> result = sqlSession.selectList("Stu_ClassContent.getWeekClassContent", classID);
  		return result;

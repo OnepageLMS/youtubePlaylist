@@ -36,6 +36,12 @@
 		where studentID=#{studentID} AND videoID=#{videoID}
 	</select>
 	
+	<select id="getWatchedCheck" resultType="videoCheckVO">
+		select *
+		from lms_videoCheck
+		where studentID=#{studentID} AND playlistID=#{playlistID} AND classContentID = #{classContentID}
+	</select>
+	
 	<select id="getTimeList" resultType="videoCheckVO">
 		SELECT * 
 		FROM lms_videoCheck order

@@ -17,5 +17,7 @@ public interface Stu_PlaylistCheckService  {
 	
 	public int getTotalVideo(int playlistID);
 	
+	public List<Stu_PlaylistCheckVO> getCompletePlaylist(Stu_PlaylistCheckVO vo);
+	
 	public List<Stu_PlaylistCheckVO> getAllPlaylist();
 }

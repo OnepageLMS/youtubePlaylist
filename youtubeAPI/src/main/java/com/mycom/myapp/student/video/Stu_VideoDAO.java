@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.mycom.myapp.commons.VideoVO;
+import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 
 @Repository
 public class Stu_VideoDAO {
@@ -23,7 +24,7 @@ public class Stu_VideoDAO {
 		return sqlSession.selectList("Stu_Video.getVideoList", vo);
 	}
 	
-	public List<VideoVO> getVideoCheckList(VideoVO vo) {
+	public List<VideoVO> getVideoCheckList(Stu_VideoCheckVO vo) {
 		return sqlSession.selectList("Stu_Video.getVideoCheckList", vo);
 	}
 	/*public PlaylistVO getPlaylist (int id) {

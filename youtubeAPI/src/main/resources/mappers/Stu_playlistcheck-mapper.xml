@@ -39,7 +39,13 @@
 	<select id="getPlaylistByPlaylistID" resultType="PlaylistCheckVO">
 		select * 
 		from lms_playlistCheck
-		where playlistID=#{playlistID} AND classContentID = #{classContentID}
+		where playlistID=#{playlistID} AND classContentID = #{classContentID} AND studentID=#{studentID}
+	</select>
+	
+	<select id="getCompletePlaylist" resultType="PlaylistCheckVO">
+		select * 
+		from lms_playlistCheck
+		where classID=#{classID} AND studentID = #{studentID}
 	</select>
 	
 	<select id="getAllPlaylist" resultType="PlaylistCheckVO">

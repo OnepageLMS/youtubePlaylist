@@ -23,6 +23,11 @@
 		where studentID=#{studentId}
 	</select>
 	
+	<select id="getAcceptedStudent" resultType="TakesVO">
+		select * from lms_takes
+		where studentID=#{studentId} and status="accepted"
+	</select>
+	
 	<select id="getTakesNum" resultType="TakesVO">
 		select studentID, name, classID, email
 		from lms_takes join lms_student on lms_takes.studentID = lms_student.id

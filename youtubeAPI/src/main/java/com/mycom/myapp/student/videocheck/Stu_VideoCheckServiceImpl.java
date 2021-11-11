@@ -43,6 +43,11 @@ public class Stu_VideoCheckServiceImpl implements Stu_VideoCheckService {
 	public Stu_VideoCheckVO getTime(Stu_VideoCheckVO vo) {
 		return videoCheckDAO.getTime(vo);
 	}
+	
+	@Override
+	public List<Stu_VideoCheckVO> getWatchedCheck(Stu_VideoCheckVO vo){
+		return videoCheckDAO.getWatchedCheck(vo);
+	}
 
 	@Override
 	public List<Stu_VideoCheckVO> getTimeList() {

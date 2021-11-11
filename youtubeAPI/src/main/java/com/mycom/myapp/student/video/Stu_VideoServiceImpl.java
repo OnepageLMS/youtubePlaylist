@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mycom.myapp.commons.VideoVO;
+import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 
 @Service
 public class Stu_VideoServiceImpl implements Stu_VideoService{
@@ -24,7 +25,7 @@ public class Stu_VideoServiceImpl implements Stu_VideoService{
 	}
 	
 	@Override
-	public List<VideoVO> getVideoCheckList(VideoVO vo) {
+	public List<VideoVO> getVideoCheckList(Stu_VideoCheckVO vo) {
 		return videoDAO.getVideoCheckList(vo);
 	}
 }
