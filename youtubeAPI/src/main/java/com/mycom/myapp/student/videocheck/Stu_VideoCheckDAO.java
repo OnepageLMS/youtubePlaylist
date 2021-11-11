@@ -42,6 +42,10 @@ public class Stu_VideoCheckDAO {
 		return sqlSession.selectOne("Stu_videoCheck.getTime2", vo);
 	}
 	
+	public List<Stu_VideoCheckVO> getWatchedCheck(Stu_VideoCheckVO vo) {
+		return sqlSession.selectList("Stu_videoCheck.getWatchedCheck", vo);
+	}
+	
 	public List<Stu_VideoCheckVO> getTimeList() {
 		List<Stu_VideoCheckVO> result = sqlSession.selectList("Stu_videoCheck.getTimeList");
 		return result;

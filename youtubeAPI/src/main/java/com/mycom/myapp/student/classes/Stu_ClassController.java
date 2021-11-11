@@ -27,6 +27,7 @@ import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
@@ -53,6 +54,9 @@ public class Stu_ClassController{
 	
 	@Autowired
 	private Stu_PlaylistCheckService playlistcheckService;
+	
+	@Autowired
+	private PlaylistService playlistService;
 	
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
@@ -220,17 +224,9 @@ public class Stu_ClassController{
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/allContents", method = RequestMethod.POST)
-	public List<ClassContentVO> allContents(HttpServletRequest request, Model model) throws Exception {
-		
-	    //return classContentService.getWeekClassContent(Integer.parseInt(request.getParameter("classID")));
-		return classContentService.getAllClassContent(classID); //classContents테이블에서 가져오기 
-	}
-	
-	@ResponseBody
 	@RequestMapping(value = "/forVideoInformation", method = RequestMethod.POST)
 	public List<VideoVO> forVideoInformation(HttpServletRequest request, Model model) throws Exception {
-		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
 		//int id = Integer.parseInt(request.getParameter("id"));
 	    VideoVO vo = new VideoVO();
 	    vo.setPlaylistID(playlistID);
@@ -238,13 +234,60 @@ public class Stu_ClassController{
 	    return videoService.getVideoList(vo);
 	}
 	
+	/*@ResponseBody
+	@RequestMapping(value = "/forWatchedCount", method = RequestMethod.POST)
+	public List<Stu_VideoCheckVO> forWatchedCount(HttpServletRequest request, Model model) throws Exception {
+		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
+		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
+		System.out.println("watch");
+		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
+	    vo.setPlaylistID(playlistID);
+	    vo.setStudentID(studentId);
+	    vo.setClassContentID(classContentID);
+	    System.out.println("하나의 classContent , playlist내 영상 개수 : "+ videoCheckService.getWatchedCheck(vo).size());
+	    return videoCheckService.getWatchedCheck(vo);
+	} *///이렇게하면 videoCheck에 없는 영상에 대한 정보는 가져오지 못함 ..... 
+	
+	@ResponseBody
+	@RequestMapping(value = "/forWatchedCount", method = RequestMethod.POST)
+	public int forWatchedCount(HttpServletRequest request, Model model) throws Exception {
+		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
+		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
+		System.out.println("watch");
+		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
+	    vo.setPlaylistID(playlistID);
+	    vo.setStudentID(studentId);
+	    vo.setClassContentID(classContentID);
+	    
+	    int count = 0;
+	    for(int i=0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
+	    	if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1)
+	    		count++;
+	    }
+	    return count;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forWatched", method = RequestMethod.POST)
+	public List<VideoVO> forWatched(HttpServletRequest request, Model model) throws Exception {
+		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
+		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
+		System.out.println("watch" + classContentID);
+		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
+	    vo.setPlaylistID(playlistID);
+	    vo.setStudentID(studentId);
+	    vo.setClassContentID(classContentID);
+	    System.out.println("하나의 classContent , playlist내 영상 개수 : "+ videoService.getVideoCheckList(vo).size());
+	    return videoService.getVideoCheckList(vo);
+	} //이렇게하면 videoCheck에 없는 영상에 대한 정보는 가져오지 못함 ..... ..
+	
 
 	@ResponseBody
 	@RequestMapping(value = "/changeID", method = RequestMethod.POST)
 	public ClassContentVO changeID(HttpServletRequest request, Model model) throws Exception {
 		ClassContentVO vo = classContentService.getOneContent(Integer.parseInt(request.getParameter("id")));
 	    
-	    return vo;
+	    return vo;////
 	}
 	
 	
@@ -287,6 +330,7 @@ public class Stu_ClassController{
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 		pcvo.setPlaylistID(playlistID);
 		pcvo.setClassContentID(classPlaylistID);
+		pcvo.setStudentID(studentId);
 	   
 	  if(playlistcheckService.getPlaylistByPlaylistID(pcvo) != null) {
 		  System.out.println("null아니니까");
@@ -296,7 +340,7 @@ public class Stu_ClassController{
 		  return null;
 	}
 	
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/isExisted", method = RequestMethod.POST)
 	public String isExisted(HttpServletRequest request) throws Exception { //변수들 하나씩 가져오는거 아니고 json 형식으로 가져올 수 있도록
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
@@ -322,7 +366,7 @@ public class Stu_ClassController{
 		else {
 			return "Success";
 		}
-	}
+	}*/
 	
 	/*@RequestMapping(value = "/videocheck", method = RequestMethod.POST)
 	@ResponseBody
@@ -379,9 +423,9 @@ public class Stu_ClassController{
 		//int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		int classID = Integer.parseInt(request.getParameter("classID"));
+		//int classID = Integer.parseInt(request.getParameter("classID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
-		
+		System.out.println("lastTime : " + lastTime + " ,timer " + timer + " ,videoID : " + videoID + " ,playlistID : " + playlistID + " , classID : " + classID + " classPlaylistID : " + classPlaylistID); 
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);
@@ -393,7 +437,7 @@ public class Stu_ClassController{
 		vo.setClassContentID(classPlaylistID);
 		//System.out.println(vo.getClassID() + " " + vo.getClassPlaylistID());
 		if (videoCheckService.updateTime(vo) == 0) {
-			System.out.println("데이터 업데이트 실패 ");
+			System.out.println("데이터 업데이트 실패 -> insert할 것 ");
 			videoCheckService.insertTime(vo);
 
 		}
@@ -412,11 +456,13 @@ public class Stu_ClassController{
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int watch = Integer.parseInt(request.getParameter("watch"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		//int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
+		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
 		//int classID = Integer.parseInt(request.getParameter("classID"));
 		//System.out.println("classPlaylistID : " + classPlaylistID + " id : " + id);
+		int totalVideo = Integer.parseInt(request.getParameter("totalVideo"));
 		System.out.println("lastTime : " + lastTime+" timer : " + timer + " studentID :  " + studentId);
-		System.out.println("videoID : " + videoID+" watch : " + watch + " playlistID :  " + playlistID + " classPlaylistID : " + id+  " classID : " + classID);
+		System.out.println("videoID : " + videoID+" watch : " + watch + " playlistID :  " + playlistID + " classPlaylistID : " + classPlaylistID+  " classID : " + classID);
+		System.out.println("totalVideo : " + totalVideo);
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);
@@ -424,45 +470,106 @@ public class Stu_ClassController{
 		vo.setvideoID(videoID);
 		vo.setTimer(timer);
 		vo.setClassID(classID);
-		vo.setClassContentID(id);
+		vo.setClassContentID(classPlaylistID);
+		vo.setPlaylistID(playlistID);
 		
-		Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
+		//Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
 		vo.setWatched(watch);
-		
-		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		
-		pcvo.setStudentID(studentId);
-		pcvo.setPlaylistID(playlistID);
-		//pcvo.setVideoID(videoID);
-		//pcvo.setClassContentID(classPlaylistID);
-		pcvo.setClassContentID(id);
-		pcvo.setClassID(classID);
-		//pcvo.set
 		
 		//우선 현재 db테이블의 getWatched를 가져온다. 이때 가져온 값이 0이다
 		//vo.setWatched를 한다.
 		//vo.getWatched했는데 1이다.
 		//이럴때 playlistcheck테이블의 totalWatched업데이트 시켜주기
-		
+		//totalVideo랑 playlist의 개수가 똑같고, watch가 모두 1이면 ==> playlistCheck insert 
 		
 		if (videoCheckService.updateWatch(vo) == 0) { //하나도 안멈추고 처음부터 끝까지 보는 경우
-			videoCheckService.insertTime(vo);
-			playlistcheckService.updateTotalWatched(pcvo);
-
+			System.out.println("----------" +classPlaylistID);
+			videoCheckService.insertTime(vo);	
 		}
 		else { //업데이트가 성공하면 
-			if(checkVO.getWatched() == 0) { //checkVO의정보가 playlistcheck에 업데이트가 되지 않았면 
-				if(vo.getWatched() == 1) { //원래 값은 0이었는데 1로 업뎃된것을 의미
-					//System.out.println("값이 뭔데 ? " +vo.getWatchedUpdate());
-					//System.out.println("값이 뭔데 ? " +vo.getWatched());
-					//System.out.println("값이 뭔디 3 " +pcvo.getStudentID() + " / " + pcvo.getPlaylistID() + " / " + pcvo.getVideoID());
-					//playlistcheckService.insertPlaylist(pcvo);
-					playlistcheckService.updateTotalWatched(pcvo); //
-				}
+			System.out.println("changeWatch 업데이트 성공 ");
+		}
+		
+		System.out.println("이거 playlist에 영상 몇개있냐면 ,,, " + playlistService.getPlaylist(playlistID).getTotalVideo());
+		int count = 0;
+		//if(totalVideo == playlistService.getPlaylist(playlistID).getTotalVideo()) {
+			//System.out.println("이거 출력되면 안돼,,,,,,,,"); //이거 출력되면 watch 1인거 다 확인해주어야 함 
+		for(int i= 0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
+			if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1) {
+				System.out.println(videoCheckService.getWatchedCheck(vo).get(i).getID());
+				count++;
+			}
+			else {
+				System.out.println(videoCheckService.getWatchedCheck(vo).get(i).getID());
+				break;
 			}
 		}
 			
+		if(count == playlistService.getPlaylist(playlistID).getTotalVideo()) {
+			System.out.println("오퀴 이제 playlistCheck insert!");
+			//insert2번 일어난다.. 밥먹고 와서 해결할거다!.
+			Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
+			
+			pcvo.setStudentID(studentId);
+			pcvo.setPlaylistID(playlistID);
+			//pcvo.setVideoID(videoID);
+			//pcvo.setClassContentID(classPlaylistID);
+			pcvo.setClassContentID(classPlaylistID);
+			pcvo.setClassID(classID);
+			pcvo.setTotalVideo(playlistService.getPlaylist(playlistID).getTotalVideo());
+			pcvo.setTotalWatched(0.0);
+			
+			if(playlistcheckService.getPlaylist(playlistID) == null) {
+				if(playlistcheckService.insertPlaylist(pcvo) != 0)
+					System.out.println("changewatch good insert");
+				else
+					System.out.println("changewatch insert 실패");
+			}
+			else {
+				System.out.println("추후에 시간 업데이트가 일어날 수 있도록 ,, ");
+			}
+		}
+		else {
+			System.out.println("아직은,,,, count : " + count  );
+		}
+		//}
+		
 		return "redirect:/"; // 이것이 ajax 성공시 파라미터로 들어가는구만!!
+	}
+	
+	//dashboard_Stu에서 사용
+	@RequestMapping(value = "/competePlaylistCount", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Integer> progressbarInDash(HttpServletRequest request) {
+		//takes테이블에서 studentID의 모든 classID를 가져온다.
+		//classID를 pcvo에 넣어서 해당 classID에서 완료한 Playlist들을 담는다.
+		//이 리스트를 리스트안에 넣어준다.
+		//리스트의 리스트를 리턴한다. 
+		System.out.println("여기 오ㅓ ?");
+		List<Integer> completePlaylist = new ArrayList<Integer>();
+		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
+		pcvo.setStudentID(studentId);
+		System.out.println(takesService.getStudent(studentId));
+		
+		for(int i=0; i<takesService.getAcceptedStudent(studentId).size(); i++) { //주어진 studentID를 가진 학생이 수강하는 수업에 대해 
+			pcvo.setClassID(takesService.getAcceptedStudent(studentId).get(i).getClassID());
+			System.out.println("다본 playlist : " + playlistcheckService.getCompletePlaylist(pcvo).size());
+			completePlaylist.add(playlistcheckService.getCompletePlaylist(pcvo).size());
+		}
+		return completePlaylist;
+	}
+	
+	@RequestMapping(value = "/classTotalPlaylistCount", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Integer> classTotalPlaylistCount(HttpServletRequest request) {
+		//ClassContentVO ccvo= new ClassContentVO ();
+
+		List<Integer> allPlaylist = new ArrayList<Integer>();
+		
+		for(int i=0; i<takesService.getAcceptedStudent(studentId).size(); i++) { //주어진 studentID를 가진 학생이 수강하는 수업에 대해 
+			allPlaylist.add(classContentService.getPlaylistCount(takesService.getAcceptedStudent(studentId).get(i).getClassID()));
+		}
+		return allPlaylist;
 	}
 
 

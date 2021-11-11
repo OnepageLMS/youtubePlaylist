@@ -45,6 +45,10 @@ public class Stu_PlaylistCheckDAO {
 		return sqlSession.selectOne("Stu_PlaylistCheck.getTotalVideo", playlistID);
 	}
 	
+	public List<Stu_PlaylistCheckVO> getCompletePlaylist(Stu_PlaylistCheckVO vo) {
+		return sqlSession.selectList("Stu_PlaylistCheck.getCompletePlaylist", vo);
+	}
+	
 	public List<Stu_PlaylistCheckVO> getAllPlaylist() {
 		//System.out.println("dao!");
 		return sqlSession.selectList("Stu_PlaylistCheck.getAllPlaylist");

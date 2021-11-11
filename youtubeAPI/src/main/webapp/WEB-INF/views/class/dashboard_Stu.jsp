@@ -84,6 +84,7 @@ function getAllClass(act, order){
 				else
 					newNotice = '';
 				
+				
 				if(act == 1){
 					var cardColor = active_colors[i%(active_colors.length)];
 					html = '<div class="col-sm-12 col-md-6 col-lg-3">'
@@ -148,6 +149,31 @@ function getAllMyClass(){
 		type: 'post',
 		url: "${pageContext.request.contextPath}/student/class/getAllMyClass",
 		success: function(data){
+			$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+				url : "${pageContext.request.contextPath}/student/class/competePlaylistCount",
+				type : "post",
+				async : false,
+				success : function(data) {
+					completePlaylist = data;
+				},
+				error : function() {
+					alert("error");
+				}
+			})	
+			
+			$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+				url : "${pageContext.request.contextPath}/student/class/classTotalPlaylistCount",
+				type : "post",
+				async : false,
+				success : function(data) {
+					allPlaylist = data;
+				},
+				error : function() {
+					alert("error");
+				}
+			})
+			
+			
 			 $('.activeClassList').empty();
 			active = data.active;
 			inactive = data.inactive;
@@ -163,6 +189,13 @@ function getAllMyClass(){
 				$('.activeClassList').append('<p class="col text-center">참여중인 강의실이 없습니다! </p>');
 			else{
 				$(active).each(function(){
+					if(completePlaylist[i] == 0 ){
+						percentage = 0;
+					}
+					else{
+						percentage = Math.floor(completePlaylist[i] /  allPlaylist[i] *100);
+					}
+					
 					var classID = this.id;
 					var classNoticeURL = "'${pageContext.request.contextPath}/student/notice/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
@@ -194,7 +227,7 @@ function getAllMyClass(){
 					                        			+ '<div class="widget-subheading col-12">학습 진행도</div>'
 														+ '<div class="col-12">'
 															+ '<div class="mb-3 progress">'
-				                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+				                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + percentage + '%;">' + percentage + '%</div>'
 				                                            + '</div>'
 														+ '</div>'
 													+ '</div>'

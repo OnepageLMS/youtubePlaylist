@@ -47,6 +47,11 @@ public class Stu_PlaylistCheckServiceImpl implements Stu_PlaylistCheckService{
 	}
 	
 	@Override
+	public List<Stu_PlaylistCheckVO> getCompletePlaylist(Stu_PlaylistCheckVO vo){
+		return playlistcheckDAO.getCompletePlaylist(vo);
+	}
+	
+	@Override
 	public List<Stu_PlaylistCheckVO> getAllPlaylist(){
 		return playlistcheckDAO.getAllPlaylist();
 	}

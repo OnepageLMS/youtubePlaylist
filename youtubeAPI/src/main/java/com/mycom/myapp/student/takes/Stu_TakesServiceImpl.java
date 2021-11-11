@@ -38,6 +38,11 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 	}
 	
 	@Override
+	public List<Stu_TakesVO> getAcceptedStudent(int studentID){
+		return stu_TakesDAO.getAcceptedStudent(studentID);
+	}
+	
+	@Override
 	public List<Stu_TakesVO> getStudentNum(int classID) {
 		return stu_TakesDAO.getStudentNum(classID);
 	}

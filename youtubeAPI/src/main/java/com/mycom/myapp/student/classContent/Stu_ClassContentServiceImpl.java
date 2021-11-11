@@ -19,6 +19,11 @@ public class Stu_ClassContentServiceImpl implements Stu_ClassContentService{
 	}
 	
 	@Override
+	public int getPlaylistCount(int classID) {
+		return classContentDAO.getPlaylistCount(classID);
+	}
+	
+	@Override
 	public List<ClassContentVO> getWeekClassContent(int classID){
 		return classContentDAO.getWeekClassContent(classID);
 	}

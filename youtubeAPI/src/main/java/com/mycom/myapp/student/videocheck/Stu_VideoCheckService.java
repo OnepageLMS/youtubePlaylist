@@ -16,5 +16,7 @@ public interface Stu_VideoCheckService {
 	
 	public Stu_VideoCheckVO getTime(Stu_VideoCheckVO vo) ;
 	
+	public List<Stu_VideoCheckVO> getWatchedCheck(Stu_VideoCheckVO vo);
+	
 	public List<Stu_VideoCheckVO> getTimeList();
 }

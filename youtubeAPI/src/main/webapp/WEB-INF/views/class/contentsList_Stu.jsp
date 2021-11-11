@@ -51,11 +51,30 @@
 		//console.log("몇개냐면,, " + weekContents.length);
 		console.log("length : " + allMyClass.length);
 		console.log(allMyClass);
+		
+		var watchCount = 0 ;
 			for(var i=0; i<allMyClass.length; i++){
-				//if(allMyClass[i].playist == 0){
-					
-				//}
-				//var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
+				
+				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+					url : "${pageContext.request.contextPath}/student/class/forWatchedCount",
+					type : "post",
+					async : false,
+					data : {	
+						playlistID : weekContents[i].playlistID,
+						classContentID : weekContents[i].id
+					},
+					success : function(data) {
+						watchCount = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+						console.log(data);
+						//console.log("forVideoInfo? : " + watch[0].id);
+						//console.log("forVideoInfo? : " + watch[1].watched);
+						//console.log("forVideoInfo? : " + watch[2].watched);
+					},
+					error : function() {
+						alert("error");
+					}
+				})
+				
 				var day = allMyClass[i].days;
 				var endDate = allMyClass[i].endDate; //timestamp -> actural time
 				var videoLength = '';
@@ -63,13 +82,29 @@
 				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
 				var symbol;
+				var progressbar;
 				if(allMyClass[i].playlistID == 0){ //playlist없이 description만 올림 
 					symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
+					progressbar = '';
 					videoLength = '';
 				}
 				else{ //playlist 올림 
 					symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-					
+					progressbar = '<div class="col-sm-3">'
+						               	 + '<div class="widget-content">'
+						            		+'<div class="widget-content-outer">'
+						                 	+'<div class="widget-content-wrapper">'
+						                     	+'<div class="widget-content-right">'
+						                         	+'<div class="widget-numbers fsize-1 text-muted"> ' + watchCount + " / " + weekContents[i].totalVideo +  '</div>'
+						                    		+'</div>'
+						                 	+'</div>'
+						                     +'<div class="widget-progress-wrapper mt-1">'
+						                        + '<div class="progress-bar-sm progress-bar-animated-alt progress">'
+						                             +'<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="71" aria-valuemin="0" aria-valuemax="100" style="width: '+ watchCount/weekContents[i].totalVideo*100 +'%;"></div>'
+						                         +'</div>'
+						                    +'</div>'
+						            +' </div>'
+						         + '</div>';
 					for(var j=0; j<weekContents.length; j++){
 							if(allMyClass[i].playlistID == weekContents[j].playlistID)
 							videoLength = "[" + convertTotalLength(weekContents[j].totalVideoLength) + "]";
@@ -85,7 +120,7 @@
 									+ '<div class="row col d-flex align-items-center">'
 										+ '<div class="index col-sm-1 ">' + (allMyClass[i].daySeq+1) + '. </div>'
 										+ '<div class="videoIcon col-sm-1">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
-										+ "<div class='col-sm-8 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
+										+ "<div class='col-sm-7 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
 											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
 												+ allMyClass[i].title + " " + videoLength  
 											+ '</div>'
@@ -97,8 +132,17 @@
 											+ '</div>'
 										
 										+ '</div>'
-									+ '</div>'
-								+ '</div>');
+										
+										+ progressbar
+                                       /* + '<div class="mb-3 progress">'
+                                    		+ '<div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">1/2</div>'
+                                		+ '</div>'*/
+                                    + '</div>'
+                                    
+                                    
+                                    
+							+ '</div>'
+						+ '</div>');
 			}
 	 		
 	});
