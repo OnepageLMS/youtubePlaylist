@@ -32,9 +32,9 @@ function leaveSite(){
 			location.replace('${pageContext.request.contextPath}/login/signin');
 		},
 		error: function(data, status,error) {
-			alert('회원탈퇴에 실패했습니다!');
+			console.log('회원탈퇴에 실패했습니다!');
 		}
-	});	
+	});
 }
 </script>
 

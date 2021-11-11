@@ -38,7 +38,7 @@
        <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
            <div class="app-sidebar__inner">
                <ul class="vertical-nav-menu">
-                   <li class="app-sidebar__heading">활성화된 강의실</li>
+                   <li class="app-sidebar__heading">진행중인 강의실</li>
                    <c:forEach var="v" items="${allMyClass}">
                    	<c:set var="curr_name" value="${v.className}"/>
                    			<c:set var="name" value="<%=className%>"/>
@@ -63,9 +63,15 @@
                               		</a>
                                	</li>
                                	<li>
+									<a href="${pageContext.request.contextPath}/student/calendar/${v.id}">
+                                   		<i class="metismenu-icon"></i>
+                                   		강의 캘린더
+                              		</a>
+                               	</li>
+                               	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>
-                                       	강의컨텐츠
+                                       	강의 컨텐츠
                                    	</a>
                                	</li>
                                	<li>
@@ -77,7 +83,7 @@
                            	</ul>
                        	</li>
 					</c:forEach>
-					<li class="app-sidebar__heading">비활성화된 강의실</li>
+					<li class="app-sidebar__heading">종료된 강의실</li>
                    <c:forEach var="v" items="${allMyInactiveClass}">
                    <c:set var="curr_name" value="${v.className}"/>
                    			<c:set var="name" value="<%=className%>"/>
@@ -102,9 +108,15 @@
                               		</a>
                                	</li> 
                                	<li>
+									<a href="${pageContext.request.contextPath}/student/calendar/${v.id}">
+                                  		<i class="metismenu-icon"></i>
+                                  		강의 캘린더
+                             		</a>
+                              	</li>
+                               	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>
-                                       	강의컨텐츠
+                                       	강의 컨텐츠
                                    	</a>
                                	</li>
                                	<li>

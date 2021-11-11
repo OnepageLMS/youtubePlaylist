@@ -77,67 +77,6 @@ public class LoginController {
 	private Stu_TakesVO takes;
 	public MemberVO loginVO;
 	
-	//(jw)
-	@RequestMapping(value="/enroll" , method = RequestMethod.GET)
-	public String enroll(Model model) {
-		//takes.setStudentID(loginvo.getId());
-		takes.setStudentName(loginVO.getName());
-		takes.setClassName(classInfo.getClassName()); 
-		takes.setStatus("pending");
-		if(takesService.insertStudent(takes) == 1) {
-			System.out.println("학생 등록 요청 완료~!");
-			model.addAttribute("enroll", 1); // 
-		}
-		else {
-			System.out.println("학생 등록 요청 실패");
-		}
-		
-		return "redirect:/student/class/dashboard";
-	}	
-	
-	@RequestMapping(value = "/invite/{entryCode}", method = RequestMethod.GET)
-	public String entry(@PathVariable String entryCode, Model model, HttpSession session) { //@SessionAttribute("login") MemberVO loginVO) { //
-		this.entryCode = entryCode;
-		takes = new Stu_TakesVO();
-		
-		classInfo = classesService.getClassByEntryCode(entryCode);
-		model.addAttribute("classInfo", classInfo);
-		
-		int flag=0; // 이미 등록되어 있는지 여부 확인용  
-		loginVO = (MemberVO)session.getAttribute("login");
-		if(loginVO != null) {
-			System.out.println("로그인된 아이디 확인 => " + loginVO.getId());
-			if(checkIfAlreadyEnrolled(loginVO, classInfo) == 0) {
-				flag = 0;
-			}
-			else {
-				flag = 1;
-			}
-		}
-		model.addAttribute("login", loginVO);
-		model.addAttribute("alreadyEnrolled", flag);
-		
-		return "intro/invite"; 
-	}
-	
-	public int checkIfAlreadyEnrolled(MemberVO loginVO, ClassesVO classInfo) {
-		System.out.println(classInfo.getId() + ": " + loginVO.getId());
-		//Stu_TakesVO result = null;
-		takes.setClassID(classInfo.getId());
-		takes.setStudentID(loginVO.getId());
-		System.out.println(takes.getClassID() + ": " + takes.getStudentID());
-		Stu_TakesVO result  = takesService.checkIfAlreadyEnrolled(takes);
-		if(loginVO.getMode().equals("lms_teacher")) { // result 결과는 학생만 확인함. 
-			loginVO.setInstructorID(loginVO.getId());
-			List<ClassesVO> classes = classesService.getAllMyClass(loginVO.getInstructorID());
-			for(ClassesVO oneClass : classes) {
-				if(oneClass.getId() == classInfo.getId()) return 1; 
-			}
-		}
-		if(result == null) return 0;
-		else return 1;
-	}
-	
 	@RequestMapping(value = "/login/signin", method = RequestMethod.GET)
 	public String login() {
 		return "intro/signin";
@@ -244,11 +183,10 @@ public class LoginController {
 		if(entryCode != null) {
 			if(checkIfAlreadyEnrolled(loginvo, classInfo) == 0) {
 				//takes.setStudentID(loginvo.getId());
-				takes.setStudentName(loginvo.getName());
 				takes.setClassName(classInfo.getClassName());
 				takes.setStatus("pending");
 				if(takesService.insertStudent(takes) == 1) {
-					System.out.println("학생 등록 요청 완료~!");
+					System.out.println("학생 등록 요청 완료");
 					model.addAttribute("enroll", 1);
 				}
 				else System.out.println("학생 등록 요청 실패");
@@ -256,6 +194,68 @@ public class LoginController {
 		}
 		return returnURL;
 	}
+	
+	//(jw)
+	@RequestMapping(value="/enroll" , method = RequestMethod.GET)
+	public String enroll(Model model) {
+		//takes.setStudentID(loginvo.getId());
+		takes.setClassName(classInfo.getClassName()); 
+		takes.setStatus("pending");
+		if(takesService.insertStudent(takes) == 1) {
+			System.out.println("학생 등록 요청 완료~!");
+			model.addAttribute("enroll", 1); // 
+		}
+		else {
+			System.out.println("학생 등록 요청 실패");
+		}
+		
+		return "redirect:/student/class/dashboard";
+	}	
+	
+	@RequestMapping(value = "/invite/{entryCode}", method = RequestMethod.GET)
+	public String entry(@PathVariable String entryCode, Model model, HttpSession session) { //@SessionAttribute("login") MemberVO loginVO) { //
+		this.entryCode = entryCode;
+		takes = new Stu_TakesVO();
+		
+		classInfo = classesService.getClassByEntryCode(entryCode);
+		model.addAttribute("classInfo", classInfo);
+		
+		int flag=0; // 이미 등록되어 있는지 여부 확인용  
+		loginVO = (MemberVO)session.getAttribute("login");
+		if(loginVO != null) {
+			System.out.println("로그인된 아이디 확인 => " + loginVO.getId());
+			if(checkIfAlreadyEnrolled(loginVO, classInfo) == 0) {
+				flag = 0;
+			}
+			else {
+				flag = 1;
+			}
+		}
+		model.addAttribute("login", loginVO);
+		model.addAttribute("alreadyEnrolled", flag);
+		
+		return "intro/invite"; 
+	}
+	
+	public int checkIfAlreadyEnrolled(MemberVO loginVO, ClassesVO classInfo) {
+		System.out.println(classInfo.getId() + ": " + loginVO.getId());
+		//Stu_TakesVO result = null;
+		takes.setClassID(classInfo.getId());
+		takes.setStudentID(loginVO.getId());
+		System.out.println(takes.getClassID() + ": " + takes.getStudentID());
+		Stu_TakesVO result  = takesService.checkIfAlreadyEnrolled(takes);
+		if(loginVO.getMode().equals("lms_teacher")) { // result 결과는 학생만 확인함. 
+			loginVO.setInstructorID(loginVO.getId());
+			List<ClassesVO> classes = classesService.getAllMyClass(loginVO.getInstructorID());
+			for(ClassesVO oneClass : classes) {
+				if(oneClass.getId() == classInfo.getId()) return 1; 
+			}
+		}
+		if(result == null) return 0;
+		else return 1;
+	}
+	
+	
 	
 	@RequestMapping(value = "/login/revoketoken") //토큰 무효화
 	public Map<String, String> revokeToken(@RequestParam(value = "token") String token) throws JsonProcessingException {
