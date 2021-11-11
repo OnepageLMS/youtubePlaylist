@@ -94,7 +94,7 @@ $(document).ready(function(){
 	getPlaylistInfo();
 	getAllVideo();
 	showSlider();
-
+	setSlider();
 });
 
 function getPlaylistInfo(){
@@ -180,7 +180,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 		    	var html = '<div class="video list-group-action list-group-item row d-flex justify-content-between"'
 		    				+ addStyle
 							+ '>'
-								+'<div class="col-lg-11 row" onclick="playVideoFromPlaylist(this)" ' 
+								+'<div class="col-lg-11 row" onclick="playVideoFromPlaylist(this); setSlider();" ' 
 									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 									+ '" videoID="' + value.id 
 									+ '" youtubeID="' + value.youtubeID 
@@ -394,8 +394,8 @@ function convertTotalLength(seconds){
 	var result = "";
 	
 	if (seconds_hh > 0)
-		result = ("00"+seconds_hh .toString()).slice(-2)+ ":";
-	result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
+		result = ("00"+seconds_hh.toString()).slice(-2)+ ":";
+	result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss.toString()).slice(-2) ;
 	
 	return result;
 }
@@ -475,7 +475,7 @@ function showSlider(){
 }
 
 function setSlider() {
-	console.log("limit값 확인 !! ", limit);
+	console.log("limit값 확인 !! ", end_s);
 	/* $("#slider-range").slider("destroy"); */
 	/*var attributes = {
 		max: limit
@@ -485,17 +485,19 @@ function setSlider() {
 
 	// pass updated attributes to rangeslider.js
 	$element.rangeslider('update', true); */
-	$('#slider-range').slider( "option", "min", 0);
-	$('#slider-range').slider( "option", "max", limit);
+	$('#slider-range').slider( "option", "min", start_s);
+	$('#slider-range').slider( "option", "max", end_s);
 
-	$( "#slider-range" ).slider( "option", "values", [ 0, limit ] );
+	$( "#slider-range" ).slider( "option", "values", [ start_s, end_s ] );
 	//$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
-	
-	start_hour= start_min = start_sec = 0;
 
-    end_hour = Math.floor(limit / 3600);
-    end_min = Math.floor(limit % 3600 / 60);
-    end_sec = limit % 60;
+	start_hour = Math.floor(start_s / 3600);
+	start_min = Math.floor(start_s % 3600 / 60);
+	start_sec = start_s % 60;
+
+    end_hour = Math.floor(end_s / 3600);
+    end_min = Math.floor(end_s % 3600 / 60);
+    end_sec = end_s % 60;
 
 	
 	$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );

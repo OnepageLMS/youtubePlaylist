@@ -39,8 +39,8 @@ public class AttendanceCheckServiceImpl implements AttendanceCheckService {
 	}
 	
 	@Override
-	public int deleteAttendanceCheck(int id) {
-		return attendanceCheckDAO.deleteAttendanceCheck(id);
+	public int deleteAttendanceCheck(int studentID) {
+		return attendanceCheckDAO.deleteAttendanceCheck(studentID);
 	}
 	
 	@Override

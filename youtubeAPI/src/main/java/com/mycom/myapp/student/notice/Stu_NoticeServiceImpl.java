@@ -42,4 +42,9 @@ public class Stu_NoticeServiceImpl implements Stu_NoticeService{
 		return noticeDAO.countNoticeCheck(vo);
 	}
 
+	@Override
+	public int deleteNoticeCheck(int studentID) {
+		return noticeDAO.deleteNoticeCheck(studentID);
+	}
+
 }

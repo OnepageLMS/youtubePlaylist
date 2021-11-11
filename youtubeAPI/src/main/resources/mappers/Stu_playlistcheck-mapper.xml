@@ -22,7 +22,7 @@
 	</update>
 	
 	<delete id="deletePlaylist">
-		delete from lms_playlistCheck where id=#{id}
+		delete from lms_playlistCheck where studentID=#{studentID}
 	</delete>
 	
 	<select id="getPlaylist" resultType="PlaylistCheckVO">

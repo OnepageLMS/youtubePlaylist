@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.attendanceCheck.AttendanceCheckService;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.MemberVO;
+import com.mycom.myapp.student.attendanceCheck.Stu_AttendanceCheckService;
+import com.mycom.myapp.student.notice.Stu_NoticeService;
+import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
 
@@ -32,6 +36,15 @@ public class MemberController {
 	
 	@Autowired
 	private Stu_TakesService stu_takesService;
+	
+	@Autowired
+	private Stu_NoticeService stu_noticeService;
+	
+	@Autowired
+	private AttendanceCheckService attendanceCheckService;
+	
+	@Autowired
+	private Stu_PlaylistCheckService stu_playlistCheckService;
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateName", method = RequestMethod.POST)
@@ -67,7 +80,6 @@ public class MemberController {
 				//takes & attendanceCK & noticeCK & playlistCK & videoCK 자동삭제
 				System.out.println("학생 탈퇴 완료!");
 			}
-			
 		}
 	}
 	
@@ -90,6 +102,9 @@ public class MemberController {
 	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
 		System.out.println(vo.getClassID() + vo.getStudentID());
 		int result = stu_takesService.deleteStudent(vo);
+		attendanceCheckService.deleteAttendanceCheck(vo.getStudentID());
+		stu_noticeService.deleteNoticeCheck(vo.getStudentID());
+		stu_playlistCheckService.deletePlaylist(vo.getStudentID());
 		
 		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
 			System.out.println("totalStudent 업데이트 성공!");

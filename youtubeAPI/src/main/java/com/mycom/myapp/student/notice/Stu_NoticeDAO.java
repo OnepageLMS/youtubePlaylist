@@ -36,5 +36,9 @@ public class Stu_NoticeDAO {
 	public int countNoticeCheck(NoticeVO vo) {
 		return sqlSession.selectOne("Stu_Notice.getCountNoticeCheck", vo);
 	}
+	
+	public int deleteNoticeCheck(int studentID) {
+		return sqlSession.delete("Stu_Notice.deleteNoticeCheck", studentID);
+	}
 
 }

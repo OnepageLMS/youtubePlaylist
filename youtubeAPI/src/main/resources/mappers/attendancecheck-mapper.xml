@@ -33,7 +33,7 @@
 	</update>
 	
 	<delete id="deleteAttendanceCheck">
-		delete from lms_attendanceCheck where id=#{id}
+		delete from lms_attendanceCheck where studentID=#{studentID}
 	</delete>
 	
 	<select id="getAttendanceCheck" resultType="AttendanceCheckVO">

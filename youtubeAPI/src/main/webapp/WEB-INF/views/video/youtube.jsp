@@ -246,12 +246,8 @@ $(document).ready(function(){
 		for (var i = 0; i < maxResults; i++) {
 			var id = idList[i];
 			var view = viewCount[i];
-			var title = titleList[i].replace("'", "&apos;").replace("\"","&quot;");
-
-			console.log(title);
-			console.log(typeof title);
-			console.log(`값 확인! \${title}`);
-			
+			var title = titleList[i].replace("'", "’").replace("/\"/g","\\\""); //titleList[i].replace("'", "&apos;").replace("\"","&quot;");
+	
 			/* title = `${title}`; */
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 100%; height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
@@ -265,7 +261,7 @@ $(document).ready(function(){
 			$("#get_view").append(					
 					/* '<div class="searchedVideo" onclick="$(#form2).submit();">' */
 					
-				/* 	'<ul class="list-group">'
+					/* 	'<ul class="list-group">'
                         + '<button class="list-group-item-action list-group-item">Dapibus ac facilisis in</button>'
                         <button class="list-group-item-action list-group-item">Morbi leo risus</button>
                         <button class="list-group-item-action list-group-item">Porta ac consectetur ac</button>
@@ -391,7 +387,7 @@ $(document).ready(function(){
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative row form-group">'
 							+ '<label for="exampleEmail" class="col-sm-2 col-form-label">영상제목 설정</label>'
-							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value="'+ `\${title}` +'"></div>'
+							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value=\''+ `\${title}` +'\'></div>'
 						+ '</div>'
 						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete" >'
@@ -420,7 +416,7 @@ $(document).ready(function(){
 								+ '<div class="col-sm-10"><input type="text" id="setTag" name="setTag" class="col-sm-11 form-control"> </div>'
 							+ '</div>' 
 						+ '</div>'
-						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +title+'\'); ">' 
+						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +`\{$title}`+'\'); ">' 
 							+ '<i class="fas fa-plus-square"> 리스트에 추가 </i>'
 						+ '</button> </div>'
 					+ '</form>' 
@@ -620,7 +616,6 @@ $(document).ready(function(){
 		    end_min = Math.floor(limit % 3600 / 60);
 		    end_sec = limit % 60;
 
-			
 			$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
 		}
 		
@@ -646,8 +641,6 @@ $(document).ready(function(){
 			$("#get_view").children().eq(index).css("background-color", "lightgray");
 			
 			console.log("check videoTitle here", videoTitle);
-
-			
 					
 			/* <span class="videoTitle bg-white p-1" style="border: 1px solid black"> </span>
 			<div>
@@ -1070,7 +1063,6 @@ $(document).ready(function(){
 								</div>
 
 								<div id="get_view"></div>
-
 								<div class="container">
 									<div class="row">
 										<div id="nav_view"></div>
