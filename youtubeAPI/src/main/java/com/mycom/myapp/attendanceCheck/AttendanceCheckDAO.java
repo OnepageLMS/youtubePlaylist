@@ -38,8 +38,8 @@ public class AttendanceCheckDAO {
 		return result;
 	}
 	
-	public int deleteAttendanceCheck(int id){
-		int result = sqlSession.update("AttendanceCheck.deleteAttendanceCheck", id);
+	public int deleteAttendanceCheck(int studentID){
+		int result = sqlSession.update("AttendanceCheck.deleteAttendanceCheck", studentID);
 		return result;
 	}
 	

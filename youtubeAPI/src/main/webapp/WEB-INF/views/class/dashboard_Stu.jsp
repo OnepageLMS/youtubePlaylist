@@ -319,11 +319,11 @@ function submitDeleteClassroom(){
                                </div>
                                <div class="d-inline-block ml-5">
                                    <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-                                       수강대기현황 
+                                       수강신청대기현황 
                                    </button>
                                </div>
                          </div>
-                       </div>            
+                       </div>          
                       
                        <div class="dashboardClass">
                        	<div class="classActive row">

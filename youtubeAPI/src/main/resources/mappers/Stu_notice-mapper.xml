@@ -38,4 +38,10 @@
 		where studentID=#{studentID} and lms_notice.classID=#{id}
 	</select>
 	
+	<delete id="deleteNoticeCheck">
+		delete from lms_noticeCheck where studentID = #{studentID}
+	</delete>
+	
+	
+	
 </mapper>
