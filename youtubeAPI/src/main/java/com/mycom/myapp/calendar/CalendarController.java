@@ -13,16 +13,19 @@ import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.ClassesVO;
 
 @Controller
+@RequestMapping(value="/calendar")
 public class CalendarController {
 	
 	@Autowired
 	private ClassesService classService;
 	
 	private int instructorID = 0;
+	private int classID = 0;
 	
-	@RequestMapping(value="/calendar/{classID}", method = {RequestMethod.GET, RequestMethod.POST})
-	public String calendar(@PathVariable(value="classID") int classID, Model model, HttpSession session) {
+	@RequestMapping(value="/{classID}", method = {RequestMethod.GET, RequestMethod.POST})
+	public String calendar(@PathVariable(value="classID") int class_id, Model model, HttpSession session) {
 		instructorID = (Integer)session.getAttribute("userID");
+		classID = class_id;
 		
 		ClassesVO vo = new ClassesVO();
 		vo.setId(classID);
@@ -37,6 +40,12 @@ public class CalendarController {
 		model.addAttribute("allMyInactiveClass", classService.getAllMyInactiveClass(instructorID));
 		model.addAttribute("className", classService.getClassName(classID));
 		return "class/calendar";
+	}
+	
+	@RequestMapping(value="/getSchedulueList", method = RequestMethod.POST)
+	public String getScheduleList(Model model) {
+		
+		return "";
 	}
 
 }
