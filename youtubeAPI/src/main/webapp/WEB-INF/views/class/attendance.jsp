@@ -512,7 +512,7 @@ function updateAttendance(days){
 						<div class="row align-items-center">
 							<div class="col-md-2 pr-0">
 								<button id="modalSubmit" type="button"
-								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">초대링크 생성</button>
+								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">초대링크 조회</button>
 							</div>
 							<div class="entryCode col-md-8 row ml-1 align-items-center" style="display:none;">
 								<span id="link" class="mr-4"> learntube.kr/invite/${classInfo.entryCode} </span>
