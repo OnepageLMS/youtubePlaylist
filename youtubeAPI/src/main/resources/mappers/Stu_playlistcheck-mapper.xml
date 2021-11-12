@@ -36,6 +36,11 @@
 		where lms_playlist.playlistID  = #{playlistID}
 	</select>
 	
+	<select id="getHowMany" resultType="int">
+		select count(*) from lms_playlistCheck
+		where lms_playlistCheck.playlistID  = #{playlistID} AND lms_playlistCheck.classID = #{classID}
+	</select>
+	
 	<select id="getPlaylistByPlaylistID" resultType="PlaylistCheckVO">
 		select * 
 		from lms_playlistCheck
