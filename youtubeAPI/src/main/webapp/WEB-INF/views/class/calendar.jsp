@@ -254,8 +254,8 @@
 	</div>
 
 <!-- 이벤트 생성 modal -->
-<div class="modal fade bd-example-modal-lg show" id="modal-view-event-add" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade show" id="modal-view-event-add" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">새로운 일정</h5>
