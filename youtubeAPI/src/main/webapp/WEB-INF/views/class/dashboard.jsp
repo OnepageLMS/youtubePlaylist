@@ -166,7 +166,20 @@ function getAllMyClass(){	//위와 중복 제거하기
 			 $('.activeClassList').empty();
 			active = data.active;
 			inactive = data.inactive;
-
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/class/forHowManyTakes",
+				type : "post",
+				async : false,
+				success : function(data) {
+					howmanyTake = data; 
+					console.log(howmanyTake);
+				},
+				error : function() {
+					alert("error");
+				}
+			})
+			
 			if(active == null && inactive == null){
 				$('.dashboardClass').append('<p class="col text-center">생성된 강의실이 없습니다.</p>');
 				$('.classActive').hide();
@@ -181,6 +194,32 @@ function getAllMyClass(){	//위와 중복 제거하기
 					var classID = this.id;
 					var className = this.className;
 					
+					$.ajax({
+						url : "${pageContext.request.contextPath}/forPublished",
+						type : "post",
+						async : false,
+						data : {classID : classID},
+						success : function(data) {
+							forPublished = data;
+						},
+						error : function() {
+							alert("error");
+						}
+					})
+					
+					$.ajax({
+						url : "${pageContext.request.contextPath}/forAll",
+						type : "post",
+						async : false,
+						data : {classID : classID},
+						success : function(data) {
+							forAll = data;
+						},
+						error : function() {
+							alert("error");
+						}
+					})
+					
 					var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
@@ -189,6 +228,12 @@ function getAllMyClass(){	//위와 중복 제거하기
 					var cardColor = active_colors[i%(active_colors.length)]; 
 
 					if(closeDate == '9999-12-31') closeDate = '';
+					
+					var width;
+					if(forPublished == 0)
+						width = 0;
+					else
+						width = Math.floor(forPublished / forAll * 100);
 					
 					var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 											+ '<div class="mb-3 card classCard">'
@@ -213,10 +258,11 @@ function getAllMyClass(){	//위와 중복 제거하기
 													+ '<div class="row">'
 														+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
 														+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + closeDate + ' </div>'
-														+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
+														+ '<div class="widget-subheading col-5 pb-2"><b>참여 '+howmanyTake+'명</b></div>'
 														+ '<div class="col-12">'
 															+ '<div class="mb-3 progress">'
-											                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+											                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + width + '%;">' + forPublished + ' / ' + forAll + '  공개</div>'
+													            // published 1인 컨텐츠 개수, 전체 컨텐츠 개수   
 											                + '</div>'
 														+ '</div>'
 													+ '</div>'

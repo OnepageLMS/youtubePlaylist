@@ -23,7 +23,9 @@ import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.playlist.PlaylistService;
+import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckVO;
+import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.commons.PlaylistVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
@@ -39,6 +41,10 @@ public class ClassContentController {
 	private ClassContentService classContentService;
 	@Autowired
 	private PlaylistService playlistService;
+	@Autowired
+	private Stu_PlaylistCheckService playlistCheckService;
+	@Autowired
+	private Stu_TakesService takesService;
 	@Autowired
 	private MemberService memberService;
   
@@ -59,6 +65,25 @@ public class ClassContentController {
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		model.addAttribute("className", classService.getClassName(classID));
 		return "class/contentsList";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forHowManyWatch", method = RequestMethod.POST)
+	public int forHowManyWatch(HttpServletRequest request, Model model) throws Exception {
+		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		Stu_PlaylistCheckVO spcvo = new Stu_PlaylistCheckVO();
+		spcvo.setClassID(classID);
+		spcvo.setPlaylistID(playlistID);
+		System.out.println(playlistCheckService.getHowMany(spcvo));
+		
+		return playlistCheckService.getHowMany(spcvo);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forHowManyTakes", method = RequestMethod.POST)
+	public int forHowManyTakes(HttpServletRequest request, Model model) throws Exception {
+		
+		return takesService.getStudentNum(classID).size();
 	}
 
 	@RequestMapping(value = "/contentDetail/{id}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기

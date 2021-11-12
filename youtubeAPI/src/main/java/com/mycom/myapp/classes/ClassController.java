@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 
 import net.sf.json.JSONArray;
 
@@ -33,6 +35,9 @@ public class ClassController {
 	
 	@Autowired
 	private ClassContentService classContentService;
+	
+	@Autowired
+	private Stu_ClassContentService stu_classContentService;
 	
 	@Autowired
 	private MemberService memberService;
@@ -62,6 +67,24 @@ public class ClassController {
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		return "class/dashboard";
 	}	
+	
+	@ResponseBody
+	@RequestMapping(value = "/forPublished",  method = RequestMethod.POST)	//학생이랑 선생님 같이 사용하도록 바꾸기!!
+	public int forPubished(HttpServletRequest request, Model model) throws Exception {
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		System.out.println(classID);
+		return stu_classContentService.getAllClassContent(classID).size();
+	}	
+	
+	@ResponseBody
+	@RequestMapping(value = "/forAll",  method = RequestMethod.POST)	//학생이랑 선생님 같이 사용하도록 바꾸기!!
+	public int forAll(HttpServletRequest request, Model model) throws Exception {
+		int classID = Integer.parseInt(request.getParameter("classID"));
+		return classContentService.getRealAll(classID).size();
+	}	
+	
+	
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)

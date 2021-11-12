@@ -184,6 +184,22 @@ $(document).ready(function(){
 		var videoLength;
 		var symbol;
 		
+		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			url : "${pageContext.request.contextPath}/class/forHowManyTakes",
+			type : "post",
+			async : false,
+			success : function(data) {
+				howmanyTake = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+				console.log(howmanyTake);
+				//console.log("forVideoInfo? : " + watch[0].id);
+				//console.log("forVideoInfo? : " + watch[1].watched);
+				//console.log("forVideoInfo? : " + watch[2].watched);
+			},
+			error : function() {
+				alert("error");
+			}
+		})
+		
 		for(var i=0; i<realAllContents.length; i++){
 			if(realAllContents[i].playlistID == 0){
 				symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
@@ -196,6 +212,27 @@ $(document).ready(function(){
 					if(realAllContents[i].playlistID == allContents[j].playlistID)
 						videoLength = " [" + convertTotalLength(allContents[j].totalVideoLength) + "] ";
 				}
+				
+				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+					url : "${pageContext.request.contextPath}/class/forHowManyWatch",
+					type : "post",
+					async : false,
+					data : {	
+						playlistID : realAllContents[i].playlistID
+					},
+					success : function(data) {
+						howmanyCount = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+						console.log(howmanyCount);
+						//console.log("forVideoInfo? : " + watch[0].id);
+						//console.log("forVideoInfo? : " + watch[1].watched);
+						//console.log("forVideoInfo? : " + watch[2].watched);
+					},
+					error : function() {
+						alert("error");
+					}
+				})
+				
+				
 			}
 				
 			var day = realAllContents[i].days;
@@ -242,17 +279,26 @@ $(document).ready(function(){
 				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", false);  
 			}*/
 			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
+			
+			
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
 			var onclickDetail = "location.href='../contentDetail/" + realAllContents[i].id + "/" + i + "'";
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + realAllContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 			var published;
-
-			if (realAllContents[i].published == true)
+			var percentage = '';
+			if (realAllContents[i].published == true){
 				published = '<input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" class="custom-control-input" class="switch" name="published">'
 								+ '<label class="custom-control-label" for="switch">공개</label>';
-			else
+				//percentage = Math.floor(howmanyCount/howmanyTake*100) + '% 완료';
+			}
+			else{
 				published = '<label class="custom-control-label" for="switch">비공개</label>'
 								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
+				percentage = '';
+			}
+			
+			if (realAllContents[i].published == true && realAllContents[i].playlistID != 0)
+				percentage = Math.floor(howmanyCount/howmanyTake*100) + '% 완료';
 			
 			content.append(
 				"<div class='content list-group-item-action list-group-item' seq='" + realAllContents[i].daySeq + "'>"
@@ -270,7 +316,8 @@ $(document).ready(function(){
 										+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
 									+ '</div>' 
 							+ '</div>'
-							+ '<div class="col-sm-2 text-success col-2 pl-5 pr-0">**% 완료</div>'
+							// playlistcheck에서 classID와 playlistID를 가진 count가져오기  / takes 테이블에서 classID같은 학생 수 
+							+ '<div class="col-sm-2 text-success col-2 pl-5 pr-0">' + percentage + '</div>'
 							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
 									//+ published
 								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
