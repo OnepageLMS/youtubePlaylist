@@ -109,7 +109,7 @@ function getPlaylistInfo(){
 								+ '<p class="totalVideoLength ml-2 mb-0"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>'
 							+ '</div>'
 							+ '<button type="button" class="col-4 btn btn-transition btn-outline-primary btn-sm float-right"'
-							+ 		' onclick="location.href=' + addVideoURL + '" style="max-width:115px;">Youtube 영상추가</button>'
+							+ 		' onclick="location.href=' + addVideoURL + '" style="max-width:115px;">Youtube영상추가</button>'
 						+ '</div>';
 						
 			$('.playlistInfo').append(html);
@@ -536,7 +536,7 @@ function setSlider() {
 											<div class="form-row">
                                                 <div class="col-md-8">
                                                     <div class="position-relative form-group">
-                                                    	<label for="inputNewTitle" class="">영상 제목 설정</label>
+                                                    	<label for="inputNewTitle" class="">영상제목 설정</label>
                                                     	<input name="newTitle" id="inputNewTitle" type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -564,11 +564,9 @@ function setSlider() {
 	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
 	                                            	</div>
 	                                            </div>
-	                                            <div class="position-relative row col form-group">
+	                                            <div class="position-relative col form-group">
 	                                            	<label for="amount" class="col-form-label">설정된시간</label>
-	                                            	<div class="col-sm-10"> 
-	                                            		<input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> 
-	                                            	</div>
+	                                            	<input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> 
 	                                            </div>
 	                                            <div class="position-relative row form-group" style="display: none;">
 	                                            	<div class="col-sm-2">
