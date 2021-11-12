@@ -370,39 +370,40 @@ $(document).ready(function(){
 			var $div = $('<div id="playerBox" class="text-center" > <div class="iframe-container" id="player" style="width: 100%;"></div>'
 					+ '<form class>'
 						+ '<div id="player_info">' 
-							+ '<div class="position-relative row form-group">'
-							+ '<label for="exampleEmail" class="col-sm-2 col-form-label">영상제목 설정</label>'
-							+ '<div class="col-sm-10"> <input type="text" id="setTitle" class="col-sm-11 form-control" value=\''+ `\${title}` +'\'></div>'
+							+ '<div class="position-relative form-group col row">'
+							+ '<label class="col-lg-2 col-form-label">영상제목 설정</label>'
+							+ '<div class="col-lg-10"> <input type="text" id="setTitle" class="form-control" value=\''+ `\${title}` +'\'></div>'
 						+ '</div>'
+						+ '<div class="position-relative form-group row col">' 
+							+ '<label class="col-lg-2 col-form-label">태그</label>' 
+							+ '<div class="col-lg-10"><input type="text" id="setTag" name="setTag" class="form-control"> </div>'
+						+ '</div>' 
 						+ '<div id="setVideoInfo"> '
-							+ '<div id="delete" >'
-								+ '<div class="setTimeRange input-group">'
-									+ '<div class="col-md-2 input-group-prepend">'
+							+ '<div id="delete">'
+								+ '<div class="setTimeRange input-group col mb-3">'
+									+ '<div class="col-2 input-group-prepend pl-0">'
 										+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>'
 									+ '</div>'
-									+ '<div class="col-md-8"> <div id="slider-range"></div> </div>'
-									+ '<div class="col-md-2 input-group-append">' 
+									+ '<div class="col-8"> <div id="slider-range"></div> </div>'
+									+ '<div class="col-2 input-group-append">' 
 										+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>'
 									+ '</div>' 
 								+ '</div>'
-								+ '<div class="position-relative row form-group">'
+								+ '<div class="position-relative form-group row col">'
 									/* + '<div class="col-sm-2 col-form-label d-flex justify-content-center">' */
-									+ '<label for="amount" class="col-sm-2 col-form-label"><b>설정된시간</b></label>'
+									+ '<label for="amount" class="col-lg-2 col-form-label">설정된시간</label>'
 									/* + '</div>'  */
-									+ '<div class="col-sm-10"> <input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> </div>'
+									+ '<div class="col-lg-10"> <input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> </div>'
 								+ '</div>' 
 								+ '<div class="position-relative row form-group" style="display: none;">'
 									+ '<div class="col-sm-2">'
 									+ '<div class="col-sm-10"> <div id="warning1"> </div> </div>' 
 								+ '</div>'
 							+ '</div>'
-							+ '<div class="position-relative row form-group">' 
-								+ '<label class="col-sm-2 col-form-label" style="font-weight: bold"> 태그: </label>' 
-								+ '<div class="col-sm-10"><input type="text" id="setTag" name="setTag" class="col-sm-11 form-control"> </div>'
-							+ '</div>' 
+							
 						+ '</div>'
-						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +`\{$title}`+'\'); ">' 
-							+ '<i class="fas fa-plus-square">장바구니 담기</i>'
+						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-4 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +`\{$title}`+'\'); ">' 
+							+ '<i class="fas fa-plus-square"></i> 장바구니 담기'
 						+ '</button> </div>'
 					+ '</form>' 
 					/* + '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="display: hidden;">'
@@ -528,26 +529,26 @@ $(document).ready(function(){
 				cart_end_time = end_hour + ":" + end_min + ":" + end_sec;
 			}
 				
-			var html = '<div class="videoSeq">' 
-				+ '<input type="hidden" name="youtubeID" id="inputYoutubeID" value="' + id +'">'
-				+ '<input type="hidden" name="start_s" id="start_s" value="' + start_time + '">' 
-				+ '<input type="hidden" name="end_s" id="end_s" value="' + end_time + '">' 
-				+ '<input type="hidden" name="title" id="inputYoutubeTitle" value="' + title + '">'
-				+ '<input type="hidden" name="newName" id="newName" value="'+ $('#setTitle').val() + '">'
-				+ '<input type="hidden" name="maxLength" id="maxLength" value="' + limit + '">' 
-				+ '<input type="hidden" name="duration" id="duration" value="' + totalSeconds + '">'
-				+ '<input type="hidden" name="tag" id="tag" value="' + $('#setTag').val() + '">'
-				//+ '<input type="hidden" name="duration" id="duration">'
-				+ '<div class="row">' //videoID="' + id + '" videoTitle="' + title + '">' 
-				+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave" name="chk"></div>'
-				+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
-				+ '<div class="col-lg-7">'
-				+ '<div style="font-weight: bold;">' + shortTitle + '</div>'
-				+ '<div style="display:inline" value="'+cart_start_time+'"> start ' + cart_start_time + '</div>'
-				+ '<div style="display:inline" value="'+cart_end_time+'"> end ' + cart_end_time + '</div>' 
-				//+ '<div id="duration" style="display: none"> duration:' + $('#duration').val() + '</div>'
-				+ '<div id="running_time" style="display:inline" value="'+hhmmss+'"> duration ' + hhmmss + '</div>'
-				+ '</div> </div>'; 
+			var html = '<div class="videoSeq col">' 
+						+ '<input type="hidden" name="youtubeID" id="inputYoutubeID" value="' + id +'">'
+						+ '<input type="hidden" name="start_s" id="start_s" value="' + start_time + '">' 
+						+ '<input type="hidden" name="end_s" id="end_s" value="' + end_time + '">' 
+						+ '<input type="hidden" name="title" id="inputYoutubeTitle" value="' + title + '">'
+						+ '<input type="hidden" name="newName" id="newName" value="'+ $('#setTitle').val() + '">'
+						+ '<input type="hidden" name="maxLength" id="maxLength" value="' + limit + '">' 
+						+ '<input type="hidden" name="duration" id="duration" value="' + totalSeconds + '">'
+						+ '<input type="hidden" name="tag" id="tag" value="' + $('#setTag').val() + '">'
+						//+ '<input type="hidden" name="duration" id="duration">'
+						+ '<div class="row d-flex align-items-center">' //videoID="' + id + '" videoTitle="' + title + '">' 
+						+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave" name="chk"></div>'
+							+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
+							+ '<div class="col-lg-7">'
+							+ '<div><b>' + shortTitle + '</b></div>'
+							+ '<div style="display:inline" value="'+cart_start_time+'"> start ' + cart_start_time + '</div>'
+							+ '<div style="display:inline" value="'+cart_end_time+'"> end ' + cart_end_time + '</div>' 
+							//+ '<div id="duration" style="display: none"> duration:' + $('#duration').val() + '</div>'
+							+ '<div id="running_time" style="display:inline" value="'+hhmmss+'"> duration ' + hhmmss + '</div>'
+						+ '</div> </div>'; 
 			//3. var html = $('#setVideosInCart').html();
 			$("#videosInCart").append(html); 	
 
@@ -940,8 +941,6 @@ $(document).ready(function(){
 	</script>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
 		<jsp:include page="../outer_top.jsp" flush="false" />
-		
-		<!-- (jw ) -->
 		<div class="ui-theme-settings">
             <button type="button" id="TooltipDemo" class="btn-open-options btn btn-warning">
                 <i class="fa fa-cart-plus fa-w-16 fa-lg"></i>
@@ -956,16 +955,16 @@ $(document).ready(function(){
 	                            <button type="button" class="close ml-auto btn" aria-label="Close" onclick="closeSidebar();">
 	                            	<span aria-hidden="true">×</span>
 	                            </button> -->
-	                            <div class="row">
-	                            	<div class="col-sm-12">
-			                            선택된 비디오 플레이리스트
+	                            <div class="row w-100">
+	                            	<div class="col">
+			                            <b class="col-11 pl-0">선택된 영상 Playlist</b>
 			                            <button type="button" class="close ml-auto btn" aria-label="Close" onclick="closeSidebar();" style="line-height:35px">
-			                            	<span aria-hidden="true">X</span>
+			                            	<span aria-hidden="true" style="font-size:18px;">X</span>
 			                            </button>
 	                            	</div>
-	                            	<div class="videoNewTitle col-sm-12">
-		                            	<input type="checkbox" id="checkAll" onclick="selectAll(this)"> <label class="form-check-label"> 전체 선택 </label>  
-										<button onclick="deleteFromCart()" class="m-0 btn-transition btn btn-danger float-right">선택 항목 삭제</button>
+	                            	<div class="videoNewTitle col-12 pl-2">
+		                            	<input type="checkbox" id="checkAll" onclick="selectAll(this);"> <label class="form-check-label"> 전체 선택 </label>  
+										<button onclick="deleteFromCart();" class="m-0 btn-transition btn btn-danger btn-small float-right">선택 항목 삭제</button>
 	                            	
 	                            	</div>
 	                            </div>
@@ -1006,7 +1005,7 @@ $(document).ready(function(){
                  			<i class="pe-7s-left-arrow h3 col-12"></i>
                   			<p class="col-12 m-0">이전</p>
                			</button>
-                        <span id="playlistName" class="text-primary"></span> - Youtube 검색
+                        <span id="playlistName" class="text-primary"></span> - Youtube
 					</h4>	
 					
 
@@ -1031,14 +1030,11 @@ $(document).ready(function(){
 												<button onclick="fnGetList();"
 													class="btn btn-secondary btn-small">검색</button>
 											</div>
-											
 										</form>
 									</div>
 								</div>
-
 							</div>
 							<div class="card-body" style="overflow-y:auto; height:750px;">
-
 								<div>
 									<form action="playlist/player" id="form2" method="post"
 										style="display: none">
@@ -1047,7 +1043,6 @@ $(document).ready(function(){
 											type="hidden" name="playerDuration" id="playerDuration">
 									</form>
 								</div>
-
 								<div id="get_view" style="margin-bottom: 10px;"></div>
 								<div class="container d-flex justify-content-center">
 									<div class="row">
@@ -1056,7 +1051,6 @@ $(document).ready(function(){
 								</div>
 							</div> 
 						</div>						
-						
 						<div class="playerForm col-lg-6 form-class" style="display:none;">
 							<div class="main-card card pb-3">
 								<!-- form 동적으로 추가(jw) -->
