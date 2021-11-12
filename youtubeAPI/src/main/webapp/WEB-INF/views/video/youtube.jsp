@@ -8,33 +8,19 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta http-equiv="Content-Language" content="en">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Youtube 영상 추가</title>
+	<title>Youtube 검색</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-	<meta name="description" content="This is an example dashboard created using build-in elements and components.">
 	<meta name="msapplication-tap-highlight" content="no">
-	<!--
-	    =========================================================
-	    * ArchitectUI HTML Theme Dashboard - v1.0.0
-	    =========================================================
-	    * Product Page: https://dashboardpack.com
-	    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-	    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-	    =========================================================
-	    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-	    -->
-	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-
-	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
+	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<link rel="stylesheet" href="/resources/demos/style.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	
 	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
@@ -47,7 +33,7 @@
 	font-size: 12px;
 }
 img {
-	width: 128px;
+	width: 15px;
 	height: 80px;
 	padding: 5px;
 }
@@ -90,8 +76,6 @@ img {
 <script>
 var email;
 $(document).ready(function(){
-	email = "yewon.lee@onepage.edu";	//로그인 정보 가져오는걸로 수정하기 !
-	
 	//getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
 	
 	//var allMyClass = JSON.parse('${allMyClass}');
@@ -224,10 +208,10 @@ $(document).ready(function(){
 												})
 									}));
 						if (jdata.prevPageToken) {
-							lastAndNext(jdata.prevPageToken, " <-이전 ");
+							lastAndNext(jdata.prevPageToken, '<p class="page-link" aria-label="Previous" style="display:inline;"><span aria-hidden="true">«</span><span class="sr-only">Previous</span></p>');
 						}
 						if (jdata.nextPageToken) {
-							lastAndNext(jdata.nextPageToken, " 다음-> ");
+							lastAndNext(jdata.nextPageToken, '<p class="page-link" aria-label="Next" style="display:inline;"><span aria-hidden="true">»</span><span class="sr-only">Next</span></p>');
 						}
 					},
 					error : function(xhr, textStatus) {
@@ -250,7 +234,8 @@ $(document).ready(function(){
 	
 			/* title = `${title}`; */
 			
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" style="width: 100%; height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
+			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" '
+				+ 'style="height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
 			+ '\'' + ',\'' + `\${title}` + '\''
 			+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" >';
 			//var url = '<a href="https://youtu.be/' + id + '">';
@@ -270,7 +255,7 @@ $(document).ready(function(){
 					
 					'<div class="searchedVideo list-group-item-action list-group-item" >'
 							+ '<div class="row">'
-								+ '<div class="col-sm-3">'
+								+ '<div class="col-sm-4">'
 									+ thumbnail
 								+ '</div>'
 								/* + '<div class="col-sm-1"> </div>' */
@@ -278,7 +263,7 @@ $(document).ready(function(){
 									+ '<div onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
 									+ '\'' + ',\'' + `\${title}` + '\''
 									+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" style="cursor: pointer; ">'
-										+ '<h5>' + `\${title}` + '</h5>'
+										+ '<p class="mb-1"><b>' + `\${title}` + '</b></p>'
 										+ '<div>'
 											+ '<span class="info m-0"> published: <b>' + dateList[i]
 											+ '</b> view: <b>' + view
@@ -417,7 +402,7 @@ $(document).ready(function(){
 							+ '</div>' 
 						+ '</div>'
 						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-3 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +`\{$title}`+'\'); ">' 
-							+ '<i class="fas fa-plus-square"> 리스트에 추가 </i>'
+							+ '<i class="fas fa-plus-square">장바구니 담기</i>'
 						+ '</button> </div>'
 					+ '</form>' 
 					/* + '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="display: hidden;">'
@@ -638,7 +623,7 @@ $(document).ready(function(){
 			$("#get_view").children().eq(index).children().eq(1).attr('style', 'display: none');
 			$("#get_view").children().eq(index).children().eq(2).attr('style', 'display: none'); */
 
-			$("#get_view").children().eq(index).css("background-color", "lightgray");
+			$("#get_view").children().eq(index).css("background-color", "rgb(240, 240, 240)");
 			
 			console.log("check videoTitle here", videoTitle);
 					
@@ -997,15 +982,10 @@ $(document).ready(function(){
 					                  <div class="app-footer-left">
 					                  	<a href="javascript:void(0);" style="display:inline;">       
 			                            	<button class="btn btn-primary mr-3" onclick="insertVideo();">
-			                                  선택된 비디오 playlist에 추가
+			                                  선택한 비디오 playlist에 추가
 			                              	</button>
 		                                </a>
-					                  </div>
-					                  <!-- <div class="app-footer-right">
-					                      <button>
-					                         전체 비디오 playlist에 추가
-					                      </button> 
-					                      -->            
+					                  </div>     
 					              </div>
 					          </div>
 					      </div>                        
@@ -1021,31 +1001,37 @@ $(document).ready(function(){
  
 			<div class="app-main__outer">
 				<div class="app-main__inner">
-					<button class="btn row" onclick="history.back();"> 
-                    			<i class="pe-7s-left-arrow h3 col-12"></i>
-                    			<p class="col-12 m-0" style="font-size:12px; text-align: center;">이전</p>
-                 		</button>
-					<h4 id="playlistName" style="display: inline-block">- Youtube 영상 추가</h4>
+					<h4>
+						<button class="btn row" onclick="history.back();"> 
+                 			<i class="pe-7s-left-arrow h3 col-12"></i>
+                  			<p class="col-12 m-0">이전</p>
+               			</button>
+                        <span id="playlistName" class="text-primary"></span> - Youtube 검색
+					</h4>	
+					
+
 					<div class="row" id="searchArea">
 						<div class="selectedPlaylist col-lg-12 card">
 							<!-- <div class="card-header"> -->
 							<div class="card-title playlistName m-3">
 
-								<div class="row">
-									<div class="col-lg-12 ">
-										<form class="form-inline" name="form1" method="post"
-											onsubmit="return false;">
-											<select name="opt" id="opt"
-												class="mr-2 dropdown-toggle btn btn-primary btn-lg">
-												<option value="relevance">관련순</option>
-												<option value="date">날짜순</option>
-												<option value="viewCount">조회순</option>
-												<option value="title">문자순</option>
-												<option value="rating">평가순</option>
-											</select> <input type="text" id="search_box"
-												class="form-control col-lg-8 mr-2">
-											<button onclick="fnGetList();"
-												class="btn btn-primary btn-lg">검색</button>
+								<div class="">
+									<div class="">
+										<form class="form-inline" name="form1" method="post" onsubmit="return false;">
+											<div class="row w-100">
+												<select name="opt" id="opt" class="col-xs-3 mr-1 dropdown-toggle btn-transition btn btn-outline-secondary btn-small">
+													<option value="relevance">관련순</option>
+													<option value="date">날짜순</option>
+													<option value="viewCount">조회순</option>
+													<option value="title">문자순</option>
+													<option value="rating">평가순</option>
+												</select> 
+												<input type="text" id="search_box"
+													class="col-6 form-control mr-1">
+												<button onclick="fnGetList();"
+													class="btn btn-secondary btn-small">검색</button>
+											</div>
+											
 										</form>
 									</div>
 								</div>
@@ -1062,8 +1048,8 @@ $(document).ready(function(){
 									</form>
 								</div>
 
-								<div id="get_view"></div>
-								<div class="container">
+								<div id="get_view" style="margin-bottom: 10px;"></div>
+								<div class="container d-flex justify-content-center">
 									<div class="row">
 										<div id="nav_view"></div>
 									</div>
@@ -1102,7 +1088,7 @@ $(document).ready(function(){
 	                </button>
 	            </div>
 	            <div class="modal-body">
-	                <p>플레이리스트가 저장되었습니다. 동영상을 더 추가하시겠습니까?</p>
+	                <p>플레이리스트에 저장되었습니다. 동영상을 더 추가하시겠습니까?</p>
 	            </div>
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">아니오 </button>

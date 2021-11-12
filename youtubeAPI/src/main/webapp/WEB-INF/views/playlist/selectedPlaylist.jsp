@@ -12,31 +12,17 @@
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
+    
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-
-	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	
 	
@@ -66,7 +52,7 @@
 		  position: absolute;
 		  background-color: #eee;
 		  padding: 4px;
-		  font-size: 0.75rem;
+		  font-size: 0.88rem;
 		}
 	</style>
 </head>
@@ -115,12 +101,15 @@ function getPlaylistInfo(){
 
 			$('.playlistInfo').empty();
 			var addVideoURL = "'${pageContext.request.contextPath}/video/youtube'";
-			var html = '<div class="numOfVideos">'
-							+ '<p class="numOfNow" style="display:inline"></p>'
-							+ ' / '
-							+ '<p class="numOfTotal" style="display:inline">' + totalVideo + '</p>'
-							+ '<p class="totalVideoLength ml-3" style="display:inline"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>'
-							+ '<button type="button" class="ml-3 btn btn-transition btn-outline-primary btn-sm" onclick="location.href=' + addVideoURL + '">Youtube영상추가</button>'
+			var html = '<div class="numOfVideos row d-flex align-items-center">'
+							+ '<div class="col-9 row">'
+								+ '<p class="numOfNow mr-1 mb-0"></p>'
+								+ ' / '
+								+ '<p class="numOfTotal ml-1 mb-0">' + totalVideo + '</p>'
+								+ '<p class="totalVideoLength ml-2 mb-0"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>'
+							+ '</div>'
+							+ '<button type="button" class="col-4 btn btn-transition btn-outline-primary btn-sm float-right"'
+							+ 		' onclick="location.href=' + addVideoURL + '" style="max-width:115px;">Youtube 영상추가</button>'
 						+ '</div>';
 						
 			$('.playlistInfo').append(html);
@@ -180,7 +169,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 		    	var html = '<div class="video list-group-action list-group-item row d-flex justify-content-between"'
 		    				+ addStyle
 							+ '>'
-								+'<div class="col-lg-11 row" onclick="playVideoFromPlaylist(this); setSlider();" ' 
+								+'<div class="col-11 row pr-0" onclick="playVideoFromPlaylist(this); setSlider();" ' 
 									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 									+ '" videoID="' + value.id 
 									+ '" youtubeID="' + value.youtubeID 
@@ -189,24 +178,24 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 									+ '" maxLength="' + value.maxLength + '"'
 								+ '>'
 							//+ '<div class="videoSeq ">' + (index+1) + '</div>'
-									+ '<div class="post-thumbnail col-lg-3">'
+									+ '<div class="post-thumbnail col-lg-4">'
 										+ '<div class="videoSeq row">' 
 											+ '<span class="col-1">' + (index+1) + '</span>'
 											+ thumbnail 
 										+ '</div>'
 										+ '<div class="tag" tag="' + tag + '"></div>'
 									+ '</div>'
-									+ '<div class="col-lg-9 justify-content-between">' 
-										+ '<h6 class="post-title list-group-item-heading" style="font-size: 13px;">' + tmp_newTitle + '</h6>'
+									+ '<div class="col-lg-8 pr-0 d-flex row align-items-center">' 
+										+ '<h6 class="post-title list-group-item-heading">' + tmp_newTitle + '</h6>'
 										+ '<div class="videoOriTitle" title="' + tmp_title + '"></div>'
-										+ '<p style="font-size: 13px;">' 
+										+ '<p class="mb-0">' 
 											+ '<span class="mr-2">시작: ' + convertTotalLength(value.start_s) + '</span>'
 											+ '<span class="mr-2"> 끝: ' + convertTotalLength(value.end_s) + '</span>'
 											+ '<br><span>총 길이: ' + convertTotalLength(value.duration) + '</span>'
 										+ '</p>'
 									+ '</div>'
 								+ '</div>'
-									+ '<button type="button" class="videoEditBtn col-lg-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
+									+ '<button type="button" class="videoEditBtn col-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
 		    							+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
 			    					+ '</button>'
 			    					+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-411px, 33px, 0px);">' 
@@ -512,22 +501,14 @@ function setSlider() {
                  
                  <div class="app-main__outer">
                     <div class="app-main__inner">
-                    
-                        <div class="app-page-title" style="padding: 0; margin: -20px -20px 10px;">
-                            <div class="page-title-wrapper" >
-                                <div class="page-title-heading">
-                                	<div class="row mr-3 ml-1">
-                                		<button class="btn row"  onclick="history.back();"> 
-                                			<i class="pe-7s-left-arrow h3 col-12"></i>
-                                			<p class="col-12" style="font-size:12px; text-align: center;">이전</p>
-                                		</button>
-                                	</div>
-                                	<h4 class="displayPlaylistName text-primary" style="padding-bottom: 2%;"></h4> <h4> - 비디오</h4>
-                                </div>
-                          </div>
-                        </div>            
-                       
-                       
+	                    <h4>
+							<button class="btn row" onclick="history.back();"> 
+                  				<i class="pe-7s-left-arrow h3 col-12"></i>
+                  				<p class="col-12 m-0">이전</p>
+               				</button>
+                        	<span class="displayPlaylistName text-primary"></span> 
+                        </h4>	
+                    	
                         <div class="row">
                             <div class="displayVideo col-lg-8 col-md-8">
 								<div id="player" class="embed-responsive embed-responsive-4by3 card">
@@ -569,22 +550,22 @@ function setSlider() {
                                             
                                             <div class="form-row">
                                             
-	                                            <div class="setTimeRange input-group">
-	                                            	<div class="col-md-2 input-group-prepend">
+	                                            <div class="setTimeRange input-group row">
+	                                            	<div class="col-2 input-group-prepend">
 	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
-	                                            	</div><div class="col-md-8"> 
+	                                            	</div><div class="col-8"> 
 	                                            		<div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
 	                                            			<div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div>
 	                                            			<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span>
 	                                            			<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 100%;"></span>
 	                                            		</div> 
 	                                            	</div>
-	                                            	<div class="col-md-2 input-group-append">
+	                                            	<div class="col-2 input-group-append">
 	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
 	                                            	</div>
 	                                            </div>
 	                                            <div class="position-relative row col form-group">
-	                                            	<label for="amount" class="col-form-label"><b>설정된시간</b></label>
+	                                            	<label for="amount" class="col-form-label">설정된시간</label>
 	                                            	<div class="col-sm-10"> 
 	                                            		<input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> 
 	                                            	</div>

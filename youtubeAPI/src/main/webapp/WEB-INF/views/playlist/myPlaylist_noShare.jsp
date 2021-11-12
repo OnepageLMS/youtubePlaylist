@@ -37,8 +37,16 @@
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 	
 	<style>
+	@media only screen and (max-width: 768px) {
+	  /* For mobile phones: */
+	  [class*="videoPic"] {
+	    width: 100px;
+	  }
+	}
+
 		.playlistPic {
-			width: -webkit-fill-available;
+			width: inherit;
+			max-width: 300px;
 		}
 		
 		.playlist:hover{
@@ -105,31 +113,7 @@ function getAllMyPlaylist(){
 			playlists = result.allMyPlaylist;
 
 			$('.allPlaylist').empty();
-			/*
-			var setFormat = '<div class="card">'
-								+ '<div class="card-body" style="min-height: 600px; overflow:auto;">'
-								+ '<div class="card-title input-group">'
-									+ '<div class="input-group-prepend">'
-										+ '<button class="btn btn-outline-secondary">전체</button>'
-										+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
-										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;">'
-											+ '<button type="button" tabindex="0" class="dropdown-item">Playlist 이름</button>'
-											+ '<button type="button" tabindex="1" class="dropdown-item">Video 제목</button>'
-											+ '<button type="button" tabindex="2" class="dropdown-item">태그</button>'
-										+ '</div>'
-									+ '</div>'
-									+ '<input placeholder="playlist 검색" type="text" class="form-control">'
-									+ ' <div class="input-group-append">'
-										+ '<button class="btn btn-secondary">검색</button>'
-									+ '</div>'
-								+ '</div>'
-								+ '<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>'
-								+ '<div><ul class="allPlaylist list-group"></div></div>'
-							+ '</div>'
-						+ '</div>';
-				//$('.myPlaylist').append(setFormat);
-				*/
-
+		
 			if(playlists.length == 0){
 				$('.allPlaylist').append('<p class="text-center">저장된 playlist가 없습니다.</p>');
 			}
@@ -154,7 +138,7 @@ function getAllMyPlaylist(){
 
 // 왼쪽에서 플레이리스트 선택시에 영상추가 버튼 보여지게 하기 
 function showAddVideoButton(playlistID, playlistName){
-	$('#addVideoButton').attr('style', 'display: block');
+	$('#addVideoButton').attr('style', 'display: inline');
 	
 }
 
@@ -186,7 +170,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 
 			var name = '<h4>'
 							+ '<p id="displayPlaylistName" style="display:inline";><b>' + result.playlistName + '</b></p>'
-							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link editPlaylistBtn" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
+							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link editPlaylistBtn p-2" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
 					+ '</h4>';
 		    $('.playlistName').append(name); //중간영역 
 		    
@@ -273,17 +257,17 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 						$("#playAllVideo").attr("onclick", passData);
 					} 
 					
-					var html = '<div class="row list-group-item-action list-group-item">'
-									+ '<div class="video col row d-flex justify-content-between align-items-center" videoID="' + value.id + '">'
-										+ '<div class="videoIndex col-sm-1 d-sm-inline-block"> <i class="fa fa-fw" aria-hidden="true"></i></p></div>'
-										+ '<div class="videoContent col-sm-10 p-0 d-sm-inline-block" onclick="' + passData + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
+					var html = '<div class="list-group-item-action list-group-item">'
+									+ '<div class="video row d-flex justify-content-between align-items-center" videoID="' + value.id + '">'
+										+ '<div class="videoIndex col-1 pl-0"> <i class="fa fa-fw" aria-hidden="true"></i></p></div>'
+										+ '<div class="videoContent col-10 p-0 d-sm-inline-block" onclick="' + passData + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
 											+ '<div class="row">'
-												+ '<div class="thumbnailBox col-sm-3 row">' 
+												+ '<div class="thumbnailBox col-sm-3 pl-0">' 
 													+ thumbnail 
 												+ '</div>'
-												+ '<div class="titles col-sm-9">'
+												+ '<div class="titles col-md-9" style="text-align: left;">'
 													+ '<div class="row">'
-														+ '<p class="col-sm-12 text-primary">' + tags + '</p>'
+														+ '<p class="col-sm-12 text-primary mb-0">' + tags + '</p>'
 														+ '<p class="videoNewTitle col-sm-12">' + newTitle + '</p>'
 														+ '<p class="videoOriTitle col-sm-12 row">' 
 															+ '<b>시작</b> ' + convertTotalLength(value.start_s) + ' <b class="ml-2">끝</b> ' + convertTotalLength(value.end_s) + ' <b class="ml-2">총 길이</b> ' + convertTotalLength(value.duration)
@@ -292,7 +276,7 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 												+ '</div>'
 											+ '</div>'
 										+ '</div>'
-										+ '<button type="button" class="videoEditBtn col-sm-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
+										+ '<button type="button" class="videoEditBtn col-1 btn d-sm-inline-block" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">'
 											+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
 										+ '</button>'
 										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(218px, 96px, 0px);">' 
@@ -522,7 +506,7 @@ function submitDeletePlaylist(){
 			                <div class="col-md-4 col-lg-3">
 								<div class="myPlaylist">
 									<div class="card">
-										<div class="card-body" style="min-height: 600px; overflow:auto;">
+										<div class="card-body" style="overflow:auto; max-height: 700px;">
 										<div class="card-title input-group">
 											<div class="input-group-prepend">
 												<button class="btn btn-outline-secondary">전체</button>
@@ -549,11 +533,12 @@ function submitDeletePlaylist(){
 							<div class="selectedPlaylist col-md-8 col-lg-9 card" style="min-height: 600px;">
 								<div class="card-body">
 									<div class="row">
-										<div class="col-lg-9 card-title playlistName">										
+										<div class="col-7 card-title playlistName pr-0" style="text-align: left;">										
 										</div>
 
-									 	<div class="col-lg-3">
-									 		<button type="button" id="addVideoButton" class="btn btn-transition btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button>
+									 	<div class="col-5 pl-0">
+									 		<button type="button" id="addVideoButton" class="btn btn-transition btn-outline-primary float-right" 
+									 				onclick="location.href='${pageContext.request.contextPath}/video/youtube'" style="display: none">Youtube 영상추가</button>
 									 	 </div>
 									</div>
 									<div class="row">
@@ -562,7 +547,7 @@ function submitDeletePlaylist(){
 										</div>
 										<div class="divider"> </div>
 										<div class="col-lg-9">
-											<div id="allVideo" class="list-group list-group-flush"></div>
+											<div id="allVideo" class="list-group list-group-flush row"></div>
 										</div>
 									</div>
 								</div>
