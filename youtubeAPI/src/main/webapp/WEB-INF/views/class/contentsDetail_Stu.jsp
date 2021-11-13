@@ -13,24 +13,28 @@
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="msapplication-tap-highlight" content="no">
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
-	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
-	<link rel="icon" href="favicon-16.png" sizes="16x16"> 
-	<link rel="icon" href="favicon-32.png" sizes="32x32"> 
-	<link rel="icon" href="favicon-48.png" sizes="48x48"> 
-	<link rel="icon" href="favicon-64.png" sizes="64x64"> 
-	<link rel="icon" href="favicon-128.png" sizes="128x128">
-	<!--favicon 설정 -->
-    -->
+    <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+	
+	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
-<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-
-<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+<style>
+	#client-paginator {
+	  position: relative;
+	  overflow-y: hidden;
+	  overflow-x: scroll;
+	}
+	.pagination {
+	  display: table !important;
+	}
+	.pagination>li {
+	  display: table-cell !important;
+	}
+</style>
 <script>
 //var studentEmail = 2; //우선 임의로 넣기
 //var classPlaylistID = 0;
@@ -45,7 +49,6 @@ var ori_index =0;
 var ori_videoID;
 var ori_playlistID;
 var ori_classContentID;
-
 
 
 $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 위함
@@ -146,17 +149,16 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
 						+ weekContents[i].playlistID + ','   + weekContents[i].id + ',' + (i+1) +')"'
 		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
+			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[i].daySeq + "'>"
 							+ '<div class="row col d-flex align-items-center">'
-								+ "<div class='index col-1 col-sm-1'>" + symbol + "</div>"
-									
-								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
-									+ "<div class='col-12 col-sm-12 card-title'>"
+								+ "<div class='index col-sm-1'>" + symbol + "</div>"
+								+ "<div class='' style='cursor: pointer;'>"
+									+ "<div class='card-title'>"
 										+ weekContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
 									+ '</div>'
-									+ '<div class="col-sm-12">'
+									+ '<div class="">'
 										+ '<div class="contentInfoBorder"></div>'
-										+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
+										+ '<div class="endDate contentInfo">' + '마감일: ' + endDate + '</div>'
 									+ '</div>' 
 								+ '</div>'
 									
@@ -169,7 +171,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 					+ '<div data-parent="#accordion" id="collapse' + (i+1) + '"' + area_labelledby + showing + '>'
 		    			+ '<div class="card-body" day="' +(i+1)+ '"> '
 					
-					    	+ '<div id="allVideo" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">'
+					    	+ '<div id="allVideo" class="">'
 								
 								+ '<div id="classTitle"></div>'
 								+ '<div id="classDescription"> </div>'
@@ -190,7 +192,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		else{ //Playlist 
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
 				
-				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
+				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg" style="max-width: 100%; height: 100%;">';
 				var day = weekContents[i].days;
 				var endDate = weekContents[i].endDate; //timestamp -> actural time
 		
@@ -236,7 +238,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 					//for(var k=0; k<watch.length; k++){
 					if(watch[k] != null || watch[k+1] != null){
 						if(watch[k].watched == 1 ){
-							completed = '<div class="col-2 col-xs-2 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+							completed = '<div class="col-2"><span class="badge badge-primary"> 완료 </span></div>';
 						}
 						k++;
 					}
@@ -247,14 +249,13 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 						
 					innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 									+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-										+ '<div class="post-thumbnail col-4 col-xs-4 col-lg-4"> ' 
+										+ '<div class="post-thumbnail col-4 p-1"> ' 
 											+ thumbnail 
-											+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
+											+ '<div class="col-12 p-1" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
 										+ ' </div>' 
-										+ '<div class="post-content col-6 col-xs-6 col-lg-6 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
+										+ '<div class="post-content col-6 p-1 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
 											+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
 											+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ',' + i + ', this)" >' 
-											+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[j].newTitle + '</div>' 
 											+	'<div class=""> start : '+  convertTotalLength(playlist[j].start_s) + '</div>' 
 											+	'<div class=""> end : '+  convertTotalLength(playlist[j].end_s) + '</div>' 
 										+'</div>' 
@@ -277,13 +278,13 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
 			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
 							+ '<div class="row col d-flex align-items-center">'
-								+ '<div class="index col-1 col-sm-1 ">' + symbol + '</div>'
+								+ '<div class="index col-sm-1">' + symbol + '</div>'
 									
-								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
-									+ "<div class='col-12 col-sm-12 card-title'>"
+								+ "<div class='col-sm-11' style='cursor: pointer;'>"
+									+ "<div class='card-title'>"
 										+ weekContents[i].title  + '  [' + convertTotalLength(weekContents[i].totalVideoLength) + ']' 
 									+ '</div>'
-									+ '<div class="col-sm-12">'
+									+ '<div class="">'
 										+ '<div class="contentInfoBorder"></div>'
 										+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
 									+ '</div>' 
@@ -433,7 +434,7 @@ function myThumbnail(classContentID, idx){
 
 		if(watch[k] != null || watch[k+1] != null){
 			if(watch[k].watched == 1 ){
-				completed = '<div class="col-2 col-xs-2 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+				completed = '<div class="col-2"><span class="badge badge-primary">완료</span></div>';
 			}
 			k++;
 		}
@@ -441,11 +442,11 @@ function myThumbnail(classContentID, idx){
 		$(className).append( //stu//stu
 						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 						+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-							+ '<div class="post-thumbnail col-4 col-xs-4 col-lg-4"> ' 
+							+ '<div class="post-thumbnail col-4 p-1"> ' 
 								+ thumbnail 
-								+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[i].duration) +'</div>' 
+								+ '<div class="col-12 p-1" style="text-align : center">'+  convertTotalLength(playlist[i].duration) +'</div>' 
 							+ ' </div>' 
-							+ '<div class="post-content col-6 col-xs-6 col-lg-6 align-items-center" onclick="viewVideo(\''  //viewVideo호출
+							+ '<div class="post-content col-6 p-1 align-items-center" onclick="viewVideo(\''  //viewVideo호출
 								+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
 								+ 	playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this.parentNode)" >' 
 								+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[i].newTitle + '</div>' 
@@ -486,11 +487,11 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 		
 		//if, else if문은 영상을 변경했을 때, 원래 보던 영상에 대한 표시를 지우기 위한 코드
 		if(visited == 0){
-			item.style.background = "lightgrey";
+			item.style.background = "#F0F0F0";
 		}
 		else if(visited == 1){
 			ori_item.style.background = "transparent";
-			item.style.background = "lightgrey";
+			item.style.background = "#F0F0F0";
 		}
 		
 		if(ori_playlistID !== undefined){
@@ -819,19 +820,16 @@ function collectPlayCount(data) {
 		 	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
-        			<div class="app-page-title">
-                    	<div class="page-title-wrapper">
-                        	<div class="page-title-heading">
-                        		<i class="pe-7s-left-arrow fa-lg" style="margin-right: 10px" onclick="history.back();"> </i>
-                            	<span class="text-primary" style="margin-left: 10px">${classInfo.className}</span>  - 강의컨텐츠	<!-- 이부분 이름 바꾸기!! -->
-                            </div>
-                        </div>
-                    </div>    
+        		 	<h4>
+        		   		<button class="btn row" onclick="history.back();"> 
+                			<i class="pe-7s-left-arrow h4 col-12"></i>
+                			<p class="col-12 m-0">이전</p>
+             			</button>
+             			<span class="text-primary">${classInfo.className}</span> - 강의컨텐츠
+                    </h4>    
                             
                     <div class="row">
-                    
-                    
-                    	<div class="main-card mb-3 card card col-8 col-md-8 col-lg-8">
+                    	<div class="main-card mb-3 card col-md-8">
 							<div class="card-body" style="margin : 0px; padding: 0px; height:auto">
 								<div class="card-header" style="margin: 10px 0px; " >
 									<div id="contentsTitle" style="font-size : 20px" ></div>
@@ -845,15 +843,16 @@ function collectPlayCount(data) {
                         </div>
                                     
 					        
-						<div class="contents col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
+						<div class="contents col-md-4" classID="${classInfo.id}">
 							<div class="col-sm-12" style="max-width: 100%; height: auto;" >
-	                           <nav class="" aria-label="Page navigation example" style="max-width: 100%; height: 100%;">
-	                               <ul class="pagination">
+	                           <nav class="" style="max-width: 100%; height: 100%;">
+	                               <div id="client-paginator">
+									<ul class="pagination">
 	                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-											<li class="page-item"><a href="#target${j}" class="page-link"> ${j}차시 </a></li>
+											<li class="page-item"><a href="#target${j}" class="page-link">${j}</a></li>
 										</c:forEach>
-	                                   
 	                              	</ul>
+								</div>
 	                            </nav>
 	                       	</div>
 	                       	
@@ -864,24 +863,18 @@ function collectPlayCount(data) {
                                             	<div id="accordion" class="accordion-wrapper mb-3">
 													<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
 														<div class="main-card mb-3 card" day="${status.index}">
-						                                   <!--<div class="card-body">-->
-																<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
-							                                    <div class="list-group day" day="${status.index}">
-							                                        	
-							                                    </div>
-						                                  <!-- </div>-->
+															<div class="card-title p-3 m-0">
+																<a name= "target${j}">${j} 차시</a> <!-- 이부분 잘 안됨 수정필요!! -->
+															</div>
+															
+						                                    <div class="list-group day" day="${status.index}"></div>
 						                               </div>
 													</c:forEach>
 												</div>
                                             </div>
-                                      <!-- </div>--> 
                                     </div>
                            	</div>
-	                       	
-							
-							
 						</div>
-                    	<!-- 여기 기존 jsp파일 내용 넣기 -->
                     </div>	
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>

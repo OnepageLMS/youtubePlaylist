@@ -38,16 +38,7 @@ public class Stu_ClassContentController {
 	private Stu_ClassContentService classContentService;
 	
 	@Autowired
-	private Stu_VideoService videoService;
-	
-	@Autowired
 	private Stu_PlaylistCheckService playlistcheckService;
-	
-	@Autowired
-	private Stu_VideoCheckService videoCheckService;
-	
-	@Autowired
-	private MemberService memberService;
 	
 	private int studentID = 0;
 	

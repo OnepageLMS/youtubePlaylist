@@ -38,7 +38,7 @@
        <div class="scrollbar-sidebar">	<!-- side menu 시작! -->
            <div class="app-sidebar__inner">
                <ul class="vertical-nav-menu">
-                   <li class="app-sidebar__heading">진행중인 강의실</li>
+                   <li class="app-sidebar__heading">수강중인 강의실</li>
                    <c:forEach var="v" items="${allMyClass}">
                    	<c:set var="curr_name" value="${v.className}"/>
                    			<c:set var="name" value="<%=className%>"/>

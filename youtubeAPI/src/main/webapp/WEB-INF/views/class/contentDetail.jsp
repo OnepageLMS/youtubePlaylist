@@ -13,18 +13,31 @@
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="msapplication-tap-highlight" content="no">
+    <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
+	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
-<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
-<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<style>
+	#client-paginator {
+	  position: relative;
+	  overflow-y: hidden;
+	  overflow-x: scroll;
+	}
+	.pagination {
+	  display: table !important;
+	}
+	.pagination>li {
+	  display: table-cell !important;
+	}
+</style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <script>
-
 //var classPlaylistID = 0;
 var classID =  1;
 //var playlistSameCheck = ${playlistSameCheck};
@@ -53,7 +66,7 @@ $(document).ready(function(){
 		  error : function() {
 		  	alert("error1");
 		  }
-	})
+	});
 	
 	$.ajax({ 
 		  url : "${pageContext.request.contextPath}/class/instructorAllContents",
@@ -70,7 +83,7 @@ $(document).ready(function(){
 		  error : function() {
 		  	alert("error1");
 		  }
-	})
+	});
 	
 	if(allContents[videoIdx].playlistID != 0){
 		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
@@ -89,7 +102,7 @@ $(document).ready(function(){
 			  error : function() {
 			  	alert("error2");
 			  }
-		})
+		});
 	}
 	
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
@@ -110,7 +123,7 @@ $(document).ready(function(){
 		error : function() {
 			alert("error");
 		}
-	})
+	});
 	
 	//var weekContents = JSON.parse('${allContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
 	//console.log(weekContents);
@@ -143,48 +156,44 @@ $(document).ready(function(){
 			
 			var content = $('.day:eq(' + day + ')');
 			content.append("<div id=\'heading" +(i+1)+ "\'>"
-		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
-						+ allContents[i].playlistID + ','   + allContents[i].id + ',' + classID + ',' + (i+1) +')"'
-		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-			               + "<div class='content card align-items-center list-group-item' seq='" + allContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
-							+ '<div class="row col d-flex align-items-center">'
-								+ "<div class='index col-1 col-sm-1'>" + symbol + "</div>"
-									
-								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
-									+ "<div class='col-12 col-sm-12 card-title'>"
-										+ allContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
+				               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
+								+ allContents[i].playlistID + ','   + allContents[i].id + ',' + classID + ',' + (i+1) +')"'
+				 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
+					               + "<div class='content card align-items-center list-group-item' seq='" + allContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
+									+ '<div class="row col d-flex align-items-center">'
+										+ "<div class='index col-1 col-sm-1'>" + symbol + "</div>"
+											
+										+ "<div class='' style='cursor: pointer;'>"
+											+ "<div class='col card-title'>"
+												+ allContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
+											+ '</div>'
+											+ '<div class="col">'
+												+ '<div class="contentInfoBorder"></div>'
+												+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
+											+ '</div>' 
+										+ '</div>'
+											
 									+ '</div>'
-									+ '<div class="col-sm-12">'
-										+ '<div class="contentInfoBorder"></div>'
-										+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
-									+ '</div>' 
 								+ '</div>'
-									
-							+ '</div>'
+				   			+ '</button>'
 						+ '</div>'
-		   			+ '</button>'
-				+ '</div>'
 				
-				
-					+ '<div data-parent="#accordion" id="collapse' + (i+1) + '"' + area_labelledby + showing + '>'
-		    			+ '<div class="card-body" day="' +(i+1)+ '"> '
-					
-					    	+ '<div id="allVideo" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">'
-								
-								+ '<div id="classTitle"></div>'
-								+ '<div id="classDescription"> </div>'
-								+ '<div id="total_runningtime"></div>'
-								+ '<div id="get_view'+ (i+1) +'">'
-									
-								//	+ innerText
-													
-								+ '</div>'
-								 	
-					       	+ '</div>'
-					       	+'</div>'
+						+ '<div data-parent="#accordion" id="collapse' + (i+1) + '"' + area_labelledby + showing + '>'
+			    			+ '<div class="card-body" day="' +(i+1)+ '"> '
+						    	+ '<div id="allVideo" class="">'
+									+ '<div id="classTitle"></div>'
+									+ '<div id="classDescription"> </div>'
+									+ '<div id="total_runningtime"></div>'
+									+ '<div id="get_view'+ (i+1) +'">'
+										
+									//	+ innerText
+														
+									+ '</div>'
+									 	
+						       	+ '</div>'
+							+'</div>'
 						+ '</div>'
-	  			+ '</div>');
-			
+		  			+ '</div>');
 		}
 		
 		else{
@@ -242,11 +251,11 @@ $(document).ready(function(){
 						
 					innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 									+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-										+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+										+ '<div class="post-thumbnail col-5"> ' 
 											+ thumbnail 
-											+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
+											+ '<div class="col-12 p-1" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
 										+ ' </div>' 
-										+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
+										+ '<div class="post-content col-7 p-1 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
 											+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
 											+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ',' + i + ', this)" >' 
 											+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[j].newTitle + '</div>' 
@@ -268,17 +277,17 @@ $(document).ready(function(){
 		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
 						+ weekContents[k].playlistID + ','   + weekContents[k].id + ',' + classID + ',' + (i+1) +')"'
 		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[k].daySeq + "' style='padding: 10px 0px 0px;' >"
-							+ '<div class="row col d-flex align-items-center">'
-								+ '<div class="index col-1 col-sm-1 ">' + symbol + '</div>'
+			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[k].daySeq + "'>"
+							+ '<div class="row d-flex align-items-center">'
+								+ '<div class="index col-sm-1 ">' + symbol + '</div>'
 									
-								+ "<div class='col-11 col-sm-11 col-lg-11' style='cursor: pointer;'>"
-									+ "<div class='col-12 col-sm-12 card-title'>"
+								+ "<div class='col-sm-11' style='cursor: pointer;'>"
+									+ "<div class='card-title'>"
 										+ weekContents[k].title  + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
 									+ '</div>'
-									+ '<div class="col-sm-12">'
+									+ '<div class="">'
 										+ '<div class="contentInfoBorder"></div>'
-										+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
+										+ '<div class="endDate contentInfo pb-2">' + '마감일: ' + endDate + '</div>'
 									+ '</div>' 
 								+ '</div>'
 									
@@ -290,8 +299,7 @@ $(document).ready(function(){
 					+ '<div data-parent="#accordion" id="collapse' + (i+1) + '"' + area_labelledby + showing + '>'
 		    			+ '<div class="card-body" day="' +(i+1)+ '"> '
 					
-					    	+ '<div id="allVideo" class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">'
-								
+					    	+ '<div id="allVideo" class="">'
 								+ '<div id="classTitle"></div>'
 								+ '<div id="classDescription"> </div>'
 								+ '<div id="total_runningtime"></div>'
@@ -455,11 +463,11 @@ function myThumbnail(classContentID, idx){
 		$(className).append( //stu//stu
 						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 						+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
-							+ '<div class="post-thumbnail col-5 col-xs-4 col-lg-5"> ' 
+							+ '<div class="post-thumbnail col-5"> ' 
 								+ thumbnail 
-								+ '<div class="col-12" style="text-align : center">'+  convertTotalLength(playlist[i].duration) +'</div>' 
+								+ '<div class="col-12 p-1" style="text-align : center">'+  convertTotalLength(playlist[i].duration) +'</div>' 
 							+ ' </div>' 
-							+ '<div class="post-content col-7 col-xs-7 col-lg-7 align-items-center" onclick="viewVideo(\''  //viewVideo호출
+							+ '<div class="post-content col-7 p-1 align-items-center" onclick="viewVideo(\''  //viewVideo호출
 								+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
 								+ 	playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this.parentNode)" >' 
 								+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[i].newTitle + '</div>' 
@@ -495,11 +503,11 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 		time = 0;
 		
 		if(visited == 0){
-			item.style.background = "lightgrey";
+			item.style.background = "#F0F0F0";
 		}
 		else if(visited == 1){
 			ori_item.style.background = "transparent";
-			item.style.background = "lightgrey";
+			item.style.background = "#F0F0F0";
 		}
 		
 		player.loadVideoById({'videoId': videoID,
@@ -612,83 +620,63 @@ function deleteContent(){
 		 	</jsp:include>
 		 	
         	<div class="app-main__outer">
-        		 <div class="app-main__inner">
-        			<div class="app-page-title">
-                    	<div class="page-title-wrapper">
-                        	<div class="page-title-heading">
-                        		<i class="pe-7s-left-arrow fa-lg" style="margin-right: 10px" onclick="history.back();"> </i>
-                            	<span class="text-primary">${classInfo.className}</span>  - 강의컨텐츠
-                            </div>  
-                        </div>
-                    </div>    
-                            
+				<div class="app-main__inner">
+        			<h4>
+                      	<button class="btn row" onclick="history.back();"> 
+                			<i class="pe-7s-left-arrow h4 col-12"></i>
+                			<p class="col-12 m-0">이전</p>
+             			</button>
+             			<span class="text-primary">${classInfo.className}</span> - 강의컨텐츠
+                    </h4>                     
                     <div class="row">
-                    	
-                    	<div class="main-card mb-3 card card col-8 col-md-8 col-lg-8">
-							<div class="card-body" style="margin : 0px; padding:0px; height:auto">
+                    	<div class="main-card mb-3 card col-md-8">
+							<div class="card-body p-0">
 								<div class="card-header">
-									<div id="contentsTitle" style="font-size : 20px" > </div>
-									<div class="float-right">
-                                        
-                                       <!--  <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#editContentModal">
-                                        	컨텐츠 수정
-                                        </button>--> 
-                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#editContentModal" class="nav-link editPlaylistBtn" style="display:inline;">
-                                        <i class="nav-link-icon fa fa-cog"></i></a>
-                                    </div>
+									<div id="contentsTitle" style="font-size : 20px; display:inline;" ></div>
+									<a href="#" data-toggle="modal" data-target="#editContentModal" class="nav-link editPlaylistBtn" style="display:inline;">
+                                        <i class="nav-link-icon fa fa-cog"></i>
+									</a>
 								</div>
-                            	<div id = "onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
+                            	<div id="onepageLMS" class="col-12 col-md-12 col-lg-12" style="margin : 0px; padding:0px;">
 								</div>
 								<div class="card-footer">
 									<div id="contentsDescription" style="font-size : 15px" > </div>
 								</div>
                             </div>
                         </div>
-                                    
-					        
-						<div class="contents col-4 col-md-4 col-lg-4" classID="${classInfo.id}">
-							<div class="col-sm-12">
-	                           <nav class="" aria-label="Page navigation example">
-	                               <ul class="pagination">
+						<div class="contents col-md-4" classID="${classInfo.id}">
+                           <nav class="">
+                           		<div id="client-paginator">
+									<ul class="pagination">
 	                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-											<li class="page-item"><a href="#target${j}" class="page-link"> ${j} </a></li>
+											<li class="page-item"><a href="#target${j}" class="page-link">${j}</a></li>
 										</c:forEach>
-	                                   
 	                              	</ul>
-	                            </nav>
-	                       	</div>
-	                       	
+								</div>
+                            </nav>
 	                       	<div class="main-card mb-3 card">
-                                    <div class="card-body" style="overflow-y:auto; height:750px;">
-                                    
-                                            <div class="ps--active-y">
-                                            	<div id="accordion" class="accordion-wrapper mb-3">
-													<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-														<div class="main-card mb-3 card">
-						                                    	<a style="display: inline;" name= "target${j}"><h5> ${j} 차시 </h5></a> 
-							                                    <div class="list-group day" day="${status.index}">
-							                                        	
-							                                    </div>
-						                                   
-						                               </div>
-													</c:forEach>
-												</div>
-                                            </div>
-                                        
-                                    </div>
+								<div class="card-body" style="overflow-y:auto; height:750px;">
+									<div class="ps--active-y">
+										<div id="accordion" class="accordion-wrapper mb-3">
+											<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+												<div class="main-card mb-3 card">
+													<div class="card-title p-3 m-0">
+														<a name= "target${j}">${j} 차시</a> <!-- 이부분 잘 안됨 수정필요!! -->
+													</div>
+				                                    <div class="list-group day" day="${status.index}"></div>
+				                               </div>
+											</c:forEach>
+										</div>
+									</div>   
+								</div>
                            	</div>
-	                       	
-							
-							
 						</div>
-                    	<!-- 여기 기존 jsp파일 내용 넣기 -->
                     </div>	
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
    	</div>
-   	
    	
    	<!-- edit classContent modal -->
     <div class="modal fade" id="editContentModal" tabindex="-1" role="dialog" aria-labelledby="editContentModal" aria-hidden="true" style="display: none;">
