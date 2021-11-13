@@ -15,16 +15,28 @@
     <meta name="msapplication-tap-highlight" content="no">
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
+	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
+	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
-<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-
-<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
-<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+<style>
+#client-paginator {
+  position: relative;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+.pagination {
+  display: table !important;
+}
+.pagination>li {
+  display: table-cell !important;
+}
+</style>
 <script>
 	var playlistcheck;
 	var playlist;
@@ -108,31 +120,29 @@
 				
 				content.append(
 						 "<div class='content list-group-item-action list-group-item' seq='" + allMyClass[i].daySeq + "'>"
-									//+ '<div class="row col d-flex justify-content-between align-items-center">'
-									+ '<div class="row col d-flex align-items-center">'
-										+ '<div class="index col-sm-1 ">' + (allMyClass[i].daySeq+1) + '. </div>'
-										+ '<div class="videoIcon col-sm-1">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
-										+ "<div class='col-sm-7 row align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
-											+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
-												+ allMyClass[i].title + " " + videoLength  
-											+ '</div>'
-											
-											+ '<div class="col-sm-12 align-items-center" style=" height: 50%; font-size: 15px; padding: 5px 0px 0px;">'
-												+ '<div class="contentInfoBorder"></div>'
-												+ '<div class="contentInfoBorder"></div>'
-												+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
-											+ '</div>'
-										
+								//+ '<div class="row col d-flex justify-content-between align-items-center">'
+								+ '<div class="row col d-flex justify-content-between align-items-center">'
+									+ '<div class="row col-sm-2">'
+										+ '<div class="index col-6 pt-1">' + (allMyClass[i].daySeq+1) + '. </div>'
+										+ '<div class="videoIcon col-6" style="font-size:25px;">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
+									+ '</div>'
+									+ "<div class='col-sm-7 align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
+										+ "<div class='card-title align-items-center' style='padding: 15px 0px 0px;'>"
+											+ allMyClass[i].title + " " + videoLength  
 										+ '</div>'
 										
-										+ progressbar
-                                       /* + '<div class="mb-3 progress">'
-                                    		+ '<div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">1/2</div>'
-                                		+ '</div>'*/
-                                    + '</div>'
-                                    
-                                    
-                                    
+										+ '<div class="align-items-center" style=" padding: 5px 0px 0px;">'
+											+ '<div class="contentInfoBorder"></div>'
+											+ '<div class="contentInfoBorder"></div>'
+											+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+										+ '</div>'
+									
+									+ '</div>'
+									+ progressbar
+                                      /* + '<div class="mb-3 progress">'
+                                   		+ '<div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">1/2</div>'
+                               		+ '</div>'*/
+                                   + '</div>'   
 							+ '</div>'
 						+ '</div>');
 			}
@@ -176,11 +186,13 @@
                     <div class="row">
                        <div class="col-md-12">	 
                           <nav class="" aria-label="Page navigation example"> 
-                             	 <ul class="pagination">
-                             	 	<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-									<li class="page-item"><a href="#target${j}" class="page-link"> ${j}차시 </a></li>
-								</c:forEach>
-                             	 </ul>
+                          	<div id="client-paginator">
+								<ul class="pagination">
+                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+										<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
+									</c:forEach>
+                              	</ul>
+							</div>	 
                            </nav>
                        	</div>
                         

@@ -21,7 +21,19 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
-
+<style>
+#client-paginator {
+  position: relative;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+.pagination {
+  display: table !important;
+}
+.pagination>li {
+  display: table-cell !important;
+}
+</style>
 <script>
 
 $(document).ready(function(){
@@ -291,14 +303,16 @@ $(document).ready(function(){
 			
 			content.append(
 				"<div class='content list-group-item-action list-group-item' seq='" + realAllContents[i].daySeq + "'>"
-						+ '<div class="row col d-flex align-items-center">'
-							+ '<div class="index col-sm-1 ">' + (realAllContents[i].daySeq+1) + '. </div>'
-							+ '<div class="videoIcon col-sm-1">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
-							+ "<div class='col-sm-6 row align-items-center' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-									+ "<div class='col-sm-12 card-title align-items-center' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
+						+ '<div class="row col d-flex justify-content-between align-items-center">'
+							+ '<div class="row col-sm-2">'
+								+ '<div class="index col-6 pt-1">' + (realAllContents[i].daySeq+1) + '. </div>'
+								+ '<div class="videoIcon col-6" style="font-size:25px;">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
+							+ '</div>'
+							+ "<div class='col-sm-6 align-items-center' onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-12 card-title' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
 										+ realAllContents[i].title  + " " + videoLength 
 									+ '</div>'		
-									+ '<div class="col-sm-12 align-items-center" style=" height: 50%; font-size: 15px; padding: 5px 0px 0px;">'
+									+ '<div class="align-items-center" style="padding: 5px 0px 0px;">'
 										+ '<div class="contentInfoBorder"></div>'
 										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
 										+ '<div class="contentInfoBorder"></div>'
@@ -306,11 +320,11 @@ $(document).ready(function(){
 									+ '</div>' 
 							+ '</div>'
 							// playlistcheck에서 classID와 playlistID를 가진 count가져오기  / takes 테이블에서 classID같은 학생 수 
-							+ '<div class="col-sm-2 text-success col-2 pl-5 pr-0">' + percentage + '</div>'
+							+ '<div class="col-sm-2 text-success">' + percentage + '</div>'
 							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
 									//+ published
-								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
-									+ '<input type="checkbox" id="exampleCustomCheckbox'+i+'" name= "exampleCustomCheckbox" class="custom-control-input exampleCustomCheckbox" onchange="YNCheck(this, '+realAllContents[i].id +')">'
+								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch pl-5 m-2">'
+									+ '<input type="checkbox" id="exampleCustomCheckbox'+i+'" name= "exampleCustomCheckbox" class="custom-control-input exampleCustomCheckbox pl-5 m-2" onchange="YNCheck(this, '+realAllContents[i].id +')">'
 										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +i+ '"></label>'
 								+ '</div>'
 							//+ '</div>'
@@ -325,8 +339,6 @@ $(document).ready(function(){
 				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", false);  
 			}
 		}
-		
-		
 	}	
 	
 	function YNCheck(obj, id){
@@ -557,7 +569,8 @@ $(document).ready(function(){
 					var name = result.playlistName;
 					var totalVideo = result.totalVideo;
 
-					var thumbnail = '<div class="image-area mt-4"><img id="imageResult" src="https://img.youtube.com/vi/' + thumbnailID + '/0.jpg" class="img-fluid rounded shadow-sm mx-auto d-block"></div>';
+					var thumbnail = '<div class="image-area mt-4"><img id="imageResult" src="https://img.youtube.com/vi/' + thumbnailID 
+												+ '/0.jpg" class="img-fluid rounded shadow-sm mx-auto d-block"></div>';
 					var playlistInfo = thumbnail + '<p>총 ' + totalVideo + ' 개의 비디오</p>';
 					$('#playlistThumbnail').empty();
 					$('#playlistThumbnail').append(playlistInfo);
@@ -575,12 +588,6 @@ $(document).ready(function(){
 			return false;
 		}
 	}
-	
-	/*function addDays(){
-		var days = ${classInfo.days};
-		days += 1;
-		return days;
-	}*/
 	
 	function updateDays(classID){
 		$.ajax({
@@ -600,7 +607,6 @@ $(document).ready(function(){
 	
 	
 	function deleteDay(classID, day){
-		console.log("classID는? " + classID);
 		$.ajax({
 			type : 'post',
 			url : '../deleteDay',
@@ -652,21 +658,22 @@ $(document).ready(function(){
         			<div class="app-page-title">
                     	<div class="page-title-wrapper">
                         	<div class="page-title-heading">
-                            	<h4><span class="text-primary">${classInfo.className}</span> - 강의컨텐츠</h4><!-- 이부분 이름 바꾸기!! -->
+                            	<h4><span class="text-primary">${classInfo.className}</span> - 강의컨텐츠</h4>
                             </div>
                         </div>
                     </div>    
                     <div class="row justify-content-center">
-                    	
                     	<div class="col-sm-12">
                            <nav class="" aria-label="Page navigation example">
-                           	   <button onclick='updateDays(${classInfo.id})' class="float-right mb-2 mr-2 btn btn-primary">차시 추가</button>
-								
-                               <ul class="pagination">
-                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-										<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
-									</c:forEach>
-                              	</ul>
+                           	   <button onclick='updateDays(${classInfo.id})' class="float-right mb-2 mr-2 btn btn-primary btn-sm">차시 추가</button>
+								<div id="client-paginator">
+									<ul class="pagination">
+	                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
+											<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
+										</c:forEach>
+	                              	</ul>
+								</div>
+                               
                             </nav>
                        	</div>
                        	
@@ -676,11 +683,11 @@ $(document).ready(function(){
                                     <div class="card-body">
                                     	<div class="card-title" style="display: inline;" >
                                     		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
-											 <h5 style="display: inline; ">${j} 차시</h5>
+											 <h5 style="display: inline;">${j} 차시</h5>
 											
 											</a> 
-											 <button onclick='showAddContentForm(${status.index})' class="mb-2 mr-2 btn-transition btn btn-outline-primary">+페이지추가</button>
-											 <button onclick='deleteDay(${classInfo.id}, ${status.index})' class="mb-2 mr-2 btn-transition btn btn-danger float-right" style="float-right;">차시삭제</button>
+											 <button onclick='showAddContentForm(${status.index})' class="mb-2 mr-2 btn-transition btn btn-outline-primary btn-sm"> +페이지추가</button>
+											 <button onclick='deleteDay(${classInfo.id}, ${status.index})' class="mb-2 mr-2 btn-transition btn btn-danger float-right btn-sm">차시삭제</button>
 											 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(-207px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <button type="button" tabindex="-1" class="dropdown-item" onclick='showAddContentForm(${status.index})'>+페이지추가</button>
                                                 <button type="button" tabindex="-1" class="dropdown-item">-페이지삭제</button>

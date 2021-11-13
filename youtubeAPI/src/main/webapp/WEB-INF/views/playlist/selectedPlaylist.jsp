@@ -24,38 +24,36 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
-	
-	
-	<style>
-		.videoPic {
-			width: 120px;
-			height: 70px;
-			padding: 5px;
-			display: inline;
-		}
-		
-		.video:hover{
-			background-color: #F0F0F0;
-		}
-		
-		#slider-div {
-		  display: flex;
-		  flex-direction: row;
-		  margin-top: 30px;
-		}
-		
-		#slider-div>div {
-		  margin: 8px;
-		}
-		
-		.slider-label {
-		  position: absolute;
-		  background-color: #eee;
-		  padding: 4px;
-		  font-size: 0.88rem;
-		}
-	</style>
 </head>
+<style>
+	.videoPic {
+		width: 120px;
+		height: 70px;
+		padding: 5px;
+		display: inline;
+	}
+	
+	.video:hover{
+		background-color: #F0F0F0;
+	}
+	
+	#slider-div {
+	  display: flex;
+	  flex-direction: row;
+	  margin-top: 30px;
+	}
+	
+	#slider-div>div {
+	  margin: 8px;
+	}
+	
+	.slider-label {
+	  position: absolute;
+	  background-color: #eee;
+	  padding: 4px;
+	  font-size: 0.88rem;
+	}
+</style>
 <script>
 var videoId;
 var videoTitle;
@@ -503,7 +501,7 @@ function setSlider() {
                     <div class="app-main__inner">
 	                    <h4>
 							<button class="btn row" onclick="history.back();"> 
-                  				<i class="pe-7s-left-arrow h3 col-12"></i>
+                  				<i class="pe-7s-left-arrow h4 col-12"></i>
                   				<p class="col-12 m-0">이전</p>
                				</button>
                         	<span class="displayPlaylistName text-primary"></span> 
