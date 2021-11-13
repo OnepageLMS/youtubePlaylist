@@ -8,21 +8,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Example</title>
+    <title>강의 컨텐츠</title>
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
+	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
+	<link rel="icon" href="favicon-16.png" sizes="16x16"> 
+	<link rel="icon" href="favicon-32.png" sizes="32x32"> 
+	<link rel="icon" href="favicon-48.png" sizes="48x48"> 
+	<link rel="icon" href="favicon-64.png" sizes="64x64"> 
+	<link rel="icon" href="favicon-128.png" sizes="128x128">
+	<!--favicon 설정 -->
     -->
 </head>
 <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
@@ -814,7 +812,7 @@ function collectPlayCount(data) {
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
+		<jsp:include page="../outer_top_stu.jsp" flush="false"/>
 
 		<div class="app-main">
 		 	<jsp:include page="../outer_left_stu.jsp" flush="false"/>
