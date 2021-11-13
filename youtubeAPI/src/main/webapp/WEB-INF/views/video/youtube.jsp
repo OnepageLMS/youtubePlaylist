@@ -8,7 +8,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta http-equiv="Content-Language" content="en">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Youtube 검색</title>
+	<title>Youtube 영상추가</title>
+	<link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
+	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
 	<meta name="msapplication-tap-highlight" content="no">
 	
@@ -16,15 +19,11 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
-	
-	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
-
+</head>
 <style>
 .video {
 	padding: 7px;
@@ -33,7 +32,7 @@
 	font-size: 12px;
 }
 img {
-	width: 15px;
+	width: 128px;
 	height: 80px;
 	padding: 5px;
 }
@@ -71,8 +70,6 @@ img {
 	cursor:pointer
 } */
 </style>
-
-</head>
 <script>
 var email;
 $(document).ready(function(){
@@ -234,8 +231,8 @@ $(document).ready(function(){
 	
 			/* title = `${title}`; */
 			
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" '
-				+ 'style="height:100%; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
+			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="" '
+				+ 'style="width: 100%; height:100%; max-width: 300px; max-height: 200px; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
 			+ '\'' + ',\'' + `\${title}` + '\''
 			+ ',\'' + durationCount[i] + '\'' + ',' + i + '); setSlider();" >';
 			//var url = '<a href="https://youtu.be/' + id + '">';

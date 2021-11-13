@@ -198,7 +198,7 @@
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow">
-		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
+		<jsp:include page="../outer_top_stu.jsp" flush="false"/>
 
 		<div class="app-main">
 			<!-- outer_left.jsp에 데이터 전송 -->

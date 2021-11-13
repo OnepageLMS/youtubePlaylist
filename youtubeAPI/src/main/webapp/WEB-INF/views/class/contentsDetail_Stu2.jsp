@@ -8,22 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Example</title>
+    <title>강의 컨텐츠</title>
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 </head>
 <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
@@ -33,6 +23,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+
 <script>
 var studentEmail = 1; //우선 임의로 넣기
 //var classPlaylistID = 0;
@@ -47,8 +38,6 @@ var ori_index =0;
 var ori_videoID;
 var ori_playlistID;
 var ori_classContentID;
-
-
 
 $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 위함
 	
@@ -769,7 +758,7 @@ function collectPlayCount(data) {
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
-		<jsp:include page="../outer_top_stu_temp.jsp" flush="false"/>
+		<jsp:include page="../outer_top_stu.jsp" flush="false"/>
 
 		<div class="app-main">
 		 	<jsp:include page="../outer_left_stu.jsp" flush="false"/>

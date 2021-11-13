@@ -9,6 +9,14 @@
 <meta http-equiv="Content-Language" content="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>강의 캘린더</title>
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
+<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
+<link rel="icon" href="favicon-16.png" sizes="16x16"> 
+<link rel="icon" href="favicon-32.png" sizes="32x32"> 
+<link rel="icon" href="favicon-48.png" sizes="48x48"> 
+<link rel="icon" href="favicon-64.png" sizes="64x64"> 
+<link rel="icon" href="favicon-128.png" sizes="128x128">
+<!--favicon 설정 -->
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
 <meta name="msapplication-tap-highlight" content="no">
