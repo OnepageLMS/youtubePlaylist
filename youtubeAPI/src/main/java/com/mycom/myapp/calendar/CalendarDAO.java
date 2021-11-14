@@ -12,11 +12,20 @@ public class CalendarDAO {
 	SqlSession sqlSession;
 	
 	public int insertEvent(CalendarVO vo) {
-		return sqlSession.insert("Calendar.insertEvent", vo);
+		sqlSession.insert("Calendar.insertEvent", vo);
+		return vo.getId();
 	}
 	
 	public int updateEvent(CalendarVO vo) {
 		return sqlSession.update("Calendar.updateEvent", vo);
+	}
+	
+	public int changeDate(CalendarVO vo) {
+		return sqlSession.update("Calendar.changeDate", vo);
+	}
+	
+	public int deleteEvent(int id) {
+		return sqlSession.delete("Calendar.deleteEvent", id);
 	}
 	
 	public List<CalendarVO> getScheduleList(int classID){

@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Calendar">
-	<insert id="insertEvent">
-		insert into lms_calendar (classID, name, date, memo)
-		values (#{classID}, #{name}, #{date}, #{memo})
+	<insert id="insertEvent" useGeneratedKeys="true" keyProperty="id">
+		insert into lms_calendar (classID, name, date, allday, memo)
+		values (#{classID}, #{name}, #{date}, #{allday}, #{memo})
 	</insert>
 	
 	<update id="updateEvent">
 		update lms_calendar 
-		set name = #{name}, date = #{date}, memo = #{memo}
+		set name = #{name}, date = #{date}, allday = #{allday}, memo = #{memo}
 		where id=#{id}
 	</update>
 	
+	<update id="changeDate">
+		update lms_calendar 
+		set date = #{date}
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteEvent">
+		delete from lms_calendar 
+		where id=#{id}
+	</delete>
+	
 	<select id="getScheduleList" resultType="Calendar">
-		select id, name, date, memo, modDate
+		select id, name, date, allday, memo
 		from lms_calendar
 		where classID = #{classID}
 	</select>
+	
 </mapper>

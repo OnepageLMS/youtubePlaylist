@@ -23,6 +23,16 @@ public class CalendarServiceImpl implements CalendarService{
 	}
 	
 	@Override
+	public int changeDate(CalendarVO vo) {
+		return calendarDAO.changeDate(vo);
+	}
+	
+	@Override
+	public int deleteEvent(int id) {
+		return calendarDAO.deleteEvent(id);
+	}
+	
+	@Override
 	public List<CalendarVO> getScheduleList(int classID){
 		return calendarDAO.getScheduleList(classID);
 	}
