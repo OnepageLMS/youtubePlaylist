@@ -32,8 +32,38 @@
 var takes;
 var takesStudentNum = 0;
 $(document).ready(function(){
+	var allMyClass = JSON.parse('${realAllMyClass}');
+	var weekContents = JSON.parse('${weekContents}');
 	
+	for(var i=0; i<allMyClass.length; i++){
+		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			url : "${pageContext.request.contextPath}/student/class/forWatchedCount",
+			type : "post",
+			async : false,
+			data : {	
+				playlistID : weekContents[i].playlistID,
+				classContentID : weekContents[i].id
+			},
+			success : function(data) {
+				watchCount = data; 
+				console.log(data);
+			},
+			error : function() {
+				alert("error");
+			}
+		})
+		
+		
+		if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
+			var element = document.getElementById('takeLMS'+i);
+			element.innerText =  watchCount/weekContents[i].totalVideo*100 + "%";
+			
+		}
+		
+	}
 });
+
+
 	
 	
 </script>
@@ -80,7 +110,7 @@ $(document).ready(function(){
 		                                            </tr>  
 		                                            <tr>
 		                                            	<td style="text-align:center"> LMS </td>
-			                                            <td id = "take${status.index}" style="text-align:center"> 0% </td>
+			                                            <td id = "takeLMS${status.index}" style="text-align:center"> 0% </td>
 		                                            </tr>
 	                                            </c:forEach>
                                             </tbody>
