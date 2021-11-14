@@ -32,8 +32,11 @@ import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
+import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
+import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 
 import net.sf.json.JSONArray;
 
@@ -42,6 +45,9 @@ import net.sf.json.JSONArray;
 public class AttendanceController {
 	@Autowired
 	private ClassesService classService;
+	
+	@Autowired
+	private Stu_ClassContentService classContentService;
 	
 	@Autowired
 	private Stu_TakesService stu_takesService;
@@ -55,6 +61,9 @@ public class AttendanceController {
 	@Autowired
 	private AttendanceCheckService attendanceCheckService;
 	
+	@Autowired
+	private Stu_VideoCheckService videoCheckService;
+	
 	
 	private int instructorID = 0;
 	public int classID;
@@ -67,8 +76,12 @@ public class AttendanceController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
-		model.addAttribute("takes", stu_takesService.getStudentNum(classID));	//이름이 모호함
+		model.addAttribute("takes", JSONArray.fromObject(stu_takesService.getStudentNum(classID)));	//이름이 모호함
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
+		
+		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
+		
 		// 학생 정보 (jw)
 		model.addAttribute("studentInfo", stu_takesService.getStudentInfo(classId));
 		
@@ -101,6 +114,27 @@ public class AttendanceController {
 		
 		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
 	}	
+	
+	@ResponseBody
+	@RequestMapping(value = "/forWatchedCount", method = RequestMethod.POST)
+	public int forWatchedCount(HttpServletRequest request, Model model) throws Exception {
+		//System.out.println("..?");
+		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
+		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
+		int studentID = Integer.parseInt(request.getParameter("studentID"));
+		//System.out.println("watch");
+		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
+	    vo.setPlaylistID(playlistID);
+	    vo.setStudentID(studentID);
+	    vo.setClassContentID(classContentID);
+	    
+	    int count = 0;
+	    for(int i=0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
+	    	if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1)
+	    		count++;
+	    }
+	    return count;
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/uploadCSV", method = RequestMethod.POST)

@@ -35,6 +35,7 @@
 <script>
 //var takes;
 //var takesStudentNum = 0;
+
 $(document).ready(function(){
 	$.ajax({
 		'url' : "${pageContext.request.contextPath}/attendance/getfileName",
@@ -58,6 +59,43 @@ $(document).ready(function(){
 		},
 	});
 	
+	var allMyClass = JSON.parse('${realAllMyClass}');
+	var weekContents = JSON.parse('${weekContents}');
+	var takes = JSON.parse('${takes}');
+	
+	for(var j=0; j<${takesNum}; j++){
+		for(var i=0; i<allMyClass.length; i++){
+			
+			$.ajax({ 
+				url : "${pageContext.request.contextPath}/attendance/forWatchedCount",
+				type : "post",
+				async : false,
+				data : {	
+					playlistID : weekContents[i].playlistID,
+					classContentID : weekContents[i].id,
+					studentID : takes[j].studentID
+				},
+				success : function(data) {
+					watchCount = data; 
+					console.log(data + " / " + weekContents[i].totalVideo);
+				},
+				error : function() {
+					alert("error");
+				}
+			})
+			
+			
+			
+			if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
+				//alert("성공이다 ");
+				var element = document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0];
+				console.log(element);
+				element.innerText =  Math.floor(watchCount/weekContents[i].totalVideo*100) + "%";
+				
+			}
+			
+		}
+	}
 	
 	$("#button").click(function(event){
 		console.log("daySeq :" + $("#inputSeq").val());
@@ -364,6 +402,53 @@ function updateAttendance(days){
 	});
 	
 }
+
+function clickCheck(target) {
+    document.querySelectorAll(`input[type=checkbox]`)
+        .forEach(el => el.checked = false);
+
+    target.checked = true;
+}
+
+var innerAttendList = new Array();
+
+function setInnerAttendance(takes, idx) { 
+	console.log("takes : " + takes + " idx : " + idx);
+	var seq = $("#inputSeq").val(); 	
+	var innerAttend = new Array();
+	
+	//for(var i =0; i <  innerAttend.length; i++){
+	// 	innerAttend[i] = new Array(5);
+	 	innerAttend.push($("#inputSeq").val());
+		innerAttend.push($("#forAttendance"+takes+""+idx).is(':checked'));
+		innerAttend.push($("#forLate"+takes+""+idx).is(':checked'));
+		innerAttend.push($("#forAbsent"+takes+""+idx).is(':checked'));
+		innerAttend.push($("#forNoCheck"+takes+""+idx).is(':checked'));
+	//}
+	innerAttendList.push(innerAttend);
+	
+	var element = document.getElementsByClassName('innerAttend'+takes+""+idx)[0];
+	element.innerHTML = '';
+	if($("#forAttendance"+takes+""+idx).is(':checked') == true){
+		element.innerHTML += "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
+	}
+	
+	if($("#forLate"+takes+""+idx).is(':checked') == true){
+		element.innerHTML += "<i class='pe-7s-check fa-2x' style=' color:orange'> </i>";
+	}
+	
+	if($("#forAbsent"+takes+""+idx).is(':checked') == true){
+		element.innerHTML += "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+	}
+	
+	if($("#forNoCheck"+takes+""+idx).is(':checked') == true){
+		element.innerHTML += "<i class='pe-7s-less fa-2x'> </i>";
+	}
+	
+	for(var i=0; i<innerAttendList.length; i++)
+		console.log(innerAttendList[i]);
+	//updateAttendance(innerAttendList);
+}
 	
 </script>
 <body>
@@ -419,7 +504,7 @@ function updateAttendance(days){
 	                                            			</a>
 	                                            			-->
 	                                            		</td>
-					                                    <td  id="lmsAttend text-center" style="font-weight:bold;">LMS</td>
+					                                    <td  id="lmsAttend text-center" style="font-weight:bold; text-align:center;">LMS</td>
 					                                </c:forEach>
 	                                            </tr>
                                             </thead>
@@ -441,7 +526,14 @@ function updateAttendance(days){
 																		  <option value="3" class="red">결석</option>
 																		</select>
 				                                            	 	</td>
-				                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
+				                                                	
+				                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 
+				                                                		<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
+																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
+		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
+				                                            				<i class="pe-7s-note"> </i>
+				                                            			</button>
+																	</td>
 				                                                </c:forEach>
 			                                                </c:if>
 			                                                
@@ -454,9 +546,19 @@ function updateAttendance(days){
 																	  <option value="3" class="red">결석</option>
 																	</select>
 			                                            	 	</td>
-			                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 0% </td>
+			                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 
+			                                                	<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
+			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
+		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
+				                                            				<i class="pe-7s-note"> </i>
+				                                            			</button>
+																</td>
+																
+																
 			                                                </c:forEach>
-			                                            </tr>  
+			                                            </tr>
+			                                            
+			                                             
 	                                            	</c:forEach>
 	                                            </c:if>
 	                                            <tr>
@@ -620,6 +722,76 @@ function updateAttendance(days){
 	        </div>
 	    </div>
 	</div>
+	
+        
+	<!-- upload LMS attendance modal -->
+	<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status"> 
+		<c:forEach var="j" begin="0" end="${classInfo.days-1}" varStatus="status2">
+		    <div class="modal fade" id="editInnerAttendance${status.index+1}${status2.index+1}" tabindex="-1" role="dialog" aria-labelledby="editInnerAttendance${status.index+1}${status2.index+1}" aria-hidden="true" style="display: none;">
+			    <div class="modal-dialog modal-sm" role="document">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="editInnerAttendanceLabel"><span class="text-primary"></span> LMS 출결관리 </h5>
+			                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">×</span>
+			                </button>
+			            </div>
+			
+				       <div class="modal-body">  
+				       		<input name="seq" id="inputSeq" type="hidden">
+			          		<div class="main-card">
+								<div class="card-body">
+				              		<form class="needs-validation" id="forInnerAttend" method="post" novalidate>
+				                        
+				                        <div class="position-relative row form-group">
+				                        
+				                        	<div class="col-sm-1 mt-2">
+				                           		<div class="position-relative form-check">
+				                               		<input id="forAttendance${status.index+1}${status2.index+1}" name="pinAttend" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+				                                 </div>
+				                             </div>
+				                             <label for="checkbox2" class="col-sm-10 col-form-label">출석</label>
+				                             
+				                       		<div class="col-sm-1 mt-2">
+				                           		<div class="position-relative form-check">
+				                               		<input id="forLate${status.index+1}${status2.index+1}" name="pinLate" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+				                                 </div>
+				                             </div>
+				                             <label for="checkbox2" class="col-sm-10 col-form-label">지각</label>
+				                             
+				                             <div class="col-sm-1 mt-2">
+				                           		<div class="position-relative form-check">
+				                               		<input id="forAbsent${status.index+1}${status2.index+1}" name="pinAbsent" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+				                                 </div>
+				                             </div>
+				                             <label for="checkbox2" class="col-sm-10 col-form-label">결석</label>
+				                             
+				                             <div class="col-sm-1 mt-2">
+				                           		<div class="position-relative form-check">
+				                               		<input id="forNoCheck${status.index+1}${status2.index+1}" name="pinNoCheck" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+				                                 </div>
+				                             </div>
+				                             <label for="checkbox2" class="col-sm-10 col-form-label">미확인</label>
+				                             
+				                             
+				                        </div> 
+				                        
+				                                     
+				                    </form>
+				               	</div>
+				            </div>
+						</div>
+				            <div class="modal-footer">
+				                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+				            	<button type="submit" id="setInnerAttendance" class="btn btn-primary" data-dismiss="modal" onclick="setInnerAttendance(${status.index+1}, ${status2.index+1})">확인</button>
+				            </div>
+			       
+			            
+			        </div>
+			    </div>
+			</div>
+		</c:forEach>		
+	</c:forEach>
 	
 	
    	

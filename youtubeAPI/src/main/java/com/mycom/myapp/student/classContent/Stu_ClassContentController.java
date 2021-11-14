@@ -56,7 +56,7 @@ public class Stu_ClassContentController {
 		//해당 플레이리스트에서 watched가 1인거 ..
 		
 		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
-		System.out.println("playlistID : " + classContentService.getAllClassContent(classID).get(2).getPlaylistID());
+		//System.out.println("playlistID : " + classContentService.getAllClassContent(classID).get(2).getPlaylistID());
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		model.addAttribute("playlistCheck", JSONArray.fromObject(playlistcheckService.getAllPlaylist()));

@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceCheckVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.classes.Stu_ClassesService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
+import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
+import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 
 import net.sf.json.JSONArray;
 
@@ -38,7 +41,13 @@ public class Stu_AttendanceCheckController {
 	private MemberService memberService;
 	
 	@Autowired
+	private Stu_ClassContentService classContentService;
+	
+	@Autowired
 	private Stu_AttendanceCheckService stu_attendanceCheckService;
+	
+	@Autowired
+	private Stu_VideoCheckService videoCheckService;
 	
 	private int studentID = 01;
 	public int classID;
@@ -49,7 +58,9 @@ public class Stu_AttendanceCheckController {
 		classID = classId;
 		model.addAttribute("classInfo", classesService.getClass(classID)); 
 		
+		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		
 		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
@@ -76,5 +87,24 @@ public class Stu_AttendanceCheckController {
 	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {
 		
 		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forWatchedCount", method = RequestMethod.POST)
+	public int forWatchedCount(HttpServletRequest request, Model model) throws Exception {
+		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
+		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
+		System.out.println("watch");
+		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
+	    vo.setPlaylistID(playlistID);
+	    vo.setStudentID(studentID);
+	    vo.setClassContentID(classContentID);
+	    
+	    int count = 0;
+	    for(int i=0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
+	    	if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1)
+	    		count++;
+	    }
+	    return count;
 	}
 }
