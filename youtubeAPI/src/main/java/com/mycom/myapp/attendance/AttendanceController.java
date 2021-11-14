@@ -124,7 +124,7 @@ public class AttendanceController {
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
 		//System.out.println("watch");
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
-	    vo.setPlaylistID(playlistID);////////
+	    vo.setPlaylistID(playlistID);//////////
 	    vo.setStudentID(studentID);
 	    vo.setClassContentID(classContentID);
 	    
