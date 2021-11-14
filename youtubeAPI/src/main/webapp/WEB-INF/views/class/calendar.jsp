@@ -31,10 +31,11 @@
 </head>
 
 <script>
+var calendar;
 	(function() {
 		$(function() {
 			var calendarEl = $('#calendar1')[0];
-			var calendar = new FullCalendar.Calendar(calendarEl, {
+			calendar = new FullCalendar.Calendar(calendarEl, {
 				height : '600px', 
 				expandRows : true, 
 				slotMinTime : '08:00', 
@@ -139,19 +140,41 @@
 				data: $('#eventForm').serialize(),
 				success: function(data){
 					console.log('event 생성 성공');
-					location.reload();	//이부분 바꾸기
+					//location.reload();	//이부분 바꾸기
+					calendar.addEvent({
+					    //id: id,
+						title: $('#setName').val(),
+						start: $('#setDate').val(),
+						description: $('#setMemo').val()
+					  });
 				},
 				error: function(data, status,error){
 					alert('event 생성 실패!');
 				}
 			});
 		}
-		  return false;
 	}
 
 	function deleteEvent(){
 		if(confirm('일정을 삭제하시겠습니까?')){
-			
+			/*var data = {"gubun": "delete", "id" : arg.event.id, "allowyn": "0"};
+			//DB 삭제
+			$.ajax({
+			  url: "./deleteSch.jsp",
+			  type: "POST",
+			  data: JSON.stringify(data),
+			  dataType: "JSON",
+			  traditional: true,
+			  success : function(data, status, xhr){
+				  //alert(xhr.status);
+				  arg.event.remove();
+				  initModal(modal, arg);
+			  },
+			  error : function(xhr, status, error){
+				    //alert(xhr.responseText);
+				  alert('일정 삭제 실패<br>새로고침 후 재시도 해주세요');
+			  }
+			});*/
 		}
 	}
 </script>
@@ -227,7 +250,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form id="eventForm" class="needs-validation" method="post" novalidate>
+            <form id="eventForm" class="needs-validation" onsubmit="return false;" method="post" novalidate>
 	            <div class="modal-body">
 	            	<input type="hidden" name="id" id="setID">
 	            	<input type="hidden" name="classID" id="setClassID" value="${classID}">
@@ -248,7 +271,7 @@
 	            </div>
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="submit" class="btn btn-primary" onclick="setEvent();">등록</button>
+	                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="setEvent();">등록</button>
 	            </div>
             </form>
         </div>
