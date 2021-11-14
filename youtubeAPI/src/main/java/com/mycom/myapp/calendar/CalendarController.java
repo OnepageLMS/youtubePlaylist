@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
@@ -49,11 +50,13 @@ public class CalendarController {
 	
 	@RequestMapping(value="/insertEvent", method = RequestMethod.POST)
 	@ResponseBody
-	public void insertEvent(@ModelAttribute CalendarVO vo) {
-		if(calendarService.insertEvent(vo) > 0) 
+	public int insertEvent(@ModelAttribute CalendarVO vo) {
+		int newID = calendarService.insertEvent(vo);
+		if(newID > 0) 
 			System.out.println("event 생성 성공:)");
 		else 
 			System.out.println("event 생성 실패:(");
+		return newID;
 	}
 	
 	@RequestMapping(value="/updateEvent", method = RequestMethod.POST)
@@ -65,13 +68,22 @@ public class CalendarController {
 			 System.out.println("event 수정 실패:(");
 	}
 	
-	@RequestMapping(value="/deleteEvent", method = RequestMethod.POST)
+	@RequestMapping(value="/changeDate", method = RequestMethod.POST)
 	@ResponseBody
-	public void deleteEvent(@PathVariable(value="id") int id) {
-		 /*if(calendarService.updateEvent() > 0) 
+	public void changeDate(@ModelAttribute CalendarVO vo) {
+		 if(calendarService.changeDate(vo) > 0) 
 			 System.out.println("event 수정 성공:)");
 		 else 
-			 System.out.println("event 수정 실패:(");*/
+			 System.out.println("event 수정 실패:(");
+	}
+	
+	@RequestMapping(value="/deleteEvent", method = RequestMethod.POST)
+	@ResponseBody
+	public void deleteEvent(@RequestParam(value="id") int id) {
+		 if(calendarService.deleteEvent(id) > 0) 
+			 System.out.println("event 삭제 성공:)");
+		 else 
+			 System.out.println("event 삭제 실패:(");
 	}
 	
 	@RequestMapping(value="/getScheduleList/{classID}", method = RequestMethod.GET)

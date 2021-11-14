@@ -5,8 +5,8 @@ public class CalendarVO {
 	private int classID;
 	private String name;
 	private String date;
+	private String allday;
 	private String memo;
-	private String modDate;
 	
 	public int getId() {
 		return id;
@@ -32,16 +32,16 @@ public class CalendarVO {
 	public void setDate(String date) {
 		this.date = date;
 	}
+	public String getAllday() {
+		return allday;
+	}
+	public void setAllday(String allday) {
+		this.allday = allday;
+	}
 	public String getMemo() {
 		return memo;
 	}
 	public void setMemo(String memo) {
 		this.memo = memo;
-	}
-	public String getModDate() {
-		return modDate;
-	}
-	public void setModDate(String modDate) {
-		this.modDate = modDate;
 	}
 }
