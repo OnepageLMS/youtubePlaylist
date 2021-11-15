@@ -97,14 +97,20 @@ public class MemberController {
 		return result;
 	}
 	
+	// 학생 삭제시 필요한 정보: 학생ID, 수업ID 
 	@ResponseBody
 	@RequestMapping(value ="/deleteTakes" , method = RequestMethod.POST)
 	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
 		System.out.println(vo.getClassID() + vo.getStudentID());
 		int result = stu_takesService.deleteStudent(vo);
+		
+		//1. attendance테이블에서 classID에 해당하는 attendanceID구하기) => 여러개임. 
+		//2. attendanceID 하나씩 꺼내와서 해당 출석ID와 studentID 를 가지는 attendanceCheck 지우기. => 
 		attendanceCheckService.deleteAttendanceCheck(vo.getStudentID());
+		// noticeID, studentID 필요 
 		stu_noticeService.deleteNoticeCheck(vo.getStudentID());
-		stu_playlistCheckService.deletePlaylist(vo.getStudentID());
+		stu_playlistCheckService.deletePlaylist(vo.getStudentID()); // 
+		
 		
 		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
 			System.out.println("totalStudent 업데이트 성공!");

@@ -11,10 +11,20 @@
     <title>Dashboard</title>
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
+	
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    
+    <!--
+    =========================================================
+    * ArchitectUI HTML Theme Dashboard - v1.0.0
+    =========================================================
+    * Product Page: https://dashboardpack.com
+    * Copyright 2019 DashboardPack (https://dashboardpack.com)
+    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
+    =========================================================
+    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    -->
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
@@ -326,6 +336,34 @@ function submitDeleteClassroom(){
 	}
 }
 
+function deleteRequest(studentID, classID, obj){
+	if(!confirm("해당 강의실의 수강대기신청을 삭제하시겠습니까?")){
+		return false;
+	}
+	
+	var objParams = {
+		studentID : studentID,
+		classID : classID,
+	}
+	
+	$.ajax({
+		'type' : 'POST',
+		'url' : '${pageContext.request.contextPath}/member/deleteTakes',
+		'data' : JSON.stringify(objParams),
+		'contentType' : "application/json",
+		success : function(data){
+			deleteRow(obj)
+		},
+		error:function(request,status,error){
+	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+	    }	
+	});
+}
+
+function deleteRow(obj){
+	$(obj).parent().closest('.row').remove();
+}
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -432,22 +470,27 @@ function submitDeleteClassroom(){
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle"> 수강대기현황 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="text-align:center;">
                 <c:forEach var="v" items="${allPendingClass }">
                 	<div class="row">
                 		<c:choose>
 	                		<c:when test="${v.status eq 'pending'}">
-		                		<div class="col-sm-4 ml-3">
+		                		<div class="col-sm-4 ml-2" style="text-align:left;" >
 		                			<p> ${v.className} </p>
 		                		</div>
-		                		<div class="col-sm-1"></div>
-		                		<div class="col-sm-6">
+		                		<div class="col-sm-3">
 		                			<p> 허락 대기중 </p>
+		                		</div>
+		                		<div class="col-sm-3">
+		                			<p> ${v.regDate} </p>
+		                		</div>
+		                		<div>
+		                			<button class="btn btn-danger btn-sm" onclick="deleteRequest(${v.studentID}, ${v.classID}, this);">취소 </button>
 		                		</div>
 	                		</c:when>
                 		</c:choose>
