@@ -105,6 +105,7 @@
 					});	
 				 },
 				eventClick: function(obj) {
+					console.log(obj);
 					udpateEventModal(obj);
 				},
 				select: function (startDate, endDate, jsEvent, view) {	//하나 혹은 드래그 해서 일정을 선택했을 때
@@ -119,7 +120,9 @@
 	})();
 
 	function stringFormat(p_val){
-		if(p_val < 10)
+		if(p_val == '')
+			return '00';
+		else if(p_val < 10)
 			return p_val = '0'+p_val;
 		else
 			return p_val;
@@ -142,7 +145,7 @@
 	}
 
 	function addEvent(){
-		if($('#addName').val() == '' || $('#addName').val() == null) return;
+		if($('#addName').val() == '' || $('#addName').val() == null) return false;
 		
 		var newDate = $('#addDate').val() + "T" + stringFormat($('#addHour').val()) + ":" + stringFormat($('#addMin').val()) + ":00";
 		$('#addHiddenDate').val(newDate);
@@ -151,7 +154,6 @@
 		if (allday == true) $('#addAllday').val(1);
 		else $('#setAllday').val(0);
 
-		
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/calendar/insertEvent',
@@ -160,10 +162,11 @@
 				calendar.addEvent({
 				    id: newID,
 					title: $('#addName').val(),
-					start: newDate,
+					start: newDate + "+09:00",
 					allDay: allday
 				  });
-				//location.reload();
+				$('#addEventForm')[0].reset();
+				$('#addEventModal').modal('hide');
 			},
 			error: function(data, status,error){
 				alert('일정 생성 실패<br>새로고침 후 재시도 해주세요!');
@@ -339,7 +342,7 @@
 	            </div>
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="addEvent();">등록</button>
+	                <button type="submit" class="btn btn-primary" onclick="addEvent();">등록</button>
 	            </div>
             </form>
         </div>
