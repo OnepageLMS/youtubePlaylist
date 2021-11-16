@@ -20,4 +20,5 @@ public interface ClassContentService {
 	public List<ClassContentVO> getAllClassContentForCopy(int classID);
 	public int insertCopiedClassContents(List<ClassContentVO> list);
 	public int getDaySeq(ClassContentVO vo);
+	public ClassContentVO getClassContentID(ClassContentVO vo);
 }

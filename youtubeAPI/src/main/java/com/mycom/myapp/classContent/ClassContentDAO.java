@@ -93,4 +93,8 @@ public class ClassContentDAO {
 	public int getDaySeq(ClassContentVO vo) {
 		return sqlSession.selectOne("ClassContent.getDaySeq", vo);
 	}
+	
+	public ClassContentVO getClassContentID(ClassContentVO vo) {
+		return sqlSession.selectOne("ClassContent.getClassContentID", vo);
+	}
 }

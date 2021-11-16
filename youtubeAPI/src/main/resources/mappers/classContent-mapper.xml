@@ -16,6 +16,11 @@
 		where classID=#{classID} and days=#{days}
 	</select>
 	
+	<select id="getClassContentID" resultType="classContent">
+		select id from lms_classContent
+		where classID=#{classID} and days=#{days}
+	</select>
+	
 	<update id="updateContent">
 		update lms_classContent
 		set title=#{title}, description=#{description}, endDate=#{endDate} 

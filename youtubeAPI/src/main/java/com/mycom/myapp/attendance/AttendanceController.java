@@ -27,11 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.mycom.myapp.attendanceCheck.AttendanceCheckService;
+import com.mycom.myapp.classContent.ClassContentService;
 import com.mycom.myapp.commons.AttendanceCheckVO;
+import com.mycom.myapp.commons.AttendanceInternalCheckVO;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.student.attendanceInternalCheck.Stu_AttendanceInternalCheckService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
@@ -47,6 +50,9 @@ public class AttendanceController {
 	private ClassesService classService;
 	
 	@Autowired
+	private ClassContentService classInsContentService;
+	
+	@Autowired
 	private Stu_ClassContentService classContentService;
 	
 	@Autowired
@@ -60,6 +66,9 @@ public class AttendanceController {
 	
 	@Autowired
 	private AttendanceCheckService attendanceCheckService;
+	
+	@Autowired
+	private Stu_AttendanceInternalCheckService attendanceInCheckService;
 	
 	@Autowired
 	private Stu_VideoCheckService videoCheckService;
@@ -87,15 +96,22 @@ public class AttendanceController {
 		
 		// attendance csv (hy)
 		List<AttendanceVO> id = attendanceService.getAttendanceList(classID); //해당 classID를 가진 attribute의 개수 (해당 수업에서 업로드된 파일의 개수) 
-		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID); //해당 classID를 가진 수업을 수강하는 학생 수 
+		//List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID); //해당 classID를 가진 수업을 수강하는 학생 수 
 		List<List<String>> file = new ArrayList<List<String>>();
 		for(int i=0; i<id.size(); i++) { 
 			List<String> fileList = new ArrayList<String>();
 			int attendanceID = id.get(i).getId(); // 7, 8, 9, 10
-			System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(classID).size());
+			//System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(classID).size());
+			List<AttendanceCheckVO> takes = attendanceCheckService.getAttendanceCheckList(attendanceID); 
+			//System.out.println(takes.size());
+			//System.out.println(takes.get(0).getExternal());
 			for(int j=0; j<takes.size(); j++) { //id.size()이면 안되겠는걸.. 
+				//takes.size()로하면 에러가 나는 이유, 1차시에는 3명에 대한 출석을 업데이트했는데 그 이후에 학생한명이 더 들어온다 -> 4명
+				//그럼 indexOutOfBoundsException이 발생한다.
+				//attendanceCheck에서 id가 같은 것들 가져오기 
 				//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 			if(attendanceCheckService.getAttendanceCheckList(attendanceID).size() != 0 || attendanceCheckService.getAttendanceCheckList(attendanceID).get(j) != null)
+				//System.out.println("attendanceID" + attendanceID+ " j : " + j + " external : " + attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				
 			}
@@ -104,7 +120,7 @@ public class AttendanceController {
 		
 		model.addAttribute("file", file);
 		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(classID));
-		System.out.println("classID" + classID + "fileNum " + attendanceCheckService.getAttendanceCheckListCount(classID));
+		//System.out.println("classID" + classID + "fileNum " + attendanceCheckService.getAttendanceCheckListCount(classID));
 		return "class/attendance";
 	}	
 	
@@ -397,8 +413,18 @@ public class AttendanceController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/whichAttendance", method = RequestMethod.POST)
-	public int whichAttendance(HttpServletRequest request, @RequestParam(value="finalTakes[]")String[] finalTakes)  {
+	public int whichAttendance(HttpServletRequest request, @RequestParam(value="finalTakes[]")String[] finalTakes, @RequestParam(value="finalInternalTakes[]")String[] finalInternalTakes)  {
 		int attendanceID = Integer.parseInt(request.getParameter("attendanceID"));
+		int days = Integer.parseInt(request.getParameter("days"));
+		
+		ClassContentVO ccvo = new ClassContentVO();
+		ccvo.setClassID(classID);
+		ccvo.setDays(days);
+		
+		int classContentID = classInsContentService.getClassContentID(ccvo).getId();
+		
+		System.out.println("classContentID " + classContentID);
+
 		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
 		
 		for(int i=0; i<finalTakes.length; i++) {
@@ -406,6 +432,12 @@ public class AttendanceController {
 			avo.setAttendanceID(attendanceID);
 			avo.setExternal(finalTakes[i]);
 			avo.setStudentID(takes.get(i).getStudentID()); //takes테이블에서 바로가져오도록 하면 될듯 
+			
+			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+			aivo.setInternal(finalInternalTakes[i]);
+			aivo.setStudentID(takes.get(i).getStudentID());
+			aivo.setClassContentID(classContentID);
+			
 			if(attendanceCheckService.getAttendanceCheck(avo) != null) {
 				attendanceCheckService.updateExAttendanceCheck(avo);
 			}
@@ -414,9 +446,42 @@ public class AttendanceController {
 				attendanceCheckService.insertExAttendanceCheck(avo);
 				
 			}
+			
+			
+			//System.out.println("null이라고,,?? " + attendanceInCheckService.getAttendanceInCheck(aivo).getStudentID());
+			if(attendanceInCheckService.getAttendanceInCheck(aivo) != null) {
+				attendanceInCheckService.updateAttendanceInCheck(aivo);
+				System.out.println("선생님이 inner 수정  ");
+			}
+			else {
+				attendanceInCheckService.insertAttendanceInCheck(aivo);
+				System.out.println("선생님이 inner 삽입  ");
+			}
 		}
 		
+		//classID와  days를 통해 classContentID를 가져오기 
+		//classContentID와 studentID를 통해 
+		
 		return 1;
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forInnerWatched", method = RequestMethod.POST)
+	public AttendanceInternalCheckVO forInnerWatched(HttpServletRequest request)  {
+		int classContentID = Integer.parseInt(request.getParameter("classContentID"));
+		int studentID = Integer.parseInt(request.getParameter("studentID"));
+		
+		System.out.println("studentID : " + studentID + " / classContentID : " + classContentID);
+		AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+		aivo.setClassContentID(classContentID);
+		aivo.setStudentID(studentID);
+		
+		if(attendanceInCheckService.getAttendanceInCheck(aivo) != null)
+			return attendanceInCheckService.getAttendanceInCheck(aivo);
+		else {
+			return null; //insert를 해서 그에 대한 Id를 가져와보기 (파일 업로드없이 출결사항을 업데이트) 
+		}
 		
 	}
 	

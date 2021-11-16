@@ -85,7 +85,9 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			playlistID : weekContents[videoIdx].playlistID,
 		},
 		success : function(data) {
+			//console.log("playlistID : " + weekContents[videoIdx].playlistID);
 			playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+			//console.log("준비중인데 " + playlist.length); 
 			ori_videoID = playlist[0].id; //첫 videoID는 선택된 classContent의 Playlist의 첫번째 영상
 			ori_playlistID = weekContents[videoIdx].playlistID;
 			ori_classContentID = weekContents[videoIdx].id;
@@ -106,6 +108,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		},
 		success : function(data) {
 			watch = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+			//classContent = weekContents[videoIdx].id;
 			console.log("forVideoInfo? : " + watch[0].watched);
 			console.log("forVideoInfo? : " + watch[1]);
 			//console.log("forVideoInfo? : " + watch[2].watched);
@@ -723,7 +726,7 @@ function onPlayerStateChange(event) {
 	if(event.data == 0){
 		watchedFlag = 1;
 		
-		console.log(" 시작 전인데 classContentID : " + classContent.id);
+		//console.log(" 시작 전인데 classContentID : " + classContent.id);
 		$.ajax({
 			'type' : "post",
 			'url' : "${pageContext.request.contextPath}/student/class/changewatch",
