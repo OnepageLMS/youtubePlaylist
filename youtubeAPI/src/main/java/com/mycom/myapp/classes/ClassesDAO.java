@@ -33,8 +33,8 @@ public class ClassesDAO {
 		return sqlSession.update("Classes.deleteDay", id);
 	}
 	
-	public int updateInstructorNull(int id) {	//선생님이 강의실 나갔을 때
-		return sqlSession.update("Classes.updateInstructorNull", id);
+	public int updateInstructorNull(ClassesVO vo) {	//선생님이 강의실 나갔을 때
+		return sqlSession.update("Classes.updateInstructorNull", vo);
 	}
 	
 	public int updateActive(int id) {

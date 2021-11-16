@@ -46,8 +46,6 @@ public class ClassContentController {
 	private Stu_PlaylistCheckService playlistCheckService;
 	@Autowired
 	private Stu_TakesService takesService;
-	@Autowired
-	private MemberService memberService;
   
 	private int instructorID = 0;
 	private int classID;
@@ -172,41 +170,24 @@ public class ClassContentController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
-	public String addContentOK(HttpServletRequest request, Model model) {
-		ClassContentVO vo = new ClassContentVO();
-		
-		System.out.println(request.getParameter("playlistID"));
-		vo.setClassID(Integer.parseInt(request.getParameter("id")));
-		vo.setDays(Integer.parseInt(request.getParameter("days")));
-		vo.setTitle(request.getParameter("title"));
-		vo.setDescription(request.getParameter("description"));
-		vo.setStartDate(request.getParameter("startDate"));
-		
-		String endDate = request.getParameter("endDate");
-		String playlistID = request.getParameter("playlistID");
-		if(endDate != "")
-			vo.setEndDate(endDate);
-		if(Integer.parseInt(playlistID) != 0) { //playlist와 함께 insert 
-			vo.setPlaylistID(Integer.parseInt(playlistID));
-			
+	public String addContentOK(@ModelAttribute ClassContentVO vo, Model model) {
+		if(vo.getEndDate().equals("0000-00-00"))
+			vo.setEndDate(null);
+		if(vo.getPlaylistID() != 0) {
 			if(classContentService.insertContent(vo) != 0) {
 				System.out.println("add classcontent 성공");
 				return "ok";
 			}
-			else {
-				return "false";
-			}
+			else return "false";
 		}
-		else { // url만 insert 
+
+		else { //playlistID 제외 insert
 			if(classContentService.insertURLContent(vo) != 0) {
 				System.out.println("add URLclasscontent 성공");
 				return "ok";
 			}
-			else {
-				return "false";
-			}
+			else return "false";
 		}
-			
 	}
 	
 	@ResponseBody

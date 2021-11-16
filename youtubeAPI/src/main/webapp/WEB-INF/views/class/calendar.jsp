@@ -394,13 +394,13 @@
 						<div class="col-sm-3">
 							<div class="position-relative form-group">
 								<label>시</label> 
-								<input type="number" class="form-control" id="setHour">
+								<input type="number" class="form-control" min="0" max="23" id="setHour">
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="position-relative form-group">
 								<label>분</label> 
-								<input type="number" class="form-control" id="setMin">
+								<input type="number" class="form-control" min="0" max="59" id="setMin">
 							</div>
 						</div>
 					</div>

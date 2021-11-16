@@ -22,6 +22,10 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <style>
+.selectPlaylist{
+	overflow-y: scroll; 
+	height: 50vh;
+}
 #client-paginator {
   position: relative;
   overflow-y: hidden;
@@ -46,7 +50,6 @@ $(document).ready(function(){
 			url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
 			success : function(result){
 				playlists = result.allMyPlaylist;
-				
 				if (playlists == null)
 					$('.myPlaylist').append('저장된 playlist가 없습니다.');
 
@@ -58,7 +61,7 @@ $(document).ready(function(){
 											+ '<div class="input-group-prepend">'
 												+ '<button class="btn btn-outline-secondary">전체</button>'
 												+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
-												+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;"><h6 tabindex="-1" class="dropdown-header">Header</h6>'
+												+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;">'
 													+ '<button type="button" tabindex="-1" class="dropdown-item">Playlist 이름</button>'
 													+ '<button type="button" tabindex="0" class="dropdown-item">Video 제목</button>'
 													+ '<button type="button" tabindex="0" class="dropdown-item">태그</button>'
@@ -69,7 +72,7 @@ $(document).ready(function(){
 												+ '<button class="btn btn-secondary">검색</button>'
 											+ '</div>'
 										+ '</div>'
-										+ '<form><fieldset class="allPlaylist position-relative form-group"></fieldset></form>'
+										+ '<form class="selectPlaylist"><fieldset class="allPlaylist position-relative form-group"></fieldset></form>'
 									+ '</div>'
 								+ '</div>';
 					$('.myPlaylist').append(setFormat);
@@ -237,11 +240,14 @@ $(document).ready(function(){
 			}
 				
 			var day = realAllContents[i].days;
+			var endDate;
+			console.log(realAllContents);
+			console.log(i + '번째 endDate' + realAllContents[i].endDate);
 			if(realAllContents[i].endDate == null)
-				var endDate = '설정되지 않음';
+				endDate = '설정되지 않음';
 			
 			else {
-				var endDate = realAllContents[i].endDate.split(":");
+				endDate = realAllContents[i].endDate.split(":");
 				endDate = endDate[0] + ":" + endDate[1];	
 			}
 
@@ -363,7 +369,7 @@ $(document).ready(function(){
 			datatype : 'json',
 			success : function(result){
 				console.log("success!");
-				location.reload();
+				//location.reload();
 			}
 		});
 
@@ -371,70 +377,67 @@ $(document).ready(function(){
 
 	function showAddContentForm(day){
 		day -= 1; //임의로 조절... 
-		console.log('day :' + day);
-		
-		var htmlGetCurrentTime = "'javascript:getCurrentTime()'";
+		var htmlGetCurrentTime = "'javascript:getCurrentTime();'";
 		
 		var addFormHtml = '<div class="addContentForm card-border mb-3 card card-body border-alternate" name="contentForm">'
 							+ '<div class="card-header">'
-								+ '<h5> 학습페이지 추가 </h5>'
+								+ '<h5>학습페이지 생성</h5>'
 							+ '</div>'
-							+ '<form id="addContent" class="form-group card-body needs-validation" method="post" novalidate>' 
+							+ '<form id="addContent" class="form-group card-body needs-validation" onsubmit="return false;" method="post" novalidate>' 
 								+ '<input type="hidden" name="classID" id="inputClassID" value="${classInfo.id}">'
 								+ '<input type="hidden" name="days" id="inputDays" value="'+ day +'"/>'
 								+ '<input type ="hidden" id="inputPlaylistID" name="playlistID">'
-								+ '<div class="selectContent m-3">'
-									+ '<p id="playlistTitle" class="d-sm-inline-block font-weight-light text-muted"> Playlist를 선택해주세요 </p>'
-									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn mr-2 mb-2 btn-primary float-right" data-toggle="modal" data-target="#selectPlaylistModal">Playlist 가져오기</button>'
+								+ '<div class="selectContent m-3 pr-3">'
+									+ '<p id="playlistTitle" class="d-sm-inline-block"> Playlist를 선택해주세요 </p>'
+									+ '<button type="button" id="selectPlaylistBtn" name="selectPlaylistBtn" class="btn btn-transition btn btn-outline-success btn-sm float-right"'
+											+ 'data-toggle="modal" data-target="#selectPlaylistModal">Playlist 가져오기</button>'
 									+ '<div id="playlistThumbnail" class="image-area mt-4"></div>'
 								+ '</div>'
-								+ '<div class="inputTitle input-group col">'
-									+ '<div class="input-group-prepend">'
-										+ '<label for="title" class="input-group-text">제목</label>'
-									+ '</div>'
-									+ '<input class="form-control d-sm-inline-block" id="inputTitle" type="text" name="title" required />'
-									+ '<div class="invalid-feedback">게시글 제목을 입력해주세요</div>'
-								+ '</div>'
-								+ '<div class="inputDescription m-3">'
-									+ '<textarea name="description" id="inputDescription" class="form-control" rows="10" id="comment" placeholder="이곳에 내용을 작성해 주세요."></textarea>'
-								+ '</div>'
-								+ '<div class="m-3">'
-									+ '<div class="setEndDate input-group">'
-										+ '<div class="input-group-prepend">'
-											+ '<label for="endDate" class="input-group-text"> 마감일: </label>'
-										+ '</div>'
-										+ '<input type="hidden" name="endDate">'
-										+ '<input type="date" class="form-control col-sm-8" id="endDate">'
-										+ '<input type="number" class="setTime end_h form-control col-sm-2" value="0" min="0" max="23"> 시'
-										+ '<input type="number" class="setTime end_m form-control col-sm-2" value="0" min="0" max="59"> 분'
-									+ '</div>'
-									+ '<div class="setStartDate input-group">'
-										+ '<div class="input-group-prepend">'
-											+ '<label for="startDate" class="input-group-text">공개일: </label>'
-										+ '</div>'
-										+ '<input type="hidden" name="startDate">'
-										+ '<input type="date" class="form-control col-sm-8" id="startDate">'
-										+ '<input type="number" class="setTime start_h form-control col-sm-2" value="0" min="0" max="23"> 시'
-										+ '<input type="number" class="setTime start_m form-control col-sm-2" value="0" min="0" max="59"> 분'
-										+ '<button type="button" class="btn btn-info btn-sm" onclick="location.href=' + htmlGetCurrentTime + '">지금</button>'
-									+ '</div>'
-								+ '</div>'
+								+ '<div class="position-relative row form-group col">'
+									+ '<label for="inputTitle" class="col-sm-2 col-form-label">제목</label>'
+	                                + '<div class="col-sm-10 p-0">' 
+	                                	+ '<input type="text" name="title" id="inputTitle" class="form-control" required>'
+	                                	+ '<div class="invalid-feedback">제목을 입력해주세요</div>'
+	                                + '</div>'
+	                            + '</div>'
+	                             + '<div class="position-relative row form-group col">'
+	                             	+ '<label for="inputDescription" class="col-sm-2 col-form-label">내용</label>'
+                               		+ '<div class="col-sm-10 p-0">'
+                               			+ '<textarea name="description" id="inputDescription" class="form-control" rows="10" id="comment" placeholder="이곳에 내용을 작성해 주세요."></textarea>'
+                            		+ '</div>'
+                            	+ '</div>'
+                            	+ '<div class="position-relative row col form-group d-flex align-items-center">'
+                            		+ '<label class="col-sm-2 col-form-label">마감일</label>'
+                                	+ '<input type="hidden" name="endDate" id="endDate">'
+									+ '<input type="date" class="form-control col-sm-4" id="endDate">'
+									+ '<input type="number" class="setTime end_h form-control col-sm-2 mr-1" value="0" min="0" max="23"> 시'
+									+ '<input type="number" class="setTime end_m form-control col-sm-2 ml-2 mr-1" value="0" min="0" max="59"> 분' 
+                                + '</div>'
+                                + '<div class="position-relative row col form-group d-flex align-items-center">'
+	                        		+ '<label class="col-sm-2 col-form-label" >공개일</label>'
+	                        		+ '<input type="hidden" name="startDate" id="startDate" >'
+	                        		+ '<input type="date" class="form-control col-sm-4" id="setStartDate">'
+									+ '<input type="number" class="setTime start_h form-control col-sm-2 mr-1" value="0" min="0" max="23"> 시'
+									+ '<input type="number" class="setTime start_m form-control col-sm-2 ml-1 mr-1" value="0" min="0" max="59"> 분'
+									+ '<button type="button" class="btn-transition btn btn-outline-focus btn-sm ml-1" onclick="location.href=' + htmlGetCurrentTime + '">지금</button>'
+	                            + '</div>'
 								+ '<div class="text-center m-3">'
-									+ '<button type="button" class="btn btn-sm btn-warning" onclick="cancelForm();" >취소</button>'
-									+ '<button type="submit" form="addContent" class="btn btn-sm btn-primary" onclick="submitAddContentForm();">저장</button>'
+									+ '<button type="button" class="btn btn-secondary mr-2" onclick="cancelForm();">작성 취소</button>'
+									+ '<button type="submit" form="addContent" class="btn btn-primary" onclick="submitAddContentForm();">저장</button>'
 								+ '</div>'
 							+ '</form>';
 									
-		$('input[name=days]').attr('value', day);
+		//$('input[name=days]').attr('value', day);
 		$('.day:eq(' + day + ')').append(addFormHtml);
 
 		//아래부분 마감일 설정때 나오도록...?
 		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
 		var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
-		endDate.min = date;
+		//endDate.min = date;
 		//endDate.value = date;
-		startDate.min = date;
-		startDate.value = date;
+		//startDate.min = date;
+		//startDate.value = date;
+		$('#setStartDate').val(date);
 
 		//페이지 추가 form 영역으로 페이지 스크롤 
 		var offset = $('.addContentForm').offset();
@@ -445,7 +448,7 @@ $(document).ready(function(){
 	function getCurrentTime(){
 		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
 		var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
-		startDate.value = date;
+		$('#setStartDate').val(date);
 		
 		var hour = new Date().getHours();
 		var min = new Date().getMinutes();
@@ -455,43 +458,51 @@ $(document).ready(function(){
 	}
 
 	function cancelForm(){
-		var a = confirm("작성을 취소하시겠습니까?");
-		if (a) {
+		if (confirm("작성을 취소하시겠습니까?")) {
 			$('.addContentForm').remove();
 		}
 	}
 
 	function popupOpen(){
 		if ($('#inputPlaylistID').val() >= 0){
-			console.log($('#inputPlaylistID').val());
-			if('이미 선택한 Playlist가 있습니다. 새로 바꾸시겠습니까?'){
-			}
-			else {
+			if(!confirm('이미 선택한 Playlist가 있습니다. 새로 바꾸시겠습니까?'))
 				return false;
-			}
 		}
 		
 		p.focus();
 	} 
 
+	function stringFormat(p_val){
+		if(p_val == '')
+			return '00';
+		else if(p_val < 10)
+			return p_val = '0'+p_val;
+		else
+			return p_val;
+	  }
+
 	function submitAddContentForm(){
-		alert($('#inputTitle').val());
-		if($('#inputTitle').val() == null || $('#inputTitle').val() == '') return false;
-		
-		var date = $('#startDate').val(); 
+		if($('#inputTitle').val() == null || $('#inputTitle').val() == ''){
+			alert('제목을 입력해주세요!');
+			 return false;
+		}
+		var date = $('#setStartDate').val(); 
 		var hour = $('.start_h').val();
         var min = $('.start_m').val();
-		var startDate = date + " " + hour + ":" + min + ":00";
-		$('input[name=endDate]').val(endDate);
+		var startDate = date + "T" + stringFormat(hour) + ":" +stringFormat(min) + ":00";
+		$('#startDate').val(startDate);
         
 		var endDate = $('#endDate').val();
-		if(endDate != null){
+		if(endDate != null && endDate != ''){
 			var e_date = $('#endDate').val();
 	        var e_hour = $('.end_h').val();
 	        var e_min = $('.end_m').val();
-			endDate = e_date + " " + e_hour + ":" + e_min + ":00";
-			$('input[name=startDate]').val(startDate);
+			endDate = e_date + "T" + stringFormat(e_hour) + ":" + stringFormat(e_min) + ":00";	
 		}
+		else {
+			endDate = "0000-00-00";
+		}
+		$('#endDate').val(endDate);
 
 		/*
         if(startDate.getTime() >= endDate.getTime()) {
@@ -500,29 +511,14 @@ $(document).ready(function(){
             return false;
         }*/
 
-        //$('#addContent').serialize()
-		if($("#inputPlaylistID").val() != 0){
-			playlistID = $("#inputPlaylistID").val();
+		if($("#inputPlaylistID").val() == null || $("#inputPlaylistID").val() == ''){
+			$("#inputPlaylistID").val(0);
 		}
-		else{
-			playlistID = 0;
-		}
-        
         
         $.ajax({
             type: 'post',
             url: '${pageContext.request.contextPath}/class/addContentOK',
-            data: {
-                id : $('#inputClassID').val(),
-            	days : $('#inputDays').val(),
-            	title : $("#inputTitle").val(),
-    			description : $("#inputDescription").val(),
-    			playlistID : playlistID,
-    			startDate : startDate,
-    			endDate : endDate,
-                },
-            datatype: 'json',
-            async : false,
+            data: $('#addContent').serialize(),
             success: function(data){
     			if(data == 'ok')
     				console.log('컨텐츠 생성 완료!');
@@ -531,8 +527,8 @@ $(document).ready(function(){
     			location.reload();
     		},
     		error: function(data, status,error){
-    			console.log("days: " + $('#inputDays').val()+ " playlistID" + playlistID);
-    			alert('강의실 생성 실패! ');
+    			console.log("days: " + $('#inputDays').val());
+    			alert('강의컨텐츠 생성에 실패했습니다! 잠시후 다시 시도해주세요:(');
     		}
         });
 	}
@@ -570,7 +566,7 @@ $(document).ready(function(){
 					var totalVideo = result.totalVideo;
 
 					var thumbnail = '<div class="image-area mt-4"><img id="imageResult" src="https://img.youtube.com/vi/' + thumbnailID 
-												+ '/0.jpg" class="img-fluid rounded shadow-sm mx-auto d-block"></div>';
+												+ '/0.jpg" class="img-fluid rounded shadow-sm mx-auto d-block" style="width: 200px;"></div>';
 					var playlistInfo = thumbnail + '<p>총 ' + totalVideo + ' 개의 비디오</p>';
 					$('#playlistThumbnail').empty();
 					$('#playlistThumbnail').append(playlistInfo);
@@ -607,20 +603,24 @@ $(document).ready(function(){
 	
 	
 	function deleteDay(classID, day){
-		$.ajax({
-			type : 'post',
-			url : '../deleteDay',
-			data : {classID : classID,
-				days : day},
-			datatype : 'json',
-			success : function(result){
-				console.log("성공!" +result);
-				location.reload();
-			},
-			error : function() {
-			  	alert("updateDays error");
-			}
-		});
+		
+		if(confirm('정말 차시를 삭제하시겠습니까?')){	//이미 생성된컨텐츠가 있을경우에 따로 처리해야함!
+			$.ajax({
+				type : 'post',
+				url : '../deleteDay',
+				data : {classID : classID,
+					days : day},
+				datatype : 'json',
+				success : function(result){
+					console.log("성공!" +result);
+					location.reload();
+				},
+				error : function() {
+				  	alert("updateDays error");
+				}
+			});
+		}
+		
 	}
 </script>
 <script>
