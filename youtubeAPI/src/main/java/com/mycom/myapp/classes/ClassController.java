@@ -169,7 +169,7 @@ public class ClassController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="/editClassroom", method = RequestMethod.POST)	//classroom 생성 처리
+	@RequestMapping(value="/editClassroom", method = RequestMethod.POST)
 	public String editClassroom(@ModelAttribute ClassesVO vo) {
 		if (classService.updateClassroom(vo) != 0) {
 			System.out.println("controller 강의실 수정 성공");
@@ -186,6 +186,8 @@ public class ClassController {
 	public void deleteClassroomForMe(@RequestParam(value = "id") int classID) {
 		if(classService.updateInstructorNull(classID) != 0) {
 			System.out.println("controller instructor null 성공");
+			
+			//updateActive에서 종료일자 같이 설정해주기!!!
 			if(classService.updateActive(classID) != 0) {
 				System.out.println("controller class active null 성공");
 			}

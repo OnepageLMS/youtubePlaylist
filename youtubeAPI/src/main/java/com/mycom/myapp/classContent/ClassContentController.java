@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
@@ -250,6 +251,18 @@ public class ClassContentController {
 		
 		if (classService.updateDays(cvo) == 0) return 0;
 		else return 1;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getBiggestUsedDay", method = RequestMethod.POST)
+	public int getBiggestUsedDay(@RequestParam(value="classID") int classID)  {	//각 차시별 강의 컨텐츠가 하나라도 생성된것 중 가장 큰 차시 정보 가져오기
+		int biggestDay = classContentService.getBiggestUsedDay(classID);
+		if(biggestDay < 0)
+			System.out.println("getBiggestUsedDay 가져오기 실패!");
+		else
+			System.out.println("getBiggestUsedDay 가져오기 성공!");
+		return biggestDay;
+		
 	}
 	
 	@ResponseBody

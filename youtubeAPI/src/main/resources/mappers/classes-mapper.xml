@@ -5,7 +5,6 @@
 		insert into lms_class (instructorID, active, className, description, days, tag, closeDate, entryCode)
 		values (#{instructorID}, #{active}, #{className}, #{description}, #{days}, #{tag}, #{closeDate}, #{entryCode})
 	</insert>
-	
 	<update id="updateClassroom">
 		update lms_class 
 		set className=#{className}, description=#{description}, days=#{days}, tag=#{tag}, active=#{active}, closeDate=#{closeDate}

@@ -5,6 +5,7 @@
 <html>
 <head>
 	<title>Home</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
 </head>
 <body>
 	<button onclick="location.href='${pageContext.request.contextPath}/login/signin'">Sign In</button>

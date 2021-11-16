@@ -50,13 +50,15 @@ public class NoticeController {
 		vo.setId(classID);
 		vo.setInstructorID(instructorID);
 		
+		//accessDenied 페이지에서 아래부분 사용하기때문에 순서 바꾸지 말기!
+		model.addAttribute("allMyClass", classService.getAllMyActiveClass(instructorID));
+		model.addAttribute("allMyInactiveClass", classService.getAllMyInactiveClass(instructorID));
+		
 		if(classService.checkAccessClass(vo) == 0) {
 			System.out.println("접근권한 없음!");
 			return "accessDenied";
 		}
 		model.addAttribute("classID", classID);
-		model.addAttribute("allMyClass", classService.getAllMyActiveClass(instructorID));
-		model.addAttribute("allMyInactiveClass", classService.getAllMyInactiveClass(instructorID));
 		model.addAttribute("className", classService.getClassName(classID));
 		return "class/notice";
 	}

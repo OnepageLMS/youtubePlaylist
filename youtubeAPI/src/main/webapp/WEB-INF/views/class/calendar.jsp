@@ -170,7 +170,7 @@
 					allDay: allday
 				  });
 				$('#addEventForm')[0].reset();
-				$('#addEventFormd').removeClass('was-validated')
+				$('#addEventForm').removeClass('was-validated')
 				$('#addEventModal').modal('hide');
 			},
 			error: function(data, status,error){
