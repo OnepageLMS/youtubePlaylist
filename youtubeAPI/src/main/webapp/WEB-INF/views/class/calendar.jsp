@@ -31,9 +31,14 @@
 </head>
 <style>
 	#addAllday, #setAllday{
-		width: 30%;
+		width: 15px;
 		margin: auto;
 	}
+	.fc-col-header, .fc-daygrid-body { width: 100% !important; }
+	.fc-daygrid-body {width: 100% !important;}
+	.fc-scrollgrid-sync-table {width: 100% !important;}
+	
+	.fc-daygrid-body { table { width: 100% !important; } }
 </style>
 <script>
 	var calendar;
@@ -50,7 +55,7 @@
 				headerToolbar : {
 					left : 'prev,next today',
 					center : 'title',
-					right : 'dayGridMonth,listWeek'
+					right : 'dayGridMonth,timeGridWeek,listWeek'
 				},
 				initialView : 'dayGridMonth', 
 				navLinks : true, 
@@ -105,7 +110,6 @@
 					});	
 				 },
 				eventClick: function(obj) {
-					console.log(obj);
 					udpateEventModal(obj);
 				},
 				select: function (startDate, endDate, jsEvent, view) {	//하나 혹은 드래그 해서 일정을 선택했을 때
@@ -166,13 +170,13 @@
 					allDay: allday
 				  });
 				$('#addEventForm')[0].reset();
+				$('#addEventFormd').removeClass('was-validated')
 				$('#addEventModal').modal('hide');
 			},
 			error: function(data, status,error){
 				alert('일정 생성 실패<br>새로고침 후 재시도 해주세요!');
 			}
 		});
-		
 	}
 
 	function updateEvent(arg){
@@ -299,14 +303,14 @@
 	            	<input type="hidden" name="classID" id="addClassID" value="${classID}">
 	            	
 	                <div class="form-group row">
-	                	<div class="col-sm-10">
+	                	<div class="col-9">
 							<div class="position-relative form-group">
 								<label>일정명</label> 
 								<input type="text" class="form-control" name="name" id="addName" required>
 								<div class="invalid-feedback">일정명을 입력해 주세요</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-3">
 							<div class="position-relative form-group">
 								<label>하루종일</label> 
 								<input type="checkbox" class="form-control" name="allday" id="addAllday">
@@ -316,19 +320,19 @@
 					</div>
 					<div class="form-group row">
 						<input type="hidden" name="date" id="addHiddenDate">
-						<div class="col-sm-6">
+						<div class="col-6">
 							<div class="position-relative form-group">
 								<label>날짜</label> 
 								<input type="date" class="datetimepicker form-control" id="addDate" required>
 							</div>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-3">
 							<div class="position-relative form-group">
 								<label>시</label> 
 								<input type="number" class="form-control" id="addHour">
 							</div>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-3">
 							<div class="position-relative form-group">
 								<label>분</label> 
 								<input type="number" class="form-control" id="addMin">
