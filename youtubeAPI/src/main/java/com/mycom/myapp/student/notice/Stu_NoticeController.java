@@ -45,14 +45,16 @@ public class Stu_NoticeController {
 		vo.setId(classID);
 		vo.setStudentID(studentID);
 		
+		//accessDenied 페이지에서 아래부분 사용하기때문에 순서 바꾸지 말기!
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService_stu.getAllMyClass(studentID)));	
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService_stu.getAllMyInactiveClass(studentID)));
+		
 		if(classService_stu.checkTakeClass(vo) == 0) {
 			System.out.println("수강중인 과목이 아님!");
 			return "accessDenied_stu";
 		}
 		
 		model.addAttribute("classID", classID);
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService_stu.getAllMyClass(studentID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService_stu.getAllMyInactiveClass(studentID)));
 		model.addAttribute("className", classService.getClassName(classID));
 		return "class/notice_Stu";
 	}
