@@ -77,21 +77,55 @@ $(document).ready(function(){
 				},
 				success : function(data) {
 					watchCount = data; 
-					console.log(data + " / " + weekContents[i].totalVideo);
+					//console.log(data + " / " + weekContents[i].totalVideo);
 				},
 				error : function() {
 					alert("error");
 				}
 			})
 			
+			$.ajax({ 
+				url : "${pageContext.request.contextPath}/attendance/forInnerWatched",
+				type : "post",
+				async : false,
+				data : {	
+					classContentID : weekContents[i].id,
+					studentID : takes[j].studentID
+				},
+				success : function(data) {
+					innerWatched = data;
+					//console.log(innerWatched);
+				},
+				error : function() {
+					alert("error");
+				}
+			})
 			
+			//console.log("innerWatched : " + innerWatched); //null아닐 때 backgroundcolor도 주기 
 			
 			if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
 				//alert("성공이다 ");
-				var element = document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0];
-				console.log(element);
-				element.innerText =  Math.floor(watchCount/weekContents[i].totalVideo*100) + "%";
+				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0];
+				//console.log(element);
+				element.innerText = '';
+				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText =  Math.floor(watchCount/weekContents[i].totalVideo*100) + "%";
 				
+				
+				if(innerWatched.length == 0){
+					if(Math.floor(watchCount/weekContents[i].totalVideo*100) == 100)
+						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
+					else
+						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+				}
+				
+				/*else{
+					//console.log("i : " + i + " / j : " + j);
+					//element.style.background = 'grey'; //추후에수정하기 
+					if(innerWatched.internal = "출석")
+						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
+					else
+						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+				}*/ //추후에수정하기 
 			}
 			
 		}
@@ -338,10 +372,10 @@ function updateAttendance(days){
 	//days의 $(".takeZoom"+seq).eq(r).val();을 리스트로 만들면되지 않을까  == //takeZoom(days+1)번째의 value들을 array에 저장하기
 	var rows = document.getElementById("stuName").getElementsByTagName("th");
 	var finalTakes = [];
+	var finalInternalTakes = [];
 	var days = days + 1;
-	console.log("days : " + days);
-	var attendanceID = 0;
 	
+	var attendanceID = 0;
 	for(var i=0; i<rows.length; i++){
 		console.log(" i " + i + "  " + $(".takeZoom"+days).eq(i).val());
 		if($(".takeZoom"+days).eq(i).val() == -1){
@@ -359,11 +393,17 @@ function updateAttendance(days){
 			finalTakes.push("지각");
 		if($(".takeZoom"+days).eq(i).val() == 3)
 			finalTakes.push("결석");
+		
+		if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:dodgerblue"> </i>')
+			finalInternalTakes.push("출석");
+		else
+			finalInternalTakes.push("결석");
+		console.log($(".innerAttend"+(i+1)+""+days)[0].innerHTML + " / " + "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>");
+		//alert($(".innerAttend"+(i+1)+""+days)[0].innerHTML);
+		
 	}
-	
-	for(var i=0; i<rows.length; i++)
-		console.log("finalTakes: " + finalTakes[i]); //finalTakes에는 잘 들어감 
-	
+
+	alert(finalTakes.length + " / " + finalInternalTakes.length);
 	$.ajax({ //attendaceID를 위해 
 		'type' : "post",
 		'url' : "${pageContext.request.contextPath}/attendance/forAttendance",
@@ -380,7 +420,8 @@ function updateAttendance(days){
 				'data' : { //나중에 수정 
 					attendanceID : attendanceID,
 					days : days,
-					finalTakes : finalTakes
+					finalTakes : finalTakes,
+					finalInternalTakes : finalInternalTakes
 				},
 				success : function(data){
 					attendanceID = data;
@@ -527,7 +568,7 @@ function setInnerAttendance(takes, idx) {
 																		</select>
 				                                            	 	</td>
 				                                                	
-				                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 
+				                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 				                                                		<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
 																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
@@ -546,7 +587,7 @@ function setInnerAttendance(takes, idx) {
 																	  <option value="3" class="red">결석</option>
 																	</select>
 			                                            	 	</td>
-			                                                	<td id = "takeLms${status2.index+1}" style="text-align:center"> 
+			                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 			                                                	<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
 			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">

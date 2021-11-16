@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AttendanceInternalCheck">
+	
+	<insert id="insertAttendanceInCheck">
+		insert into lms_attendanceInternalCheck(internal, classContentID, studentID)
+		values
+		(#{internal}, #{classContentID}, #{studentID})
+	</insert>
+	
+	<update id="updateAttendanceInCheck">
+		update lms_attendanceInternalCheck
+		set internal=#{internal}, classContentID=#{classContentID}, studentID=#{studentID}
+		where classContentID=#{classContentID} and studentID=#{studentID}
+	</update>
+	
+	<delete id="deleteAttendanceInCheck">
+		delete from lms_attendanceInternalCheck where classContentID=#{classContentID}
+	</delete>
+	
+	<select id="getAttendanceInCheck" resultType="attendanceInternal">
+		select * from lms_attendanceInternalCheck
+		where classContentID=#{classContentID} and studentID=#{studentID}
+	</select>
+	
+</mapper>

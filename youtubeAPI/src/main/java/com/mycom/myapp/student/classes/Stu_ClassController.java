@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.student.video.Stu_VideoService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
+import com.mycom.myapp.video.VideoService;
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.AttendanceInternalCheckVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.MemberVO;
@@ -28,6 +30,7 @@ import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.playlist.PlaylistService;
+import com.mycom.myapp.student.attendanceInternalCheck.Stu_AttendanceInternalCheckService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
@@ -53,6 +56,9 @@ public class Stu_ClassController{
 	private Stu_VideoService videoService;
 	
 	@Autowired
+	private VideoService insVideoService;
+	
+	@Autowired
 	private Stu_PlaylistCheckService playlistcheckService;
 	
 	@Autowired
@@ -69,6 +75,9 @@ public class Stu_ClassController{
 	
 	@Autowired
 	private Stu_TakesService takesService;
+	
+	@Autowired
+	private Stu_AttendanceInternalCheckService attendanceInCheckService;
 	
 	private int studentId = 0;
 	private int playlistID = 0; 
@@ -231,7 +240,8 @@ public class Stu_ClassController{
 	    VideoVO vo = new VideoVO();
 	    vo.setPlaylistID(playlistID);
 	    //vo.setId(id);
-	    return videoService.getVideoList(vo);
+	    System.out.println("size : " +videoService.getVideoList(vo).size() + "playlistID : " + playlistID);
+	    return insVideoService.getVideoList(playlistID);
 	}
 	
 	/*@ResponseBody
@@ -507,7 +517,6 @@ public class Stu_ClassController{
 			
 		if(count == playlistService.getPlaylist(playlistID).getTotalVideo()) {
 			System.out.println("오퀴 이제 playlistCheck insert!");
-			//insert2번 일어난다.. 밥먹고 와서 해결할거다!.
 			Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 			
 			pcvo.setStudentID(studentId);
@@ -519,9 +528,26 @@ public class Stu_ClassController{
 			pcvo.setTotalVideo(playlistService.getPlaylist(playlistID).getTotalVideo());
 			pcvo.setTotalWatched(0.0);
 			
+			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+			aivo.setClassContentID(classPlaylistID);
+			aivo.setStudentID(studentId);
+			aivo.setInternal("출석");
+			
 			if(playlistcheckService.getPlaylist(playlistID) == null) {
-				if(playlistcheckService.insertPlaylist(pcvo) != 0)
+				if(playlistcheckService.insertPlaylist(pcvo) != 0) {
 					System.out.println("changewatch good insert");
+					//playlistCheck에 insert될 때, attendanceInternalCheck에도 insert시키기 
+					//get했을 때 null이면 insert, 
+					if(attendanceInCheckService.getAttendanceInCheck(aivo) == null) {
+						AttendanceInternalCheckVO aic = new AttendanceInternalCheckVO();
+						aic.setClassContentID(classPlaylistID);
+						aic.setStudentID(studentId);
+						aic.setInternal("출석");
+						attendanceInCheckService.insertAttendanceInCheck(aic);
+						System.out.println("출석도 잘넣어보았다 ");
+					}
+					
+				}
 				else
 					System.out.println("changewatch insert 실패");
 			}

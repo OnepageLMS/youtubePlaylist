@@ -39,6 +39,7 @@ public class VideoDAO {
 	}
 	
 	public List<VideoVO> getVideoList(int playlistID) {
+		//System.out.println("이것이 출력되어야합니다. ");
 		List<VideoVO> result = sqlSession.selectList("Video.getVideoList", playlistID);
 		return result;
 	}
