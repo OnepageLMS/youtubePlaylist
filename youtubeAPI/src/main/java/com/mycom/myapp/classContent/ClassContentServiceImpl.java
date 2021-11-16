@@ -44,6 +44,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public int getBiggestUsedDay(int classID) {
+		return ClassContentDAO.getBiggestUsedDay(classID);
+	}
+	
+	@Override
 	public ClassContentVO getOneContentInstructor(int id) {
 		return ClassContentDAO.getOneContentInstructor(id);
 	}

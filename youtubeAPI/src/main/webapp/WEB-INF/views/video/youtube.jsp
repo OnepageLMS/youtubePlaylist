@@ -30,7 +30,7 @@
 }
 .info {
 	font-size: 12px;
-}
+} 
 img {
 	width: 128px;
 	height: 80px;
@@ -58,17 +58,21 @@ img {
 	margin-right: auto;
 	background-color: #E8E8E8;
 }
+
 /* 마우스 포인터을 손가락으로 변경 */
 .card:not(.no-move) .card-header {
 	cursor: pointer;
 }
+
 .card {
 	border-radius: 5px;
 }
-/* .searchedVideo a:hover{
-	background: ligthgray;
-	cursor:pointer
-} */
+
+.displayResultList{
+	overflow-y: scroll; 
+	height: 80vh;
+}
+
 </style>
 <script>
 var email;
@@ -1031,7 +1035,7 @@ $(document).ready(function(){
 									</div>
 								</div>
 							</div>
-							<div class="card-body" style="overflow-y:auto; height:750px;">
+							<div class="card-body displayResultList">
 								<div>
 									<form action="playlist/player" id="form2" method="post"
 										style="display: none">

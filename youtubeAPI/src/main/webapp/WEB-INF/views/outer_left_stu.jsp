@@ -65,13 +65,13 @@
                                	<li>
 									<a href="${pageContext.request.contextPath}/student/calendar/${v.id}">
                                    		<i class="metismenu-icon"></i>
-                                   		강의 캘린더
+                                   		강의캘린더
                               		</a>
                                	</li>
                                	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>
-                                       	강의 컨텐츠
+                                       	강의컨텐츠
                                    	</a>
                                	</li>
                                	<li>
@@ -110,13 +110,13 @@
                                	<li>
 									<a href="${pageContext.request.contextPath}/student/calendar/${v.id}">
                                   		<i class="metismenu-icon"></i>
-                                  		강의 캘린더
+                                  		강의캘린더
                              		</a>
                               	</li>
                                	<li>
                                 	<a href="${pageContext.request.contextPath}/student/class/contentList/${v.id}">
                                        <i class="metismenu-icon"></i>
-                                       	강의 컨텐츠
+                                       	강의컨텐츠
                                    	</a>
                                	</li>
                                	<li>

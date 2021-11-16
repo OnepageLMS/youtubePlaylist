@@ -33,51 +33,56 @@
 	  }
 	}
 
-		.playlistPic {
-			width: inherit;
-			max-width: 300px;
-		}
+	.playlistPic {
+		width: inherit;
+		max-width: 300px;
+	}
+	
+	.playlist:hover{
+		background-color: #F0F0F0;
+		cursor: pointer;
+	}
+	
+	.videoIndex {
+		cursor: grab;
+	}
+	
+	/*sortable 이동 타켓 */
+	.video-placeholder {
+		border: 1px dashed grey;
+		margin: 0 1em 1em 0;
+		height: 150px;
+		margin-left:auto;
+		margin-right:auto;
+		background-color: #E8E8E8;
+	}
+	
+	.videoContent:hover{
+		cursor: pointer;
+	}
+	
+	.duration{
+		text-align: center;
+		margin: 3px;
+	}
+	
+	.videoNewTitle{
+		font-size: 16px;
+		margin: 3px 0;
+		font-weight: bold;
+	}
+	
+	.videoOriTitle {
+		font-size: 13px;
+		margin: 0;
+	}
+	
+	.displayPlaylist{
+		overflow-y: scroll; 
+		height: 64vh;
+	}
 		
-		.playlist:hover{
-			background-color: #F0F0F0;
-			cursor: pointer;
-		}
-		
-		.videoIndex {
-			cursor: grab;
-		}
-		
-		/*sortable 이동 타켓 */
-		.video-placeholder {
-			border: 1px dashed grey;
-			margin: 0 1em 1em 0;
-			height: 150px;
-			margin-left:auto;
-			margin-right:auto;
-			background-color: #E8E8E8;
-		}
-		
-		.videoContent:hover{
-			cursor: pointer;
-		}
-		
-		.duration{
-			text-align: center;
-			margin: 3px;
-		}
-		
-		.videoNewTitle{
-			font-size: 16px;
-			margin: 3px 0;
-			font-weight: bold;
-		}
-		
-		.videoOriTitle {
-			font-size: 13px;
-			margin: 0;
-		}
-		
-	</style>
+</style>
 </head>
 
 <script>
@@ -248,13 +253,13 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 					
 					var html = '<div class="list-group-item-action list-group-item">'
 									+ '<div class="video row d-flex justify-content-between align-items-center" videoID="' + value.id + '">'
-										+ '<div class="videoIndex col-1 pl-0"> <i class="fa fa-fw" aria-hidden="true"></i></p></div>'
+										+ '<div class="videoIndex col-1 pl-2"> <i class="fa fa-fw" aria-hidden="true"></i></p></div>'
 										+ '<div class="videoContent col-10 p-0 d-sm-inline-block" onclick="' + passData + '" videoID="' + value.id + '" youtubeID="' + value.youtubeID + '" >'
 											+ '<div class="row">'
 												+ '<div class="thumbnailBox col-sm-3 pl-0">' 
 													+ thumbnail 
 												+ '</div>'
-												+ '<div class="titles col-md-9" style="text-align: left;">'
+												+ '<div class="titles col-md-9 d-flex align-items-center" style="text-align: left;">'
 													+ '<div class="row">'
 														+ '<p class="col-sm-12 text-primary mb-0">' + tags + '</p>'
 														+ '<p class="videoNewTitle col-sm-12">' + newTitle + '</p>'
@@ -495,7 +500,7 @@ function submitDeletePlaylist(){
 			                <div class="col-md-4 col-lg-3">
 								<div class="myPlaylist">
 									<div class="card">
-										<div class="card-body" style="overflow:auto; max-height: 700px;">
+										<div class="card-body">
 										<div class="card-title input-group">
 											<div class="input-group-prepend">
 												<button class="btn btn-outline-secondary">전체</button>
@@ -512,14 +517,16 @@ function submitDeletePlaylist(){
 											</div>
 										</div>
 										<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>
-										<div><ul class="allPlaylist list-group"></ul></div>
+										<div class="displayPlaylist">
+											<ul class="allPlaylist list-group"></ul>
+										</div>
 									</div>
 								</div>
 								
 								</div>
 							</div>
 			
-							<div class="selectedPlaylist col-md-8 col-lg-9 card" style="min-height: 600px;">
+							<div class="selectedPlaylist col-md-8 col-lg-9 card" style="height: 80vh;">
 								<div class="card-body">
 									<div class="row">
 										<div class="col-7 card-title playlistName pr-0" style="text-align: left;">										
