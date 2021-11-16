@@ -85,7 +85,7 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
 									+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
 											+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
-									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의컨텐츠</button>'
 									+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
 	                        	+ '</div>'
                         		+ '<div class="divider m-0 p-0"></div>'
@@ -120,7 +120,7 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 								+ '</div>'
 								+ '<div class="card-body">'
 									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
+									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의컨텐츠</button>'
 									+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
                         		+ '</div>'
                         		+ '<div class="divider m-0 p-0"></div>'
@@ -399,10 +399,6 @@ function submitAddClassroom(){
 	});	
 }
 
-function checkAvailableSetDay(){	//현재 생성된 강의컨텐츠 갯수 체크
-	
-}
-
 function submitEditClassroom(){
 	if ($('#editClassName').val() == '') return false;
 	var check;
@@ -413,10 +409,9 @@ function submitEditClassroom(){
 		async: false,
 		success: function(data){
 			data++;	//db에는 days가 0부터 저장
-			console.log(data + ' -> 생성된 강의컨텐츠 갯수 가져오기 성공! ');
 			
 			if($('#editClassDays').val() < data){
-				alert('[강의 회차 설정 오류]\n현재 ' +data + '회차까지 강의 컨텐츠가 존재합니다!\n현재 생성된 강의 컨텐츠의 회차와 같거나 더 큰 숫자를 입력해주세요!');
+				alert('[강의 회차 설정 오류]\n현재 ' +data + '회차까지 강의 컨텐츠가 존재합니다!\n현재 생성된 강의 컨텐츠의 회차와 같거나 더 큰 숫자를 입력해주세요.');
 				$('#editClassDays').addClass('is-invalid');
 				check = 1;
 			}
@@ -431,14 +426,15 @@ function submitEditClassroom(){
 	});
 	
 	if(check != 0) return false;
+	
 	var today = new Date();
 	var year = today.getFullYear();
     var month = today.getMonth()+1;
     var day = today.getDate();
 	
 	if ((day + "").length < 2) day = "0" + day;
-    
 	today = year + "-" +  month + "-" + day;
+	
 	var closeDate = $('#editCloseDate').val();
 	
 	if($('#customSwitch2').is(':checked') && closeDate != '' && (today >= closeDate)){
@@ -491,11 +487,23 @@ function submitDeleteClassroom(){
 	}
 
 	if(opt == 'forMe'){
+		var today = new Date();
+		var year = today.getFullYear();
+	    var month = today.getMonth()+1;
+	    var day = today.getDate();
+		
+		if ((day + "").length < 2) day = "0" + day;
+	    
+		today = year + "-" +  month + "-" + day;
+		
 		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 종료된 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
 			$.ajax({
 				type: 'post',
 				url: '${pageContext.request.contextPath}/deleteForMe',
-				data: {'id' : $('#setClassID').val()},
+				data: {
+					'id' : $('#setClassID').val(),
+					'date' : today
+					},
 				datatype: 'json',
 				success: function(data){
 					console.log('나에게만 강의실 삭제 성공');

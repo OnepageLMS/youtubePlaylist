@@ -33,8 +33,8 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 	
 	@Override
-	public int updateInstructorNull(int id) {
-		return classesDAO.updateInstructorNull(id);
+	public int updateInstructorNull(ClassesVO vo) {
+		return classesDAO.updateInstructorNull(vo);
 	}
 	
 	@Override

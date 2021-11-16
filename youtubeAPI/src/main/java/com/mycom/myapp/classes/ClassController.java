@@ -183,11 +183,16 @@ public class ClassController {
 	
 	@ResponseBody
 	@RequestMapping(value="/deleteForMe", method = RequestMethod.POST)
-	public void deleteClassroomForMe(@RequestParam(value = "id") int classID) {
-		if(classService.updateInstructorNull(classID) != 0) {
+	public void deleteClassroomForMe(
+			@RequestParam(value = "id") int classID,
+			@RequestParam(value = "date") String date) {
+		ClassesVO vo = new ClassesVO();
+		vo.setId(classID);
+		vo.setCloseDate(date);
+		
+		if(classService.updateInstructorNull(vo) != 0) {
 			System.out.println("controller instructor null 성공");
 			
-			//updateActive에서 종료일자 같이 설정해주기!!!
 			if(classService.updateActive(classID) != 0) {
 				System.out.println("controller class active null 성공");
 			}

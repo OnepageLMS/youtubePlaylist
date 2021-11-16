@@ -32,10 +32,7 @@ public class PlaylistController {
 	private PlaylistService playlistService;
 	@Autowired
 	private ClassesService classService;
-	@Autowired
-	private MemberService memberService;
 	
-	//private int instructorID = 1;
 	private int instructorID = 0;
 	
 	@RequestMapping(value = "/myPlaylist", method = {RequestMethod.GET, RequestMethod.POST}) 
@@ -80,8 +77,9 @@ public class PlaylistController {
 
 	@RequestMapping(value = "/getAllMyPlaylist", method = RequestMethod.POST) 
 	@ResponseBody
-	public Object getAllMyPlaylist() {
+	public Object getAllMyPlaylist(HttpSession session) {
 		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
+		instructorID = (Integer)session.getAttribute("userID");
 		playlists = playlistService.getAllMyPlaylist(instructorID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();

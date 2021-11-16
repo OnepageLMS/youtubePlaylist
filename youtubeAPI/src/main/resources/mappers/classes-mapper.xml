@@ -22,7 +22,8 @@
 	</update>
 	
 	<update id="updateInstructorNull">
-		update lms_class set instructorID=NULL
+		update lms_class 
+		set instructorID=NULL, closeDate=#{closeDate}
 		where id=#{id}
 	</update>
 	
