@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.mycom.myapp.commons.NoticeVO;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 @Repository
 public class Stu_NoticeDAO {
@@ -37,8 +38,8 @@ public class Stu_NoticeDAO {
 		return sqlSession.selectOne("Stu_Notice.getCountNoticeCheck", vo);
 	}
 	
-	public int deleteNoticeCheck(int studentID) {
-		return sqlSession.delete("Stu_Notice.deleteNoticeCheck", studentID);
+	public int deleteNoticeCheck(Stu_TakesVO vo) {
+		return sqlSession.delete("Stu_Notice.deleteNoticeCheck", vo);
 	}
 
 }

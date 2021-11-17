@@ -7,6 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.mycom.myapp.student.takes.Stu_TakesVO;
+
 
 @Repository
 public class Stu_PlaylistCheckDAO {
@@ -28,8 +30,8 @@ public class Stu_PlaylistCheckDAO {
 		return result;
 	}
 	
-	public int deletePlaylist(int id) {
-		int result = sqlSession.delete("Stu_PlaylistCheck.deletePlaylist", id);
+	public int deletePlaylist(Stu_TakesVO vo) {
+		int result = sqlSession.delete("Stu_PlaylistCheck.deletePlaylist", vo);
 		return result;
 	}
 	

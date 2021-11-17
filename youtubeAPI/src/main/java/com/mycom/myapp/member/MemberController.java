@@ -26,6 +26,7 @@ import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
 import com.mycom.myapp.student.takes.Stu_TakesVO;
+import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 
 @Controller
 @RequestMapping(value = "/member")
@@ -49,7 +50,7 @@ public class MemberController {
 	private Stu_PlaylistCheckService stu_playlistCheckService;
 	
 	@Autowired
-	private AttendanceService attendanceService;
+	private Stu_VideoCheckService stu_videoCheckService; 
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateName", method = RequestMethod.POST)
@@ -107,32 +108,26 @@ public class MemberController {
 	@RequestMapping(value ="/deleteTakes" , method = RequestMethod.POST)
 	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
 		System.out.println(vo.getClassID() + vo.getStudentID());
-		int result = 1; //stu_takesService.deleteTakes(vo);
+		int result = stu_takesService.deleteTakes(vo);
 		
 		//1. attendance테이블에서 classID에 해당하는 attendanceID구하기) => 여러개임. 
 		//2. attendanceID 하나씩 꺼내와서 해당 출석ID와 studentID 를 가지는 attendanceCheck 지우기. => 
-		List<AttendanceVO> IDList = new ArrayList<AttendanceVO>();
-		IDList = attendanceService.getAttendanceID2(vo.getClassID());
-		
-//		for (int i = 0; i < IDList.size(); i++) {
-//			  System.out.println("확인!=>" + IDList.get(i).getId());
-//		}
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("IDList", IDList);
-		attendanceCheckService.deleteAttendanceCheck(map);
-		
-		
-		
-//		attendanceCheckService.deleteAttendanceCheck(vo.getStudentID());
-//		// noticeID, studentID 필요 
-//		stu_noticeService.deleteNoticeCheck(vo.getStudentID());
-//		stu_playlistCheckService.deletePlaylist(vo.getStudentID()); // 
+//		List<AttendanceVO> IDList = new ArrayList<AttendanceVO>();
+//		IDList = attendanceService.getAttendanceID2(vo.getClassID());
 //		
-//		
-//		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
-//			System.out.println("totalStudent 업데이트 성공!");
-//		else
-//			System.out.println("totalStudent 업데이트 실패 ");	
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//		map.put("IDList", IDList);
+//		attendanceCheckService.deleteAttendanceCheck(vo, map);
+		
+		attendanceCheckService.deleteAttendanceCheck(vo);
+		stu_noticeService.deleteNoticeCheck(vo);
+		stu_playlistCheckService.deletePlaylist(vo);  
+		stu_videoCheckService.deleteTime(vo);		
+	
+		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
+			System.out.println("totalStudent 업데이트 성공!");
+		else
+			System.out.println("totalStudent 업데이트 실패 ");	
 				
 		return result;
 	}

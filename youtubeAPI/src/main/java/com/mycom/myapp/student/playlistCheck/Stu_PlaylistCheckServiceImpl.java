@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.myapp.student.takes.Stu_TakesVO;
+
 
 @Service
 public class Stu_PlaylistCheckServiceImpl implements Stu_PlaylistCheckService{
@@ -17,8 +19,8 @@ public class Stu_PlaylistCheckServiceImpl implements Stu_PlaylistCheckService{
 	}
 	
 	@Override
-	public int deletePlaylist(int id) {
-		return playlistcheckDAO.deletePlaylist(id);
+	public int deletePlaylist(Stu_TakesVO vo) {
+		return playlistcheckDAO.deletePlaylist(vo);
 	}
 	
 	@Override

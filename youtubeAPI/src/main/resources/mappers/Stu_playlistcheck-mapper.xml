@@ -22,7 +22,7 @@
 	</update>
 	
 	<delete id="deletePlaylist">
-		delete from lms_playlistCheck where studentID=#{studentID}
+		delete from lms_playlistCheck where studentID = #{studentID} and classID=#{classID} 
 	</delete>
 	
 	<select id="getPlaylist" resultType="PlaylistCheckVO">
@@ -33,7 +33,7 @@
 	
 	<select id="getTotalVideo" resultType="int">
 		select totalVideo from lms_playlist
-		where lms_playlist.playlistID  = #{playlistID}
+		where lms_playlist.playlistID = #{playlistID}
 	</select>
 	
 	<select id="getHowMany" resultType="int">

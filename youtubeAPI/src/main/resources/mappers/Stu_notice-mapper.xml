@@ -39,7 +39,9 @@
 	</select>
 	
 	<delete id="deleteNoticeCheck">
-		delete from lms_noticeCheck where studentID = #{studentID}
+		delete A from lms_noticeCheck A 
+		LEFT JOIN lms_notice B ON B.id = A.noticeID 
+		WHERE B.classID = #{classID} and A.studentID=#{studentID}
 	</delete>
 	
 	

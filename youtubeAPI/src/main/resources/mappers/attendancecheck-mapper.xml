@@ -33,11 +33,9 @@
 	</update>
 	
 	<delete id="deleteAttendanceCheck">
-		select * from lms_attendanceCheck as A
-		where A.attendanceID IN
-		<foreach collection="list" item="item" open="(" close=")" separator=",">
-			#{item}
-		</foreach>
+		delete A from lms_attendanceCheck A 
+		LEFT JOIN lms_attendance B ON B.id = A.attendanceID 
+		WHERE B.classID = #{classID} and studentID=#{studentID}
 	</delete>
 	
 	<select id="getAttendanceCheck" resultType="AttendanceCheckVO">

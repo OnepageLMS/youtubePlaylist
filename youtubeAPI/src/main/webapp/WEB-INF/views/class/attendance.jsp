@@ -268,7 +268,8 @@ function deleteRequest(studentID, option){
 		'data' : JSON.stringify(objParams),
 		'contentType' : "application/json",
 		success : function(data){
-			showAllStudentInfo();
+			var result = showAllStudentInfo();
+			console.log("삭제 성공!" + result)
 		},
 		error:function(request,status,error){
 	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
