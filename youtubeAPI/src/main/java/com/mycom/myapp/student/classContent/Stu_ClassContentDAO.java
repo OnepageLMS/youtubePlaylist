@@ -13,6 +13,11 @@ import com.mycom.myapp.commons.ClassContentVO;
  	@Autowired
  	SqlSession sqlSession;
  	
+ 	public int getDaySeq(ClassContentVO vo) {
+ 		int result = sqlSession.selectOne("Stu_ClassContent.getDaySeq", vo);
+ 		return result;
+ 	}
+ 	
  	public ClassContentVO getOneContent(int id) {
  		ClassContentVO result = sqlSession.selectOne("Stu_ClassContent.getOneContent", id);
  		return result;
@@ -38,8 +43,7 @@ import com.mycom.myapp.commons.ClassContentVO;
  		return result;
  	}
  	
- 	public int getDaySeq(ClassContentVO vo) {
- 		int result = sqlSession.selectOne("Stu_ClassContent.getDaySeq", vo);
- 		return result;
+ 	public String getCompleteClassContent(ClassContentVO vo){
+ 		return  sqlSession.selectOne("Stu_ClassContent.getAllClassContent", vo);
  	}
  }

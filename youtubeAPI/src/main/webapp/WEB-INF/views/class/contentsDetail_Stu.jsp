@@ -61,6 +61,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		  success : function(data) {
 			  weekContents = data;
 			  videoIdx = ${daySeq};
+			  classContent = weekContents[videoIdx]; //없으면 안됩니다 
 			 // console.log(weekContents);
 			 // console.log("weekContents.legth : " + weekContents.length);
 			 // console.log("playlistID : " + weekContents[videoIdx].playlistID);

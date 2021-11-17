@@ -1,6 +1,9 @@
 package com.mycom.myapp.student.classes;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -462,19 +465,14 @@ public class Stu_ClassController{
 	public String changeWatchOK(HttpServletRequest request) {
 		double lastTime = Double.parseDouble(request.getParameter("lastTime"));
 		double timer = Double.parseDouble(request.getParameter("timer"));
-		//int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int watch = Integer.parseInt(request.getParameter("watch"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
-		//int classID = Integer.parseInt(request.getParameter("classID"));
-		//System.out.println("classPlaylistID : " + classPlaylistID + " id : " + id);
 		int totalVideo = Integer.parseInt(request.getParameter("totalVideo"));
-		System.out.println("lastTime : " + lastTime+" timer : " + timer + " studentID :  " + studentId);
-		System.out.println("videoID : " + videoID+" watch : " + watch + " playlistID :  " + playlistID + " classPlaylistID : " + classPlaylistID+  " classID : " + classID);
-		System.out.println("totalVideo : " + totalVideo);
-		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
+		
+		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		vo.setLastTime(lastTime);
 		vo.setStudentID(studentId);
 		vo.setvideoID(videoID);
@@ -482,8 +480,6 @@ public class Stu_ClassController{
 		vo.setClassID(classID);
 		vo.setClassContentID(classPlaylistID);
 		vo.setPlaylistID(playlistID);
-		
-		//Stu_VideoCheckVO checkVO = videoCheckService.getTime(vo); //위에서 set한 videoID를 가진 정보를 가져와서 checkVO에 넣는다.
 		vo.setWatched(watch);
 		
 		//우선 현재 db테이블의 getWatched를 가져온다. 이때 가져온 값이 0이다
@@ -493,7 +489,6 @@ public class Stu_ClassController{
 		//totalVideo랑 playlist의 개수가 똑같고, watch가 모두 1이면 ==> playlistCheck insert 
 		
 		if (videoCheckService.updateWatch(vo) == 0) { //하나도 안멈추고 처음부터 끝까지 보는 경우
-			System.out.println("----------" +classPlaylistID);
 			videoCheckService.insertTime(vo);	
 		}
 		else { //업데이트가 성공하면 
@@ -538,11 +533,51 @@ public class Stu_ClassController{
 					System.out.println("changewatch good insert");
 					//playlistCheck에 insert될 때, attendanceInternalCheck에도 insert시키기 
 					//get했을 때 null이면 insert, 
+					//마감일보다 playlistCheck에 insert된 시간이 먼저거나 갘으면 true(출석)
+					//그렇지 않으면 결석 
+					
+					//마감일 
+					/*ClassContentVO ccvo = new ClassContentVO();
+					ccvo.setClassID(classID);
+					ccvo.setPlaylistID(playlistID);
+					
+					classContentService.getCompleteClassContent(ccvo);*/
+					System.out.println(classContentService.getOneContent(classPlaylistID).getEndDate());
+					String endString = classContentService.getOneContent(classPlaylistID).getEndDate();
+					//playlistCheck테이블에서 classContentID와 studentID가 같은 regDate가져오기 
+					System.out.println(playlistcheckService.getPlaylistByPlaylistID(pcvo).getRegdate());
+					String stuCompleteString = playlistcheckService.getPlaylistByPlaylistID(pcvo).getRegdate();
+					
+					
+					SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+					
+					Date endDate = null;
+					try {
+						endDate = format.parse(endString);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					
+					Date stuCompleteDate = null;
+					try {
+						stuCompleteDate = format.parse(stuCompleteString);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+
+					int result = endDate.compareTo(stuCompleteDate); 
+					//0 이거나 1이면 출석 (endDate >= stuCompleteDate) 기간 내에 들음, 아니면 결석 
+					System.out.println("0 이거나 1이면 출석 , 아니면 결석 " + result);
+					
 					if(attendanceInCheckService.getAttendanceInCheck(aivo) == null) {
 						AttendanceInternalCheckVO aic = new AttendanceInternalCheckVO();
 						aic.setClassContentID(classPlaylistID);
 						aic.setStudentID(studentId);
-						aic.setInternal("출석");
+						
+						if(result == 0 || result == 1)
+							aic.setInternal("출석");
+						else //-1 
+							aic.setInternal("결석");
 						attendanceInCheckService.insertAttendanceInCheck(aic);
 						System.out.println("출석도 잘넣어보았다 ");
 					}
