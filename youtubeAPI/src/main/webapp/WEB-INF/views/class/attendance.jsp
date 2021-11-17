@@ -105,27 +105,27 @@ $(document).ready(function(){
 			
 			if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
 				//alert("성공이다 ");
-				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0];
+				var element = document.getElementsByClassName('innerAttend'+j+""+i)[0];
 				//console.log(element);
 				element.innerText = '';
 				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText =  Math.floor(watchCount/weekContents[i].totalVideo*100) + "%";
 				
 				
-				if(innerWatched.length == 0){
+				if(innerWatched.length == 0){ 
 					if(Math.floor(watchCount/weekContents[i].totalVideo*100) == 100)
 						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
 					else
 						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
 				}
 				
-				/*else{
-					//console.log("i : " + i + " / j : " + j);
-					//element.style.background = 'grey'; //추후에수정하기 
+				else{
+					console.log("i : " + i + " / j : " + j + "/ innerWatched.internal " + innerWatched.internal);
+					element.style.background = 'grey'; //추후에수정하기 
 					if(innerWatched.internal = "출석")
 						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
 					else
 						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
-				}*/ //추후에수정하기 
+				}
 			}
 			
 		}
@@ -394,11 +394,11 @@ function updateAttendance(days){
 		if($(".takeZoom"+days).eq(i).val() == 3)
 			finalTakes.push("결석");
 		
-		if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:dodgerblue"> </i>')
+		if($(".innerAttend"+i+""+(days-1))[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:dodgerblue"> </i>')
 			finalInternalTakes.push("출석");
 		else
 			finalInternalTakes.push("결석");
-		console.log($(".innerAttend"+(i+1)+""+days)[0].innerHTML + " / " + "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>");
+		//console.log($(".innerAttend"+(i+1)+""+days)[0].innerHTML + " / " + "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>");
 		//alert($(".innerAttend"+(i+1)+""+days)[0].innerHTML);
 		
 	}
@@ -570,7 +570,7 @@ function setInnerAttendance(takes, idx) {
 				                                                	
 				                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 				                                                		<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
-																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
+																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index}${status2.index}" onclick="setAttendanceModal(${i});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>
@@ -589,7 +589,7 @@ function setInnerAttendance(takes, idx) {
 			                                            	 	</td>
 			                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 			                                                	<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
-			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
+			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index}${status2.index}" onclick="setAttendanceModal(${i});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>
