@@ -11,4 +11,5 @@ public interface Stu_ClassContentService {
 	public List<ClassContentVO> getSamePlaylistID(ClassContentVO vo); //추가
 	public List<ClassContentVO> getAllClassContent(int classID);
 	public int getDaySeq(ClassContentVO vo);
+	public String getCompleteClassContent(ClassContentVO vo);
 }

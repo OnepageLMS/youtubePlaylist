@@ -43,4 +43,9 @@ public class Stu_ClassContentServiceImpl implements Stu_ClassContentService{
 		return classContentDAO.getDaySeq(vo);
 	}
 	
+	@Override
+	public String getCompleteClassContent(ClassContentVO vo) {
+		return classContentDAO.getCompleteClassContent(vo);
+	}
+	
 }

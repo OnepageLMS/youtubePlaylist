@@ -11,8 +11,8 @@ public class Stu_PlaylistCheckVO  {
 	private int classID;
 	private int totalVideo;
 	private double totalWatched;
-	private Date regdate;
-	private Date updateWatched;
+	private String regdate;
+	private String updateWatched;
 	
 	private int videoID; //이거 mapper에서 videoID사용해서 추가하는 
 	
@@ -58,16 +58,16 @@ public class Stu_PlaylistCheckVO  {
 	public void setTotalWatched(double totalWatched) {
 		this.totalWatched = totalWatched;
 	}
-	public Date getRegdate() {
+	public String getRegdate() {
 		return regdate;
 	}
-	public void setRegdate(Date regdate) {
+	public void setRegdate(String regdate) {
 		this.regdate = regdate;
 	}
-	public Date getUpdateWatched() {
+	public String getUpdateWatched() {
 		return updateWatched;
 	}
-	public void setUpdateWatched(Date updateWatched) {
+	public void setUpdateWatched(String updateWatched) {
 		this.updateWatched = updateWatched;
 	}
 	public int getVideoID() {

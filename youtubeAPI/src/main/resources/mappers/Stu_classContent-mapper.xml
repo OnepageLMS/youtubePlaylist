@@ -33,5 +33,10 @@
 		select * from lms_classContent
 		where classID=#{classID} AND published =1 order by days, daySeq
 	</select>
+	
+	<select id="getCompleteClassContent" resultType="String">
+		select endDate from lms_classContent
+		where classID=#{classID} AND playlistID=#{playlistID} published =1 order by days, daySeq
+	</select>
 
 </mapper>
