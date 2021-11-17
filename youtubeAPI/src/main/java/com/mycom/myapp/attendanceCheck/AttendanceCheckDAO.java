@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.mycom.myapp.commons.AttendanceCheckVO;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 @Repository
 public class AttendanceCheckDAO {
@@ -39,8 +40,8 @@ public class AttendanceCheckDAO {
 		return result;
 	}
 	
-	public int deleteAttendanceCheck(HashMap<String, Object> map){
-		int result = sqlSession.update("AttendanceCheck.deleteAttendanceCheck", map);
+	public int deleteAttendanceCheck(Stu_TakesVO vo){
+		int result = sqlSession.update("AttendanceCheck.deleteAttendanceCheck", vo);
 		return result;
 	}
 	

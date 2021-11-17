@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckDAO;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
 
@@ -20,8 +21,8 @@ public class Stu_VideoCheckServiceImpl implements Stu_VideoCheckService {
 	}
 	
 	@Override
-	public int deleteTime(int id) {
-		return videoCheckDAO.deleteTime(id);
+	public int deleteTime(Stu_TakesVO vo) {
+		return videoCheckDAO.deleteTime(vo);
 	}
 	
 	@Override

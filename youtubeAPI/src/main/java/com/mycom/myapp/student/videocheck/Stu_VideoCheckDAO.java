@@ -6,6 +6,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.mycom.myapp.student.takes.Stu_TakesVO;
+
 @Repository
 public class Stu_VideoCheckDAO {
 	
@@ -17,8 +19,8 @@ public class Stu_VideoCheckDAO {
 		return result;
 	}
 	
-	public int deleteTime(int id) {
-		int result = sqlSession.delete("Stu_videoCheck.deleteTime", id);
+	public int deleteTime(Stu_TakesVO vo) {
+		int result = sqlSession.delete("Stu_videoCheck.deleteTime", vo);
 		return result;
 	}
 	

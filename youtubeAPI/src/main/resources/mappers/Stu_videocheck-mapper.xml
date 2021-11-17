@@ -21,7 +21,7 @@
 	</update>
 	
 	<delete id="deleteTime">
-		delete from lms_videoCheck where id=#{id}
+		delete from lms_videoCheck where classID=#{classID} and studentID=#{studentID}
 	</delete>
 	
 	<select id="getTime" resultType="videoCheckVO">

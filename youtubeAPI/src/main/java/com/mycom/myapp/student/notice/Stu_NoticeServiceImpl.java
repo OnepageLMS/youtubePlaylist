@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mycom.myapp.commons.NoticeVO;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 @Service
 public class Stu_NoticeServiceImpl implements Stu_NoticeService{
@@ -43,8 +44,8 @@ public class Stu_NoticeServiceImpl implements Stu_NoticeService{
 	}
 
 	@Override
-	public int deleteNoticeCheck(int studentID) {
-		return noticeDAO.deleteNoticeCheck(studentID);
+	public int deleteNoticeCheck(Stu_TakesVO vo) {
+		return noticeDAO.deleteNoticeCheck(vo);
 	}
 
 }

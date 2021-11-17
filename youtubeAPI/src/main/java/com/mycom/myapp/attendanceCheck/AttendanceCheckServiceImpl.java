@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mycom.myapp.commons.AttendanceCheckVO;
 import com.mycom.myapp.commons.AttendanceVO;
+import com.mycom.myapp.student.takes.Stu_TakesVO;
 
 @Service
 public class AttendanceCheckServiceImpl implements AttendanceCheckService {
@@ -40,8 +41,8 @@ public class AttendanceCheckServiceImpl implements AttendanceCheckService {
 	}
 	
 	@Override
-	public int deleteAttendanceCheck(HashMap<String, Object> map) {
-		return attendanceCheckDAO.deleteAttendanceCheck(map);
+	public int deleteAttendanceCheck(Stu_TakesVO vo) {
+		return attendanceCheckDAO.deleteAttendanceCheck(vo);
 	}
 	
 	@Override

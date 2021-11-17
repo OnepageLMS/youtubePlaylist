@@ -2,10 +2,12 @@ package com.mycom.myapp.student.playlistCheck;
 
 import java.util.List;
 
+import com.mycom.myapp.student.takes.Stu_TakesVO;
+
 public interface Stu_PlaylistCheckService  {
 	public int insertPlaylist(Stu_PlaylistCheckVO vo);
 
-	public int deletePlaylist(int id) ;
+	public int deletePlaylist(Stu_TakesVO vo) ;
 	
 	public int updatePlaylist(Stu_PlaylistCheckVO vo);
 	
