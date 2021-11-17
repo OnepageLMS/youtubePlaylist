@@ -225,7 +225,6 @@ public class ClassController {
 			) {	//종료날짜?! 에러난다!!!
 		
 		ClassesVO vo = classService.getClassInfoForCopy(classID);	//Copy할 기존 강의실 데이터 가져오기
-		//vo.setInstructorID(instructorID);
 		String name = vo.getClassName() + "-1";
 		vo.setClassName(name);
 		vo.setEntryCode(createEntryCode());
@@ -242,10 +241,9 @@ public class ClassController {
 			List<CalendarVO> original = calendarService.getScheduleList(classID);
 			for (int i=0; i<original.size(); i++) {	
 				original.get(i).setClassID(newClassID);	//newClassID 로 설정
-				System.out.println(i + " : " + original.get(i).getClassID());
+				if(original.get(i).getAllday() == null) original.get(i).setAllday(0);
 			}	
 		
-			// 새로 생성된 classID에 다 넣기
 			if(calendarService.insertCopiedCalendar(original) != 0)
 				System.out.println("class calendar 복사 완료!");
 			else {
@@ -259,12 +257,10 @@ public class ClassController {
 		if(content != 0) {
 			List<ClassContentVO> original = classContentService.getAllClassContentForCopy(classID);
 			for (int i=0; i<original.size(); i++) {	
-				original.get(i).setClassID(newClassID);	//newClassID 로 설정
-				System.out.println(i + " : " + original.get(i).getClassID());
-				if(original.get(i).getPlaylistID() == 0) original.get(i).setPlaylistID(null);
+				original.get(i).setClassID(newClassID);
+				//if(original.get(i).getPublished() == null) original.get(i).setAllday(0);
 			}	
 		
-			// 새로 생성된 classID에 다 넣기
 			if(classContentService.insertCopiedClassContents(original) != 0)
 				System.out.println("class contents 복사 완료!");
 			else {

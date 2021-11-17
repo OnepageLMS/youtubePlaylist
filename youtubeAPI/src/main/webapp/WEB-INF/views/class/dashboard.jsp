@@ -547,13 +547,13 @@ function submitShareClassroom(){
 	
 	if(content == true) content = 1;
 	else content = 0;
-	/*
+	
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/copyClassroom',
 		data: {
 			'id' : $('#shareClassroomID').val(),
-			'calendar' : notice,
+			'calendar' : calendar,
 			'content' : content
 			},
 		datatype: 'json',
@@ -567,7 +567,7 @@ function submitShareClassroom(){
 		error: function(data, status,error){
 			alert('강의실 복제애 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
-	});*/
+	});
 }
 
 function publishNotice(){
