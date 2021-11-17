@@ -84,10 +84,17 @@
 	</select>
 	
 	<insert id="insertCopiedClassContents" parameterType="java.util.List">
-		insert into lms_classContent (classID, days, daySeq, title, description, playlistID)
+		insert into lms_classContent (classID, days, daySeq, title, description, playlistID, published)
 		values 
 			<foreach collection="list" item="item" separator=",">
-				("${item.classID}","${item.days}","${item.daySeq}","${item.title}","${item.description}","${item.playlistID}")
+				("${item.classID}","${item.days}","${item.daySeq}","${item.title}","${item.description}"
+				 <if test="item.playlistID == 0" >
+		          , NULL
+		         </if>
+		         <if test="item.playlistID != 0" >
+		         , "${item.playlistID}"
+		         </if>
+		         , NULL)
 			</foreach>	
 	</insert>
 

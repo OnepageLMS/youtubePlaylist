@@ -5,8 +5,8 @@ public class ClassContentVO {
 	private String title;
 	private String description;
 	private int classID;
-	//private int playlistID; //null값은 int에 저장안됨
-	private Integer playlistID;
+	private int playlistID; //null값은 int에 저장안됨
+	//private Integer playlistID;
 	private int days;
 	private int daySeq;
 	private int published;
@@ -43,10 +43,10 @@ public class ClassContentVO {
 	public void setClassID(int classID) {
 		this.classID = classID;
 	}
-	public Integer getPlaylistID() {
+	public int getPlaylistID() {
 		return playlistID;
 	}
-	public void setPlaylistID(Integer playlistID) {
+	public void setPlaylistID(int playlistID) {
 		this.playlistID = playlistID;
 	}
 	public int getDays() {

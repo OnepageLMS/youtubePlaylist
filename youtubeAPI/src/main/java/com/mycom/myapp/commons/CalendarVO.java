@@ -5,7 +5,7 @@ public class CalendarVO {
 	private int classID;
 	private String name;
 	private String date;
-	private String allday;
+	private Integer allday;
 	private String memo;
 	
 	public int getId() {
@@ -32,10 +32,10 @@ public class CalendarVO {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public String getAllday() {
+	public Integer getAllday() {
 		return allday;
 	}
-	public void setAllday(String allday) {
+	public void setAllday(Integer allday) {
 		this.allday = allday;
 	}
 	public String getMemo() {
