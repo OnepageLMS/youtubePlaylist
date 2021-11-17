@@ -1,5 +1,6 @@
 package com.mycom.myapp.attendanceCheck;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.mycom.myapp.commons.AttendanceCheckVO;
@@ -11,7 +12,7 @@ public interface AttendanceCheckService {
 	public int updateExAttendanceCheck(AttendanceCheckVO vo);
 	public int updateInAttendanceCheck(AttendanceCheckVO vo);
 	public int updateAttendanceCheck(AttendanceCheckVO vo);
-	public int deleteAttendanceCheck(int studentID);
+	public int deleteAttendanceCheck(HashMap<String, Object> map);
 	public AttendanceCheckVO getAttendanceCheck(AttendanceCheckVO vo);
 	public List<AttendanceCheckVO> getAttendanceCheckList(int attendanceID);
 	public int getAttendanceCheckListCount(int classID) ;

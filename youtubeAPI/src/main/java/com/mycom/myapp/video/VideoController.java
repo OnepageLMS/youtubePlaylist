@@ -73,7 +73,7 @@ public class VideoController {
 		return map;
 	}
 	
-	@RequestMapping(value = "/updateVideo", method = RequestMethod.POST) 
+	@RequestMapping(value = "/updateVideo", method = {RequestMethod.GET, RequestMethod.POST}) 
 	@ResponseBody
 	public String updateVideo(@ModelAttribute VideoVO videoVo) {
 		if(videoService.updateVideo(videoVo) != 0) {

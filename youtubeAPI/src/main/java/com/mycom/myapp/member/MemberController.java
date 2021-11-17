@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.attendance.AttendanceService;
 import com.mycom.myapp.attendanceCheck.AttendanceCheckService;
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.student.attendanceCheck.Stu_AttendanceCheckService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
@@ -45,6 +47,9 @@ public class MemberController {
 	
 	@Autowired
 	private Stu_PlaylistCheckService stu_playlistCheckService;
+	
+	@Autowired
+	private AttendanceService attendanceService;
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateName", method = RequestMethod.POST)
@@ -102,22 +107,40 @@ public class MemberController {
 	@RequestMapping(value ="/deleteTakes" , method = RequestMethod.POST)
 	public int deleteTakes(@RequestBody Stu_TakesVO vo) {
 		System.out.println(vo.getClassID() + vo.getStudentID());
-		int result = stu_takesService.deleteStudent(vo);
+		int result = 1; //stu_takesService.deleteTakes(vo);
 		
 		//1. attendance테이블에서 classID에 해당하는 attendanceID구하기) => 여러개임. 
 		//2. attendanceID 하나씩 꺼내와서 해당 출석ID와 studentID 를 가지는 attendanceCheck 지우기. => 
-		attendanceCheckService.deleteAttendanceCheck(vo.getStudentID());
-		// noticeID, studentID 필요 
-		stu_noticeService.deleteNoticeCheck(vo.getStudentID());
-		stu_playlistCheckService.deletePlaylist(vo.getStudentID()); // 
+		List<AttendanceVO> IDList = new ArrayList<AttendanceVO>();
+		IDList = attendanceService.getAttendanceID2(vo.getClassID());
+		
+//		for (int i = 0; i < IDList.size(); i++) {
+//			  System.out.println("확인!=>" + IDList.get(i).getId());
+//		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("IDList", IDList);
+		attendanceCheckService.deleteAttendanceCheck(map);
 		
 		
-		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
-			System.out.println("totalStudent 업데이트 성공!");
-		else
-			System.out.println("totalStudent 업데이트 실패 ");	
+		
+//		attendanceCheckService.deleteAttendanceCheck(vo.getStudentID());
+//		// noticeID, studentID 필요 
+//		stu_noticeService.deleteNoticeCheck(vo.getStudentID());
+//		stu_playlistCheckService.deletePlaylist(vo.getStudentID()); // 
+//		
+//		
+//		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
+//			System.out.println("totalStudent 업데이트 성공!");
+//		else
+//			System.out.println("totalStudent 업데이트 실패 ");	
 				
 		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value ="/cancelEnroll" , method = RequestMethod.POST)
+	public int cancelEnroll (@RequestBody Stu_TakesVO vo) {
+		return stu_takesService.deleteTakes(vo);
 	}
 	
 	@ResponseBody

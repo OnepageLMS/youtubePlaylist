@@ -348,7 +348,7 @@ function deleteRequest(studentID, classID, obj){
 	
 	$.ajax({
 		'type' : 'POST',
-		'url' : '${pageContext.request.contextPath}/member/deleteTakes',
+		'url' : '${pageContext.request.contextPath}/member/cancelEnroll',
 		'data' : JSON.stringify(objParams),
 		'contentType' : "application/json",
 		success : function(data){
@@ -370,7 +370,7 @@ function deleteRow(obj){
        <jsp:include page="../outer_top_stu.jsp" flush="true"/>      
                
        <div class="app-main">  
-       		<jsp:include page="../outer_left_stu.jsp" flush="false"></jsp:include>
+       		<jsp:include page="../outer_left.jsp" flush="false"></jsp:include>
                 <div class="app-main__outer">
                    <div class="app-main__inner">
                        <div class="app-page-title">
@@ -389,7 +389,7 @@ function deleteRow(obj){
                        <div class="dashboardClass">
                        	<div class="classActive row">
                        		<div class="col-12 row m-1">
-                       			<h4 class="">수강중인 강의실</h4>
+                       			<h4 class="">참여중인 강의실</h4>
                         		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -476,6 +476,11 @@ function deleteRow(obj){
                 </button>
             </div>
             <div class="modal-body" style="text-align:center;">
+            	<c:if test="${empty allPendingClass }">
+            		<div class="row">
+            			<div> 현재 대기중인 강의실이 없습니다!! :) </div>
+            		</div> 
+            	</c:if>
                 <c:forEach var="v" items="${allPendingClass }">
                 	<div class="row">
                 		<c:choose>
@@ -502,7 +507,7 @@ function deleteRow(obj){
                 <button type="button" class="btn btn-primary">Save changes</button>
             </div> -->
         </div>
-    </div>
+   	</div>
 </div>
    
 </body>

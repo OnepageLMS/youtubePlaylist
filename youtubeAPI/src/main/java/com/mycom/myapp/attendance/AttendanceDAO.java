@@ -1,5 +1,6 @@
 package com.mycom.myapp.attendance;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -43,6 +44,11 @@ public class AttendanceDAO {
 	
 	public AttendanceVO getAttendanceID(AttendanceVO vo) {
 		AttendanceVO result = sqlSession.selectOne("Attendance.getAttendanceID", vo);
+		return result;
+	}
+	
+	public List<AttendanceVO> getAttendanceID2(int classID) {
+		List<AttendanceVO> result = sqlSession.selectList("Attendance.getAttendanceID", classID);
 		return result;
 	}
 	
