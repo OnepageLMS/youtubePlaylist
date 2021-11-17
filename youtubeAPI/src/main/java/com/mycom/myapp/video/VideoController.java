@@ -76,8 +76,22 @@ public class VideoController {
 	@RequestMapping(value = "/updateVideo", method = {RequestMethod.GET, RequestMethod.POST}) 
 	@ResponseBody
 	public String updateVideo(@ModelAttribute VideoVO videoVo) {
+		
+		System.out.println("================\n");
+		System.out.println(videoVo.getPlaylistID());
+		System.out.println(videoVo.getDuration());
+		System.out.println(videoVo.getEnd_s());
+		System.out.println(videoVo.getId());
+		System.out.println(videoVo.getmaxLength());
+		System.out.println(videoVo.getNewTitle());
+		System.out.println(videoVo.getStart_s());
+		System.out.println(videoVo.getTag());
+		System.out.println("================\n");
+		
 		if(videoService.updateVideo(videoVo) != 0) {
 			System.out.println("video 수정 성공!");
+			 
+			
 			
 			int playlistID = videoVo.getPlaylistID();
 			updateTotalLength(playlistID);
