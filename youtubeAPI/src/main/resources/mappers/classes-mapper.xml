@@ -3,7 +3,7 @@
 <mapper namespace="Classes">
 	<insert id="insertClassroom" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into lms_class (instructorID, active, className, description, days, tag, closeDate, entryCode)
-		values (#{instructorID}, #{active}, #{className}, #{description}, #{days}, #{tag}, #{closeDate}, #{entryCode})
+		values (#{instructorID}, 1, #{className}, #{description}, #{days}, #{tag}, #{closeDate}, #{entryCode})
 	</insert>
 	<update id="updateClassroom">
 		update lms_class 
@@ -45,7 +45,8 @@
 	</select>
 	
 	<select id="getClassInfoForCopy" resultType="classes">
-		select className, description, days, tag, entryCode from lms_class where id=#{id}
+		select instructorID, className, description, days, tag 
+		from lms_class where id=#{id}
 	</select>
 	
 	<select id="getClassByEntryCode" resultType="classes">

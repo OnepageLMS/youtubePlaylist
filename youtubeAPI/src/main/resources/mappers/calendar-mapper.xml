@@ -29,4 +29,13 @@
 		where classID = #{classID}
 	</select>
 	
+	<insert id="insertCopiedCalendar" parameterType="java.util.List">
+		insert into lms_calendar (classID, name, date, allday, memo)
+		values 
+			<foreach collection="list" item="item" separator=",">
+				("${item.classID}","${item.name}","${item.date}","${item.allday}","${item.memo}")
+			</foreach>	
+	</insert>
+	
+	
 </mapper>

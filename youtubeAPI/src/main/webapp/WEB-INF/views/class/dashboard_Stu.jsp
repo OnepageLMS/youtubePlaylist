@@ -366,7 +366,7 @@ function deleteRow(obj){
        <jsp:include page="../outer_top_stu.jsp" flush="true"/>      
                
        <div class="app-main">  
-       		<jsp:include page="../outer_left.jsp" flush="false"></jsp:include>
+       		<jsp:include page="../outer_left_stu.jsp" flush="false"></jsp:include>
                 <div class="app-main__outer">
                    <div class="app-main__inner">
                        <div class="app-page-title">
@@ -384,7 +384,7 @@ function deleteRow(obj){
                        <div class="dashboardClass">
                        	<div class="classActive row">
                        		<div class="col-12 row m-1">
-                       			<h4>참여중인 강의실</h4>
+                       			<h4>수강중인 강의실</h4>
                         		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">

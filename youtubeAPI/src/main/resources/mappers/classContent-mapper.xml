@@ -6,7 +6,7 @@
 		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}, #{startDate}, #{endDate})
 	</insert>
 	
-	<insert id="insertURLContent">
+	<insert id="insertURLContent">	<!-- playlist있는 강의컨텐츠 -->
 		insert into lms_classContent (title, description, classID, days, daySeq, startDate, endDate)
 		values (#{title}, #{description}, #{classID}, #{days}, #{daySeq}+1, #{startDate}, #{endDate})
 	</insert>

@@ -39,6 +39,10 @@
 	.fc-scrollgrid-sync-table {width: 100% !important;}
 	
 	.fc-daygrid-body { table { width: 100% !important; } }
+	
+	.fc-today-button .fc-button .fc-button-primary{
+		margin: auto;
+	}
 </style>
 <script>
 	var calendar;
@@ -120,6 +124,7 @@
 				},
 			});
 			calendar.render();
+			
 		});
 	})();
 

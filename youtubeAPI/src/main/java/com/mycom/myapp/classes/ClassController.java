@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.calendar.CalendarService;
 import com.mycom.myapp.classContent.ClassContentService;
+import com.mycom.myapp.commons.CalendarVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.MemberVO;
@@ -32,6 +34,9 @@ public class ClassController {
 	
 	@Autowired
 	private ClassesService classService;
+	
+	@Autowired
+	private CalendarService calendarService;
 	
 	@Autowired
 	private ClassContentService classContentService;
@@ -155,6 +160,7 @@ public class ClassController {
 	
 	@RequestMapping(value="/insertClassroom", method = {RequestMethod.GET,RequestMethod.POST})
 	public String insertClassroom(@ModelAttribute ClassesVO vo) {
+		if(vo.getCloseDate() == "") vo.setCloseDate(null);
 		vo.setInstructorID(instructorID);
 		vo.setEntryCode(createEntryCode());
 
@@ -212,12 +218,17 @@ public class ClassController {
 	
 	@ResponseBody
 	@RequestMapping(value="/copyClassroom", method = RequestMethod.POST)
-	public int copyClassroom(@RequestParam(value = "id") int classID) {	//종료날짜?! 에러난다!!!
+	public int copyClassroom(
+			@RequestParam(value = "id") int classID,
+			@RequestParam(value = "calendar") int calendar,
+			@RequestParam(value = "content") int content
+			) {	//종료날짜?! 에러난다!!!
 		
 		ClassesVO vo = classService.getClassInfoForCopy(classID);	//Copy할 기존 강의실 데이터 가져오기
-		vo.setInstructorID(instructorID);
+		//vo.setInstructorID(instructorID);
 		String name = vo.getClassName() + "-1";
 		vo.setClassName(name);
+		vo.setEntryCode(createEntryCode());
 		
 		int newClassID = classService.insertClassroom(vo); //새로 생성된 classID 저장
 		if(newClassID >= 0)	//복사한 classContents 각 row에 설정된 nextClassID와 같은지 check
@@ -226,21 +237,40 @@ public class ClassController {
 			System.out.println("Class 생성 실패");
 			return 0;
 		}
-	
+		
+		if(calendar != 0) {
+			List<CalendarVO> original = calendarService.getScheduleList(classID);
+			for (int i=0; i<original.size(); i++) {	
+				original.get(i).setClassID(newClassID);	//newClassID 로 설정
+				System.out.println(i + " : " + original.get(i).getClassID());
+			}	
+		
+			// 새로 생성된 classID에 다 넣기
+			if(calendarService.insertCopiedCalendar(original) != 0)
+				System.out.println("class calendar 복사 완료!");
+			else {
+				System.out.println("class calendar 복사 실패!");
+				return 0;
+			}
+		}
+		
 		// lms_classContent에 기존 classID의 내용 가져오기
 			// days, daySeq, title, description, playlistID만 가져오기
-		List<ClassContentVO> original = classContentService.getAllClassContentForCopy(classID);
-		for (int i=0; i<original.size(); i++) {	
-			original.get(i).setClassID(newClassID);	//newClassID 로 설정
-			System.out.println(i + " : " + original.get(i).getClassID());
-		}	
-	
-		// 새로 생성된 classID에 다 넣기
-		if(classContentService.insertCopiedClassContents(original) != 0)
-			System.out.println("class contents 복사 완료!");
-		else {
-			System.out.println("class contents 복사 실패!");
-			return 0;
+		if(content != 0) {
+			List<ClassContentVO> original = classContentService.getAllClassContentForCopy(classID);
+			for (int i=0; i<original.size(); i++) {	
+				original.get(i).setClassID(newClassID);	//newClassID 로 설정
+				System.out.println(i + " : " + original.get(i).getClassID());
+				if(original.get(i).getPlaylistID() == 0) original.get(i).setPlaylistID(null);
+			}	
+		
+			// 새로 생성된 classID에 다 넣기
+			if(classContentService.insertCopiedClassContents(original) != 0)
+				System.out.println("class contents 복사 완료!");
+			else {
+				System.out.println("class contents 복사 실패!");
+				return 0;
+			}
 		}
 		
 		return 1;
