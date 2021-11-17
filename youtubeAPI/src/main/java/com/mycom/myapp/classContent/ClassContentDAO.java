@@ -39,7 +39,7 @@ public class ClassContentDAO {
 	}
 	
 	public int getClassNum(int classID) {	//생성된 강의 컨텐츠의 갯수 가져오기
-		String result = sqlSession.selectOne("ClassContent.getClassNum", classID);
+		String result = sqlSession.selectOne("ClassContent.getClassNum", classID).toString();
 		System.out.println("여기는DAO, result " + result);
 		if (result != null) 
 			return Integer.parseInt(result);
@@ -48,9 +48,9 @@ public class ClassContentDAO {
 	}
 	
 	public int getBiggestUsedDay(int classID) {	//각 차시별 강의 컨텐츠가 하나라도 생성된것 중 가장 큰 차시 정보 가져오기
-		String result = sqlSession.selectOne("ClassContent.getBiggestUsedDay", classID);
+		String result = sqlSession.selectOne("ClassContent.getBiggestUsedDay", classID).toString();
 		if (result != null) 
-			return Integer.parseInt(result);
+			return Integer.parseInt(result) + 1;
 		else
 			return 0;
 	}

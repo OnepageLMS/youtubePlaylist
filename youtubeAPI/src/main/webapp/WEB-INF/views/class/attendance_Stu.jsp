@@ -31,6 +31,7 @@
 <script>
 var takes;
 var takesStudentNum = 0;
+
 $(document).ready(function(){
 	var allMyClass = JSON.parse('${realAllMyClass}');
 	var weekContents = JSON.parse('${weekContents}');
@@ -53,10 +54,24 @@ $(document).ready(function(){
 			}
 		})
 		
-		
+		//추가하기!!! (lms 영상에 대한 출석/지각/결석 badge) -> attendanceCheck.internal
 		if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
 			var element = document.getElementById('takeLMS'+i);
-			element.innerText =  watchCount/weekContents[i].totalVideo*100 + "%";
+			var result = Math.round(watchCount/weekContents[i].totalVideo*100);
+			if(result != 0){
+				element.innerText = result + "%";
+
+				//<div class="mb-2 mr-2 badge badge-primary">Primary</div>\
+				//뱃지 추가해주기!!!
+
+				/*if(result >= 80)
+					$('#takeLMS' + i).addClass('text-primary');
+				else if(result >= 60)
+					$('#takeLMS' + i).addClass('text-warning');
+				else
+					$('#takeLMS' + i).addClass('text-danger');
+				*/
+			}
 			
 		}
 		
@@ -105,12 +120,26 @@ $(document).ready(function(){
 	                                             <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status">
 		                                            <tr>
 		                                            	<th scope="row${status.index}" style="text-align:center" rowspan=2 > ${status.index+1} 차시 </th>
-                                                      	<td style="text-align:center"><i class="pe-7s-video" style=" color:dodgerblue"> </i>  ZOOM </td>
-                                                      	<td id = "take${status.index}" style="text-align:center; text-weight:bold" > ${file[status.index]} </td>
+                                                      	<td style="text-align:center"><i class="pe-7s-video" style=" color:dodgerblue"></i>  ZOOM </td>
+                                                      	<c:set var="state" value="${file[status.index]}"/>
+                                                      	
+                                                      	<td id = "take${status.index}" 
+	                                                      	<c:choose>
+	                                                      		<c:when test="${state eq '출석'}">
+	                                                      			class="text-primary"
+	                                                      		</c:when>
+	                                                      		<c:when test="${state eq '지각'}">
+															        class="text-warning"
+															    </c:when>
+															    <c:otherwise>
+															        class="text-danger"
+															    </c:otherwise>
+	                                                      	</c:choose>
+                                                      	style="text-align:center; text-weight:bold" > ${file[status.index]} </td>
 		                                            </tr>  
 		                                            <tr>
-		                                            	<td style="text-align:center"> LMS </td>
-			                                            <td id = "takeLMS${status.index}" style="text-align:center"> 0% </td>
+		                                            	<td style="text-align:center"><i class="pe-7s-film"></i> LMS </td>
+			                                            <td id = "takeLMS${status.index}" style="text-align:center"> <!-- 0% --> </td>
 		                                            </tr>
 	                                            </c:forEach>
                                             </tbody>

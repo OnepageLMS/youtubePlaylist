@@ -84,8 +84,6 @@ public class ClassController {
 	}	
 	
 	
-	
-	
 	@ResponseBody
 	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)
 	public ClassesVO getClassInfo(@RequestParam(value = "classID") int classID) {
@@ -171,6 +169,7 @@ public class ClassController {
 	@ResponseBody
 	@RequestMapping(value="/editClassroom", method = RequestMethod.POST)
 	public String editClassroom(@ModelAttribute ClassesVO vo) {
+		if(vo.getCloseDate() == "") vo.setCloseDate(null);
 		if (classService.updateClassroom(vo) != 0) {
 			System.out.println("controller 강의실 수정 성공");
 			return "ok";

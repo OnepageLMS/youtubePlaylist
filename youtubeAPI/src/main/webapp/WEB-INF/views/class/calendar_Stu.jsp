@@ -133,7 +133,7 @@
 							<div class="page-title-heading mr-3">
 								<h4>
 									<span class="text-primary displayClassName">${className}</span>
-									- 강의 캘린더
+									- 강의캘린더
 								</h4>
 							</div>
 						</div>
