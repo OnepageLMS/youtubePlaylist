@@ -11,25 +11,12 @@
     <title>Dashboard</title>
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
-	
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
+    
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
@@ -48,7 +35,7 @@ $(document).ready(function(){
 	showAlert();
 });
 
-function getAllClass(act, order){
+function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만 가져오는 함수 (정렬, 수정 등에 사용!)
 	var i = 0;
 	var classType;
 
@@ -74,6 +61,7 @@ function getAllClass(act, order){
 			$(list).each(function(){
 				var classID = this.id;
 				var classNoticeURL = "'${pageContext.request.contextPath}/student/notice/" + classID + "'";
+				var classCalendarURL = "'${pageContext.request.contextPath}/student/calendar/" + classID + "'";
 				var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 				var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
 				var newNotice = this.newNotice;
@@ -87,7 +75,7 @@ function getAllClass(act, order){
 				
 				if(act == 1){
 					var cardColor = active_colors[i%(active_colors.length)];
-					html = '<div class="col-sm-12 col-md-6 col-lg-3">'
+					html = '<div class="col-md-6 col-lg-3">'
 						+ '<div class="mb-3 card">'
 							+ '<div class="card-header ' + cardColor + '">' 
 								+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
@@ -95,15 +83,17 @@ function getAllClass(act, order){
 									+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 							+ '</div>'
 							+ '<div class="card-body">'
-								+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지' 
+								+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="공지"></i>공지' 
 									+ newNotice
 								+ '</button>'
-								+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-								+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+								+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+								+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+								+ '<button class="btn btn-outline-focus col-6" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
                        		+ '</div>'
-                       		+ '<div class="card-footer">'
-                       			+ '<div class="row w-100">'
-                        			+ '<div class="widget-subheading col-12">학습 진행도</div>'
+                       		+ '<div class="divider m-0 p-0"></div>'
+                       		+ '<div class="card-body">'
+                       			+ '<div class="row">'
+                        			+ '<div class="widget-subheading col-12">내 학습현황</div>'
 									+ '<div class="col-12">'
 										+ '<div class="mb-3 progress">'
                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
@@ -118,19 +108,20 @@ function getAllClass(act, order){
 				else{
 					var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 					html = '<div class="col-sm-12 col-md-6 col-lg-3">'
-											+ '<div class="mb-3 card">'
-												+ '<div class="card-header ' + cardColor + '">' 
-													+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-													+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn float-right">'
-														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
-												+ '</div>'
-												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
-								        		+ '</div>'
-								        	+ '</div>'
-								        + '</div>';
+								+ '<div class="mb-3 card">'
+									+ '<div class="card-header ' + cardColor + '">' 
+										+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
+										+ '<a href="void(0);" classID="' + classID + '" data-toggle="modal" data-target="#setClassroomModal" class="nav-link setClassroomBtn float-right">'
+											+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+									+ '</div>'
+									+ '<div class="card-body">'
+										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '"><i class="fa fa-fw pr-3" aria-hidden="true"></i>공지</button>' 
+										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+										+ '<button class="btn btn-outline-focus col-6" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
+					        		+ '</div>'
+					        	+ '</div>'
+					        + '</div>';
 				}
 				i++;
 				$(classType).append(html);
@@ -145,6 +136,7 @@ function getAllClass(act, order){
 function getAllMyClass(){
 	var i=0;
 	var active, inactive;
+	
 	$.ajax({
 		type: 'post',
 		url: "${pageContext.request.contextPath}/student/class/getAllMyClass",
@@ -173,20 +165,19 @@ function getAllMyClass(){
 				}
 			})
 			
-			
 			 $('.activeClassList').empty();
 			active = data.active;
 			inactive = data.inactive;
 	
 			if((active.length + inactive.length) == 0){
-				$('.dashboardClass').append('<p class="col text-center">참여중인 강의실이 없습니다.</p>');
+				$('.dashboardClass').append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
 				$('.classActive').hide();
 				$('.classInactive').hide();
 				return false;
 			}
 
 			if(active.length == 0)
-				$('.activeClassList').append('<p class="col text-center">참여중인 강의실이 없습니다! </p>');
+				$('.activeClassList').append('<p class="col text-center">참여중인 강의실이 없습니다. </p>');
 			else{
 				$(active).each(function(){
 					if(completePlaylist[i] == 0 ){
@@ -198,6 +189,7 @@ function getAllMyClass(){
 					
 					var classID = this.id;
 					var classNoticeURL = "'${pageContext.request.contextPath}/student/notice/" + classID + "'";
+					var classCalendarURL = "'${pageContext.request.contextPath}/student/calendar/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/student/attendance/" + classID + "'";
 					var cardColor = active_colors[i%(active_colors.length)];
@@ -208,7 +200,7 @@ function getAllMyClass(){
 					else
 						newNotice = '';
 					
-					var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+					var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 											+ '<div class="mb-3 card">'
 												+ '<div class="card-header ' + cardColor + '">' 
 													+ '<div class="col-sm-10">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
@@ -216,15 +208,17 @@ function getAllMyClass(){
 														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</div>'
 												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지' 
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="공지"></i>공지' 
 														+ newNotice
 													+ '</button>'
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
 				                        		+ '</div>'
-				                        		+ '<div class="card-footer">'
-				                        			+ '<div class="row w-100">'
-					                        			+ '<div class="widget-subheading col-12">학습 진행도</div>'
+				                        		+ '<div class="divider m-0 p-0"></div>'
+				                        		+ '<div class="card-body">'
+				                        			+ '<div class="row">'
+					                        			+ '<div class="widget-subheading col-12">내 학습현황</div>'
 														+ '<div class="col-12">'
 															+ '<div class="mb-3 progress">'
 				                                            	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + percentage + '%;">' + percentage + '%</div>'
@@ -241,17 +235,18 @@ function getAllMyClass(){
 			}
 
 			if(inactive.length == 0)
-				$('.inactiveClassList').append('<p class="col text-center">종료된 강의실이 없습니다!</p>');
+				$('.inactiveClassList').append('<p class="col text-center">종료된 강의실이 없습니다.</p>');
 			else{
 				i = 0;
 				$(inactive).each(function(){
 					var classID = this.id;
 					var classNoticeURL = "'${pageContext.request.contextPath}/student/notice/" + classID + "'";
+					var classCalendarURL = "'${pageContext.request.contextPath}/student/calendar/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/student/class/contentList/" + classID + "'";
 					var classAttendanceURL = '#';
 					var cardColor = inactive_colors[i%(inactive_colors.length)]; 
 
-					var dashboardCard = '<div class="col-sm-6 col-md-3 col-lg-3">'
+					var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 											+ '<div class="mb-3 card">'
 												+ '<div class="card-header ' + cardColor + '">' 
 													+ '<div class="col-md-10">' +  this.className + ' (' + this.days + ' 차시)</div>' 
@@ -259,9 +254,10 @@ function getAllMyClass(){
 														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</div>'
 												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pr-4" aria-hidden="true"></i></button>' 
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw pr-3" aria-hidden="true"></i>공지</button>' 
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
 								        		+ '</div>'
 								        	+ '</div>'
 								        + '</div>';
@@ -370,18 +366,17 @@ function deleteRow(obj){
        <jsp:include page="../outer_top_stu.jsp" flush="true"/>      
                
        <div class="app-main">  
-       		<jsp:include page="../outer_left.jsp" flush="false"></jsp:include>
+       		<jsp:include page="../outer_left_stu.jsp" flush="false"></jsp:include>
                 <div class="app-main__outer">
                    <div class="app-main__inner">
                        <div class="app-page-title">
                            <div class="page-title-wrapper">
                                <div class="page-title-heading mr-3">
-                                 	<h3>내 강의실</h3>
-                               </div>
-                               <div class="d-inline-block ml-5">
-                                   <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-                                       수강신청대기현황 
-                                   </button>
+                                 	<h3>내 강의실
+                                 		<button type="button" class="btn mr-3 btn-transition btn btn-outline-focus btn-sm" data-toggle="modal" data-target="#exampleModalLong">
+	                                       수강대기현황 
+	                                   </button>
+                                 	</h3>
                                </div>
                          </div>
                        </div>          
@@ -389,7 +384,7 @@ function deleteRow(obj){
                        <div class="dashboardClass">
                        	<div class="classActive row">
                        		<div class="col-12 row m-1">
-                       			<h4 class="">참여중인 강의실</h4>
+                       			<h4>수강중인 강의실</h4>
                         		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -402,7 +397,7 @@ function deleteRow(obj){
                        	</div>
                        	<div class="classInactive row">
                        		<div class="col-12 row m-1">
-                       			<h4 class="">종료된 강의실</h4>
+                       			<h4>종료된 강의실</h4>
                         		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
 		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -413,9 +408,6 @@ function deleteRow(obj){
                        		</div>
                        		<div class="inactiveClassList col row"></div>
                        	</div>
-                       	
-                            	<!-- 대시보드 안 box 끝 !! -->
-        
                     </div>
                    <jsp:include page="../outer_bottom.jsp" flush="true"/>
               </div>
@@ -447,7 +439,7 @@ function deleteRow(obj){
 		               </div>
 		               <div class="position-relative form-group">
 		               		<label for="editClassName" class="">강의실 설명</label> 
-		               		<textarea id="displayDescription" class="form-control" rows="4"></textarea>
+		               		<div id="displayDescription" class="form-control" style="height: 100px;"></div>
 		               </div>
 					</div>
 					<div class="divider"></div>
@@ -478,24 +470,24 @@ function deleteRow(obj){
             <div class="modal-body" style="text-align:center;">
             	<c:if test="${empty allPendingClass }">
             		<div class="row">
-            			<div> 현재 대기중인 강의실이 없습니다!! :) </div>
+            			<div> 현재 대기중인 강의실이 없습니다!!</div>
             		</div> 
             	</c:if>
-                <c:forEach var="v" items="${allPendingClass }">
+                <c:forEach var="v" items="${allPendingClass}">
                 	<div class="row">
                 		<c:choose>
 	                		<c:when test="${v.status eq 'pending'}">
 		                		<div class="col-sm-4 ml-2" style="text-align:left;" >
-		                			<p> ${v.className} </p>
+		                			<p><b>'${v.className}'</b></p>
 		                		</div>
-		                		<div class="col-sm-3">
-		                			<p> 허락 대기중 </p>
+		                		<div class="col-sm-2">
+		                			<p>대기중</p>
 		                		</div>
-		                		<div class="col-sm-3">
-		                			<p> ${v.regDate} </p>
+		                		<div class="col-sm-4">
+		                			<p>요청일시 <span class="text-muted">${v.regDate}</span> </p>
 		                		</div>
 		                		<div>
-		                			<button class="btn btn-danger btn-sm" onclick="deleteRequest(${v.studentID}, ${v.classID}, this);">취소 </button>
+		                			<button class="btn btn-danger btn-sm" onclick="deleteRequest(${v.studentID}, ${v.classID}, this);">삭제</button>
 		                		</div>
 	                		</c:when>
                 		</c:choose>

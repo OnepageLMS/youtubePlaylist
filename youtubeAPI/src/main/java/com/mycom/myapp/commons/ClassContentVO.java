@@ -6,6 +6,7 @@ public class ClassContentVO {
 	private String description;
 	private int classID;
 	private int playlistID; //null값은 int에 저장안됨
+	//private Integer playlistID;
 	private int days;
 	private int daySeq;
 	private int published;

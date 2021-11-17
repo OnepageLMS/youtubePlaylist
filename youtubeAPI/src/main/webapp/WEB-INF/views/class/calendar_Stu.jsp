@@ -39,6 +39,10 @@
 	.fc-scrollgrid-sync-table {width: 100% !important;}
 	
 	.fc-daygrid-body { table { width: 100% !important; } }
+	
+	.fc-today-button{
+		margin: auto;
+	}
 </style>
 <script>
 	var calendar;
@@ -76,7 +80,6 @@
 				                           	if(element.allday == 1) allday = true;
 				                           	
 			                                events.push({
-				                                   id: element.id,
 			                                       title: element.name,
 			                                       start: element.date,
 			                                       allDay: allday,
@@ -102,12 +105,11 @@
 			$('#setAllday').prop('checked', true);
 		else
 			$('#setAllday').prop('checked', false);
-		$('#setID').val(obj.event.id);
-		$('#setName').val(obj.event.title);
+		$('#setName').text(obj.event.title);
 		$('#setDate').val(obj.event.startStr.split("T")[0]);
-		$('#setHour').val(obj.event.start.getHours());
-		$('#setMin').val(obj.event.start.getMinutes());
-		$('#setMemo').val(obj.event.extendedProps.description);
+		$('#setHour').text(obj.event.start.getHours());
+		$('#setMin').text(obj.event.start.getMinutes());
+		$('#setMemo').text(obj.event.extendedProps.description);
 		$('#eventModal').modal('show');
 	}
 </script>
@@ -133,7 +135,7 @@
 							<div class="page-title-heading mr-3">
 								<h4>
 									<span class="text-primary displayClassName">${className}</span>
-									- 강의 캘린더
+									- 강의캘린더
 								</h4>
 							</div>
 						</div>
@@ -170,7 +172,7 @@
                 	<div class="col-sm-10">
 						<div class="position-relative form-group">
 							<label>일정명</label> 
-							<input type="text" class="form-control" id="setName" readonly>
+							<p class="form-control" id="setName"></p>
 						</div>
 					</div>
 					<div class="col-sm-2">
@@ -192,19 +194,19 @@
 					<div class="col-sm-3">
 						<div class="position-relative form-group">
 							<label>시</label> 
-							<input type="number" class="form-control" id="setHour" readonly>
+							<p class="form-control" id="setHour"></p>
 						</div>
 					</div>
 					<div class="col-sm-3">
 						<div class="position-relative form-group">
 							<label>분</label> 
-							<input type="number" class="form-control" id="setMin" readonly>
+							<p class="form-control" id="setMin"></p>
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label>메모</label>
-					<textarea class="form-control" id="setMemo" readonly></textarea>
+					<p class="form-control" id="setMemo" style="height: 100px;"></p>
 				</div>
             </div>
             <div class="modal-footer">

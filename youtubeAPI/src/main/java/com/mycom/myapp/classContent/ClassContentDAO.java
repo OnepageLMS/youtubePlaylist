@@ -48,9 +48,9 @@ public class ClassContentDAO {
 	}
 	
 	public int getBiggestUsedDay(int classID) {	//각 차시별 강의 컨텐츠가 하나라도 생성된것 중 가장 큰 차시 정보 가져오기
-		String result = sqlSession.selectOne("ClassContent.getBiggestUsedDay", classID);
+		Integer result =  sqlSession.selectOne("ClassContent.getBiggestUsedDay", classID);
 		if (result != null) 
-			return Integer.parseInt(result);
+			return result+1;
 		else
 			return 0;
 	}

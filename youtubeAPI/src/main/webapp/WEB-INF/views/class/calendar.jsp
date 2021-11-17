@@ -39,6 +39,10 @@
 	.fc-scrollgrid-sync-table {width: 100% !important;}
 	
 	.fc-daygrid-body { table { width: 100% !important; } }
+	
+	.fc-today-button .fc-button .fc-button-primary{
+		margin: auto;
+	}
 </style>
 <script>
 	var calendar;
@@ -120,6 +124,7 @@
 				},
 			});
 			calendar.render();
+			
 		});
 	})();
 
@@ -268,7 +273,7 @@
 							<div class="page-title-heading mr-3">
 								<h4>
 									<span class="text-primary displayClassName">${className}</span>
-									- 강의 캘린더
+									- 강의캘린더
 								</h4>
 							</div>
 						</div>

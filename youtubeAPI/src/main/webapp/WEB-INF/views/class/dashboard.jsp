@@ -9,24 +9,14 @@
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Dashboard</title>
-    
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/img/Learntube.ico">
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
-	<link rel="icon" href="favicon-16.png" sizes="16x16"> 
-	<link rel="icon" href="favicon-32.png" sizes="32x32"> 
-	<link rel="icon" href="favicon-48.png" sizes="48x48"> 
-	<link rel="icon" href="favicon-64.png" sizes="64x64"> 
-	<link rel="icon" href="favicon-128.png" sizes="128x128">
-	<!--favicon 설정 -->
-	
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
 	
     <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 </head>
 <style>
@@ -38,18 +28,14 @@
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-strong-bliss", "bg-arielle-smile", "bg-night-fade", "bg-sunny-morning"];
-
 $(document).ready(function(){
 	getAllMyClass();
 });
-
-function getAllClass(act, order){
+function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하나씩만 가져올 때 사용 (여기에도 학생진행현황 표시 추가!!)
 	var i = 0;
 	var classType;
-
 	if(act == 1) classType = '.activeClassList';
 	else classType = '.inactiveClassList';
-
 	$.ajax({
 		type: 'post',
 		url: "${pageContext.request.contextPath}/getAllClass",
@@ -60,7 +46,6 @@ function getAllClass(act, order){
 		success: function(data){
 			$(classType).empty();
 			list = data.list;
-
 			if(list.length == 0)
 				$(classType).append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
 			else {
@@ -69,14 +54,13 @@ function getAllClass(act, order){
 					var className = this.className;
 					
 					var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
+					var classCalendarURL = "'${pageContext.request.contextPath}/calendar/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
 					var regDate = this.regDate.split(' ')[0];
 					var closeDate = this.closeDate;
 					var html;
-
-					if(closeDate == '9999-12-31') closeDate = '';
-
+					if(closeDate == null) closeDate = '';
 					if(act == 1){
 						var cardColor = active_colors[i%(active_colors.length)]; 
 						
@@ -84,26 +68,27 @@ function getAllClass(act, order){
 							+ '<div class="mb-3 card classCard">'
 								+ '<div class="card-header ' + cardColor + '">' 
 									+ '<div class="col-sm-8 pr-1">' +  className + ' (' + this.days + ' 차시)' + '</div>'
-									+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
-										+ '<i class="nav-link-icon fa fa-share"></i>'
+									+ '<a class="col-sm-2" classID="' + classID + '" className="' + className + '" href="javascript:shareClassroomFn(this);" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+										+ '<i class="nav-link-icon fa fa-share" title="강의실 복제"></i>'
 									+ '</a>'
 									+ '<a class="col-sm-2" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
-										+ '<i class="nav-link-icon fa fa-cog"></i>'
+										+ '<i class="nav-link-icon fa fa-cog" title="강의실 설정"></i>'
 									+ '</a>'
 								+ '</div>'
 								+ '<div class="card-body">'
-									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-									+ '<button class="btn btn-outline-focus col-6 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
-											+ '공지 작성<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
-									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-									+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+									+ '<button class="btn btn-outline-focus col-4 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw pr-2" aria-hidden="true"></i>공지</button>'
+									+ '<button class="btn btn-outline-focus col-2 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
+											+ '<i class="fa fa-pencil-square-o" aria-hidden="true" title="공지작성"></i></button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw mr-1" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
 	                        	+ '</div>'
                         		+ '<div class="divider m-0 p-0"></div>'
 	                        	+ '<div class="card-body">'
 									+ '<div class="row">'
 										+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
-										+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + closeDate + ' </div>'
-										+ '<div class="widget-subheading col-5 pb-2"><b>참여 **명</b></div>'
+										+ '<div class="widget-subheading col-12 pb-2"><b>종료 설정일</b> ' + closeDate + ' </div>'
+										+ '<div class="widget-subheading col pb-2"><b>참여 **명</b></div>'
 										+ '<div class="col-12">'
 											+ '<div class="mb-3 progress">'
 							                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
@@ -121,17 +106,18 @@ function getAllClass(act, order){
 							+ '<div class="mb-3 card classCard">'
 								+ '<div class="card-header ' + cardColor + '">' 
 									+ '<div class="col-sm-8 pr-1">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-										+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
-										+ '<i class="nav-link-icon fa fa-share"></i>'
+										+ '<a class="col-sm-2"  classID="' + classID + '" className="' + this.className + '" href="javascript:shareClassroomFn(this);" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+										+ '<i class="nav-link-icon fa fa-share" title="강의실 복제"></i>'
 									+ '</a>'
-									+ '<a class="col-sm-2" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
-										+ '<i class="nav-link-icon fa fa-cog"></i>'
+									+ '<a class="col-sm-2" href="void(0);" onclick="editClassroomFn(' + classID + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
+										+ '<i class="nav-link-icon fa fa-cog" title="강의실 설정"></i>'
 									+ '</a>'
 								+ '</div>'
 								+ '<div class="card-body">'
-									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-									+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-									+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw pr-3" aria-hidden="true"></i>공지</button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw mr-1" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
                         		+ '</div>'
                         		+ '<div class="divider m-0 p-0"></div>'
 	                        	+ '<div class="card-body">'
@@ -155,8 +141,7 @@ function getAllClass(act, order){
 		}
 	});
 }
-
-function getAllMyClass(){	//위와 중복 제거하기
+function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함수 (처음 페이지 로딩될때만 사용)위와 중복 제거하기
 	var i=0;
 	var active, inactive;
 	$.ajax({
@@ -180,7 +165,7 @@ function getAllMyClass(){	//위와 중복 제거하기
 				}
 			})
 			
-			if(active == null && inactive == null){
+			if((active.length + inactive.length) == 0){
 				$('.dashboardClass').append('<p class="col text-center">생성된 강의실이 없습니다.</p>');
 				$('.classActive').hide();
 				$('.classInactive').hide();
@@ -221,13 +206,13 @@ function getAllMyClass(){	//위와 중복 제거하기
 					})
 					
 					var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
+					var classCalendarURL = "'${pageContext.request.contextPath}/calendar/" + classID + "'";
 					var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + classID + "'";
 					var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/"+ classID + "'";
 					var regDate = this.regDate.split(' ')[0];
 					var closeDate = this.closeDate;
 					var cardColor = active_colors[i%(active_colors.length)]; 
-
-					if(closeDate == '9999-12-31') closeDate = '';
+					if(closeDate == null) closeDate = '';
 					
 					var width;
 					if(forPublished == 0)
@@ -239,26 +224,27 @@ function getAllMyClass(){	//위와 중복 제거하기
 											+ '<div class="mb-3 card classCard">'
 												+ '<div class="card-header ' + cardColor + '">' 
 													+ '<div class="col-sm-8 pr-1">' +  className + ' (' + this.days + ' 차시)' + '</div>'
-													+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + classID + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
-														+ '<i class="nav-link-icon fa fa-share"></i>'
+													+ '<a class="col-sm-2" classID="' + classID + '" className="' + className + '" href="void(0);" onclick="shareClassroomFn(this);" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+														+ '<i class="nav-link-icon fa fa-share" title="강의실 복제"></i>'
 													+ '</a>'
 													+ '<a class="col-sm-2" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
-														+ '<i class="nav-link-icon fa fa-cog"></i>'
+														+ '<i class="nav-link-icon fa fa-cog" title="강의실 설정"></i>'
 													+ '</a>'
 												+ '</div>'
 												+ '<div class="card-body">'
-													+ '<button class="btn btn-outline-focus col-8 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-													+ '<button class="btn btn-outline-focus col-4 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
-															+ '<i class="fa fa-pencil-square-o pl-2" aria-hidden="true"></i></button>'
-													+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-													+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+													+ '<button class="btn btn-outline-focus col-4 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw pr-2" aria-hidden="true" title="공지"></i>공지</button>'
+													+ '<button class="btn btn-outline-focus col-2 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
+															+ '<i class="fa fa-pencil-square-o" aria-hidden="true" title="공지작성"></i></button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw mr-1" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
 					                        	+ '</div>'
 				                        		+ '<div class="divider m-0 p-0"></div>'
 					                        	+ '<div class="card-body">'
 													+ '<div class="row">'
 														+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
-														+ '<div class="widget-subheading col-12 pb-2"><b>종료일</b> ' + closeDate + ' </div>'
-														+ '<div class="widget-subheading col-5 pb-2"><b>참여 '+howmanyTake+'명</b></div>'
+														+ '<div class="widget-subheading col-12 pb-2"><b>종료 설정일</b> ' + closeDate + ' </div>'
+														+ '<div class="widget-subheading col pb-2"><b>참여 '+howmanyTake+'명</b></div>'
 														+ '<div class="col-12">'
 															+ '<div class="mb-3 progress">'
 											                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + width + '%;">' + forPublished + ' / ' + forAll + '  공개</div>'
@@ -282,28 +268,29 @@ function getAllMyClass(){	//위와 중복 제거하기
 						var id = this.id;
 						var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + id + "'";
 						var classContentURL = "'${pageContext.request.contextPath}/class/contentList/" + id + "'";
+						var classCalendarURL = "'${pageContext.request.contextPath}/calendar/" + id + "'";
 						var classAttendanceURL = "'${pageContext.request.contextPath}/attendance/'";
 						var regDate = this.regDate.split(' ')[0];
 						var closeDate = this.closeDate;
 						var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-
-						if(closeDate == '9999-12-31') closeDate = '';
+						if(closeDate == null) closeDate = '';
 						
 						var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
 												+ '<div class="mb-3 card classCard">'
 													+ '<div class="card-header ' + cardColor + '">' 
 														+ '<div class="col-sm-8 pr-1">' +  this.className + ' (' + this.days + ' 차시)' + '</div>'
-															+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(' + id + ');" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
-															+ '<i class="nav-link-icon fa fa-share"></i>'
+															+ '<a class="col-sm-2" href="void(0);" onclick="shareClassroomFn(this);" classID="' + id + '" className="' + this.className + '" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+															+ '<i class="nav-link-icon fa fa-share" title="강의실 복제"></i>'
 														+ '</a>'
 														+ '<a class="col-sm-2" href="void(0);" onclick="editClassroomFn(' + id + ');"  data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
-															+ '<i class="nav-link-icon fa fa-cog"></i>'
+															+ '<i class="nav-link-icon fa fa-cog" title="강의실 설정"></i>'
 														+ '</a>'
 													+ '</div>'
 													+ '<div class="card-body">'
-														+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classNoticeURL + '">공지<i class="fa fa-fw pl-2" aria-hidden="true"></i></button>'
-														+ '<button class="btn btn-outline-focus col-12 mb-2" onclick="location.href=' + classContentURL + '">강의 컨텐츠</button>'
-														+ '<button class="btn btn-outline-focus col-12" onclick="location.href=' + classAttendanceURL + '">출결/학습현황</button>'
+														+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw pr-2" aria-hidden="true"></i>공지</button>'
+														+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
+														+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
+														+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw mr-1" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
 					                        		+ '</div>'
 					                        		+ '<div class="divider m-0 p-0"></div>'
 						                        	+ '<div class="card-body">'
@@ -322,26 +309,28 @@ function getAllMyClass(){	//위와 중복 제거하기
 			}
 		});
 	}
-
-function setPublishNotice(item){
+function setPublishNotice(item){	//set add notice modal
 	var id = item.getAttribute('classID');
 	var name = item.getAttribute('className');
 	
 	$('#inputNoticeForm')[0].reset();
-
 	$('#setNoticeClassName').text(name);
 	$('#setNoticeClassID').val(id);
 }
 	
-
 $(".addClassroomBtn").click(function () {
 	$('#formAddClassroom')[0].reset();
 });
-function shareClassroomFn(id){	//set the share classroom modal
+function shareClassroomFn(item){	//set the share classroom modal
+	var id = item.getAttribute('classID');
+	var name = item.getAttribute('className');
 	$('#shareClassroomID').val(id);
+	$('#setShareClassName').text(name);
 }
 function editClassroomFn(id){	//set the edit classroom modal
 	$('#formEditClassroom')[0].reset();
+	$('#formEditClassroom').removeClass('was-validated')
+	$('#editClassDays').removeClass('is-invalid');
 	
 	$.ajax({
 		type: 'post',
@@ -352,10 +341,6 @@ function editClassroomFn(id){	//set the edit classroom modal
 			var closeDate = data.closeDate;
 			
 			if(days == null) days = 0;
-			
-			if(closeDate != '9999-12-31') 
-				$('#editCloseDate').val(closeDate);
-			
 			if(data.active == 0)
 				$('#customSwitch2').removeAttr('checked');
 			else
@@ -364,6 +349,7 @@ function editClassroomFn(id){	//set the edit classroom modal
 			$('#setClassID').val(id);
 			$('#editClassName').val(data.className);
 			$('#editDescription').val(data.description);
+			$('#editCloseDate').val(closeDate);
 			$('#editClassDays').val(days);
 			$('#editClassTag').val(data.tag);
 		},
@@ -377,12 +363,6 @@ function submitAddClassroom(){
 	
 	if($('#inputClassDays').val() == '')
 		$('#inputClassDays').val(0);
-	
-	if($('#inputCloseDate').val() == '')
-		$('#inputCloseDate').val('9999-12-31');
-
-	$('#customSwitch1').val(1);
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/insertClassroom',
@@ -401,22 +381,48 @@ function submitAddClassroom(){
 		}
 	});	
 }
-function submitEditClassroom(){	//미완성 (classDays 현재 강의컨텐츠의 갯수 넘지 않도록 체크)
+function submitEditClassroom(){
 	if ($('#editClassName').val() == '') return false;
-
+	var check;
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/class/getBiggestUsedDay',
+		data: { classID : $('#setClassID').val()},
+		async: false,
+		success: function(data){
+			if(data != null && $('#editClassDays').val() < data){
+				alert('[강의 회차 설정 오류]\n현재 ' +data + '회차까지 강의 컨텐츠가 존재합니다!\n현재 생성된 강의 컨텐츠의 회차와 같거나 더 큰 숫자를 입력해주세요.');
+				$('#editClassDays').addClass('is-invalid');
+				check = 1;
+			}
+			else {
+				check = 0;
+			}
+		
+		},
+		error: function(data, status,error){
+			console.log('생성된 강의컨텐츠 갯수 가져오기 실패! ');
+		}
+	});
+	
+	if(check != 0) return false;
+	
 	var today = new Date();
 	var year = today.getFullYear();
     var month = today.getMonth()+1;
     var day = today.getDate();
 	
 	if ((day + "").length < 2) day = "0" + day;
-    
 	today = year + "-" +  month + "-" + day;
+	
 	var closeDate = $('#editCloseDate').val();
 	
-	if($('#customSwitch2').is(':checked') && (today >= closeDate)){
-		if(confirm('강의실 종료일이 오늘 날짜보다 빠르거나 같습니다. 지금 바로 강의실을 종료 하시겠습니까? \n취소 버튼을 누르시면 강의실 설정으로 돌아갑니다.'))
-			$('#customSwitch2').removeAttr('checked');
+	if($('#customSwitch2').is(':checked') && closeDate != '' && (today >= closeDate)){
+		if(confirm('강의실 종료일이 오늘 날짜보다 빠르거나 같습니다. 지금 바로 강의실을 종료 하시겠습니까? \n취소 버튼을 누르면 강의실 설정으로 돌아갑니다.')){
+			$('#customSwitch2').prop('checked', false);
+			$('#customSwitch2').val(0);
+			$('#editCloseDate').val(today);
+		}	
 		else return false;
 	}
 	
@@ -424,18 +430,17 @@ function submitEditClassroom(){	//미완성 (classDays 현재 강의컨텐츠의
 		$('#editClassDays').val(0);
 	
 	if($('#customSwitch2').is(':checked'))
-		$('#customSwitch2').val(1);
-	else
+		$('#customSwitch2').val(1);	
+	else {
 		$('#customSwitch2').val(0);
-	
-	if($('#editCloseDate').val() == '')
-		$('#editCloseDate').val('9999-12-31');
+		if($('#editCloseDate').val() == '')	
+			$('#editCloseDate').val(today);
+	}
 	
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/editClassroom',
-		data: 
-			$('#formEditClassroom').serialize(),
+		data: $('#formEditClassroom').serialize(),
 		datatype: 'json',
 		success: function(data){
 			if(data == 'ok')
@@ -449,20 +454,30 @@ function submitEditClassroom(){	//미완성 (classDays 현재 강의컨텐츠의
 		}
 	});
 }
-
 function submitDeleteClassroom(){
 	var opt = $('input[name=deleteOpt]:checked').val();
 	if(opt == null){
 		alert('강의실 삭제 옵션을 선택해 주세요.');
 		return false;
 	}
-
 	if(opt == 'forMe'){
+		var today = new Date();
+		var year = today.getFullYear();
+	    var month = today.getMonth()+1;
+	    var day = today.getDate();
+		
+		if ((day + "").length < 2) day = "0" + day;
+	    
+		today = year + "-" +  month + "-" + day;
+		
 		if(confirm('나에게만 강의실이 삭제되고 학생들에게는 종료된 강의실로 전환됩니다. \n삭제된 데이터는 다시 복구될 수 없습니다. \n삭제 하시겠습니까?')){
 			$.ajax({
 				type: 'post',
 				url: '${pageContext.request.contextPath}/deleteForMe',
-				data: {'id' : $('#setClassID').val()},
+				data: {
+					'id' : $('#setClassID').val(),
+					'date' : today
+					},
 				datatype: 'json',
 				success: function(data){
 					console.log('나에게만 강의실 삭제 성공');
@@ -497,10 +512,26 @@ function submitDeleteClassroom(){
 	}
 }
 function submitShareClassroom(){
+	var calendar = $('#copyCalendar').is(":checked");
+	var content = $('#copyContent').is(":checked");
+	if(calendar != true && content != true){
+		alert('최소 하나의 복제 항목을 선택해주세요.')
+		return false;
+	}
+	if(calendar == true) calendar = 1;
+	else calendar = 0;
+	
+	if(content == true) content = 1;
+	else content = 0;
+	
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/copyClassroom',
-		data: {'id' : $('#shareClassroomID').val()},
+		data: {
+			'id' : $('#shareClassroomID').val(),
+			'calendar' : calendar,
+			'content' : content
+			},
 		datatype: 'json',
 		success: function(data){
 			if(data == 1)
@@ -510,19 +541,16 @@ function submitShareClassroom(){
 			location.reload();
 		},
 		error: function(data, status,error){
-			alert('강의실 복사 실패! ');
+			alert('강의실 복제애 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
 }
-
 function publishNotice(){
 	if($('#inputTitle').val() == '' ) return false;
-
 	if ($('#inputImportant').val() == 'on')
 		$('#inputImportant').val(1);
 	else
 		$('#inputImportant').val(0);
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/addNotice',
@@ -564,11 +592,12 @@ function publishNotice(){
                         	<div class="classActive row">
                         		<div class="col-12 row m-1">
                         			<h4 class="">진행중인 강의실</h4>
+                        			
 	                        		<div class="dropdown d-inline-block pl-2">
 			                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
-			                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-			                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'regDate');">개설일순</button>
-			                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'className');">이름순</button>
+			                           <div aria-labelby="dropdownMenuButton" class="dropdown-menu">
+			                               <button type="button" class="dropdown-item" onclick="getAllClass(1, 'regDate');">개설일순</button>
+			                               <button type="button" class="dropdown-item" onclick="getAllClass(1, 'className');">이름순</button>
 			                           </div>
 			                       </div>
                         		</div>
@@ -599,7 +628,7 @@ function publishNotice(){
 	    <div class="modal-dialog modal-sm">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="exampleModalLongTitle">강의실 복제</h5>
+	                <h5 class="modal-title" id="exampleModalLongTitle"><span id="setShareClassName" class="text-primary"></span> - 강의실 복제</h5>
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                    <span aria-hidden="true">×</span>
 	                </button>
@@ -610,15 +639,15 @@ function publishNotice(){
                         <div class="col">                
                             <div class="form-group">
                                 <div class="form-check">
-                                    <input id="closeButton" type="checkbox" value="checked" class="form-check-input">
-                                    <label class="form-check-label" for="closeButton">
-                                        공지
+                                    <input id="copyCalendar" type="checkbox" class="form-check-input">
+                                    <label class="form-check-label" for="copyCalendar">
+                                        강의캘린더
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input id="addBehaviorOnToastClick" type="checkbox" value="checked" class="form-check-input">
-                                    <label class="form-check-label" for="addBehaviorOnToastClick">
-                                        강의 컨텐츠
+                                    <input id="copyContent" type="checkbox" class="form-check-input">
+                                    <label class="form-check-label" for="copyContent">
+                                        강의컨텐츠
                                     </label>
                                 </div>
                             </div>
@@ -647,7 +676,7 @@ function publishNotice(){
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
 		               		<label for="inputClassName" class="">강의실 이름</label>
-		               		<input name="className" id="inputClassName" type="text" class="form-control" required>
+		               		<input name="className" id="inputClassName" type="text" class="form-control" required autofocus>
 		               		<div class="invalid-feedback">강의실 이름을 입력해주세요</div>	
 		               </div>
 		               <div class="position-relative form-group">
@@ -658,19 +687,19 @@ function publishNotice(){
 		               		<div class="col-md-3">
 			                   <div class="position-relative form-group">
 			                   		<label for="inputClassDays" class="">강의 횟수</label>
-				               		<input name="days" placeholder="12" id="inputClassDays" type="number" class="form-control">
+				               		<input name="days" id="inputClassDays" type="number" class="form-control" min="0">
 			                   </div>
 		                   	</div>
 		                   	
 							<div class="col-md-9">
 			                   <div class="position-relative form-group">
 				               		<label for="inputClassTag" class="">태그</label>
-				               		<input name="tag" placeholder="21겨울캠프" id="inputTag" type="text" class="form-control">
+				               		<input name="tag" placeholder="21겨울캠프, 공동체" id="inputTag" type="text" class="form-control">
 				               </div>
 			               	</div>
 	                   </div>
 	                   <div class="form-group"> 
-			        		<label for="inputCloseDate">강의실 게시 종료일</label>
+			        		<label for="inputCloseDate">강의실 종료 설정</label>
 			        		<input type="date" name="closeDate" class="form-control" id="inputCloseDate"/>
 			        	</div> 
 		            </div>
@@ -684,7 +713,7 @@ function publishNotice(){
 	    </div>
 	</div>
 	
-	<!-- setting classroom modal -->
+	<!-- edit classroom modal -->
     <div class="modal fade" id="setClassroomModal" tabindex="-1" role="dialog" aria-labelledby="setClassroomModalLabel" aria-hidden="true" style="display: none;">
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
@@ -710,7 +739,8 @@ function publishNotice(){
 		               		<div class="col-md-3">
 			                   <div class="position-relative form-group">
 			                   		<label for="editClassDays" class="">강의 횟수</label>
-				               		<input name="days" id="editClassDays" type="number" class="form-control">
+				               		<input name="days" id="editClassDays" type="number" class="form-control" min="0" required>
+				               		<div class="invalid-feedback">강의 횟수를 다시 설정해주세요</div>	
 			                   </div>
 		                   	</div>
 		                   	
@@ -723,7 +753,7 @@ function publishNotice(){
 	                   </div>
 	                   
 	                   <div class="form-group"> 
-			        		<label for="inputCloseClassroom">강의실 종료 예약</label>
+			        		<label for="inputCloseClassroom">강의실 종료 설정</label>
 			        		<input type="date" name="closeDate" class="form-control" id="editCloseDate"/>
 			        	</div> 
 			        	<div class="custom-control custom-switch">
