@@ -31,4 +31,8 @@ public class CalendarDAO {
 	public List<CalendarVO> getScheduleList(int classID){
 		return sqlSession.selectList("Calendar.getScheduleList", classID);
 	}
+	
+	public int insertCopiedCalendar(List<CalendarVO> list) {
+		return sqlSession.insert("Calendar.insertCopiedCalendar", list);
+	}
 }

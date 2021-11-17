@@ -36,4 +36,9 @@ public class CalendarServiceImpl implements CalendarService{
 	public List<CalendarVO> getScheduleList(int classID){
 		return calendarDAO.getScheduleList(classID);
 	}
+	
+	@Override
+	public int insertCopiedCalendar(List<CalendarVO> list) {
+		return calendarDAO.insertCopiedCalendar(list);
+	}
 }
