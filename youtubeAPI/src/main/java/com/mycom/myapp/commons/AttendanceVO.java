@@ -7,6 +7,7 @@ public class AttendanceVO {
 	private String fileName;
 	private String regDate;
 	private String modDate;
+
 	public int getId() {
 		return id;
 	}

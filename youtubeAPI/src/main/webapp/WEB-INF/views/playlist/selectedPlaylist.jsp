@@ -76,8 +76,9 @@ $(document).ready(function(){
 	$('.myplaylistLink').addClass('text-primary');
 
 	getPlaylistInfo();
-	showSlider();
 	getAllVideo();
+	
+	
 	
 	
 });
@@ -169,7 +170,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 		    	var html = '<div class="video list-group-action list-group-item row d-flex justify-content-between"'
 		    				+ addStyle
 							+ '>'
-								+'<div class="col-11 row pr-0" onclick="playVideoFromPlaylist(this); setSlider();" ' 
+								+'<div class="col-11 row pr-0" onclick="playVideoFromPlaylist(this);" ' 
 									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 									+ '" videoID="' + value.id 
 									+ '" youtubeID="' + value.youtubeID 
@@ -206,6 +207,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 							
 				$('.videos').append(html); 
 			});
+			showSlider();
 		    setSlider();
 		    console.log("check end_s ==> " + end_s);
 		}
@@ -223,9 +225,12 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 	$('.video:eq(' + seq + ')').css("background", "#F0F0F0"); //클릭한 video 표시
 
 	youtubeID = item.getAttribute('youtubeID');
-	start_s = item.getAttribute('start_s');
-	end_s = item.getAttribute('end_s');
-	limit = item.getAttribute('maxLength');
+	start_s = Number(item.getAttribute('start_s'));
+	end_s = Number(item.getAttribute('end_s'));
+	limit = Number(item.getAttribute('maxLength'));
+
+	console.log("확인: " + start_s);
+	console.log("확인: " + end_s);
 
 	var childs = item.childNodes;
 	
@@ -240,6 +245,8 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 		'startSeconds' : start_s,
 		'endSeconds' : end_s
 	});
+
+	setSlider();
 }
 
 function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설정하기
@@ -299,7 +306,7 @@ function onYouTubeIframeAPIReady() {
 		videoId : videoId,
 		events : {
 			'onReady' : onPlayerReady,
-			'onStateChange' : onPlayerStateChange
+			//'onStateChange' : onPlayerStateChange
 		}
 	});
 }
@@ -317,7 +324,7 @@ function onPlayerReady() {
 		});
 	}
 }
-// player가 끝시간을 넘지 못하게 만들기 --> 선생님한테는 끝시간을 넘길수있도록 수정해야 함
+// player가 끝시간을 넘지 못하게 만들기 --> 선생님한테는 끝시간을 넘길수있도록 수정해야 함 : 반영함 (jw)
 function onPlayerStateChange(state) {
 	if (player.getCurrentTime() >= end_s) {
 		player.pauseVideo();
@@ -402,21 +409,23 @@ function updateVideo(){ // video 정보 수정
 	var tmp_playlistID = $('#allVideo').attr('playlistID');
 
 	$('#inputPlaylistID').val(tmp_playlistID);
+	
+	 $("#maxLength").val(end_s);
+	 $("#duration").val(end_s - start_s); 
 
 	$.ajax({
 		'type': "POST",
 		'url': "${pageContext.request.contextPath}/video/updateVideo",
 		'data': $("#videoForm").serialize(),
-		'dataType': "json",
 		success: function(data) {
 			console.log("ajax video 수정 완료!");
 			getPlaylistInfo(tmp_playlistID);
 			getAllVideo(tmp_playlistID, tmp_videoID); 
 		},
-		error: function(error) {
-			//getAllPlaylist(videoID); 
-			console.log("ajax video 수정 실패!" + error);
-		}
+		error: function(request,status,error){
+	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+	        console.log("ajax video 수정 실패!" + error);
+	    }	
 	});
 }
 
@@ -475,7 +484,7 @@ function showSlider(){
 }
 
 function setSlider() {
-	console.log("end_s 값 확인 !! ", end_s);
+	console.log("end_s 값 확인 !! ", limit);
 	/* $("#slider-range").slider("destroy"); */
 	/*var attributes = {
 		max: limit
@@ -485,8 +494,8 @@ function setSlider() {
 
 	// pass updated attributes to rangeslider.js
 	$element.rangeslider('update', true); */
-	$('#slider-range').slider( "option", "min", start_s);
-	$('#slider-range').slider( "option", "max", end_s);
+	$('#slider-range').slider( "option", "min", 0);
+	$('#slider-range').slider( "option", "max", limit);
 
 	$( "#slider-range" ).slider( "option", "values", [ start_s, end_s ] );
 	//$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
@@ -498,9 +507,10 @@ function setSlider() {
     end_hour = Math.floor(end_s / 3600);
     end_min = Math.floor(end_s % 3600 / 60);
     end_sec = end_s % 60;
-
+	console.log("여기까지 되나 확인! ");
 	
 	$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+	console.log("여기까지 되나 확인! ");
 }
 </script>
 <body>
@@ -541,6 +551,7 @@ function setSlider() {
 										 	<input type="hidden" name="duration" id="duration">
 										 	<input type="hidden" name="id" id="inputVideoID">
 										 	<input type="hidden" name="playlistID" id="inputPlaylistID">
+										 	<input type="hidden" name="maxLength" id="maxLength">
 										</div>
 										 
 										<div class="card-body">
@@ -560,7 +571,6 @@ function setSlider() {
                                             </div>
                                             
                                             <div class="form-row">
-                                            
 	                                            <div class="setTimeRange input-group row">
 	                                            	<div class="col-2 input-group-prepend">
 	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>

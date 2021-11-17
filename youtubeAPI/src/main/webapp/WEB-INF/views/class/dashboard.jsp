@@ -28,18 +28,14 @@
 var colors = ["text-primary", "text-warning", "text-success", "text-secondary", "text-info", "text-focus", "text-alternate", "text-shadow"];
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-strong-bliss", "bg-arielle-smile", "bg-night-fade", "bg-sunny-morning"];
-
 $(document).ready(function(){
 	getAllMyClass();
 });
-
 function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하나씩만 가져올 때 사용 (여기에도 학생진행현황 표시 추가!!)
 	var i = 0;
 	var classType;
-
 	if(act == 1) classType = '.activeClassList';
 	else classType = '.inactiveClassList';
-
 	$.ajax({
 		type: 'post',
 		url: "${pageContext.request.contextPath}/getAllClass",
@@ -50,7 +46,6 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 		success: function(data){
 			$(classType).empty();
 			list = data.list;
-
 			if(list.length == 0)
 				$(classType).append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
 			else {
@@ -65,9 +60,7 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 					var regDate = this.regDate.split(' ')[0];
 					var closeDate = this.closeDate;
 					var html;
-
 					if(closeDate == null) closeDate = '';
-
 					if(act == 1){
 						var cardColor = active_colors[i%(active_colors.length)]; 
 						
@@ -148,7 +141,6 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 		}
 	});
 }
-
 function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함수 (처음 페이지 로딩될때만 사용)위와 중복 제거하기
 	var i=0;
 	var active, inactive;
@@ -220,7 +212,6 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 					var regDate = this.regDate.split(' ')[0];
 					var closeDate = this.closeDate;
 					var cardColor = active_colors[i%(active_colors.length)]; 
-
 					if(closeDate == null) closeDate = '';
 					
 					var width;
@@ -282,7 +273,6 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 						var regDate = this.regDate.split(' ')[0];
 						var closeDate = this.closeDate;
 						var cardColor = inactive_colors[i%(inactive_colors.length)]; 
-
 						if(closeDate == null) closeDate = '';
 						
 						var dashboardCard = '<div class="col-sm-12 col-md-6 col-lg-3">'
@@ -319,30 +309,24 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 			}
 		});
 	}
-
 function setPublishNotice(item){	//set add notice modal
 	var id = item.getAttribute('classID');
 	var name = item.getAttribute('className');
 	
 	$('#inputNoticeForm')[0].reset();
-
 	$('#setNoticeClassName').text(name);
 	$('#setNoticeClassID').val(id);
 }
 	
-
 $(".addClassroomBtn").click(function () {
 	$('#formAddClassroom')[0].reset();
 });
-
 function shareClassroomFn(item){	//set the share classroom modal
 	var id = item.getAttribute('classID');
 	var name = item.getAttribute('className');
-
 	$('#shareClassroomID').val(id);
 	$('#setShareClassName').text(name);
 }
-
 function editClassroomFn(id){	//set the edit classroom modal
 	$('#formEditClassroom')[0].reset();
 	$('#formEditClassroom').removeClass('was-validated')
@@ -357,7 +341,6 @@ function editClassroomFn(id){	//set the edit classroom modal
 			var closeDate = data.closeDate;
 			
 			if(days == null) days = 0;
-
 			if(data.active == 0)
 				$('#customSwitch2').removeAttr('checked');
 			else
@@ -375,13 +358,11 @@ function editClassroomFn(id){	//set the edit classroom modal
 		}
 	});
 }
-
 function submitAddClassroom(){
 	if ($('#inputClassName').val() == '') return false;
 	
 	if($('#inputClassDays').val() == '')
 		$('#inputClassDays').val(0);
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/insertClassroom',
@@ -400,7 +381,6 @@ function submitAddClassroom(){
 		}
 	});	
 }
-
 function submitEditClassroom(){
 	if ($('#editClassName').val() == '') return false;
 	var check;
@@ -474,14 +454,12 @@ function submitEditClassroom(){
 		}
 	});
 }
-
 function submitDeleteClassroom(){
 	var opt = $('input[name=deleteOpt]:checked').val();
 	if(opt == null){
 		alert('강의실 삭제 옵션을 선택해 주세요.');
 		return false;
 	}
-
 	if(opt == 'forMe'){
 		var today = new Date();
 		var year = today.getFullYear();
@@ -536,12 +514,10 @@ function submitDeleteClassroom(){
 function submitShareClassroom(){
 	var calendar = $('#copyCalendar').is(":checked");
 	var content = $('#copyContent').is(":checked");
-
 	if(calendar != true && content != true){
 		alert('최소 하나의 복제 항목을 선택해주세요.')
 		return false;
 	}
-
 	if(calendar == true) calendar = 1;
 	else calendar = 0;
 	
@@ -569,15 +545,12 @@ function submitShareClassroom(){
 		}
 	});
 }
-
 function publishNotice(){
 	if($('#inputTitle').val() == '' ) return false;
-
 	if ($('#inputImportant').val() == 'on')
 		$('#inputImportant').val(1);
 	else
 		$('#inputImportant').val(0);
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/addNotice',
