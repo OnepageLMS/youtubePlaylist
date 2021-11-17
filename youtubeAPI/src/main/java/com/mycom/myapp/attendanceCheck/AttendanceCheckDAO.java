@@ -1,5 +1,6 @@
 package com.mycom.myapp.attendanceCheck;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -38,8 +39,8 @@ public class AttendanceCheckDAO {
 		return result;
 	}
 	
-	public int deleteAttendanceCheck(int studentID){
-		int result = sqlSession.update("AttendanceCheck.deleteAttendanceCheck", studentID);
+	public int deleteAttendanceCheck(HashMap<String, Object> map){
+		int result = sqlSession.update("AttendanceCheck.deleteAttendanceCheck", map);
 		return result;
 	}
 	

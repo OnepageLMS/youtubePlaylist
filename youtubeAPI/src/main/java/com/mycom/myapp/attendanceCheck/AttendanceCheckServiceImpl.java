@@ -1,5 +1,6 @@
 package com.mycom.myapp.attendanceCheck;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class AttendanceCheckServiceImpl implements AttendanceCheckService {
 	}
 	
 	@Override
-	public int deleteAttendanceCheck(int studentID) {
-		return attendanceCheckDAO.deleteAttendanceCheck(studentID);
+	public int deleteAttendanceCheck(HashMap<String, Object> map) {
+		return attendanceCheckDAO.deleteAttendanceCheck(map);
 	}
 	
 	@Override

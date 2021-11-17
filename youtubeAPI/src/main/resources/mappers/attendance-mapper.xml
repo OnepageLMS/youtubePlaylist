@@ -34,6 +34,11 @@
 		where classID=#{classID} and days=#{days}
 	</select>
 	
+	<select id="getAttendanceID2" resultType="attendance">
+		select id from lms_attendance
+		where classID=#{classID}
+	</select>
+	
 	<select id="getAttendanceList" resultType="attendance">
 		select distinct id from lms_attendance
 		where classID=#{classID}

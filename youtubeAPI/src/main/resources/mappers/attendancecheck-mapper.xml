@@ -33,7 +33,11 @@
 	</update>
 	
 	<delete id="deleteAttendanceCheck">
-		delete from lms_attendanceCheck where studentID=#{studentID}
+		select * from lms_attendanceCheck as A
+		where A.attendanceID IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
 	</delete>
 	
 	<select id="getAttendanceCheck" resultType="AttendanceCheckVO">

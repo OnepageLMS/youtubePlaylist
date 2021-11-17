@@ -76,12 +76,13 @@ $(document).ready(function(){
 	$('.myplaylistLink').addClass('text-primary');
 
 	getPlaylistInfo();
-	getAllVideo();
 	showSlider();
-	setSlider();
+	getAllVideo();
+	
+	
 });
 
-function getPlaylistInfo(){
+function getPlaylistInfo(){ 
 	var playlistID = ${playlistID};
 	$.ajax({
 		type : 'post',
@@ -159,6 +160,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 			    	setDisplayVideoInfo(index); //player 제외 선택한 video 표시 설정
 				
 					var addStyle = ' style="background-color:#F0F0F0; padding:5px;"';
+					console.log("check end_s ==> " + end_s);
 			    }
 
 		    	else 
@@ -204,8 +206,12 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 							
 				$('.videos').append(html); 
 			});
+		    setSlider();
+		    console.log("check end_s ==> " + end_s);
 		}
 	});
+	
+			
 }
 
 function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클릭했을 때 실행 (처음 이 페이지가 불러와질때 제외)
@@ -371,7 +377,7 @@ function getCurrentPlayTime(e, obj) {
 // 재생 구간 유효성 검사: 
 function validation(event) { //video 수정 form 제출하면 실행되는 함수
 	
-		return updateVideo(event);
+		return updateVideo();
 }
 
 function convertTotalLength(seconds){
@@ -388,10 +394,11 @@ function convertTotalLength(seconds){
 }
 
 function updateVideo(){ // video 정보 수정		
-	alert('clicked!');
-	event.preventDefault(); // avoid to execute the actual submit of the form.
+	/* alert('clicked!'); */
+	event.preventDefault(); // avoid to execute the actual submit of the form. 
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
+	alert($('#inputVideoID').val());
 	var tmp_playlistID = $('#allVideo').attr('playlistID');
 
 	$('#inputPlaylistID').val(tmp_playlistID);
@@ -400,10 +407,11 @@ function updateVideo(){ // video 정보 수정
 		'type': "POST",
 		'url': "${pageContext.request.contextPath}/video/updateVideo",
 		'data': $("#videoForm").serialize(),
+		'dataType': "json",
 		success: function(data) {
 			console.log("ajax video 수정 완료!");
 			getPlaylistInfo(tmp_playlistID);
-			getAllVideo(tmp_playlistID, tmp_videoID);
+			getAllVideo(tmp_playlistID, tmp_videoID); 
 		},
 		error: function(error) {
 			//getAllPlaylist(videoID); 
@@ -457,12 +465,17 @@ function showSlider(){
 		    end_sec = ui.values[ 1 ] % 60;
 
 		    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+		    $("#start_s").val(ui.values[0]);
+		    $("#end_s").val(ui.values[1]);
+
+			console.log("start_s ==> "+$("#start_s").val());
+			console.log("end_s ==> "+ $("#end_s").val());
 		}
 	});    
 }
 
 function setSlider() {
-	console.log("limit값 확인 !! ", end_s);
+	console.log("end_s 값 확인 !! ", end_s);
 	/* $("#slider-range").slider("destroy"); */
 	/*var attributes = {
 		max: limit
@@ -521,14 +534,14 @@ function setSlider() {
 									<div class="card-header">
 										<h4 id="displayVideoTitle" class="m-2"></h4>
 									</div>
-									<form id="videoForm" onsubmit="return validation(event);">
+									<form id="videoForm" onsubmit="return validation(event);" method="post">
 										<div id="timeSetting">
 											<input type="hidden" name="start_s" id="start_s">
 											<input type="hidden" name="end_s" id="end_s">
 										 	<input type="hidden" name="duration" id="duration">
 										 	<input type="hidden" name="id" id="inputVideoID">
 										 	<input type="hidden" name="playlistID" id="inputPlaylistID">
-										 </div>
+										</div>
 										 
 										<div class="card-body">
 											<div class="form-row">
