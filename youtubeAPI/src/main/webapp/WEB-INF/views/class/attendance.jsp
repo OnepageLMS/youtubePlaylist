@@ -63,26 +63,63 @@ $(document).ready(function(){
 	var weekContents = JSON.parse('${weekContents}');
 	var takes = JSON.parse('${takes}');
 	
+	
+	
+	var days = 0;
 	for(var j=0; j<${takesNum}; j++){
 		for(var i=0; i<allMyClass.length; i++){
+			console.log("초기 i : " + i);
+			var watchCount = 0;
+			var totalVideo = 0;
+			//var daysCount;
 			
+			
+			//for(var k=0; k<${classInfo.days}; k++){
+			console.log('days : ' + days);
 			$.ajax({ 
-				url : "${pageContext.request.contextPath}/attendance/forWatchedCount",
+				url : "${pageContext.request.contextPath}/attendance/forDays",
 				type : "post",
 				async : false,
 				data : {	
-					playlistID : weekContents[i].playlistID,
-					classContentID : weekContents[i].id,
-					studentID : takes[j].studentID
+					days: days				
 				},
 				success : function(data) {
-					watchCount = data; 
-					//console.log(data + " / " + weekContents[i].totalVideo);
+					daysCount = data;
 				},
 				error : function() {
 					alert("error");
 				}
 			})
+			
+			if(days < ${classInfo.days})
+				days++;
+			//}
+			console.log("daysCount : " + daysCount);
+			for(var k =0; k< daysCount; k++){
+			//	console.log("days : " + weekContents[i].days + " i+1 days : " + weekContents[i+1].days + " , i : " + i);
+			//	i = i + k;	
+				$.ajax({ 
+					url : "${pageContext.request.contextPath}/attendance/forWatchedCount",
+					type : "post",
+					async : false,
+					data : {	
+						playlistID : weekContents[i].playlistID,
+						classContentID : weekContents[i].id,
+						studentID : takes[j].studentID
+					},
+					success : function(data) {
+						watchCount += data; 
+						totalVideo +=  weekContents[i].totalVideo;
+						console.log(watchCount + " / " + totalVideo);
+					},
+					error : function() {
+						alert("error");
+					}
+				})
+			//	i++;
+				console.log("i : " + i + "weekContents.id " + weekContents[i].id);
+			
+			}
 			
 			$.ajax({ 
 				url : "${pageContext.request.contextPath}/attendance/forInnerWatched",
@@ -94,39 +131,43 @@ $(document).ready(function(){
 				},
 				success : function(data) {
 					innerWatched = data;
-					//console.log(innerWatched);
+					console.log(innerWatched);
 				},
 				error : function() {
 					alert("error");
 				}
 			})
 			
-			//console.log("innerWatched : " + innerWatched); //null아닐 때 backgroundcolor도 주기 
-			
 			if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
 				//alert("성공이다 ");
-				var element = document.getElementsByClassName('innerAttend'+j+""+i)[0];
+				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0]; //j = 0, i = 3 
 				//console.log(element);
 				element.innerText = '';
-				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText =  Math.floor(watchCount/weekContents[i].totalVideo*100) + "%";
-				
-				
-				if(innerWatched.length == 0){ 
-					if(Math.floor(watchCount/weekContents[i].totalVideo*100) == 100)
+				//if(weekContents[i].days == weekContents[i+1].days){
+				//var ori_watchCount = watchCount;
+				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText =  Math.floor(watchCount/totalVideo*100) + "%";
+			//}
+			
+				if(daysCount != 0){
+					if(innerWatched == 2)
 						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
-					else
+					else if(innerWatched == -1)
 						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+					else 
+						element.innerHTML +=  "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
 				}
 				
+				else if(totalVideo == 0){
+					element.innerHTML += '';
+				}
 				else{
-					console.log("i : " + i + " / j : " + j + "/ innerWatched.internal " + innerWatched.internal);
-					element.style.background = 'grey'; //추후에수정하기 
-					if(innerWatched.internal = "출석")
-						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
-					else
-						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+					element.innerHTML += '';
 				}
+			
+			
 			}
+			
+			console.log("밖인디 " + watchCount + " / " + totalVideo + " i :" + i);
 			
 		}
 	}
@@ -394,7 +435,7 @@ function updateAttendance(days){
 		if($(".takeZoom"+days).eq(i).val() == 3)
 			finalTakes.push("결석");
 		
-		if($(".innerAttend"+i+""+(days-1))[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:dodgerblue"> </i>')
+		if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:dodgerblue"> </i>')
 			finalInternalTakes.push("출석");
 		else
 			finalInternalTakes.push("결석");
@@ -570,7 +611,7 @@ function setInnerAttendance(takes, idx) {
 				                                                	
 				                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 				                                                		<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
-																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index}${status2.index}" onclick="setAttendanceModal(${i});" 
+																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>
@@ -589,7 +630,7 @@ function setInnerAttendance(takes, idx) {
 			                                            	 	</td>
 			                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 			                                                	<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
-			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index}${status2.index}" onclick="setAttendanceModal(${i});" 
+			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>

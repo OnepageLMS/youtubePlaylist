@@ -109,10 +109,6 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		},
 		success : function(data) {
 			watch = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
-			//classContent = weekContents[videoIdx].id;
-			console.log("forVideoInfo? : " + watch[0].watched);
-			console.log("forVideoInfo? : " + watch[1]);
-			//console.log("forVideoInfo? : " + watch[2].watched);
 		},
 		error : function() {
 			alert("error");
@@ -201,7 +197,6 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 				var endDate = weekContents[i].endDate; //timestamp -> actural time
 		
 				classContentID = weekContents[i].id; // classContent의 id //여기 수정
-				console.log("classContentID : " +classContentID );
 				
 				//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
 				if(i == videoIdx){
@@ -340,7 +335,7 @@ function convertTotalLength(seconds){
 var n ;
 var playlistVideo;
 function showLecture(playlistID, id, idx){ //새로운 playlist를 선택했을 때 실행되는 함수
-	//console.log("id: " + id + " idx : " + idx);
+	console.log("id: " + id + " idx : " + idx);
 	
 	if(weekContents[idx-1].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
@@ -504,10 +499,10 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 				'url' : "${pageContext.request.contextPath}/student/class/changevideo",
 				'data' : {
 							lastTime : player.getCurrentTime(),
-							videoID : ori_videoID, // 원래 비디오 id
+							videoID : playlist[ori_index].id, // 원래 비디오 id
 							//classID : classID, //classID
-							playlistID :ori_playlistID,
-							classPlaylistID : ori_classContentID,
+							playlistID :playlist[0].playlistID,
+							classPlaylistID : classContent.id,
 							timer : 0
 				},
 				success : function(data){
@@ -734,7 +729,8 @@ function onPlayerStateChange(event) {
 			'data' : {
 						lastTime : player.getCurrentTime(), //lastTime에 영상의 마지막 시간을 넣어주기
 						//studentID : studentEmail, //studentID 그대로
-						videoID : playlist[ori_index].id, //videoID 그대로
+						videoID : ori_videoID,
+						//videoID : playlist[ori_index].id, //videoID 그대로
 						timer : 0, //timer도 업데이트를 위해 필요
 						watch : 1, //영상을 다 보았으니 시청여부는 1로(출석) 업데이트!
 						playlistID : playlist[0].playlistID,
@@ -785,6 +781,9 @@ function onPlayerStateChange(event) {
 				alert(" changewatch playlist 추가 실패! : ", err.responseText );
 				//console.log("실패했는데 watch : " + watch);
 				
+			},
+			complete : function(){
+				location.reload();
 			}
 		});
 		

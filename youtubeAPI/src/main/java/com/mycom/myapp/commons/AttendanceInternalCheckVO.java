@@ -4,6 +4,8 @@ public class AttendanceInternalCheckVO {
 	private int id;
 	private String internal;
 	private int classContentID;
+	private int classID;
+	private int days;
 	private int studentID;
 	public int getId() {
 		return id;
@@ -22,6 +24,18 @@ public class AttendanceInternalCheckVO {
 	}
 	public void setClassContentID(int classContentID) {
 		this.classContentID = classContentID;
+	}
+	public int getClassID() {
+		return classID;
+	}
+	public void setClassID(int classID) {
+		this.classID = classID;
+	}
+	public int getDays() {
+		return days;
+	}
+	public void setDays(int days) {
+		this.days = days;
 	}
 	public int getStudentID() {
 		return studentID;

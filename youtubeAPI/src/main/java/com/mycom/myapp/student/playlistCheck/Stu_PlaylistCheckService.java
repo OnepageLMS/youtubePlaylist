@@ -21,5 +21,7 @@ public interface Stu_PlaylistCheckService  {
 	
 	public List<Stu_PlaylistCheckVO> getCompletePlaylist(Stu_PlaylistCheckVO vo);
 	
+	public List<Stu_PlaylistCheckVO> getCompletePlaylistWithDays(Stu_PlaylistCheckVO vo);
+	
 	public List<Stu_PlaylistCheckVO> getAllPlaylist();
 }

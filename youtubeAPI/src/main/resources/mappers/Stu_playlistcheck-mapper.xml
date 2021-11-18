@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Stu_PlaylistCheck">
 	<insert id="insertPlaylist">
-		insert into lms_playlistCheck(studentID, playlistID, classContentID, classID, totalVideo, totalWatched, updateWatched)
+		insert into lms_playlistCheck(studentID, playlistID, classContentID, classID, days, totalVideo, totalWatched, updateWatched)
 		values
-		(#{studentID}, #{playlistID}, #{classContentID}, #{classID}, #{totalVideo}, #{totalWatched}, #{updateWatched})
+		(#{studentID}, #{playlistID}, #{classContentID}, #{classID}, #{days}, #{totalVideo}, #{totalWatched}, #{updateWatched})
 	</insert>
 	
 	<update id="updatePlaylist">
@@ -50,7 +50,13 @@
 	<select id="getCompletePlaylist" resultType="PlaylistCheckVO">
 		select * 
 		from lms_playlistCheck
-		where classID=#{classID} AND studentID = #{studentID}
+		where classID=#{classID} AND studentID = #{studentID} 
+	</select>
+	
+	<select id="getCompletePlaylistWithDays" resultType="PlaylistCheckVO">
+		select * 
+		from lms_playlistCheck
+		where classID=#{classID} AND studentID = #{studentID} AND days=#{days}
 	</select>
 	
 	<select id="getAllPlaylist" resultType="PlaylistCheckVO">
