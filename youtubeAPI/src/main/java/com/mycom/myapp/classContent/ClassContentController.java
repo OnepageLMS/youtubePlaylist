@@ -1,6 +1,10 @@
 package com.mycom.myapp.classContent;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -87,10 +91,7 @@ public class ClassContentController {
 
 	@RequestMapping(value = "/contentDetail/{id}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
 	public String contentDetail(@PathVariable("id") int id, @PathVariable("daySeq") int daySeq, Model model) {	//post로 변경하기
-		//int classID = Integer.parseInt(request.getParameter("classID"));
-		
-		//ClassContentVO vo = classContentService.getOneContent(id);
-		//model.addAttribute("vo", vo);
+		System.out.println("classID는 !!! : " + classID);
 		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
@@ -120,7 +121,7 @@ public class ClassContentController {
 	public List<ClassContentVO> forInstructorContentDetail(HttpServletRequest request, Model model) throws Exception {
 		
 		
-		return classContentService.getAllClassContent(Integer.parseInt(request.getParameter("classID")));
+		return classContentService.getAllClassContent(classID);
 	}
 	
 	@ResponseBody
@@ -128,7 +129,7 @@ public class ClassContentController {
 	public List<ClassContentVO> instructorAllContents(HttpServletRequest request, Model model) throws Exception {
 		
 		
-		return classContentService.getRealAll(Integer.parseInt(request.getParameter("classID")));
+		return classContentService.getRealAll(classID);
 	}
 	
 	@ResponseBody
@@ -170,7 +171,27 @@ public class ClassContentController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
-	public String addContentOK(@ModelAttribute ClassContentVO vo, Model model) {
+	public String addContentOK(@ModelAttribute ClassContentVO vo, Model model) throws ParseException {
+		//설정된시간이 지금이면,, published를 1로 설정하기
+		//설정된시간이 지금보다 나중이면 published를 0으로 설정하기 
+		Date now = new Date();
+		//System.out.println(vo.getStartDatee());
+		/*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-ddThh:mm:ss");
+		Date startDate = dateFormat.parse(vo.getStartDate());
+		System.out.println("now : " + now+ " , startDate : " + startDate);
+		if(startDate.equals(now)) {
+			vo.setPublished(1);
+		}
+		else 
+			vo.setPublished(0);*/
+	    // LocalDateTime localDateTime = LocalDateTime.from(formatDateTime.parse(vo.getStartDate()));
+		//Timestamp startDate = Timestamp.valueOf(localDateTime);
+		/*System.out.println("now : " + now+ " , startDate : " + vo.getStartDatee());
+		int result = vo.getStartDatee().compareTo(now); 
+		
+		if(result == 0) vo.setPublished(1);
+		else vo.setPublished(0);*/
+		
 		if(vo.getEndDate().equals("0000-00-00"))
 			vo.setEndDate(null);
 		if(vo.getPlaylistID() != 0) {
