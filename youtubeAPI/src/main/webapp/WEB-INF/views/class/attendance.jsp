@@ -336,33 +336,35 @@ function showAllStudentInfo(){
 			$('.studentList').empty();
 			var list = data.studentInfo;
 			console.log(list);
-			var updatedStudentList = '<p class="text-primary mt-3"> 허락 대기중인 학생 </p>';
+			var updatedStudentList = '<p class="text-primary mt-3"> 승인 대기중인 학생 </p>';
 			
 			$.each(list, function(index, value){
         			if(value.status == "pending"){
         				updatedStudentList +=
         				'<li class="list-group-item d-sm-inline-block" style="padding-top: 5px; padding-bottom: 30px">'
-        					+ '<div class="row">'
-        						+ '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
+        					+ '<div class="row align-items-center">'
+        						/* + '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
         							+ '<span onclick="deleteRequest( ' + value.studentID + ' ,1)">'
         							+ '<i class="pe-7s-close fa-lg" style="margin-right: 30px; cursor:pointer" > </i>'
         							+ '</span>'
-       							+ '</div>'
+       							+ '</div>' */
        							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
 	      								+ '<p class="col-sm-12 mb-0">' + value.name + ' </p>'
 	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
 	    							+ '</div>'
     							+ '</div>'
-    							+ '<div class="col-sm-4">'
+    							+ '<div class="col-sm-5">'
     							+ '<div class="row">'
-	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">신청일자  </p>'
+	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">신청일자  ' + value.regDate + '</p>'
 									<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
 									<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
-									+ '<p class="col-sm-12 mb-0" style="text-align:center">' + value.regDate + ' </p>'
+									/* + '<p class="col-sm-12 mb-0" style="text-align:center">' + value.regDate + ' </p>' */
 								+ '</div>'
 								+ '</div>' 
-    						+ '<div class="col-sm-2"><button class="btn btn-transition btn-primary" onclick="allowStudent('+ value.studentID + ');"> 추가 </button></div>'
+    						+ '<div class="col-sm-3"><button class="btn btn-transition btn-primary" onclick="allowStudent('+ value.studentID + ');"> 추가 </button>'
+    						+ '<button class="btn btn-danger btn-sm" onclick="deleteRequest( ' + value.studentID + ' ,1)">삭제</button>'
+    						+ '</div>'
     						+ '</div>'
     					+ '</li>';
         			}
@@ -373,10 +375,10 @@ function showAllStudentInfo(){
 			$.each(list, function(index, value){
 	    			if(value.status == "accepted"){
 	    				updatedStudentList +=
-	    				'<li class="list-group-item d-sm-inline-block" style="padding-top: 5px; padding-bottom: 30px">'
+	    				'<li class="list-group-item d-sm-inline-block" >'  // style="padding-top: 5px; padding-bottom: 30px"
 	    					+ '<div class="row">'
-	    						+ '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
-	   							+ '</div>'
+	    						/* + '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
+	   							+ '</div>' */
 	   							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
 	       								+ '<input type="hidden" id="studentID" value="${person.studentID }" />'
@@ -384,15 +386,14 @@ function showAllStudentInfo(){
 	       								+ '<p class="col-sm-12 mb-0">' + value.email + '</p>'
 	    							+ '</div>'
 								+ '</div>'
-								+ '<div class="col-sm-4">'
+								+ '<div class="col-sm-5">'
     							+ '<div class="row">'
-	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">등록일자  </p>'
+	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">등록일' + value.modDate + ' </p>'
 									<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
 									<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
-									+ '<p class="col-sm-12 mb-0" style="text-align:center">' + value.modDate + ' </p>'
 								+ '</div>'
 								+ '</div>'    
-							+ '<div class="col-sm-2"><button class="btn btn-transition btn-danger"> 삭제  </button></div>'
+							+ '<div class="col-sm-3"><button class="btn btn-transition btn-danger" onclick="deleteRequest( ' + value.studentID + ' ,1)"> 삭제  </button></div>'
 							+ '</div>'
 						+ '</li>';
 	    			}
