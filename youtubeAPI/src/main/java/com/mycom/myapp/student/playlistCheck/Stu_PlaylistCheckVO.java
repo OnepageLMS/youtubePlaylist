@@ -9,6 +9,7 @@ public class Stu_PlaylistCheckVO  {
 	private int playlistID;
 	private int classContentID;
 	private int classID;
+	private int days;
 	private int totalVideo;
 	private double totalWatched;
 	private String regdate;
@@ -45,6 +46,12 @@ public class Stu_PlaylistCheckVO  {
 	}
 	public void setClassID(int classID) {
 		this.classID = classID;
+	}
+	public int getDays() {
+		return days;
+	}
+	public void setDays(int days) {
+		this.days = days;
 	}
 	public int getTotalVideo() {
 		return totalVideo;

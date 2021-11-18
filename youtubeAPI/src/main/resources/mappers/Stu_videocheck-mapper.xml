@@ -3,9 +3,9 @@
 
 <mapper namespace="Stu_videoCheck">
 	<insert id="insertTime">
-		insert into lms_videoCheck (id, videoID, classID, playlistID, classContentID, studentID ,lastTime, timer, watched)
+		insert into lms_videoCheck (videoID, classID, playlistID, classContentID, studentID ,lastTime, timer, watched)
 		values
-		(#{id}, #{videoID},  #{classID}, #{playlistID}, #{classContentID}, #{studentID}, #{lastTime}, #{timer}, #{watched})
+		(#{videoID},  #{classID}, #{playlistID}, #{classContentID}, #{studentID}, #{lastTime}, #{timer}, #{watched})
 	</insert>
 	
 	<update id="updateTime">

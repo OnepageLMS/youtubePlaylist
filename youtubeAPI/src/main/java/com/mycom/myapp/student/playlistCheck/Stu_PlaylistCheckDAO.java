@@ -55,6 +55,10 @@ public class Stu_PlaylistCheckDAO {
 		return sqlSession.selectList("Stu_PlaylistCheck.getCompletePlaylist", vo);
 	}
 	
+	public List<Stu_PlaylistCheckVO> getCompletePlaylistWithDays(Stu_PlaylistCheckVO vo) {
+		return sqlSession.selectList("Stu_PlaylistCheck.getCompletePlaylistWithDays", vo);
+	}
+
 	public List<Stu_PlaylistCheckVO> getAllPlaylist() {
 		//System.out.println("dao!");
 		return sqlSession.selectList("Stu_PlaylistCheck.getAllPlaylist");

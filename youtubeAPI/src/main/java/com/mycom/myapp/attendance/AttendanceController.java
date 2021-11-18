@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +134,17 @@ public class AttendanceController {
 	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
 		
 		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
+	}	
+	
+	@ResponseBody
+	@RequestMapping(value = "/forDays", method = RequestMethod.POST)
+	public int forDays(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
+		int days = Integer.parseInt(request.getParameter("days"));
+		ClassContentVO ccvo = new ClassContentVO ();
+		ccvo.setClassID(classID);
+		ccvo.setDays(days);
+		System.out.println("days는 "+ days+ "이고, 해당 days는 " + classContentService.getDaySeq(ccvo)+ " 개 ");
+		return classContentService.getDaySeq(ccvo);
 	}	
 	
 	@ResponseBody
@@ -468,20 +484,62 @@ public class AttendanceController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/forInnerWatched", method = RequestMethod.POST)
-	public AttendanceInternalCheckVO forInnerWatched(HttpServletRequest request)  {
+	public int forInnerWatched(HttpServletRequest request)  {
+		//0,1 미확인 2출석 -1 결석 
 		int classContentID = Integer.parseInt(request.getParameter("classContentID"));
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
-		
 		System.out.println("studentID : " + studentID + " / classContentID : " + classContentID);
 		AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
 		aivo.setClassContentID(classContentID);
 		aivo.setStudentID(studentID);
 		
-		if(attendanceInCheckService.getAttendanceInCheck(aivo) != null)
-			return attendanceInCheckService.getAttendanceInCheck(aivo);
-		else {
-			return null; //insert를 해서 그에 대한 Id를 가져와보기 (파일 업로드없이 출결사항을 업데이트) 
+		if(attendanceInCheckService.getAttendanceInCheck(aivo) != null) {
+			System.out.println("뭐시여 ? " + classContentID + " " + attendanceInCheckService.getAttendanceInCheck(aivo).getInternal());
+			if(attendanceInCheckService.getAttendanceInCheck(aivo).getInternal().equals("출석")) {
+				System.out.println("== 하나는 출러ㅕㄱ이 되어야하는디 ...");
+				return 2;
+			}
+				
+			else if(attendanceInCheckService.getAttendanceInCheck(aivo).getInternal().equals("결석"))
+				return -1;
 		}
+			//return attendanceInCheckService.getAttendanceInCheck(aivo).getInternal();
+		else {
+			SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			Date now = new Date();
+
+			String endString = classContentService.getOneContent(classContentID).getEndDate(); //마감 시간
+			String nowString = format.format(now);
+			
+			Date endDate = null;
+			try {
+				endDate = format.parse(endString);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			Date currentDate = null;
+			try {
+				currentDate = format.parse(nowString);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			int result = endDate.compareTo(currentDate); 
+			
+			if(result == 0 || result == 1) {
+				//resultString = "미확인";
+				return result ;
+			}
+				
+			else //-1 
+			{
+				return result ;
+			}
+		}
+		
+		return 0;
 		
 	}
 	

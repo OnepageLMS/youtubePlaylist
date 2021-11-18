@@ -3,9 +3,9 @@
 <mapper namespace="AttendanceInternalCheck">
 	
 	<insert id="insertAttendanceInCheck">
-		insert into lms_attendanceInternalCheck(internal, classContentID, studentID)
+		insert into lms_attendanceInternalCheck(internal, classContentID, classID, days, studentID)
 		values
-		(#{internal}, #{classContentID}, #{studentID})
+		(#{internal}, #{classContentID}, #{classID}, #{days}, #{studentID})
 	</insert>
 	
 	<update id="updateAttendanceInCheck">

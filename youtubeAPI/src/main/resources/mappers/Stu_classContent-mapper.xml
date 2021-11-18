@@ -4,7 +4,7 @@
 	
 	<select id="getDaySeq" resultType="int">
 		select count(*) from lms_classContent
-		where classID=#{classID} and days=#{days}
+		where classID=#{classID} and days=#{days} AND published =1
 	</select>
 	
 	<select id="getOneContent" resultType="classContent">
