@@ -115,7 +115,7 @@ function getAllMyPlaylist(){
 			else{
 				$.each(playlists, function( index, value ){	
 					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' 
-												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
+												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '" playlistName="' + value.playlistName +'">'
 											+ value.playlistName 
 											+ '<span class="float-right"><i class="pe-7s-stopwatch"></i>' + convertTotalLength(value.totalVideoLength) + '</span>'
 										+ '</button>'
@@ -480,6 +480,28 @@ function submitDeletePlaylist(){
 	window.location.href='${pageContext.request.contextPath}/video/youtube';
 } */
 
+//tag로 playlist 및 영상 찾기:
+var playlistSearch = null;
+
+function searchPlaylist() {
+	console.log(playlistSearch);
+
+	if (playlistSearch != null) {
+		playlistSearch.forEach(function(element) {
+			//$("[tag*='"+ element + "']").css("background-color", "#d9edf7;"); 
+			$("[playlistName*='" + element + "']").css("background-color", "white");
+		});
+	}
+
+	playlistSearch = $("#playlistSearch").val();
+	playlistSearch = playlistSearch.replace(/ /g, '').split(",");
+
+	playlistSearch.forEach(function(element) {
+		//$("[tag*='"+ element + "']").css("background-color", "yellow");
+		$("[playlistname*='" + element + "']").css("background-color","#d9edf7;");
+	});
+}
+
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -511,9 +533,9 @@ function submitDeletePlaylist(){
 													<button type="button" tabindex="2" class="dropdown-item">태그</button>
 												</div>
 											</div>
-											<input placeholder="" type="text" class="form-control">
+											<input id="playlistSearch" placeholder="" type="text" class="form-control">
 											<div class="input-group-append">
-												<button class="btn btn-secondary">검색</button>
+												<button class="btn btn-secondary" onclick="searchPlaylist();">검색</button>
 											</div>
 										</div>
 										<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>
