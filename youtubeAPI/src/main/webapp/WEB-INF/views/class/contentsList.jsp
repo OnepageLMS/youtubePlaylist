@@ -409,7 +409,7 @@ $(document).ready(function(){
                             	+ '<div class="position-relative row col form-group d-flex align-items-center">'
                             		+ '<label class="col-sm-2 col-form-label">마감일</label>'
                                 	+ '<input type="hidden" name="endDate" id="endDate">'
-									+ '<input type="date" class="form-control col-sm-4" id="endDate">'
+									+ '<input type="date" class="form-control col-sm-4" id="setEndDate">'
 									+ '<input type="number" class="setTime end_h form-control col-sm-2 mr-1" value="0" min="0" max="23"> 시'
 									+ '<input type="number" class="setTime end_m form-control col-sm-2 ml-2 mr-1" value="0" min="0" max="59"> 분' 
                                 + '</div>'
@@ -492,15 +492,17 @@ $(document).ready(function(){
 		var startDate = date + "T" + stringFormat(hour) + ":" +stringFormat(min) + ":00";
 		$('#startDate').val(startDate);
         
-		var endDate = $('#endDate').val();
+		var endDate = $('#setEndDate').val();
+		
 		if(endDate != null && endDate != ''){
-			var e_date = $('#endDate').val();
+			var e_date = $('#setEndDate').val();
 	        var e_hour = $('.end_h').val();
 	        var e_min = $('.end_m').val();
 			endDate = e_date + "T" + stringFormat(e_hour) + ":" + stringFormat(e_min) + ":00";	
 		}
 		else {
 			endDate = "0000-00-00";
+			
 		}
 		$('#endDate').val(endDate);
 
@@ -509,7 +511,8 @@ $(document).ready(function(){
             alert("컨텐츠 마감일보다 게시일이 빨라야 합니다.");
 	        $('#startDate').focus();
             return false;
-        }*/
+        }
+        */
 
 		if($("#inputPlaylistID").val() == null || $("#inputPlaylistID").val() == ''){
 			$("#inputPlaylistID").val(0);
