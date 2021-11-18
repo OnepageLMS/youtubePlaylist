@@ -30,6 +30,12 @@
   background-color: #dbd7d7;
   min-width: 90px;
 }
+@media only screen and (min-width: 992px) {
+	.attendanceBox{
+		width: 100vh;
+	}
+}
+
 </style>
 
 <script>
@@ -145,7 +151,10 @@ $(document).ready(function(){
 				element.innerText = '';
 				//if(weekContents[i].days == weekContents[i+1].days){
 				//var ori_watchCount = watchCount;
-				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText =  Math.floor(watchCount/totalVideo*100) + "%";
+				var result;
+				if(watchCount == null || watchCount == '') result = '';
+				else result = Math.floor(watchCount/totalVideo*100) + "%";
+				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = result;
 			//}
 			
 				if(daysCount != 0){
@@ -560,10 +569,10 @@ function setInnerAttendance(takes, idx) {
                     </div>  
                     
                     <div class="row">
-                    	<div class="col-lg-12">
+                    	<div class="col-lg-12 attendanceBox" >
                          	<div class="main-card mb-3 card">
                                     <div class="card-body ">
-                                    	<div class="table-responsive">
+                                    	<div class="table-responsive" >
                                         <table class="mb-0 table table-striped table-bordered takes">
                                             <thead>   
 	                                            <tr>
@@ -646,7 +655,7 @@ function setInnerAttendance(takes, idx) {
 	                                            </c:if>
 	                                            <tr>
 	                                            	<td style="text-align:center" > 
-						                            	업로드 파일
+						                            	업로드한 파일
 		                                           </td>
 		                                           <c:forEach var="i" begin="0" end="${classInfo.days-1}" varStatus="status2">
 		                                           		<td id = "download${status2.index+1}" style="text-align:center" colspan=2> </td>
@@ -676,7 +685,7 @@ function setInnerAttendance(takes, idx) {
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="editContentModalLabel"> <span class="text-primary" style="font-weight: bold;">${classInfo.className}</span> - 구성원 관리</h5>
+					<h5 class="modal-title" id="editContentModalLabel"> <span class="text-primary">${classInfo.className}</span> - 구성원 관리</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">×</span>
@@ -686,7 +695,7 @@ function setInnerAttendance(takes, idx) {
 				<div class="modal-body">
 					<div class="card-body" style="overflow-y: auto; height: 600px;">
 						<div class="row align-items-center">
-							<div class="col-md-2 pr-0">
+							<div class="col-lg-2 pr-0">
 								<button id="modalSubmit" type="button"
 								class="btn-transition btn btn-outline-secondary" onclick="displayEntryCode();">초대링크 조회</button>
 							</div>
@@ -700,7 +709,7 @@ function setInnerAttendance(takes, idx) {
 						
 
 						<ul class="list-group studentList">
-							<p class="text-primary mt-3"> 허락 대기중 인원 </p>
+							<p class="text-primary mt-3 mb-1"> 승인 대기중인 인원 </p>
 							<c:forEach var="person" items="${studentInfo}" varStatus="status">
                             	<c:if test="${person.status == 'pending'}" >
                             		<li class="list-group-item d-sm-inline-block">
@@ -718,14 +727,14 @@ function setInnerAttendance(takes, idx) {
 													<p class="col-sm-12 mb-0">${person.email} </p>
 												</div>
 											</div>
-											<div class="col-sm-4">
+											<div class="col-sm-5">
 												<p class="mb-0">신청일 ${person.regDate}</p>
 												
 													<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
 													<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
 	
 											 </div> 
-											<div class="col-sm-2">
+											<div class="col-sm-3">
 												<button class="btn btn-primary btn-sm mr-1" onclick="allowStudent(${person.studentID});">등록</button>
 												<button class="btn btn-danger btn-sm" onclick="deleteRequest(${person.studentID}, 1);">삭제</button>
 											</div>
@@ -734,7 +743,7 @@ function setInnerAttendance(takes, idx) {
                             	</c:if>
 	                        </c:forEach>  							
 							
-							 <p class="text-primary mt-3"> 등록된 인원 </p>
+							 <p class="text-primary mt-3 mb-1"> 등록된 인원 </p>
 							 <c:forEach var="person" items="${studentInfo}" varStatus="status">
 							 	<c:if test="${person.status == 'accepted'}" >
 							 		<li class="list-group-item d-sm-inline-block"> 
@@ -746,10 +755,10 @@ function setInnerAttendance(takes, idx) {
 													<p class="col-sm-12 mb-0">${person.email} </p>
 												</div>
 											</div>
-											<div class="col-sm-4">
+											<div class="col-sm-5">
 												<p class="mb-0">등록일 ${person.modDate}</p>
 											 </div> 
-											<div class="col-sm-2">
+											<div class="col-sm-3">
 												<button class="btn btn-danger btn-sm" onclick="deleteRequest(${person.studentID}, 2)">삭제</button>
 											</div>
 										</div>

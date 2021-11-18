@@ -77,10 +77,6 @@ $(document).ready(function(){
 
 	getPlaylistInfo();
 	getAllVideo();
-	
-	
-	
-	
 });
 
 function getPlaylistInfo(){ 
@@ -149,6 +145,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 
 		    	if (value.id == defaultVideoID){ //처음으로 띄울 video player설정
 		    		$('.displayVideo').attr('videoID', value.id);
+		    		$('.displayVideo').attr('videoIdx', value.seq);
 			    	start_s = value.start_s;
 			    	end_s = value.end_s;
 			    	limit = value.maxLength;
@@ -158,7 +155,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 			    	videoTag = tag;
 			    	
 					setYouTubePlayer();
-			    	setDisplayVideoInfo(index); //player 제외 선택한 video 표시 설정
+			    	setDisplayVideoInfo(value.seq); //player 제외 선택한 video 표시 설정
 				
 					var addStyle = ' style="background-color:#F0F0F0; padding:5px;"';
 					console.log("check end_s ==> " + end_s);
@@ -187,9 +184,9 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 										+ '<div class="tag" tag="' + tag + '"></div>'
 									+ '</div>'
 									+ '<div class="col-lg-8 pr-0 d-flex row align-items-center">' 
-										+ '<h6 class="post-title list-group-item-heading">' + tmp_newTitle + '</h6>'
+										+ '<p class="mb-0 col-12 pr-0"><b>' + tmp_newTitle + '</b></p>'
 										+ '<div class="videoOriTitle" title="' + tmp_title + '"></div>'
-										+ '<p class="mb-0">' 
+										+ '<p class="mb-0 col-12 pr-0">' 
 											+ '<span class="mr-2">시작: ' + convertTotalLength(value.start_s) + '</span>'
 											+ '<span class="mr-2"> 끝: ' + convertTotalLength(value.end_s) + '</span>'
 											+ '<br><span>총 길이: ' + convertTotalLength(value.duration) + '</span>'
@@ -237,7 +234,7 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 	newTitle = childs[1].childNodes[0].innerText;
 	title = childs[1].childNodes[1].getAttribute('title');
 	videoTag = childs[0].childNodes[1].attributes[1].value;
-
+	$('.displayVideo').attr('videoidx', seq);
 	setDisplayVideoInfo(seq);
 	
 	player.loadVideoById({
@@ -259,8 +256,7 @@ function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설
 	$('#inputNewTitle').val(newTitle);
 
 	$('#inputTag').val(tag);
-
-	$('.numOfNow').text(Number(index)+1); //클릭한 video순서 상단에 표시
+	
 
 	/*	
 	var start_hh = Math.floor(start_s / 3600);
@@ -282,6 +278,9 @@ function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
 	$("#inputVideoID").val( tmp_videoID *= 1 );
+
+	var videoIdx = $('.displayVideo').attr('videoidx');
+	$('.numOfNow').text(Number(videoIdx)+1); //클릭한 video순서 상단에 표시
 	
 	if (videoTag != null && videoTag != ''){
 		$("#inputTag").val(videoTag);
@@ -405,7 +404,6 @@ function updateVideo(){ // video 정보 수정
 	event.preventDefault(); // avoid to execute the actual submit of the form. 
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
-	alert($('#inputVideoID').val());
 	var tmp_playlistID = $('#allVideo').attr('playlistID');
 
 	$('#inputPlaylistID').val(tmp_playlistID);

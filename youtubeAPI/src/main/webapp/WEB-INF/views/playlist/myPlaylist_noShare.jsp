@@ -175,7 +175,7 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 			if (result.description == null || result.description == '') description = "설명 없음";
 
 			if (tags != null && tags != ""){
-				tags = tags.split(" ");
+				tags = tags.split(", ");
 				if(tags.length > 1){
 		    		tags = "#" + tags.join(" #");
 				}
@@ -526,7 +526,7 @@ function submitDeletePlaylist(){
 								</div>
 							</div>
 			
-							<div class="selectedPlaylist col-md-8 col-lg-9 card" style="height: 80vh;">
+							<div class="selectedPlaylist col-md-8 col-lg-9 card">
 								<div class="card-body">
 									<div class="row">
 										<div class="col-7 card-title playlistName pr-0" style="text-align: left;">										

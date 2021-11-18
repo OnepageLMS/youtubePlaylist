@@ -239,34 +239,40 @@ public class ClassController {
 		
 		if(calendar != 0) {
 			List<CalendarVO> original = calendarService.getScheduleList(classID);
-			for (int i=0; i<original.size(); i++) {	
-				original.get(i).setClassID(newClassID);	//newClassID 로 설정
-				if(original.get(i).getAllday() == null) original.get(i).setAllday(0);
-			}	
-		
-			if(calendarService.insertCopiedCalendar(original) != 0)
-				System.out.println("class calendar 복사 완료!");
-			else {
-				System.out.println("class calendar 복사 실패!");
-				return 0;
+			
+			if (original.size() != 0) {
+				for (int i=0; i<original.size(); i++) {	
+					original.get(i).setClassID(newClassID);	//newClassID 로 설정
+					if(original.get(i).getAllday() == null) original.get(i).setAllday(0);
+				}	
+				if(calendarService.insertCopiedCalendar(original) != 0)
+					System.out.println("class calendar 복사 완료!");
+				else {
+					System.out.println("class calendar 복사 실패!");
+					return 0;
+				}
 			}
+			
 		}
 		
 		// lms_classContent에 기존 classID의 내용 가져오기
 			// days, daySeq, title, description, playlistID만 가져오기
 		if(content != 0) {
 			List<ClassContentVO> original = classContentService.getAllClassContentForCopy(classID);
-			for (int i=0; i<original.size(); i++) {	
-				original.get(i).setClassID(newClassID);
-				//if(original.get(i).getPublished() == null) original.get(i).setAllday(0);
-			}	
-		
-			if(classContentService.insertCopiedClassContents(original) != 0)
-				System.out.println("class contents 복사 완료!");
-			else {
-				System.out.println("class contents 복사 실패!");
-				return 0;
+			if(original.size() != 0) {
+				for (int i=0; i<original.size(); i++) {	
+					original.get(i).setClassID(newClassID);
+					//if(original.get(i).getPublished() == null) original.get(i).setAllday(0);
+				}	
+			
+				if(classContentService.insertCopiedClassContents(original) != 0)
+					System.out.println("class contents 복사 완료!");
+				else {
+					System.out.println("class contents 복사 실패!");
+					return 0;
+				}
 			}
+			
 		}
 		
 		return 1;

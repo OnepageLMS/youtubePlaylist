@@ -69,7 +69,7 @@ public class LoginController {
 	private String clientSecret;
 	
 	private String loginMode = "";
-	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
+	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback ";
 	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 	
 	private String entryCode = null;
