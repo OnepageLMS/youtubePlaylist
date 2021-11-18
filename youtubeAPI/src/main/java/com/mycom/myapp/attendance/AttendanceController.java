@@ -120,10 +120,15 @@ public class AttendanceController {
 				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				
 			}
+			System.out.println("isFileListEmpty?? " + fileList.isEmpty());
 			file.add(fileList);
 		}
 		
 		model.addAttribute("file", file);
+		System.out.println("file.size " + file.size());
+		System.out.println("file.get(0)" + file.get(0));
+		
+		System.out.println("isEmpty ? " + file.isEmpty());
 		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(classID));
 		//System.out.println("classID" + classID + "fileNum " + attendanceCheckService.getAttendanceCheckListCount(classID));
 		return "class/attendance";
@@ -492,7 +497,7 @@ public class AttendanceController {
 		AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
 		aivo.setClassContentID(classContentID);
 		aivo.setStudentID(studentID);
-		
+		//마감시간이 지정되지 않은 경우도 생각해줘야함 
 		if(attendanceInCheckService.getAttendanceInCheck(aivo) != null) {
 			System.out.println("뭐시여 ? " + classContentID + " " + attendanceInCheckService.getAttendanceInCheck(aivo).getInternal());
 			if(attendanceInCheckService.getAttendanceInCheck(aivo).getInternal().equals("출석")) {
@@ -504,12 +509,16 @@ public class AttendanceController {
 				return -1;
 		}
 			//return attendanceInCheckService.getAttendanceInCheck(aivo).getInternal();
-		else {
+		else { 
 			SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
 			//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			Date now = new Date();
-
+			
+			
 			String endString = classContentService.getOneContent(classContentID).getEndDate(); //마감 시간
+			if(endString == null) 
+				return 0; //마감시간이 설정되어있지 않는 경우에는 미확인으로 표기하기 
+			
 			String nowString = format.format(now);
 			
 			Date endDate = null;
