@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -140,7 +141,7 @@ $(document).ready(function(){
 			
 			if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
 				//alert("성공이다 ");
-				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0]; //j = 0, i = 3 
+				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0];
 				//console.log(element);
 				element.innerText = '';
 				//if(weekContents[i].days == weekContents[i+1].days){
@@ -599,7 +600,7 @@ function setInnerAttendance(takes, idx) {
 			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].name} <br>${takes[status.index].email}</th>
 			                                            </tr>
 														<tr>
-			                                             	<c:if test="${!empty file}">
+			                                             	<c:if test="${fn:length(file) > 1}">
 				                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 				                                            	 	<td style="text-align:center" > 
 								                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
