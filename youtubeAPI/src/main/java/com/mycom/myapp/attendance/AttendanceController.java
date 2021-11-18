@@ -106,6 +106,8 @@ public class AttendanceController {
 		for(int i=0; i<id.size(); i++) { 
 			List<String> fileList = new ArrayList<String>();
 			int attendanceID = id.get(i).getId(); // 7, 8, 9, 10
+			if(attendanceService.getAttendance(attendanceID).getFileName() == null) 
+				continue; 
 			//System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(classID).size());
 			List<AttendanceCheckVO> takes = attendanceCheckService.getAttendanceCheckList(attendanceID); 
 			//System.out.println(takes.size());
@@ -118,18 +120,18 @@ public class AttendanceController {
 			if(attendanceCheckService.getAttendanceCheckList(attendanceID).size() != 0 || attendanceCheckService.getAttendanceCheckList(attendanceID).get(j) != null)
 				//System.out.println("attendanceID" + attendanceID+ " j : " + j + " external : " + attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
-				
+				//System.out.println(fileList.get(i));
 			}
-			System.out.println("isFileListEmpty?? " + fileList.isEmpty());
 			file.add(fileList);
 		}
-		
+		System.out.println("file size :" + file.size());
 		model.addAttribute("file", file);
-		System.out.println("file.size " + file.size());
-		System.out.println("file.get(0)" + file.get(0));
 		
-		System.out.println("isEmpty ? " + file.isEmpty());
-		model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(classID));
+		if(file.size() == 0)
+			model.addAttribute("fileNum",file.size());
+		else
+			model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(classID));
+		//model.addAttribute("fileNum",  file.size());
 		//System.out.println("classID" + classID + "fileNum " + attendanceCheckService.getAttendanceCheckListCount(classID));
 		return "class/attendance";
 	}	
@@ -148,7 +150,7 @@ public class AttendanceController {
 		ClassContentVO ccvo = new ClassContentVO ();
 		ccvo.setClassID(classID);
 		ccvo.setDays(days);
-		System.out.println("days는 "+ days+ "이고, 해당 days는 " + classContentService.getDaySeq(ccvo)+ " 개 ");
+		//System.out.println("days는 "+ days+ "이고, 해당 days는 " + classContentService.getDaySeq(ccvo)+ " 개 ");
 		return classContentService.getDaySeq(ccvo);
 	}	
 	
@@ -178,7 +180,7 @@ public class AttendanceController {
 	public List<List<String>> uploadCSV(MultipartHttpServletRequest request, Model model) throws Exception {
 		//업로드된 파일에서 리스트 뽑은거랑, takes테이블에서 학생이름 가져오기
 		//데이터는 함수를 또 만들어서 넘겨주기 
-		System.out.println("!!!");
+		//System.out.println("!!!");
 		MultipartFile file = request.getFile("file");
 		
 		int start_h = Integer.parseInt(request.getParameter("start_h"));
@@ -191,7 +193,7 @@ public class AttendanceController {
 		
 		UUID uuid = UUID.randomUUID();
 		String saveName = uuid + "_" + file.getOriginalFilename();
-		System.out.println("saveName : " + saveName);
+		//System.out.println("saveName : " + saveName);
 
 		List<List<String>> csvList = new ArrayList<List<String>>();
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/csv/"); //이런식으로 경로지정을 하는건지 ?? 
@@ -215,7 +217,7 @@ public class AttendanceController {
 		avo.setClassID(classID);
 		avo.setDays(days);
 		avo.setFileName(saveName);
-		System.out.println("classID : " + classID + " days :" + days + " saveName : " + saveName);
+		//System.out.println("classID : " + classID + " days :" + days + " saveName : " + saveName);
 		//System.out.println(attendanceService.getAttendanceList(classID));
 		if(attendanceService.getAttendanceID(avo) != null) { //이미 해당 날짜에 대한 파일이 업로드되어있으면 업데이트 
 			System.out.println("already updated!");
@@ -444,7 +446,7 @@ public class AttendanceController {
 		
 		int classContentID = classInsContentService.getClassContentID(ccvo).getId();
 		
-		System.out.println("classContentID " + classContentID);
+		//System.out.println("classContentID " + classContentID);
 
 		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
 		
@@ -493,7 +495,7 @@ public class AttendanceController {
 		//0,1 미확인 2출석 -1 결석 
 		int classContentID = Integer.parseInt(request.getParameter("classContentID"));
 		int studentID = Integer.parseInt(request.getParameter("studentID"));
-		System.out.println("studentID : " + studentID + " / classContentID : " + classContentID);
+		//System.out.println("studentID : " + studentID + " / classContentID : " + classContentID);
 		AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
 		aivo.setClassContentID(classContentID);
 		aivo.setStudentID(studentID);

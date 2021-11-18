@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ClassContent">
 	<insert id="insertContent">
-		insert into lms_classContent (title, description, classID, playlistID, days, daySeq, startDate, endDate)
-		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}, #{startDate}, #{endDate})
+		insert into lms_classContent (title, description, classID, playlistID, days, daySeq, published, startDate, endDate)
+		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}+1, #{published}, #{startDate}, #{endDate})
 	</insert>
 	
-	<insert id="insertURLContent">	<!-- playlist있는 강의컨텐츠 -->
-		insert into lms_classContent (title, description, classID, days, daySeq, startDate, endDate)
-		values (#{title}, #{description}, #{classID}, #{days}, #{daySeq}+1, #{startDate}, #{endDate})
+	<insert id="insertURLContent">	<!-- playlist없는 강의컨텐츠 -->
+		insert into lms_classContent (title, description, classID, days, daySeq, published, startDate, endDate)
+		values (#{title}, #{description}, #{classID}, #{days}, #{daySeq}+1, #{published}, #{startDate}, #{endDate})
 	</insert>
 	
 	<select id="getDaySeq" resultType="int">
@@ -62,7 +62,7 @@
 	</select>
 	
 	<select id="getAllClassContent" resultType="classContent">
-		select * from lms_classContent join lms_playlist on lms_classContent.playlistID = lms_playlist.id
+		select * from lms_classContent left join lms_playlist on lms_classContent.playlistID = lms_playlist.id
 		where classID=#{classID} order by days, daySeq
 	</select>
 	

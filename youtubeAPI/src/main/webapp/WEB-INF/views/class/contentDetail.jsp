@@ -39,7 +39,7 @@
 
 <script>
 //var classPlaylistID = 0;
-var classID =  1;
+//var classID =  1;
 //var playlistSameCheck = ${playlistSameCheck};
 var ori_index =0;
 //var classPlaylistID = ${classPlaylistID};
@@ -47,16 +47,13 @@ var classContentID = 1;
 var information;
 var videoIdx;
 var playlist; 
-var ccID = ${id};
+//var ccID = ${id};
 
 $(document).ready(function(){
 	$.ajax({ 
 		  url : "${pageContext.request.contextPath}/class/forInstructorContentDetail",
 		  type : "post",
 		  async : false,
-		  data : {	
-			 classID : classID //현재 class의 id를 보낸다.
-		  },
 		  dataType : "json",
 		  success : function(data) {
 			weekContents = data;
@@ -68,13 +65,10 @@ $(document).ready(function(){
 		  }
 	});
 	
-	$.ajax({ 
+	/*$.ajax({ 
 		  url : "${pageContext.request.contextPath}/class/instructorAllContents",
 		  type : "post",
 		  async : false,
-		  data : {	
-			 classID : classID //현재 class의 id를 보낸다.
-		  },
 		  dataType : "json",
 		  success : function(data) {
 			allContents = data;
@@ -83,27 +77,7 @@ $(document).ready(function(){
 		  error : function() {
 		  	alert("error1");
 		  }
-	});
-	
-	if(allContents[videoIdx].playlistID != 0){
-		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-			  url : "${pageContext.request.contextPath}/class/forVideoInformation",
-			  type : "post",
-			  async : false,
-			  data : {	
-				  playlistID : allContents[videoIdx].playlistID
-				 //playlistID : playlistSameCheck[0].playlistID //contentsList에서 선택한 주차의 첫번째 영상 보여주기
-			  },
-			  success : function(data) {
-				 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
-				 playlist_length = Object.keys(playlist).length;
-				 console.log("성공이다 이놈" + playlist);
-			  },
-			  error : function() {
-			  	alert("error2");
-			  }
-		});
-	}
+	});*/
 	
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
 		url : "${pageContext.request.contextPath}/class/changeID",
@@ -113,34 +87,34 @@ $(document).ready(function(){
 			id: ${id}
 		},
 		success : function(data) {
-			console.log("id : " + ${id});
-			console.log(data.title);
 			var element = document.getElementById("contentsTitle");
 			element.innerText = data.title;
 			var elementD = document.getElementById("contentsDescription");
 			elementD.innerText = data.description;
+			
+			$('#editContentName').val(data.title);
+			$('#editContentDescription').val(data.description);
+			$('#endDate').val(data.endDate);
 		},
 		error : function() {
 			alert("error");
 		}
 	});
 	
-	//var weekContents = JSON.parse('${allContents}'); //이게 하나의 playlist에 대한 정보들만 가지고 있음
-	//console.log(weekContents);
 	var urlContent='';
-	for(var i=0; i<allContents.length; i++){
+	for(var i=0; i<weekContents.length; i++){
 		var symbol;
 		
 		
-		if(allContents[i].playlistID == 0){
-			console.log("playlistID없음 ");
+		if(weekContents[i].playlistID == 0){
+			
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
 			if(videoIdx == i) {
 				document.getElementById("onepageLMS").style.display = "none";
 			}
 			
-			var day = allContents[i].days;
-			var endDate = allContents[i].endDate; //timestamp -> actural time
+			var day = weekContents[i].days;
+			var endDate = weekContents[i].endDate; //timestamp -> actural time
 			
 			//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
 			if(i == videoIdx){
@@ -156,16 +130,16 @@ $(document).ready(function(){
 			
 			var content = $('.day:eq(' + day + ')');
 			content.append("<div id=\'heading" +(i+1)+ "\'>"
-				               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
-								+ allContents[i].playlistID + ','   + allContents[i].id + ',' + classID + ',' + (i+1) +')"'
+				               + '<button type="button" onclick="showLecture(' 
+								+ weekContents[i].playlistID + ','   + weekContents[i].id + ',' + weekContents[i].classID + ',' + (i+1) +')"'
 				 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-					               + "<div class='content card align-items-center list-group-item' seq='" + allContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
+					               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[i].daySeq + "' style='padding: 10px 0px 0px;' >"
 									+ '<div class="row col d-flex align-items-center">'
 										+ "<div class='index col-1 col-sm-1'>" + symbol + "</div>"
 											
 										+ "<div class='' style='cursor: pointer;'>"
 											+ "<div class='col card-title'>"
-												+ allContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
+												+ weekContents[i].title // + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
 											+ '</div>'
 											+ '<div class="col">'
 												+ '<div class="contentInfoBorder"></div>'
@@ -197,60 +171,77 @@ $(document).ready(function(){
 		}
 		
 		else{
+			console.log("playlistID 0 아니니까!");
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-			//document.getElementById("onepageLMS").style.display = "";
-			for(var k=0; k<weekContents.length; k++){
 			
 			
-			if(allContents[i].playlistID == weekContents[k].playlistID){
+			//if(allContents[i].playlistID == weekContents[k].playlistID){
 				
-				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[k].thumbnailID + '/1.jpg">';
-				var day = weekContents[k].days;
-				var endDate = weekContents[k].endDate; //timestamp -> actural time
+			var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
+			var day = weekContents[i].days;
+			var endDate = weekContents[i].endDate; //timestamp -> actural time
 		
-				classContentID = weekContents[k].id; // classContent의 id //여기 수정
+			//classContentID = weekContents[i].id; // classContent의 id //여기 수정
 				
 				
-				//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
-				if(i == videoIdx){
-					var area_expanded = true;
-					var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
-					var showing = 'class="collapse show"';
-				}
-				else{
-					var area_expanded = false;
-					var area_labelledby = '';
-					var showing = 'class="collapse"';
-				}
-				
-			
+			//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
+			if(i == videoIdx){
+				var area_expanded = true;
+				var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
+				var showing = 'class="collapse show"';
+			}
+			else{
+				var area_expanded = false;
+				var area_labelledby = '';
+				var showing = 'class="collapse"';
+			}
+							
 			var innerText ='';
 			
-			if(allContents[videoIdx].playlistID != 0){
-				for(var j=0; j<playlist.length; j++){ //classcontent내에 들어있는 비디오 개수
+			$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+				  url : "${pageContext.request.contextPath}/class/forVideoInformation",
+				  type : "post",
+				  async : false,
+				  data : {	
+					  playlistID : weekContents[videoIdx].playlistID
+				  },
+				  success : function(data) {
+					 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
+					 //playlist_length = Object.keys(playlist).length;
+				  },
+				  error : function() {
+				  	alert("error2");
+				  }
+			});
+			
+			//if(allContents[videoIdx].playlistID != 0){
+			for(var j=0; j<playlist.length; j++){ //classcontent내에 들어있는 비디오 개수
 					
-					var newTitle = playlist[j].newTitle;
-					var title = playlist[j].title;
+				var newTitle = playlist[j].newTitle;
+				var title = playlist[j].title;
 						
-					if (playlist[j].newTitle == null){
-						playlist[j].newTitle = playlist[j].title;
-						playlist[j].title = '';
-				    }
+				if (playlist[j].newTitle == null){
+					playlist[j].newTitle = playlist[j].title;
+					playlist[j].title = '';
+				}
 					
-					if ((playlist[j].newTitle).length > 30){
-						playlist[j].newTitle = (playlist[j].newTitle).substring(0, 30) + " ..."; 
-					}
+				if ((playlist[j].newTitle).length > 30){
+					playlist[j].newTitle = (playlist[j].newTitle).substring(0, 30) + " ..."; 
+				}
 						
-					var completed ='';
-					if(playlist[j].watched == 1 && playlist[j].classContentID == classContentID){
-						completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
-					}
+				var completed ='';
+				if(playlist[j].watched == 1 && playlist[j].classContentID == weekContents[i].id){
+					completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
+				}
 						
 						
-					var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
-						
-					innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
-									+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' 
+				var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
+				var background = '';
+				/*if(j == 0) {
+					background = 'style="background-color :  #F0F0F0 "';
+				}*/
+				innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
+									+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" '+background+'>' 
 										+ '<div class="post-thumbnail col-5"> ' 
 											+ thumbnail 
 											+ '<div class="col-12 p-1" style="text-align : center">'+  convertTotalLength(playlist[j].duration) +'</div>' 
@@ -268,22 +259,23 @@ $(document).ready(function(){
 						
 								
 						//ori_videoID = playlist[0].id;
-				}
 			}
+			//}
 			
 			
 			var content = $('.day:eq(' + day + ')');
+			//alert("i : " + i);
 			content.append("<div id=\'heading" +(i+1)+ "\'>"
 		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
-						+ weekContents[k].playlistID + ','   + weekContents[k].id + ',' + classID + ',' + (i+1) +')"'
+						+ weekContents[i].playlistID + ','   + weekContents[i].id + ',' + weekContents[i].classID + ',' + (i+1) +')"'
 		 				+ 'data-toggle="collapse" data-target="#collapse' +(i+1)+ '" aria-expanded='+ area_expanded+' aria-controls="collapse0' +(i+1)+ '"class="text-left m-0 p-0 btn btn-link btn-block">'
-			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[k].daySeq + "'>"
+			               + "<div class='content card align-items-center list-group-item' seq='" + weekContents[i].daySeq + "'>"
 							+ '<div class="row d-flex align-items-center">'
 								+ '<div class="index col-sm-1 ">' + symbol + '</div>'
 									
 								+ "<div class='col-sm-11' style='cursor: pointer;'>"
 									+ "<div class='card-title'>"
-										+ weekContents[k].title  + '  [' + convertTotalLength(weekContents[k].totalVideoLength) + ']' 
+										+ weekContents[i].title  + '  [' + convertTotalLength(weekContents[i].totalVideoLength) + ']' 
 									+ '</div>'
 									+ '<div class="">'
 										+ '<div class="contentInfoBorder"></div>'
@@ -303,7 +295,7 @@ $(document).ready(function(){
 								+ '<div id="classTitle"></div>'
 								+ '<div id="classDescription"> </div>'
 								+ '<div id="total_runningtime"></div>'
-								+ '<div id="get_view'+ (i+1) +'">'
+								+ '<div id="get_view'+ (i+1) +'" >'
 									
 									+ innerText
 													
@@ -313,12 +305,33 @@ $(document).ready(function(){
 					       	+'</div>'
 						+ '</div>'
 	  			+ '</div>');
-			}
-			}
+			//}
+			//}
 		}
 	}
 		
 });
+
+/*function editClassroomFn(){
+	//classID, days, daySeq	다필요 
+	ajax({ 
+		  url : "${pageContext.request.contextPath}/class/forEditContents",
+		  type : "post",
+		  async : false,
+		  dataType : "json",
+		  success : function(data) {
+				var days = data.days;
+				var closeDate = data.closeDate;
+					
+				$('#editContentName').val(data.className);
+				$('#editContentDescription').val(data.description);
+				$('#endDate').val(closeDate);
+		  },
+		  error : function() {
+		  	alert("error1");
+		  }
+	});
+}*/
 
 function convertTotalLength(seconds){
 	var seconds_hh = Math.floor(seconds / 3600);
@@ -337,7 +350,7 @@ var n ;
 var playlistVideo;
 function showLecture(playlistID, id, classInfo, idx){
 
-	if(allContents[idx-1].playlistID != 0)
+	if(weekContents[idx-1].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
 		document.getElementById("onepageLMS").style.display = "none";
@@ -380,6 +393,10 @@ function showLecture(playlistID, id, classInfo, idx){
 				element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
 				var elementD = document.getElementById("contentsDescription");
 				elementD.innerText = data.description;
+				
+				$('#editContentName').val(data.title);
+				$('#editContentDescription').val(data.description);
+				$('#endDate').val(data.endDate);
 			  },
 			  error : function() {
 			  	alert("error");
@@ -434,7 +451,7 @@ function showLecture(playlistID, id, classInfo, idx){
 }*/
 
 function myThumbnail(classContentID, idx){
-	if(allContents[idx-1].playlistID == 0) return;
+	if(weekContents[idx-1].playlistID == 0) return;
 	var className = '#get_view' + idx;
 	$(className).empty();
 	
@@ -487,11 +504,11 @@ function myThumbnail(classContentID, idx){
 	
 }
 
-var visited = 0;
+var visited ;
 function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선택한 비디오 아이디를 가지고 플레이어 띄우기
 	
 
-	if(allContents[seq].playlistID != 0)
+	if(weekContents[seq].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
 		document.getElementById("onepageLMS").style.display = "none";
@@ -502,18 +519,22 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 		flag = 0;
 		time = 0;
 		
-		if(visited == 0){
-			item.style.background = "#F0F0F0";
+		if(visited){
+			visited.style.background = "transparent";
+			console.log(document.getElementsByClassName('video') + " ?????");
+			document.getElementsByClassName('video')[0].style.background = "transparent";
+			//item.style.background = "#F0F0F0";
 		}
-		else if(visited == 1){
-			ori_item.style.background = "transparent";
+		//else{
 			item.style.background = "#F0F0F0";
-		}
+		//}
 		
 		player.loadVideoById({'videoId': videoID,
              'startSeconds': startTime,
              'endSeconds': endTime,
              'suggestedQuality': 'default'})
+             
+       visited = item;  
              
 	}
 
@@ -522,6 +543,7 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 	}
 	
 }
+
 
 //youtube 영상 띄울것입니다.
 var tag = document.createElement('script');
@@ -534,11 +556,12 @@ var player;
 function onYouTubeIframeAPIReady() { 
 	//var playerID = 'onepageLMS' + n;
 	
-	if(allContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
+	if(weekContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
 		videoId =  weekContents[0].thumbnailID;
 	else //영상을 클릭했을 때
-		videoId = weekContents[videoIdx].thumbnailID;
-		
+		videoId = weekContents[videoIdx].thumbnailID;	
+	
+	
 	player = new YT.Player('onepageLMS', {
 	       height: '480',            // <iframe> 태그 지정시 필요없음
 	       width: '854',             // <iframe> 태그 지정시 필요없음
@@ -556,15 +579,37 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) { 
 	//이거는 플레이리스트의 첫번째 영상이 실행되면서 진행되는 코드 (영상클릭없이 페이지 딱 처음 로딩되었을 )
-  console.log('onPlayerReady 실행');
-
-  console.log('onPlayerReady 마감');
+	console.log('onPlayerReady 실행');
+	
+	$.ajax({
+		'type' : "post",
+		'url' : "${pageContext.request.contextPath}/student/class/videocheck",
+		'data' : {
+			videoID : playlist[0].id //현재 재생중인 (플레이리스트 첫번째 영상의 ) id
+		},
+		success : function(data){
+			
+			player.loadVideoById({'videoId' : weekContents[videoIdx].thumbnailID,
+				 'startSeconds' : playlist[0].start_s,
+				 'endSeconds' : playlist[0].end_s,
+				 'suggestedQuality': 'default'})
+			
+			//player.playVideo();
+	        player.pauseVideo();
+			
+		}, 
+		error : function(err){
+			alert(" onPlayerReady error! ");
+		}
+	});
+	
+  	console.log('onPlayerReady 마감');
   
 }
 
 function submitContent(){
 	var endDate = ($("#endDate").val() + " " + ("00"+$("#endDate_h").val()).slice(-2) + ":" + ("00"+$("#endDate_m").val()).slice(-2) + ":00") ;
-	console.log("endDate : " + endDate+ " id: " +ccID);
+	//console.log("endDate : " + endDate+ " id: " +ccID);
 	$.ajax({ 
 		  url : "../../updateClassContents",
 		  type : "post",
@@ -573,7 +618,7 @@ function submitContent(){
 			className : $("#editContentName").val(),
 			classDescription : $("#editContentDescription").val(),
 			endDate : endDate,
-			classContentID : ccID
+			classContentID : weekContents[videoIdx].id //영상이 바뀔 때 이것도 잘 바뀌는지 ,, 
 		  },
 		  dataType : "json",
 		  success : function(data) {
@@ -688,35 +733,41 @@ function deleteContent(){
 	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
-	            <div class="modal-body">
-	               <div class="position-relative form-group">
-	               		<label for="editContentName" class="">이름</label>
-	               		<input name="contentName" id="editContentName" type="text" class="form-control">
-	               </div>
-	               <div class="position-relative form-group">
-	               		<label for="editContentDescription" class="">설명</label>
-	               		<textarea name="contentDescription" id="editContentDescription" class="form-control"></textarea>
-	               </div>
-	               <div class="position-relative form-group">
-	               		<!--  <label for="editContentDuedate" class="">마감일</label>
-	               		<textarea name="contentDuedate" id="editContentDuedate" class="form-control"></textarea>-->
-	               		
-	               		<div class="setEndDate input-group">
-							<div class="input-group-prepend">
-								<label for="endDate" class="input-group-text"> 마감일: </label>
+	            
+	            <form class="needs-validation" id="formEditClassContents" method="post" onsubmit="return false;" novalidate>
+		            <input id="setClassID" name="id" type="hidden" value="">
+		            <div class="modal-body">
+		               <div class="position-relative form-group">
+		               		<label for="editContentName" class="">이름</label>
+		               		<input name="contentName" id="editContentName" type="text" class="form-control">
+		               		<div class="invalid-feedback">강의실 이름을 다시 입력해주세요</div>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<label for="editContentDescription" class="">설명</label>
+		               		<textarea name="contentDescription" id="editContentDescription" class="form-control"></textarea>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<!--  <label for="editContentDuedate" class="">마감일</label>
+		               		<textarea name="contentDuedate" id="editContentDuedate" class="form-control"></textarea>-->
+		               		
+		               		<div class="setEndDate input-group">
+								<div class="input-group-prepend">
+									<label for="endDate" class="input-group-text"> 마감일: </label>
+									<div class="invalid-feedback">마감일 다시 설정해주세요</div>
+								</div>
+								<input type="hidden" name="endDate">
+								<input type="date" class="form-control col-sm-8" id="endDate">
+								<input type="number" class="setTime end_h form-control col-sm-2" id="endDate_h" value="0" min="0" max="23">
+								<input type="number" class="setTime end_m form-control col-sm-2" id="endDate_m" value="0" min="0" max="59"> 
 							</div>
-							<input type="hidden" name="endDate">
-							<input type="date" class="form-control col-sm-8" id="endDate">
-							<input type="number" class="setTime end_h form-control col-sm-2" id="endDate_h" value="0" min="0" max="23">
-							<input type="number" class="setTime end_m form-control col-sm-2" id="endDate_m" value="0" min="0" max="59"> 
-						</div>
-	               </div>
-	            </div>
-	            <div class="modal-footer">
-	            	<div style="float: left;"><button class="btn btn-danger" onclick="deleteContent()">페이지 삭제</button></div>
-	                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	                <button id="modalSubmit" type="button" class="btn btn-primary" onclick="submitContent()">수정완료</button>
-	            </div>
+		               </div>
+		            </div>
+		            <div class="modal-footer">
+		            	<div style="float: left;"><button class="btn btn-danger" onclick="deleteContent()">페이지 삭제</button></div>
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+		                <button id="modalSubmit" type="button" class="btn btn-primary" onclick="submitContent()">수정완료</button>
+		            </div>
+	        	</form>
 	        </div>
 	    </div>
 	</div>

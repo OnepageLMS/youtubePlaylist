@@ -168,10 +168,11 @@ $(document).ready(function(){
 				}
 				
 				else if(totalVideo == 0){
-					element.innerHTML += '';
+					
+					element.innerHTML += "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
 				}
 				else{
-					element.innerHTML += '';
+					element.innerHTML += 'ㅎ';
 				}
 			
 			
