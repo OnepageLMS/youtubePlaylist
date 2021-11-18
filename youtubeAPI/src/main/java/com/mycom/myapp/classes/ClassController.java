@@ -222,7 +222,7 @@ public class ClassController {
 			@RequestParam(value = "id") int classID,
 			@RequestParam(value = "calendar") int calendar,
 			@RequestParam(value = "content") int content
-			) {	//종료날짜?! 에러난다!!!
+			) {	
 		
 		ClassesVO vo = classService.getClassInfoForCopy(classID);	//Copy할 기존 강의실 데이터 가져오기
 		String name = vo.getClassName() + "-1";
