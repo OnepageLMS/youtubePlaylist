@@ -381,7 +381,7 @@ $(document).ready(function(){
 						+ '</div>' 
 						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete">'
-								+ '<div class="setTimeRange input-group col mb-3">'
+								+ '<div class="setTimeRange input-group col d-flex justify-content-between align-items-center mb-3">'
 									+ '<div class="col-2 input-group-prepend pl-0">'
 										+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>'
 									+ '</div>'
