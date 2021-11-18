@@ -820,74 +820,75 @@ function setInnerAttendance(takes, idx) {
 	
         
 	<!-- upload LMS attendance modal -->
-	<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status"> 
-		<c:forEach var="j" begin="0" end="${classInfo.days-1}" varStatus="status2">
-		    <div class="modal fade" id="editInnerAttendance${status.index+1}${status2.index+1}" tabindex="-1" role="dialog" aria-labelledby="editInnerAttendance${status.index+1}${status2.index+1}" aria-hidden="true" style="display: none;">
-			    <div class="modal-dialog modal-sm" role="document">
-			        <div class="modal-content">
-			            <div class="modal-header">
-			                <h5 class="modal-title" id="editInnerAttendanceLabel"><span class="text-primary"></span> LMS 출결관리 </h5>
-			                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			                    <span aria-hidden="true">×</span>
-			                </button>
-			            </div>
-			
-				       <div class="modal-body">  
-				       		<input name="seq" id="inputSeq" type="hidden">
-			          		<div class="main-card">
-								<div class="card-body">
-				              		<form class="needs-validation" id="forInnerAttend" method="post" novalidate>
-				                        
-				                        <div class="position-relative row form-group">
-				                        
-				                        	<div class="col-sm-1 mt-2">
-				                           		<div class="position-relative form-check">
-				                               		<input id="forAttendance${status.index+1}${status2.index+1}" name="pinAttend" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
-				                                 </div>
-				                             </div>
-				                             <label for="checkbox2" class="col-sm-10 col-form-label">출석</label>
-				                             
-				                       		<div class="col-sm-1 mt-2">
-				                           		<div class="position-relative form-check">
-				                               		<input id="forLate${status.index+1}${status2.index+1}" name="pinLate" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
-				                                 </div>
-				                             </div>
-				                             <label for="checkbox2" class="col-sm-10 col-form-label">지각</label>
-				                             
-				                             <div class="col-sm-1 mt-2">
-				                           		<div class="position-relative form-check">
-				                               		<input id="forAbsent${status.index+1}${status2.index+1}" name="pinAbsent" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
-				                                 </div>
-				                             </div>
-				                             <label for="checkbox2" class="col-sm-10 col-form-label">결석</label>
-				                             
-				                             <div class="col-sm-1 mt-2">
-				                           		<div class="position-relative form-check">
-				                               		<input id="forNoCheck${status.index+1}${status2.index+1}" name="pinNoCheck" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
-				                                 </div>
-				                             </div>
-				                             <label for="checkbox2" class="col-sm-10 col-form-label">미확인</label>
-				                             
-				                             
-				                        </div> 
-				                        
-				                                     
-				                    </form>
-				               	</div>
+	<c:if test="${!empty takes}">
+		<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status"> 
+			<c:forEach var="j" begin="0" end="${classInfo.days-1}" varStatus="status2">
+			    <div class="modal fade" id="editInnerAttendance${status.index+1}${status2.index+1}" tabindex="-1" role="dialog" aria-labelledby="editInnerAttendance${status.index+1}${status2.index+1}" aria-hidden="true" style="display: none;">
+				    <div class="modal-dialog modal-sm" role="document">
+				        <div class="modal-content">
+				            <div class="modal-header">
+				                <h5 class="modal-title" id="editInnerAttendanceLabel"><span class="text-primary"></span> LMS 출결관리 </h5>
+				                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				                    <span aria-hidden="true">×</span>
+				                </button>
 				            </div>
-						</div>
-				            <div class="modal-footer">
-				                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-				            	<button type="submit" id="setInnerAttendance" class="btn btn-primary" data-dismiss="modal" onclick="setInnerAttendance(${status.index+1}, ${status2.index+1})">확인</button>
-				            </div>
-			       
-			            
-			        </div>
-			    </div>
-			</div>
-		</c:forEach>		
-	</c:forEach>
-	
+				
+					       <div class="modal-body">  
+					       		<input name="seq" id="inputSeq" type="hidden">
+				          		<div class="main-card">
+									<div class="card-body">
+					              		<form class="needs-validation" id="forInnerAttend" method="post" novalidate>
+					                        
+					                        <div class="position-relative row form-group">
+					                        
+					                        	<div class="col-sm-1 mt-2">
+					                           		<div class="position-relative form-check">
+					                               		<input id="forAttendance${status.index+1}${status2.index+1}" name="pinAttend" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                                 </div>
+					                             </div>
+					                             <label for="checkbox2" class="col-sm-10 col-form-label">출석</label>
+					                             
+					                       		<div class="col-sm-1 mt-2">
+					                           		<div class="position-relative form-check">
+					                               		<input id="forLate${status.index+1}${status2.index+1}" name="pinLate" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                                 </div>
+					                             </div>
+					                             <label for="checkbox2" class="col-sm-10 col-form-label">지각</label>
+					                             
+					                             <div class="col-sm-1 mt-2">
+					                           		<div class="position-relative form-check">
+					                               		<input id="forAbsent${status.index+1}${status2.index+1}" name="pinAbsent" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                                 </div>
+					                             </div>
+					                             <label for="checkbox2" class="col-sm-10 col-form-label">결석</label>
+					                             
+					                             <div class="col-sm-1 mt-2">
+					                           		<div class="position-relative form-check">
+					                               		<input id="forNoCheck${status.index+1}${status2.index+1}" name="pinNoCheck" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                                 </div>
+					                             </div>
+					                             <label for="checkbox2" class="col-sm-10 col-form-label">미확인</label>
+					                             
+					                             
+					                        </div> 
+					                        
+					                                     
+					                    </form>
+					               	</div>
+					            </div>
+							</div>
+					            <div class="modal-footer">
+					                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					            	<button type="submit" id="setInnerAttendance" class="btn btn-primary" data-dismiss="modal" onclick="setInnerAttendance(${status.index+1}, ${status2.index+1})">확인</button>
+					            </div>
+				       
+				            
+				        </div>
+				    </div>
+				</div>
+			</c:forEach>		
+		</c:forEach>
+	</c:if>
 	
    	
 </body>
