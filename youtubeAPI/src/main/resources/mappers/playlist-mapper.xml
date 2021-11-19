@@ -68,4 +68,21 @@
 		where lms_playlist.id=#{id}
 	</select>
 	
+	<select id="searchPlaylist" resultType="playlist">
+		select A.id from lms_playlist A
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="searchType=='0' and keyword!=null and keyword!=''">
+				AND A.playlistName like CONCAT('%', #{keyword}, '%')
+				OR
+				tag like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='1' and keyword!=null and keyword!=''">
+				AND A.playlistName like CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="searchType=='2' and keyword!=null and keyword!=''">
+				JOIN lms_video B ON A.id = B.playlistID where B.title like CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</select>
+	
 </mapper>

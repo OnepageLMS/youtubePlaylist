@@ -101,6 +101,23 @@ public class PlaylistController {
 		return map;
 	}
 	
+	@RequestMapping(value = "/searchPlaylist", method = RequestMethod.POST) 
+	@ResponseBody
+	public Object searchPlaylist(@ModelAttribute PlaylistVO vo ) {
+		System.out.println("타입, 키워드 값 확인!" + vo.getSearchType()  + vo.getKeyword());
+		
+		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
+		playlists = playlistService.searchPlaylist(vo);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (int i = 0; i < playlists.size(); i++) {
+			  System.out.println("플레이리스트 아이디 확인! => " + playlists.get(i).getId());
+			}
+		map.put("searched", playlists);
+		
+		return map;
+	}
+	
 	//선택한 playlist의 자세한정보 가져오기
 	@RequestMapping(value = "/getPlaylistInfo", method = RequestMethod.POST)
 	@ResponseBody

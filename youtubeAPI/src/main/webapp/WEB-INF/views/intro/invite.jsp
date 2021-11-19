@@ -37,14 +37,6 @@
 			if('${login.mode }' === 'lms_teacher') window.location.replace('${pageContext.request.contextPath}/dashboard');
 			else window.location.replace('${pageContext.request.contextPath}/student/class/dashboard');
 		}
-		
-		//아래부분 지웁시다....
-		let a = 20;
-		let b = 8;
-		let c = '자바스크립트';
-		let str = `저는 ${a+b}살이고 \${c}를 좋아합니다.`;
-		console.log(str);   //저는 28살이고 자바스크립트를 좋아합니다.
-		
 	}
 	function showAlert(){
 		alert("성공적으로 수강이 완료되었습니다!:)");
@@ -67,22 +59,23 @@
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
 									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0"> <span class="text-primary"> ${classInfo.className} </span> 강의실에 입장하시겠습니까? </span> 
+										<span class="h1 fw-bold mb-0"> <span class="text-primary"> ${classInfo.className} </span> 강의실에 입장 </span> 
 									</div>
 										
 									<c:choose>
 										<c:when test="${login.name == null}" >
-											<form action='${pageContext.request.contextPath}/login/google' method='post'>
+											<form action='${pageContext.request.contextPath}/login/google' method='POST'>
+												<input name="request" style="display:none" value="1"> 
 												<div class="pt-1 mb-4">
 													<button class="btn btn-lg btn-block btn-primary m-1 px-4" type="submit" value="stu"  name="mode">
-														<i class="fab fa-google me-2"></i>학생 로그인 
+														<i class="fab fa-google me-2"></i> 입장하기 
 													</button>
 												</div>
 											</form>
 										</c:when>
 										<c:otherwise>
 											<button class="btn btn-lg btn-block btn-danger" type="submit" onclick="location.href = '${pageContext.request.contextPath}/enroll '" >
-												수업 신청하기 
+												입장하기
 											</button>
 										</c:otherwise>
 									</c:choose>

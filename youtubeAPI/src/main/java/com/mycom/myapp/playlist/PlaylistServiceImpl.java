@@ -71,6 +71,11 @@ public class PlaylistServiceImpl implements PlaylistService{
 	public List<PlaylistVO> getPlaylistForInstructor(PlaylistVO vo) {
 		return playlistDAO.getPlaylistForInstructor(vo);
 	}
+
+	@Override
+	public List<PlaylistVO> searchPlaylist(PlaylistVO vo) {
+		return playlistDAO.searchPlaylist(vo);
+	}
 	
 	
 
