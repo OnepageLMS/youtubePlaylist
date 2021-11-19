@@ -59,7 +59,7 @@
 							<div class="col-md-6 col-lg-7 d-flex align-items-center">
 								<div class="card-body p-4 p-lg-5 text-black">
 									<div class="d-flex align-items-center mb-3 pb-1">
-										<span class="h1 fw-bold mb-0"> <span class="text-primary"> ${classInfo.className} </span> 강의실에 입장 </span> 
+										<span class="h1 fw-bold mb-0"> <span class="text-primary"> ${classInfo.className} <br> </span> 강의실 수강신청하기 </span> 
 									</div>
 										
 									<c:choose>
@@ -68,14 +68,14 @@
 												<input name="request" style="display:none" value="1"> 
 												<div class="pt-1 mb-4">
 													<button class="btn btn-lg btn-block btn-primary m-1 px-4" type="submit" value="stu"  name="mode">
-														<i class="fab fa-google me-2"></i> 입장하기 
+														수강신청하기 
 													</button>
 												</div>
 											</form>
 										</c:when>
 										<c:otherwise>
 											<button class="btn btn-lg btn-block btn-danger" type="submit" onclick="location.href = '${pageContext.request.contextPath}/enroll '" >
-												입장하기
+												수강신청하기
 											</button>
 										</c:otherwise>
 									</c:choose>

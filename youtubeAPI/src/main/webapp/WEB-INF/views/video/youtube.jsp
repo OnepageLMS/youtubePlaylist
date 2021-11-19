@@ -968,7 +968,9 @@ $(document).ready(function(){
 		<jsp:include page="../outer_top.jsp" flush="false" />
 		<div class="ui-theme-settings">
             <button type="button" id="TooltipDemo" class="btn-open-options btn btn-warning">
-                <i class="fa fa-cart-plus fa-w-16 fa-lg"></i>
+                <img src="${pageContext.request.contextPath}/resources/img/video-cart.png"
+									alt="login form" class="img-fluid"
+									style="border-radius: 1rem 0 0 1rem; width: 80%; height:80%; " />
             </button>
             <div class="theme-settings__inner">
                 <div class="scrollbar-container ps ps--active-y">
