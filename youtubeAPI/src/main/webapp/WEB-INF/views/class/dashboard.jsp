@@ -46,6 +46,20 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 		success: function(data){
 			$(classType).empty();
 			list = data.list;
+
+			$.ajax({
+				url : "${pageContext.request.contextPath}/class/forHowManyTakes",
+				type : "post",
+				async : false,
+				success : function(data) {
+					howmanyTake = data; 
+					console.log(howmanyTake);
+				},
+				error : function() {
+					alert("error");
+				}
+			});
+			
 			if(list.length == 0)
 				$(classType).append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
 			else {
@@ -61,14 +75,47 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 					var closeDate = this.closeDate;
 					var html;
 					if(closeDate == null) closeDate = '';
+					
 					if(act == 1){
+						$.ajax({
+							url : "${pageContext.request.contextPath}/forPublished",
+							type : "post",
+							async : false,
+							data : {classID : classID},
+							success : function(data) {
+								forPublished = data;
+							},
+							error : function() {
+								alert("error");
+							}
+						});
+						
+						$.ajax({
+							url : "${pageContext.request.contextPath}/forAll",
+							type : "post",
+							async : false,
+							data : {classID : classID},
+							success : function(data) {
+								forAll = data;
+							},
+							error : function() {
+								alert("error");
+							}
+						});
+						
 						var cardColor = active_colors[i%(active_colors.length)]; 
+
+						var width;
+						if(forPublished == 0)
+							width = 0;
+						else
+							width = Math.floor(forPublished / forAll * 100);
 						
 						html = '<div class="col-sm-12 col-md-6 col-lg-3">'
-							+ '<div class="mb-3 card classCard">'
+								+ '<div class="mb-3 card classCard">'
 								+ '<div class="card-header ' + cardColor + '">' 
 									+ '<div class="col-sm-8 pr-1">' +  className + ' (' + this.days + ' 차시)' + '</div>'
-									+ '<a class="col-sm-2" classID="' + classID + '" className="' + className + '" href="javascript:shareClassroomFn(this);" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
+									+ '<a class="col-sm-2" classID="' + classID + '" className="' + className + '" href="void(0);" onclick="shareClassroomFn(this);" data-toggle="modal" data-target="#shareClassroomModal" class="nav-link">'
 										+ '<i class="nav-link-icon fa fa-share" title="강의실 복제"></i>'
 									+ '</a>'
 									+ '<a class="col-sm-2" href="void(0)"; onclick="editClassroomFn(' + classID + ');" data-toggle="modal" data-target="#setClassroomModal" class="nav-link">'
@@ -76,28 +123,29 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 									+ '</a>'
 								+ '</div>'
 								+ '<div class="card-body">'
-									+ '<button class="btn btn-outline-focus col-4 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw fa-bullhorn pr-2" aria-hidden="true"></i>공지</button>'
+									+ '<button class="btn btn-outline-focus col-4 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw fa-bullhorn pr-2" aria-hidden="true" title="공지"></i>공지</button>'
 									+ '<button class="btn btn-outline-focus col-2 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
 											+ '<i class="fa fa-pencil-square-o" aria-hidden="true" title="공지작성"></i></button>'
 									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
 									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
 									+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw mr-1" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
 	                        	+ '</div>'
-                        		+ '<div class="divider m-0 p-0"></div>'
+	                    		+ '<div class="divider m-0 p-0"></div>'
 	                        	+ '<div class="card-body">'
 									+ '<div class="row">'
 										+ '<div class="widget-subheading col-12 pb-2"><b>개설일</b> ' + regDate + ' </div>'
 										+ '<div class="widget-subheading col-12 pb-2"><b>종료 설정일</b> ' + closeDate + ' </div>'
-										+ '<div class="widget-subheading col pb-2"><b>참여 **명</b></div>'
+										+ '<div class="widget-subheading col pb-2"><b>참여 '+howmanyTake+'명</b></div>'
 										+ '<div class="col-12">'
 											+ '<div class="mb-3 progress">'
-							                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+							                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + width + '%;">' + forPublished + ' / ' + forAll + '  공개</div>'
+									            // published 1인 컨텐츠 개수, 전체 컨텐츠 개수   
 							                + '</div>'
 										+ '</div>'
 									+ '</div>'
 								 + '</div>'
-                        	+ '</div>'
-                        + '</div>';
+	                    	+ '</div>'
+	                    + '</div>';
 					}
 					else{
 						var cardColor = inactive_colors[i%(inactive_colors.length)]; 
@@ -158,12 +206,11 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 				async : false,
 				success : function(data) {
 					howmanyTake = data; 
-					console.log(howmanyTake);
 				},
 				error : function() {
 					alert("error");
 				}
-			})
+			});
 			
 			if((active.length + inactive.length) == 0){
 				$('.dashboardClass').append('<p class="col text-center">생성된 강의실이 없습니다.</p>');
@@ -190,7 +237,7 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 						error : function() {
 							alert("error");
 						}
-					})
+					});
 					
 					$.ajax({
 						url : "${pageContext.request.contextPath}/forAll",
@@ -203,7 +250,7 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 						error : function() {
 							alert("error");
 						}
-					})
+					});
 					
 					var classNoticeURL = "'${pageContext.request.contextPath}/notice/" + classID + "'";
 					var classCalendarURL = "'${pageContext.request.contextPath}/calendar/" + classID + "'";
