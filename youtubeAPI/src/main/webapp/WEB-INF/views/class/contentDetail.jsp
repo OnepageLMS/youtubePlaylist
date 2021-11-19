@@ -48,7 +48,7 @@ var information;
 var videoIdx = '${daySeq}';
 var playlist; 
 //var ccID = ${id};
-//var weekContents;
+var weekContents;
 
 $(document).ready(function(){
 	$.ajax({ 
