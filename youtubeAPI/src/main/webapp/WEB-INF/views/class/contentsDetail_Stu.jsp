@@ -72,8 +72,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		  error : function() {
 		  	alert("error");
 		  }
-	})
-	
+	});
 	
 	//if(weekContents[videoIdx].playlistID != 0) {
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 

@@ -48,7 +48,7 @@ var information;
 var videoIdx = '${daySeq}';
 var playlist; 
 //var ccID = ${id};
-var weekContents;
+//var weekContents;
 
 $(document).ready(function(){
 	$.ajax({ 
@@ -72,14 +72,34 @@ $(document).ready(function(){
 			id: '${id}'
 		},
 		success : function(data) {
+			console.log(data);
 			var element = document.getElementById("contentsTitle");
 			element.innerText = data.title;
 			var elementD = document.getElementById("contentsDescription");
 			elementD.innerText = data.description;
+
+			//$('#formEditClassContents').form[0].reset();
 			$('#editContentName').val(data.title);
 			$('#editContentDescription').val(data.description);
-			$('#endDate').val(data.endDate);
 			$('#setContentID').val(data.id);
+			
+			var endDate = data.endDate;
+			if(endDate != null || endDate != ''){
+				endDate = endDate.split(" ")[0];
+				var hour = data.endDate.split(" ")[1];
+				var min = hour.split(":")[1];
+				hour = hour.split(":")[0];
+				$('#setEndDate').val(endDate);
+				$('#endDate_h').val(hour);
+				$('#endDate_m').val(min);
+			}
+			else {
+				$('#setEndDate').val('');
+				$('#endDate_h').val(hour);
+				$('#endDate_m').val(min);
+			}
+				
+			
 		},
 		error : function() {
 			alert("error");
@@ -89,8 +109,8 @@ $(document).ready(function(){
 	var urlContent='';
 	for(var i=0; i<weekContents.length; i++){
 		var symbol;
-		
-		if(weekContents[i].playlistID == 0){
+		console.log('week' + i + '/' + weekContents[i].playlistID);
+		if(weekContents[i].playlistID == 0){	//현재 playlist가 없는 학습컨텐츠일 때
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
 			if(videoIdx == i) {
 				document.getElementById("onepageLMS").style.display = "none";
@@ -165,8 +185,6 @@ $(document).ready(function(){
 		else{
 			console.log("playlistID 0 아니니까!");
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-			
-			
 			//if(allContents[i].playlistID == weekContents[k].playlistID){
 				
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
@@ -386,10 +404,26 @@ function showLecture(playlistID, id, classInfo, idx){
 				var elementD = document.getElementById("contentsDescription");
 				elementD.innerText = data.description;
 				
+				//$('#formEditClassContents').form[0].reset();
 				$('#editContentName').val(data.title);
 				$('#editContentDescription').val(data.description);
-				$('#endDate').val(data.endDate);
 				$('#setContentID').val(data.id);
+				
+				var endDate = data.endDate;
+				if(endDate != null || endDate != ''){
+					endDate = endDate.split(" ")[0];
+					var hour = data.endDate.split(" ")[1];
+					var min = hour.split(":")[1];
+					hour = hour.split(":")[0];
+					$('#setEndDate').val(endDate);
+					$('#endDate_h').val(hour);
+					$('#endDate_m').val(min);
+				}
+				else {
+					$('#setEndDate').val('');
+					$('#endDate_h').val(hour);
+					$('#endDate_m').val(min);
+				}
 			  },
 			  error : function() {
 			  	alert("error");
@@ -603,11 +637,19 @@ function setEditContentModal(){
 	
 }
 
-function submitContent(){
-	var endDate = ($("#endDate").val() + " " + ("00"+$("#endDate_h").val()).slice(-2) + ":" + ("00"+$("#endDate_m").val()).slice(-2) + ":00") ;
-	//console.log("endDate : " + endDate+ " id: " +ccID);
+function stringFormat(p_val){
+	if(p_val == '')
+		return '00';
+	else if(p_val < 10)
+		return p_val = '0'+p_val;
+	else
+		return p_val;
+  }
+
+function submitContent(){	//update content
+	var endDate = $("#setEndDate").val() + " " + stringFormat($("#endDate_h").val()) + ":" + stringFormat($("#endDate_m").val()) + ":00";
 	$.ajax({ 
-		  url : "../../updateClassContents",
+		  url : "${pageContext.request.contextPath}/class/updateClassContents",
 		  type : "post",
 		  async : false,
 		  data : {	
@@ -751,9 +793,9 @@ function deleteContent(){
 									<div class="invalid-feedback">마감일을 다시 설정해주세요</div>
 								</div>
 								<input type="hidden" name="endDate">
-								<input type="date" class="form-control col-sm-8" id="endDate">
-								<input type="number" class="setTime end_h form-control col-sm-2" id="endDate_h" value="0" min="0" max="23">
-								<input type="number" class="setTime end_m form-control col-sm-2" id="endDate_m" value="0" min="0" max="59"> 
+								<input type="date" class="form-control col-sm-8" id="setEndDate">
+								<input type="number" class="setTime end_h form-control col-sm-2" id="endDate_h" min="0" max="23">
+								<input type="number" class="setTime end_m form-control col-sm-2" id="endDate_m" min="0" max="59"> 
 							</div>
 		               </div>
 		            </div>
