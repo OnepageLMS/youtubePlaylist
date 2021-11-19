@@ -397,9 +397,8 @@ $(document).ready(function(){
 									/* + '</div>'  */
 									+ '<div class="col-lg-10"> <input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> </div>'
 								+ '</div>' 
-								+ '<div class="position-relative row form-group" style="display: none;">'
-									+ '<div class="col-sm-2">'
-									+ '<div class="col-sm-10"> <div id="warning1"> </div> </div>' 
+								+ '<div class="position-relative row form-group" style="display: block;">'
+								+ '<div id="warning1"> </div>'
 								+ '</div>'
 							+ '</div>'
 							
@@ -736,13 +735,15 @@ $(document).ready(function(){
 				d = Number(player.getCurrentTime());
 				d = parseFloat(d).toFixed(2);
 
+				console.log("시작 버튼이 클릭되었습니다 확인 ! ==> " + d);
+
 				var h = Math.floor(d / 3600);
 				var m = Math.floor(d % 3600 / 60);
 				var s = parseFloat(d % 3600 % 60).toFixed(2);
 
 				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
 					return;
-				}
+				} 
 				
 				// Setter 
 				$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
@@ -757,9 +758,9 @@ $(document).ready(function(){
 			}
 			
 			// 끝 버튼 클릭시: 
-			else{
+			else if($(obj).text() == "끝"){
 				d1 = Number(player.getCurrentTime());
-				d1 = parseFloat(d).toFixed(2);
+				d1 = parseFloat(d1).toFixed(2);
 
 				console.log("끝버튼이 클릭되었습니다 확인 ! ==> " + d1);
 
@@ -779,7 +780,7 @@ $(document).ready(function(){
 				
 				$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + s + "초"  );
 
-				end_time = parseFloat(d).toFixed(2);
+				end_time = parseFloat(d1).toFixed(2);
 				end_time *= 1.00;
 			}
 
@@ -839,16 +840,16 @@ $(document).ready(function(){
 			// Getter for slider handles 
 			values = $( "#slider-range" ).slider( "option", "values" );
 
-			if(d>d1){
+			/* if(d>d1){
 				document.getElementById("warning1").innerHTML = "시작시간은 끝시간보다 크지 않아야 합니다.";
+				document.getElementById("warning1").style.color = "red";
 				//document.getElementById("start_ss").focus();
 				return false;
-			}
+			} */
 			
 			if(d1<d){
-				console.log(d1+"는 "+d+"보다 작다.. ㅋㅋㅋ 왜 이렇게 나오는데");
-				console.log(d, " vs ", d1);
 				document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요."; 
+				document.getElementById("warning1").style.color = "red";
 				return false;
 			}
 

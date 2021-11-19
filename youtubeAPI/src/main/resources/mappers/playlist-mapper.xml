@@ -71,7 +71,7 @@
 	<select id="searchPlaylist" resultType="playlist">
 		select A.id from lms_playlist A
 		<trim prefix="WHERE" prefixOverrides="AND|OR">
-			<if test="searchType=='0' and keyword!=null and keyword!=''">
+			<if test="#{searchType}=='0' and #{keyword}!=null and #{keyword}!=''">
 				AND A.playlistName like CONCAT('%', #{keyword}, '%')
 				OR
 				tag like CONCAT('%', #{keyword}, '%')
