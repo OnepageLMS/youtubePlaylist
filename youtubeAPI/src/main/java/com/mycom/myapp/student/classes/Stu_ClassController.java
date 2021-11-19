@@ -84,10 +84,10 @@ public class Stu_ClassController{
 	private Stu_AttendanceInternalCheckService attendanceInCheckService;
 	
 	private int studentId = 0;
-	private int playlistID = 0; 
-	private int id = 0;
+	//private int playlistID = 0; 
+	//private int id = 0;
 	private int classID = 0;
-	private int daySeq = 0;
+	//private int daySeq = 0;
 	
 	@RequestMapping(value = "/test/dashboard/{studentID}",  method = RequestMethod.GET)	//개발 test용. 나중에 지우기!!
 	public String dashboard_Test(@PathVariable("studentID") int id, Model model, HttpSession session) {
@@ -192,39 +192,6 @@ public class Stu_ClassController{
 			System.out.println("totalStudent 업데이트 성공! ");
 		else
 			System.out.println("totalStudent 업데이트 실패 ");
-		
-	}
-	
-	
-	@RequestMapping(value = "/contentDetail/{playlistID}/{id}/{classID}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("playlistID") int playlistId, 
-								@PathVariable("id") int ID, 
-								@PathVariable("classID") int classId, 
-								@PathVariable("daySeq") int day, Model model) {
-		
-		
-		playlistID = playlistId;
-		id = ID;
-		classID = classId;
-		daySeq = day;
-		
-		VideoVO pvo = new VideoVO();
-		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		
-		ClassContentVO ccvo = new ClassContentVO();
-		ccvo.setPlaylistID(playlistID);
-		ccvo.setId(id);
-		ccvo.setClassID(classID); //임의로 1번 class 설정
-		
-		//model.addAttribute("allMyClass", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
-		model.addAttribute("classInfo", classesService.getClass(classID)); 
-		//model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
-		model.addAttribute("vo", classContentService.getOneContent(id));
-		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
-		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); 
-		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(classID))); // 1=>classID
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(classID))); // 1 => classID
-		return "class/contentsDetail_Stu";
 		
 	}
 	

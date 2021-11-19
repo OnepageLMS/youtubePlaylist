@@ -21,7 +21,8 @@
 	</update>
 	
 	<delete id="deleteAttendance">
-		delete from lms_attendance where id=#{id}
+		delete from lms_attendance 
+		where classID=#{classID} and days=#{days}
 	</delete>
 	
 	<select id="getAttendance" resultType="attendance">

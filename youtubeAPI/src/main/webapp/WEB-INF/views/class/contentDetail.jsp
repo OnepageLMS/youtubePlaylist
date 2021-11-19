@@ -45,9 +45,10 @@ var ori_index =0;
 //var classPlaylistID = ${classPlaylistID};
 var classContentID = 1;
 var information;
-var videoIdx;
+var videoIdx = '${daySeq}';
 var playlist; 
 //var ccID = ${id};
+//var weekContents;
 
 $(document).ready(function(){
 	$.ajax({ 
@@ -57,44 +58,28 @@ $(document).ready(function(){
 		  dataType : "json",
 		  success : function(data) {
 			weekContents = data;
-			videoIdx = ${daySeq};
-			console.log(weekContents);
 		  },
 		  error : function() {
-		  	alert("error1");
+		  	alert("강의컨텐츠 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!");
 		  }
 	});
-	
-	/*$.ajax({ 
-		  url : "${pageContext.request.contextPath}/class/instructorAllContents",
-		  type : "post",
-		  async : false,
-		  dataType : "json",
-		  success : function(data) {
-			allContents = data;
-			console.log(allContents);
-		  },
-		  error : function() {
-		  	alert("error1");
-		  }
-	});*/
 	
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
 		url : "${pageContext.request.contextPath}/class/changeID",
 		type : "post",
 		async : false,
 		data : {	
-			id: ${id}
+			id: '${id}'
 		},
 		success : function(data) {
 			var element = document.getElementById("contentsTitle");
 			element.innerText = data.title;
 			var elementD = document.getElementById("contentsDescription");
 			elementD.innerText = data.description;
-			
 			$('#editContentName').val(data.title);
 			$('#editContentDescription').val(data.description);
 			$('#endDate').val(data.endDate);
+			$('#setContentID').val(data.id);
 		},
 		error : function() {
 			alert("error");
@@ -105,23 +90,30 @@ $(document).ready(function(){
 	for(var i=0; i<weekContents.length; i++){
 		var symbol;
 		
-		
 		if(weekContents[i].playlistID == 0){
-			
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
 			if(videoIdx == i) {
 				document.getElementById("onepageLMS").style.display = "none";
 			}
 			
 			var day = weekContents[i].days;
-			var endDate = weekContents[i].endDate; //timestamp -> actural time
+			
+			var endDate = weekContents[i].endDate;
+			if(endDate == null || endDate == '')
+				endDate = '';
+			else {
+				endDate = endDate.split(":");
+				endDate = endDate[0] + ":" + endDate[1];	
+				endDate =  '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">마감일: ' + endDate + '</div>'
+				
+			}
 			
 			//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
 			if(i == videoIdx){
 				var area_expanded = true;
 				var area_labelledby = 'aria-labelledby="heading' + (i+1) + '"';
 				var showing = 'class="collapse show"';
-			}
+			} 
 			else{
 				var area_expanded = false;
 				var area_labelledby = '';
@@ -143,7 +135,7 @@ $(document).ready(function(){
 											+ '</div>'
 											+ '<div class="col">'
 												+ '<div class="contentInfoBorder"></div>'
-												+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
+												+ endDate
 											+ '</div>' 
 										+ '</div>'
 											
@@ -397,6 +389,7 @@ function showLecture(playlistID, id, classInfo, idx){
 				$('#editContentName').val(data.title);
 				$('#editContentDescription').val(data.description);
 				$('#endDate').val(data.endDate);
+				$('#setContentID').val(data.id);
 			  },
 			  error : function() {
 			  	alert("error");
@@ -589,7 +582,8 @@ function onPlayerReady(event) {
 		},
 		success : function(data){
 			
-			player.loadVideoById({'videoId' : weekContents[videoIdx].thumbnailID,
+			player.loadVideoById({
+				'videoId' : weekContents[videoIdx].thumbnailID,
 				 'startSeconds' : playlist[0].start_s,
 				 'endSeconds' : playlist[0].end_s,
 				 'suggestedQuality': 'default'})
@@ -602,9 +596,11 @@ function onPlayerReady(event) {
 			alert(" onPlayerReady error! ");
 		}
 	});
+  	console.log('onPlayerReady 마감'); 
+}
+
+function setEditContentModal(){
 	
-  	console.log('onPlayerReady 마감');
-  
 }
 
 function submitContent(){
@@ -632,10 +628,9 @@ function submitContent(){
 
 
 function deleteContent(){
-	
 	if (confirm("페이지를 정말 삭제하시겠습니까? ") == true){
 		$.ajax({ 
-			  url : "../../deleteClassContents",
+			  url : "${pageContext.request.contextPath}/class/deleteClassContent",
 			  type : "post",
 			  async : false,
 			  data : {	
@@ -728,14 +723,14 @@ function deleteContent(){
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <h5 class="modal-title" id="editContentModalLabel">학습페이지 수정</h5>
+	                <h5 class="modal-title" id="editContentModalLabel">강의컨텐츠 수정</h5>
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                    <span aria-hidden="true">×</span>
 	                </button>
 	            </div>
 	            
 	            <form class="needs-validation" id="formEditClassContents" method="post" onsubmit="return false;" novalidate>
-		            <input id="setClassID" name="id" type="hidden" value="">
+		            <input id="setContentID" name="id" type="hidden" value="">
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
 		               		<label for="editContentName" class="">이름</label>
@@ -752,8 +747,8 @@ function deleteContent(){
 		               		
 		               		<div class="setEndDate input-group">
 								<div class="input-group-prepend">
-									<label for="endDate" class="input-group-text"> 마감일: </label>
-									<div class="invalid-feedback">마감일 다시 설정해주세요</div>
+									<label for="endDate" class="input-group-text">마감일</label>
+									<div class="invalid-feedback">마감일을 다시 설정해주세요</div>
 								</div>
 								<input type="hidden" name="endDate">
 								<input type="date" class="form-control col-sm-8" id="endDate">
@@ -763,9 +758,9 @@ function deleteContent(){
 		               </div>
 		            </div>
 		            <div class="modal-footer">
-		            	<div style="float: left;"><button class="btn btn-danger" onclick="deleteContent()">페이지 삭제</button></div>
+		            	<div style="float: left;"><button class="btn btn-danger" onclick="deleteContent();">컨텐츠 삭제</button></div>
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-		                <button id="modalSubmit" type="button" class="btn btn-primary" onclick="submitContent()">수정완료</button>
+		                <button id="modalSubmit" type="button" class="btn btn-primary" onclick="submitContent();">수정완료</button>
 		            </div>
 	        	</form>
 	        </div>

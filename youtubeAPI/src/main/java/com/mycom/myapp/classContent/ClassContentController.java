@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.attendance.AttendanceService;
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.playlist.PlaylistService;
@@ -50,6 +52,8 @@ public class ClassContentController {
 	private Stu_PlaylistCheckService playlistCheckService;
 	@Autowired
 	private Stu_TakesService takesService;
+	@Autowired
+	private AttendanceService attendanceService;
   
 	private int instructorID = 0;
 	private int classID;
@@ -57,17 +61,38 @@ public class ClassContentController {
 	@RequestMapping(value = "/contentList/{classId}", method = RequestMethod.GET)
 	public String contentList(@PathVariable("classId") int classId, Model model, HttpSession session) {
 		instructorID = (Integer)session.getAttribute("userID");
+		ClassesVO vo = new ClassesVO();
+		vo.setId(classId);
+		vo.setInstructorID(instructorID);
+		
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		
+		if(classService.checkAccessClass(vo) == 0) {
+			System.out.println("접근권한 없음!");
+			return "accessDenied";
+		}
+		
 		classID = classId;
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID)));
 		model.addAttribute("allFileContents", JSONArray.fromObject(classContentService.getFileClassContent(classID)));
 		
 		model.addAttribute("realAllContents", JSONArray.fromObject(classContentService.getRealAll(classID))); // 그냥 모든 강의 컨텐츠 우선은 가져오려고,
-			
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		model.addAttribute("className", classService.getClassName(classID));
 		return "class/contentsList";
+	}
+	
+	@RequestMapping(value = "/contentDetail", method = RequestMethod.POST) //class contents 전체 보여주기
+	public String contentDetail(@RequestParam("id") int id, @RequestParam("daySeq") int daySeq, Model model) {	//post로 변경하기
+		model.addAttribute("classInfo", classService.getClass(classID)); 
+		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
+		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
+		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		
+		model.addAttribute("id", id);
+		model.addAttribute("daySeq", daySeq);
+		return "class/contentDetail";
 	}
 	
 	@ResponseBody
@@ -87,33 +112,6 @@ public class ClassContentController {
 	public int forHowManyTakes(HttpServletRequest request, Model model) throws Exception {
 		
 		return takesService.getStudentNum(classID).size();
-	}
-
-	@RequestMapping(value = "/contentDetail/{id}/{daySeq}", method = RequestMethod.GET) //class contents 전체 보여주기
-	public String contentDetail(@PathVariable("id") int id, @PathVariable("daySeq") int daySeq, Model model) {	//post로 변경하기
-		System.out.println("classID는 !!! : " + classID);
-		// contentDetail 페이지이에서 강의컨텐츠 목록 보여주기 구현중 (21/09/13) 
-		model.addAttribute("classInfo", classService.getClass(classID)); 
-		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
-		//model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyClass(instructorID)));
-		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
-		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
-		
-		/*VideoVO pvo = new VideoVO();
-		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		ClassContentVO ccvo = new ClassContentVO();
-		
-		ccvo.setPlaylistID(playlistID);
-		ccvo.setId(id);
-		ccvo.setClassID(classID); //임의로 1번 class 설정
-		
-		model.addAttribute("classInfo", classesService.getClass(classID)); 
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
-		model.addAttribute("vo", classContentService.getOneContent(id));
-		model.addAttribute("playlist", JSONArray.fromObject(videoService.getVideoList(pvo)));
-		model.addAttribute("playlistSameCheck", JSONArray.fromObject(classContentService.getSamePlaylistID(ccvo))); */
-		//return "t_contentsList_Stu2";
-		return "class/contentDetail";
 	}
 	
 	@ResponseBody
@@ -152,23 +150,6 @@ public class ClassContentController {
 	    return vo;
 	}
 	
-	/*
-	@ResponseBody
-	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
-	public String addContentOK(@ModelAttribute ClassContentVO vo) {
-		System.out.println("addContentOK!!??");
-		//int classID = vo.getClassID();
-		vo.setDaySeq(classContentService.getDaySeq(vo));
-		
-		if (classContentService.insertContent(vo) == 0) {
-			System.out.println("classContents 추가 실패!");
-			return "ok";
-		}
-		else
-			System.out.println("classContents 추가 성공!");
-		return "false";
-	}*/
-	
 	@ResponseBody
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
 	public String addContentOK(@ModelAttribute ClassContentVO vo, Model model) throws ParseException {
@@ -192,7 +173,7 @@ public class ClassContentController {
 		if(result == 0) vo.setPublished(1);
 		else vo.setPublished(0);*/
 		
-		if(vo.getEndDate().equals("0000-00-00"))
+		if(vo.getEndDate().equals(""))
 			vo.setEndDate(null);
 		if(vo.getPlaylistID() != 0) {
 			if(classContentService.insertContent(vo) != 0) {
@@ -234,14 +215,44 @@ public class ClassContentController {
 	   
 	}
 	
-	/*@ResponseBody
-	@RequestMapping(value = "/deleteClassContents", method = RequestMethod.POST)
-	public void deleteClassContents(HttpServletRequest request, Model model) throws Exception {
+	@ResponseBody
+	@RequestMapping(value = "/deleteClassContent", method = RequestMethod.POST)
+	public void deleteClassContent(HttpServletRequest request, Model model) throws Exception {
 		
 		if( classContentService.deleteContent(Integer.parseInt(request.getParameter("classContentID"))) == 0) {
-			System.out.println("modal을 통한 classcontent 삭제 실패");
+			System.out.println("classcontent 삭제 실패");
 		}
-	}*/
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteDay", method = RequestMethod.POST)
+	public int deleteDay(HttpServletRequest request, Model model) throws Exception {
+		int class_id = Integer.parseInt(request.getParameter("classID"));
+		int days = Integer.parseInt(request.getParameter("days"))-1;
+		
+		ClassContentVO ccvo = new ClassContentVO();
+		ccvo.setClassID(class_id);
+		ccvo.setDays(days);
+		
+		if( classContentService.deleteContentList(ccvo) != 0) { //강의 컨텐츠가 없는 차시를 지울때
+			System.out.println("classContent 삭제 성공!");
+			
+			AttendanceVO att_vo = new AttendanceVO();
+			att_vo.setClassID(class_id);
+			att_vo.setDays(days);
+			if(attendanceService.deleteAttendance(att_vo) != 0) {
+				System.out.println("attendance 삭제 성공!");
+			}
+		}
+		
+		if(classService.deleteDay(class_id) == 0) {
+			System.out.println("classDay 삭제 실패!");
+			return 0;
+		}
+		
+		System.out.println("차시삭제 성공!");
+		return 1;
+	}
 	
 	
 	@ResponseBody
@@ -265,31 +276,6 @@ public class ClassContentController {
 			System.out.println("getBiggestUsedDay 가져오기 성공!");
 		return biggestDay;
 		
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/deleteDay", method = RequestMethod.POST)
-	public int deleteDay(HttpServletRequest request, Model model) throws Exception {
-		ClassContentVO ccvo = new ClassContentVO();
-		ccvo.setClassID(Integer.parseInt(request.getParameter("classID")));
-		ccvo.setDays(Integer.parseInt(request.getParameter("days"))-1);
-		
-		if( classContentService.deleteContent(ccvo) == 0) { //강의 컨텐츠가 없는 차시를 지울때
-			if(classService.deleteDay(Integer.parseInt(request.getParameter("classID"))) == 0) { 
-				return 0;
-			}
-			else {
-				return 1;
-			}
-		}
-		else { //강의 컨텐츠가 있는 차시 지울 
-			if(classService.deleteDay(Integer.parseInt(request.getParameter("classID"))) == 0) { 
-				return 0;
-			}
-			else {
-				return 1;
-			}
-		}
 	}
 	
 	@ResponseBody

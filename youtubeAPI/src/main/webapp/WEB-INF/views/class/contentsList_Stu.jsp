@@ -52,11 +52,9 @@
 		
 		var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
 		
-		//console.log("몇개냐면,, " + weekContents.length);
-		console.log("length : " + allMyClass.length);
-		console.log(allMyClass);
-		
 		var watchCount = 0 ;
+		var lastDays;
+		var daySeq = 1;	//각 차시별 seq
 			for(var i=0; i<allMyClass.length; i++){
 				
 				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
@@ -80,7 +78,21 @@
 				})
 				
 				var day = allMyClass[i].days;
+				if(day != lastDays){
+					lastDays = day;
+					daySeq = 1;
+				}
+				else daySeq += 1;
+				
 				var endDate = allMyClass[i].endDate; //timestamp -> actural time
+				if(endDate == null || endDate == '')
+					endDate = '';
+				else {
+					endDate = allMyClass[i].endDate.split(":");
+					endDate = endDate[0] + ":" + endDate[1];	
+					endDate = '<p class="endDate contentInfo"">마감일: ' + endDate + '</p>';
+				}
+				
 				var videoLength = '';
 				//var result_date = convertTotalLength(date);
 				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
@@ -89,7 +101,7 @@
 				var progressbar;
 				if(allMyClass[i].playlistID == 0){ //playlist없이 description만 올림 
 					symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
-					progressbar = '';
+					progressbar = '<div class="col-sm-3"></div>';
 					videoLength = '';
 				}
 				else{ //playlist 올림 
@@ -114,19 +126,19 @@
 							videoLength = "[" + convertTotalLength(weekContents[j].totalVideoLength) + "]";
 					}
 				}
-				var onclickDetail = "location.href='../contentDetail/" + allMyClass[i].playlistID + "/" + allMyClass[i].id + "/" +classInfo+ "/" + i +  "'";
-				
+				//var onclickDetail = "location.href='../contentDetail/" + allMyClass[i].playlistID + "/" + allMyClass[i].id + "/" +classInfo+ "/" + i +  "'";
+				var goDetail = "moveToContentDetail(" + allMyClass[i].id + "," + i + "," + allMyClass[i].playlistID + ");";
 				var content = $('.day:eq(' + day + ')');
 				
 				content.append(
-						 "<div class='content list-group-item-action list-group-item' seq='" + allMyClass[i].daySeq + "'>"
+						 "<div class='content list-group-item-action list-group-item' seq='" + daySeq + "'>"
 								//+ '<div class="row col d-flex justify-content-between align-items-center">'
 								+ '<div class="row col d-flex justify-content-between align-items-center">'
 									+ '<div class="row col-sm-2">'
-										+ '<div class="index col-6 pt-1">' + (allMyClass[i].daySeq+1) + '. </div>'
+										+ '<div class="index col-6 pt-1">' + daySeq + '. </div>'
 										+ '<div class="videoIcon col-6" style="font-size:25px;">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
 									+ '</div>'
-									+ "<div class='col-sm-7 align-items-center'  onclick=" + onclickDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-7 align-items-center'  onclick=" + goDetail + " style='cursor: pointer;'>"
 										+ "<div class='card-title align-items-center' style='padding: 15px 0px 0px;'>"
 											+ allMyClass[i].title + " " + videoLength  
 										+ '</div>'
@@ -134,7 +146,7 @@
 										+ '<div class="align-items-center" style=" padding: 5px 0px 0px;">'
 											+ '<div class="contentInfoBorder"></div>'
 											+ '<div class="contentInfoBorder"></div>'
-											+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+											+ endDate
 										+ '</div>'
 									
 									+ '</div>'
@@ -160,6 +172,20 @@
 		result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
 		
 		return result;
+	}
+
+	function moveToContentDetail(contentID, daySeq, playlistID){	//content detail page로 이동
+		var html = '<input type="hidden" name="id"  value="' + contentID + '">'
+					+ '<input type="hidden" name="daySeq" value="' + daySeq + '">'
+					+ '<input type="hidden" name="playlistID" value="' + playlistID + '">';
+	
+		var goForm = $('<form>', {
+				method: 'post',
+				action: '${pageContext.request.contextPath}/student/class/contentDetail',
+				html: html
+			}).appendTo('body'); 
+	
+		goForm.submit();
 	}
 	
 </script>
@@ -189,7 +215,7 @@
                           	<div id="client-paginator">
 								<ul class="pagination">
                                		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-										<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
+										<li class="page-item"><a href="#target${j-1}" class="page-link"> ${j} 차시 </a></li>
 									</c:forEach>
                               	</ul>
 							</div>	 
