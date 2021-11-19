@@ -33,8 +33,13 @@ public class ClassContentDAO {
 		return result;
 	}
 	
-	public int deleteContent(ClassContentVO vo) { //int id => ClassContentVO vo 수정
-		int result = sqlSession.delete("ClassContent.deleteContent", vo);
+	public int deleteContent(int id) { 
+		int result = sqlSession.delete("ClassContent.deleteContent", id);
+		return result;
+	}
+	
+	public int deleteContentList(ClassContentVO vo) { 
+		int result = sqlSession.delete("ClassContent.deleteContentList", vo);
 		return result;
 	}
 	
@@ -94,10 +99,6 @@ public class ClassContentDAO {
 	
 	public int insertCopiedClassContents(List<ClassContentVO> list) {
 		return sqlSession.insert("ClassContent.insertCopiedClassContents", list);
-	}
-	
-	public int getDaySeq(ClassContentVO vo) {
-		return sqlSession.selectOne("ClassContent.getDaySeq", vo);
 	}
 	
 	public ClassContentVO getClassContentID(ClassContentVO vo) {

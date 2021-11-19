@@ -99,7 +99,7 @@ function getPlaylistInfo(){
 			var addVideoURL = "'${pageContext.request.contextPath}/video/youtube'";
 			var html = '<div class="numOfVideos row d-flex align-items-center">'
 							+ '<div class="col-9 row">'
-								+ '<p class="numOfNow mr-1 mb-0"></p>'
+								+ '<p class="numOfNow mr-1 mb-0">' + (result.seq+1) + '</p>'
 								+ ' / '
 								+ '<p class="numOfTotal ml-1 mb-0">' + totalVideo + '</p>'
 								+ '<p class="totalVideoLength ml-2 mb-0"> [총 길이 ' + convertTotalLength(totalVideoLength) + ']</p>'
@@ -280,7 +280,8 @@ function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설
 	$("#inputVideoID").val( tmp_videoID *= 1 );
 
 	var videoIdx = $('.displayVideo').attr('videoidx');
-	$('.numOfNow').text(Number(videoIdx)+1); //클릭한 video순서 상단에 표시
+	//$('.numOfNow').text(''); //클릭한 video순서 상단에 표시
+	$('.numOfNow').text(Number(videoIdx)+1);
 	
 	if (videoTag != null && videoTag != ''){
 		$("#inputTag").val(videoTag);
@@ -568,11 +569,12 @@ function setSlider() {
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-row">
-	                                            <div class="setTimeRange input-group row">
+                                            <div class="">
+	                                            <div class="setTimeRange input-group col d-flex align-items-center justify-content-between">
 	                                            	<div class="col-2 input-group-prepend">
 	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
-	                                            	</div><div class="col-8"> 
+	                                            	</div>
+	                                            	<div class="col-8"> 
 	                                            		<div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
 	                                            			<div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div>
 	                                            			<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span>
@@ -583,11 +585,11 @@ function setSlider() {
 	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
 	                                            	</div>
 	                                            </div>
-	                                            <div class="position-relative col form-group">
+	                                            <div class="position-relative form-group">
 	                                            	<label for="amount" class="col-form-label">설정된시간</label>
 	                                            	<input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> 
 	                                            </div>
-	                                            <div class="position-relative row form-group" style="display: none;">
+	                                            <div class="position-relative col form-group" style="display: none;">
 	                                            	<div class="col-sm-2">
 	                                            		<div class="col-sm-10"> 
 	                                            			<div id="warning1"></div> 

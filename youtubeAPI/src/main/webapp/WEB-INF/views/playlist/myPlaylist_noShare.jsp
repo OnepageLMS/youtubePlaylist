@@ -32,7 +32,6 @@
 	    width: 100px;
 	  }
 	}
-
 	.playlistPic {
 		width: inherit;
 		max-width: 300px;
@@ -86,40 +85,34 @@
 </head>
 
 <script>
-
 var limit;
 var start_s;
 var end_s;
 var youtubeID;
 var values; // slider handles 
 var d; // var for current playtime
-
 $(document).ready(function(){
 	getAllMyPlaylist(); 
 	$('.myplaylistLink').addClass('text-primary');
 });
-
 function getAllMyPlaylist(){
 	$.ajax({
 		type : 'post',
 		url : '${pageContext.request.contextPath}/playlist/getAllMyPlaylist',
 		success : function(result){
 			playlists = result.allMyPlaylist;
-
 			$('.allPlaylist').empty();
 		
 			if(playlists.length == 0){
 				$('.allPlaylist').append('<p class="text-center">저장된 playlist가 없습니다.</p>');
 			}
-
 			else{
 				$.each(playlists, function( index, value ){	
 					var contentHtml = '<button class="playlist list-group-item-action list-group-item" onclick="getPlaylistInfo(' 
-												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '" playlistName="' + value.playlistName +'">'
+												+ value.id + ', ' + index + ');" playlistID="' + value.id + '" thumbnailID="' + value.thumbnailID + '">'
 											+ value.playlistName 
 											+ '<span class="float-right"><i class="pe-7s-stopwatch"></i>' + convertTotalLength(value.totalVideoLength) + '</span>'
 										+ '</button>'
-
                 	$('.allPlaylist').append(contentHtml);
 				});
 			}
@@ -129,13 +122,11 @@ function getAllMyPlaylist(){
 		
 	});
 }
-
 // 왼쪽에서 플레이리스트 선택시에 영상추가 버튼 보여지게 하기 
 function showAddVideoButton(playlistID, playlistName){
 	$('#addVideoButton').attr('style', 'display: inline');
 	
 }
-
 // (jw) 여기서 얻은 playlistName, playlistID를 영상 추가 버튼에 넘겨주게 하기..? (21/09/06) 
 function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 가져오기
 	$.ajax({
@@ -149,7 +140,6 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 		    $(".playlist:eq(" + displayIdx + ")").css("background-color", "#F0F0F0;"); //클릭한 playlist 표시
 		    $('#playlistInfo').empty(); 
 		    $('.playlistName').empty();
-
 		    $('.selectedPlaylist').attr('playlistID', playlistID);
 		    
 		    var thumbnail = '<div class="row">'
@@ -161,7 +151,6 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 				    			+ '</div>'
 			    			+ '</div>';
 		    $('#playlistInfo').append(thumbnail);
-
 			var name = '<h4>'
 							+ '<p id="displayPlaylistName" style="display:inline";><b>' + result.playlistName + '</b></p>'
 							+ '<a href="javascript:void(0);" data-toggle="modal" data-target="#editPlaylistModal" class="nav-link editPlaylistBtn p-2" style="display:inline;"><i class="nav-link-icon fa fa-cog"></i></a>'
@@ -173,7 +162,6 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 			var description = result.description;
 			var tags = result.tag;
 			if (result.description == null || result.description == '') description = "설명 없음";
-
 			if (tags != null && tags != ""){
 				tags = tags.split(", ");
 				if(tags.length > 1){
@@ -183,7 +171,6 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 	    	}
 	    	else 
 		    	tags = '';
-
 			var info = '<div class="info">' 
 							+ '<div>'
 								+ '<p class="totalInfo"> 총 영상 <b>' + result.totalVideo + '개</b></p>'
@@ -198,11 +185,8 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 						
 			$('#playlistInfo').append(info);
 		    $('#playlistInfo').attr('displayIdx', displayIdx); //현재 오른쪽에 가져와진 playlistID 저장
-
 			getAllVideo(playlistID); //먼저 playlist info 먼저 셋팅하고 videolist 가져오기
-
 			showAddVideoButton(playlistID, result.playlistName); 
-
 			// (jw) playlistID를 설정해서 
 			console.log(result.playlistName);
 			localStorage.setItem("selectedPlaylistName", result.playlistName);
@@ -211,7 +195,6 @@ function getPlaylistInfo(playlistID, displayIdx){ //선택한 playlist 정보 �
 	});
 	
 }
-
 function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오들을 가져온다
 	$.ajax({
 		type : 'post',
@@ -285,20 +268,16 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 		}
 	});
 }
-
 function moveToVideoDetail(playlistID, videoID){	//playlist의 비디오 detail page로 이동
 	var html = '<input type="hidden" name="playlistID"  value="' + playlistID + '">'
 				+ '<input type="hidden" name="videoID" value="' + videoID + '">';
-
 	var goForm = $('<form>', {
 			method: 'post',
 			action: '${pageContext.request.contextPath}/video/detail',
 			html: html
 		}).appendTo('body'); 
-
 	goForm.submit();
 }
-
 $(function() { // video 순서 drag&drop으로 순서변경
 	$("#allVideo").sortable({
 		connectWith: "#allVideo", // 드래그 앤 드롭 단위 css 선택자
@@ -306,23 +285,18 @@ $(function() { // video 순서 drag&drop으로 순서변경
 		cancel: ".no-move", // 움직이지 못하는 css 선택자
 		placeholder: "video-placeholder", // 이동하려는 location에 추가 되는 클래스
 		cursor: "grab",
-
 		update : function(e, ui){ // 이동 완료 후, 새로운 순서로 db update
 			changeAllVideo();
 		}
 	});
 		$( "#allVideo" ).disableSelection(); //해당 클래스 하위의 텍스트는 변경x
-
 });
-
 function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 해당 playlist의 전체 video order 재정렬
 	var playlistID = $('.selectedPlaylist').attr('playlistID');
 	var idList = new Array();
-
 	$('.video').each(function(){
 		var tmp = $(this)[0];
 		var tmp_videoID = tmp.getAttribute('videoID');
-
 		if (deletedID != null){ // 이 함수가 playlist 삭제 뒤에 실행됐을 땐 삭제된 playlistID	 제외하고 재정렬 (db에서 삭제하는것보다 list가 더 빨리 불러와져서 이렇게 해줘야함)
 			if (deletedID != tmp_videoID)
 				idList.unshift(tmp_videoID); //자꾸 마지막 video부터 가져와져서 배열앞에 push 
@@ -348,7 +322,6 @@ function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 �
 	       }
 	    });
 }
-
 function deleteVideo(videoID){ // video 삭제
 	//이부분 수정필요!!! --> 학습자료로 사용중인 비디오 있을때 체크!!!!
 	if (confirm("정말 삭제하시겠습니까?")){
@@ -368,18 +341,15 @@ function deleteVideo(videoID){ // video 삭제
 			}, error : function(err){
 				alert("video 삭제 실패! : ", err.responseText);
 			}
-
 		});
 	}
 	else false;
 }
-
 function convertTotalLength(seconds){ //시분초로 시간 변환
 	var seconds_hh = Math.floor(seconds / 3600);
 	var seconds_mm = Math.floor(seconds % 3600 / 60);
 	var seconds_ss = parseInt(seconds % 3600 % 60); //소숫점단위 안보여주기
 	var result = "";
-
 	if((seconds_hh + '').length < 2) seconds_hh = '0'+seconds_hh;
 	if((seconds_mm + '').length < 2) seconds_mm = '0'+seconds_mm;
 	if((seconds_ss + '').length < 2) seconds_ss = '0'+seconds_ss;
@@ -390,33 +360,26 @@ function convertTotalLength(seconds){ //시분초로 시간 변환
 	
 	return result;
 }
-
 $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn 눌렀을 때 modal에 데이터 전송
 	var playlistID = $('.selectedPlaylist').attr('playlistID');
-
 	//아래 내용은 이미 화면에 표시되어있기 때문에 db에서 다시 가져오지 않는다.
 	var playlistName = $('#displayPlaylistName').text();
 	var description = $('#displayDescription').text();
 	var tags = $('#displayTag').text();
-
 	while(tags){
 		if (tags.indexOf('#') == -1) break;
 		tags = tags.replace('#', '');
 		//tags = tags.replace(' ', ', ');
 	}
-
 	if(description == '설명 없음')	 description = null;
 	
 	$('#setPlaylistID').val(playlistID);
 	$('#editPlaylistName').val(playlistName);
 	$('#editTag').val(tags);
 	$('#editPlaylistDescription').val(description);
-
 });
-
 function submitAddPlaylist(){	//submit the add playlist form
 	if($('#inputPlaylistName').val() == '') return false;
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/playlist/addPlaylist',
@@ -431,10 +394,8 @@ function submitAddPlaylist(){	//submit the add playlist form
 		}
 	});
 }
-
 function submitEditPlaylist(){
 	if($('#editPlaylistName').val() == '') return false;
-
 	$.ajax({
 		type: 'post',
 		url: '${pageContext.request.contextPath}/playlist/updatePlaylist',
@@ -449,11 +410,9 @@ function submitEditPlaylist(){
 		}
 	});
 }
-
 function submitDeletePlaylist(){
 	if(confirm("Playlist를 삭제하시겠습니까? 플레이리스트의 비디오도 모두 삭제됩니다.")){
 		var playlistID = $('#setPlaylistID').val();
-
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/playlist/deletePlaylist',
@@ -466,42 +425,16 @@ function submitDeletePlaylist(){
 			});
 	}
 }
-
 //(jw) localStorage 말고 request로 보내는 방법 다음에 시도해 볼것. (21/10/10)
 /* function goToYoutubePage(){
 	var PlaylistID = $('.selectedPlaylist').attr('playlistID');
-
 	// (jw) playlistID를 설정해서 
 	console.log(result.playlistName);
 	localStorage.setItem("selectedPlaylistName", result.playlistName);
 	localStorage.setItem("selectedPlaylistID", playlistID);
-
 	request.setAttribute("playlistID", PlaylistID);
 	window.location.href='${pageContext.request.contextPath}/video/youtube';
 } */
-
-//tag로 playlist 및 영상 찾기:
-var playlistSearch = null;
-
-function searchPlaylist() {
-	console.log(playlistSearch);
-
-	if (playlistSearch != null) {
-		playlistSearch.forEach(function(element) {
-			//$("[tag*='"+ element + "']").css("background-color", "#d9edf7;"); 
-			$("[playlistName*='" + element + "']").css("background-color", "white");
-		});
-	}
-
-	playlistSearch = $("#playlistSearch").val();
-	playlistSearch = playlistSearch.replace(/ /g, '').split(",");
-
-	playlistSearch.forEach(function(element) {
-		//$("[tag*='"+ element + "']").css("background-color", "yellow");
-		$("[playlistname*='" + element + "']").css("background-color","#d9edf7;");
-	});
-}
-
 </script>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
@@ -533,9 +466,9 @@ function searchPlaylist() {
 													<button type="button" tabindex="2" class="dropdown-item">태그</button>
 												</div>
 											</div>
-											<input id="playlistSearch" placeholder="" type="text" class="form-control">
+											<input placeholder="" type="text" class="form-control">
 											<div class="input-group-append">
-												<button class="btn btn-secondary" onclick="searchPlaylist();">검색</button>
+												<button class="btn btn-secondary">검색</button>
 											</div>
 										</div>
 										<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>

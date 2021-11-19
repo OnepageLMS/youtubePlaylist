@@ -39,6 +39,7 @@
 }
 </style>
 <script>
+var addContentFormOpened = 0;
 
 $(document).ready(function(){
 	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
@@ -195,18 +196,17 @@ $(document).ready(function(){
 			success : function(data) {
 				howmanyTake = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
 				console.log(howmanyTake);
-				//console.log("forVideoInfo? : " + watch[0].id);
-				//console.log("forVideoInfo? : " + watch[1].watched);
-				//console.log("forVideoInfo? : " + watch[2].watched);
 			},
 			error : function() {
 				alert("error");
 			}
 		})
 		
+		var lastDays;
+		var daySeq = 1;	//각 차시별 seq
 		for(var i=0; i<realAllContents.length; i++){
 			if(realAllContents[i].playlistID == 0){
-				symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
+				symbol = '<i class="pe-7s-note2 fa-lg"></i>'
 				videoLength = '';
 			}
 			else{
@@ -234,21 +234,25 @@ $(document).ready(function(){
 					error : function() {
 						alert("error");
 					}
-				})
-				
+				});
 				
 			}
 				
 			var day = realAllContents[i].days;
-			var endDate;
-			console.log(realAllContents);
-			console.log(i + '번째 endDate' + realAllContents[i].endDate);
-			if(realAllContents[i].endDate == null)
-				endDate = '설정되지 않음';
 			
+			if(day != lastDays){
+				lastDays = day;
+				daySeq = 1;
+			}
+			else daySeq += 1;
+			
+			var endDate = realAllContents[i].endDate;
+			if(endDate == null || endDate == '')
+				endDate = '';
 			else {
 				endDate = realAllContents[i].endDate.split(":");
 				endDate = endDate[0] + ":" + endDate[1];	
+				endDate = '<p class="endDate contentInfo"">마감일: ' + endDate + '</p>';
 			}
 
 			// (jw) endDate 넘겨주기 
@@ -289,7 +293,8 @@ $(document).ready(function(){
 			
 			
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
-			var onclickDetail = "location.href='../contentDetail/" + realAllContents[i].id + "/" + i + "'";
+			//var onclickDetail = "location.href='../contentDetail/" + realAllContents[i].id + "/" + i + "'";
+			var goDetail = 'moveToContentDetail(' + realAllContents[i].id + ',' + daySeq + ');';
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + realAllContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 			var published;
 			var percentage = '';
@@ -308,21 +313,21 @@ $(document).ready(function(){
 				percentage = Math.floor(howmanyCount/howmanyTake*100) + '% 완료';
 			
 			content.append(
-				"<div class='content list-group-item-action list-group-item' seq='" + realAllContents[i].daySeq + "'>"
+				"<div class='content list-group-item-action list-group-item' seq='" + daySeq + "'>"
 						+ '<div class="row col d-flex justify-content-between align-items-center">'
 							+ '<div class="row col-sm-2">'
-								+ '<div class="index col-6 pt-1">' + (realAllContents[i].daySeq+1) + '. </div>'
+								+ '<div class="index col-6 pt-1">' + daySeq + '. </div>'
 								+ '<div class="videoIcon col-6" style="font-size:25px;">' + symbol + '</div>' //playlist인지 url인지에 따라 다르게
 							+ '</div>'
-							+ "<div class='col-sm-6 align-items-center' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-									+ "<div class='col-sm-12 card-title' style=' height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
+							+ "<div class='col-sm-6 align-items-center' onclick=" + goDetail + " style='cursor: pointer;'>"
+									+ "<div class='col-sm-12 card-title' style='height: 50%; font-size: 15px; padding: 15px 0px 0px;'>"
 										+ realAllContents[i].title  + " " + videoLength 
 									+ '</div>'		
 									+ '<div class="align-items-center" style="padding: 5px 0px 0px;">'
 										+ '<div class="contentInfoBorder"></div>'
 										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
 										+ '<div class="contentInfoBorder"></div>'
-										+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
+										+ endDate
 									+ '</div>' 
 							+ '</div>'
 							// playlistcheck에서 classID와 playlistID를 가진 count가져오기  / takes 테이블에서 classID같은 학생 수 
@@ -376,12 +381,15 @@ $(document).ready(function(){
 	}
 
 	function showAddContentForm(day){
+		if(addContentFormOpened != 0) return false;
+		addContentFormOpened = 1;
+		
 		day -= 1; //임의로 조절... 
 		var htmlGetCurrentTime = "'javascript:getCurrentTime();'";
 		
 		var addFormHtml = '<div class="addContentForm card-border mb-3 card card-body border-alternate" name="contentForm">'
 							+ '<div class="card-header">'
-								+ '<h5>학습페이지 생성</h5>'
+								+ '<h5>강의컨텐츠 생성</h5>'
 							+ '</div>'
 							+ '<form id="addContent" class="form-group card-body needs-validation" onsubmit="return false;" method="post" novalidate>' 
 								+ '<input type="hidden" name="classID" id="inputClassID" value="${classInfo.id}">'
@@ -415,8 +423,8 @@ $(document).ready(function(){
                                 + '</div>'
                                 + '<div class="position-relative row col form-group d-flex align-items-center">'
 	                        		+ '<label class="col-sm-2 col-form-label" >공개일</label>'
-	                        		+ '<input type="hidden" name="startDate" id="startDate" >'
-	                        		+ '<input type="date" class="form-control col-sm-4" id="setStartDate">'
+	                        		+ '<input type="hidden" name="startDate" id="startDate">'
+	                        		+ '<input type="date" class="form-control col-sm-4" id="setStartDate" required>'
 									+ '<input type="number" class="setTime start_h form-control col-sm-2 mr-1" value="0" min="0" max="23"> 시'
 									+ '<input type="number" class="setTime start_m form-control col-sm-2 ml-1 mr-1" value="0" min="0" max="59"> 분'
 									+ '<button type="button" class="btn-transition btn btn-outline-focus btn-sm ml-1" onclick="location.href=' + htmlGetCurrentTime + '">지금</button>'
@@ -427,21 +435,16 @@ $(document).ready(function(){
 								+ '</div>'
 							+ '</form>';
 									
-		//$('input[name=days]').attr('value', day);
 		$('.day:eq(' + day + ')').append(addFormHtml);
 
 		//아래부분 마감일 설정때 나오도록...?
 		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
 		var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
-		//endDate.min = date;
-		//endDate.value = date;
-		//startDate.min = date;
-		//startDate.value = date;
 		$('#setStartDate').val(date);
 
 		//페이지 추가 form 영역으로 페이지 스크롤 
 		var offset = $('.addContentForm').offset();
-		$('html, body').animate({scrollTop : offset.top}, 400);
+		$('html, body').animate({scrollTop : offset.top}, 300);
 		
 	}
 
@@ -460,6 +463,7 @@ $(document).ready(function(){
 	function cancelForm(){
 		if (confirm("작성을 취소하시겠습니까?")) {
 			$('.addContentForm').remove();
+			addContentFormOpened = 0;
 		}
 	}
 
@@ -483,36 +487,39 @@ $(document).ready(function(){
 
 	function submitAddContentForm(){
 		if($('#inputTitle').val() == null || $('#inputTitle').val() == ''){
-			alert('제목을 입력해주세요!');
+			alert('제목을 입력해주세요');
 			 return false;
 		}
+
 		var date = $('#setStartDate').val(); 
+		if(date == null || date == '') {
+			alert('공개일을 설정해주세요');
+			return false;
+		}
+		
 		var hour = $('.start_h').val();
         var min = $('.start_m').val();
 		var startDate = date + "T" + stringFormat(hour) + ":" +stringFormat(min) + ":00";
 		$('#startDate').val(startDate);
         
 		var endDate = $('#setEndDate').val();
-		
-		if(endDate != null && endDate != ''){
+		if(endDate != null && endDate != ""){
 			var e_date = $('#setEndDate').val();
 	        var e_hour = $('.end_h').val();
 	        var e_min = $('.end_m').val();
 			endDate = e_date + "T" + stringFormat(e_hour) + ":" + stringFormat(e_min) + ":00";	
+
+			if(startDate >= endDate) {
+	            alert("컨텐츠 공개일이 마감일보다 빨라야 합니다.");
+		        $('#startDate').focus();
+	            return false;
+	        }
 		}
 		else {
-			endDate = "0000-00-00";
+			endDate = "";
 			
 		}
 		$('#endDate').val(endDate);
-
-		/*
-        if(startDate.getTime() >= endDate.getTime()) {
-            alert("컨텐츠 마감일보다 게시일이 빨라야 합니다.");
-	        $('#startDate').focus();
-            return false;
-        }
-        */
 
 		if($("#inputPlaylistID").val() == null || $("#inputPlaylistID").val() == ''){
 			$("#inputPlaylistID").val(0);
@@ -547,12 +554,6 @@ $(document).ready(function(){
 		result += ("00"+seconds_mm.toString()).slice(-2) + ":" + ("00"+seconds_ss .toString()).slice(-2) ;
 		
 		return result;
-	}
-	
-	function deleteCheck(classID, id){
-		var a = confirm("정말 삭제하시겠습니까?");
-		if (a)
-			location.href = '../deleteContent/' + classID + "/" + id;
 	}
 
 	function selectOK(){	//modal창에서 playlist 선택완료시
@@ -604,26 +605,38 @@ $(document).ready(function(){
 		});
 	}
 	
-	
 	function deleteDay(classID, day){
-		
-		if(confirm('정말 차시를 삭제하시겠습니까?')){	//이미 생성된컨텐츠가 있을경우에 따로 처리해야함!
+		if(confirm(day + '차시를 삭제하시겠습니까?\n차시에 해당하는 강의 컨텐츠와 학생들의 출결 정보도 함께 삭제됩니다.')){	//사용자입력받기
 			$.ajax({
 				type : 'post',
-				url : '../deleteDay',
-				data : {classID : classID,
-					days : day},
+				url : '${pageContext.request.contextPath}/class/deleteDay',
+				data : {
+					classID : classID,
+					days : day
+					},
 				datatype : 'json',
 				success : function(result){
 					console.log("성공!" +result);
 					location.reload();
 				},
 				error : function() {
-				  	alert("updateDays error");
+				  	alert("차시 삭제에 실패했습니다! 잠시후 다시 시도해주세요:(");
 				}
 			});
 		}
-		
+	}
+
+	function moveToContentDetail(contentID, daySeq){	//content detail page로 이동
+		var html = '<input type="hidden" name="id"  value="' + contentID + '">'
+					+ '<input type="hidden" name="daySeq" value="' + daySeq + '">';
+	
+		var goForm = $('<form>', {
+				method: 'post',
+				action: '${pageContext.request.contextPath}/class/contentDetail',
+				html: html
+			}).appendTo('body'); 
+	
+		goForm.submit();
 	}
 </script>
 <script>
@@ -672,7 +685,7 @@ $(document).ready(function(){
 								<div id="client-paginator">
 									<ul class="pagination">
 	                               		<c:forEach var="j" begin="1" end="${classInfo.days}" varStatus="status">
-											<li class="page-item"><a href="#target${j}" class="page-link"> ${j} 차시 </a></li>
+											<li class="page-item"><a href="#target${j-1}" class="page-link"> ${j} 차시 </a></li>
 										</c:forEach>
 	                              	</ul>
 								</div>
@@ -687,14 +700,15 @@ $(document).ready(function(){
                                     	<div class="card-title" style="display: inline;" >
                                     		<a style="display: inline; white-space: nowrap;" name= "target${j}" >
 											 <h5 style="display: inline;">${j} 차시</h5>
-											
 											</a> 
 											 <button onclick='showAddContentForm(${status.index})' class="mb-2 mr-2 btn-transition btn btn-outline-primary btn-sm"> +페이지추가</button>
-											 <button onclick='deleteDay(${classInfo.id}, ${status.index})' class="mb-2 mr-2 btn-transition btn btn-danger float-right btn-sm">차시삭제</button>
-											 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(-207px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                                <button type="button" tabindex="-1" class="dropdown-item" onclick='showAddContentForm(${status.index})'>+페이지추가</button>
-                                                <button type="button" tabindex="-1" class="dropdown-item">-페이지삭제</button>
-                                            </div> 
+											 <c:set var="j" value="${j}" />
+											 <c:set var="count" value="${classInfo.days}" />
+												<c:if test="${j eq count}">
+													<button onclick='deleteDay(${classInfo.id}, ${status.index})' 
+														class="mb-2 mr-2 btn-transition btn btn-danger float-right btn-sm">차시삭제</button>
+												</c:if>
+											 
                                     	</div>
 
 	                                    <div class="list-group accordion-wrapper day" day="${status.index}">
@@ -711,6 +725,7 @@ $(document).ready(function(){
 	   	</div>
    	</div>
    	
+   	<!-- 강의컨텐츠 생성 중 Playlist 가져오기 modal -->
    	<div class="modal fade" id="selectPlaylistModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
 	    <div class="modal-dialog" role="document">
 	        <div class="modal-content">

@@ -76,6 +76,25 @@ public class LoginController {
 	private ClassesVO classInfo;
 	private Stu_TakesVO takes;
 	public MemberVO loginVO;
+	private int newlyEnrolled=0;
+	
+	
+	//(jw)
+	@RequestMapping(value="/enroll" , method = RequestMethod.POST)
+	public String enroll(Model model) {
+		//takes.setStudentID(loginvo.getId());
+		takes.setClassName(classInfo.getClassName()); 
+		takes.setStatus("pending");
+		if(takesService.insertStudent(takes) == 1) {
+			System.out.println("학생 등록 요청 완료~!");
+			model.addAttribute("enroll", 1); // 
+		}
+		else {
+			System.out.println("학생 등록 요청 실패");
+		}
+		
+		return "redirect:/student/class/dashboard";
+	}	
 	
 	@RequestMapping(value = "/login/signin", method = RequestMethod.GET)
 	public String login() {
@@ -83,10 +102,16 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "/login/google", method = RequestMethod.POST)
-	public String google(@RequestParam(value = "mode") String mode) {
+	public String google(@RequestParam(value = "mode") String mode, @RequestParam(value="request", required=false)Integer request ) {
 		System.out.println(mode);
 		loginMode = mode;
-			
+		System.out.println(request);
+		
+		if(request == null) request = 0;
+		else {
+			newlyEnrolled = 1;
+		}		
+		
 		String url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + clientID + "&"
 							+ "redirect_uri=" + redirectURL + "&response_type=code&scope=email%20profile%20openid&access_type=offline";
 		return "redirect:" + url;
@@ -94,7 +119,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login/oauth2callback", method = RequestMethod.GET)
 	public String googleAuth(Model model, @RequestParam(value = "code") String authCode, HttpServletRequest request,
-			HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
+		HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
 		
 		// HTTP Request를 위한 RestTemplate
 		RestTemplate restTemplate = new RestTemplate();
@@ -104,7 +129,7 @@ public class LoginController {
 		googleOAuthRequestParam.setClientId(clientID);
 		googleOAuthRequestParam.setClientSecret(clientSecret);
 		googleOAuthRequestParam.setCode(authCode);
-		googleOAuthRequestParam.setRedirectUri(redirectURL); 
+		googleOAuthRequestParam.setRedirectUri(redirectURL);
 		googleOAuthRequestParam.setGrantType("authorization_code");
 	
 		// JSON 파싱을 위한 기본값 세팅
@@ -178,6 +203,10 @@ public class LoginController {
 		
 		session.setAttribute("userID", loginvo.getId());
 		session.setAttribute("login", loginvo);
+		model.addAttribute("newlyEnrolled", newlyEnrolled);
+		System.out.println("newlyEnrolled값 확인! " + newlyEnrolled);
+		
+		if(newlyEnrolled == 1) newlyEnrolled = 0;
 		
 		//(jw)
 		if(entryCode != null) {
@@ -195,26 +224,11 @@ public class LoginController {
 		return returnURL;
 	}
 	
-	//(jw)
-	@RequestMapping(value="/enroll" , method = RequestMethod.GET)
-	public String enroll(Model model) {
-		//takes.setStudentID(loginvo.getId());
-		takes.setClassName(classInfo.getClassName()); 
-		takes.setStatus("pending");
-		if(takesService.insertStudent(takes) == 1) {
-			System.out.println("학생 등록 요청 완료~!");
-			model.addAttribute("enroll", 1); // 
-		}
-		else {
-			System.out.println("학생 등록 요청 실패");
-		}
-		
-		return "redirect:/student/class/dashboard";
-	}	
-	
 	@RequestMapping(value = "/invite/{entryCode}", method = RequestMethod.GET)
 	public String entry(@PathVariable String entryCode, Model model, HttpSession session) { //@SessionAttribute("login") MemberVO loginVO) { //
 		this.entryCode = entryCode;
+		
+		newlyEnrolled = 1; // 신규 강의신청 확인용 
 		takes = new Stu_TakesVO();
 		
 		classInfo = classesService.getClassByEntryCode(entryCode);
@@ -233,7 +247,7 @@ public class LoginController {
 		}
 		model.addAttribute("login", loginVO);
 		model.addAttribute("alreadyEnrolled", flag);
-		
+
 		return "intro/invite"; 
 	}
 	

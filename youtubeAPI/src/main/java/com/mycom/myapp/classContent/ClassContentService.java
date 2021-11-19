@@ -9,7 +9,8 @@ public interface ClassContentService {
 	public int insertURLContent(ClassContentVO vo);
 	public int updateContent(ClassContentVO vo);
 	public int updatePublished(ClassContentVO vo);
-	public int deleteContent(ClassContentVO vo); //int id -> ClassContentVO vo수정
+	public int deleteContent(int id);
+	public int deleteContentList(ClassContentVO vo);
 	public int getClassNum(int classID);
 	public int getClassDaysNum(int classID);
 	public int getBiggestUsedDay(int classID);
@@ -20,6 +21,5 @@ public interface ClassContentService {
 	public List<ClassContentVO> getRealAll(int classID);
 	public List<ClassContentVO> getAllClassContentForCopy(int classID);
 	public int insertCopiedClassContents(List<ClassContentVO> list);
-	public int getDaySeq(ClassContentVO vo);
 	public ClassContentVO getClassContentID(ClassContentVO vo);
 }

@@ -8,7 +8,7 @@ public interface AttendanceService {
 	public int insertAttendanceNoFile(AttendanceVO vo); 
 	public int insertAttendance(AttendanceVO vo);
 	public int updateAttendance(AttendanceVO vo);
-	public int deleteAttendance(int id);
+	public int deleteAttendance(AttendanceVO vo);
 	public AttendanceVO getAttendance(int id);
 	public AttendanceVO getAttendanceID(AttendanceVO vo);
 	public List<AttendanceVO> getAttendanceID2(int classID);

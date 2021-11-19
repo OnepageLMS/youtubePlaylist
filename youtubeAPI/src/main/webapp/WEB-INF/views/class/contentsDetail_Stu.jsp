@@ -41,7 +41,7 @@
 //var classID =  ${classInfo.id};
 //var playlistSameCheck = ${playlistSameCheck};
 //var classPlaylistID = ${classPlaylistID};
-var classContentID = 0 ;
+var classContentID = 0;
 var videoIdx;
 var playlist; 
 
@@ -50,21 +50,19 @@ var ori_videoID;
 var ori_playlistID;
 var ori_classContentID;
 
+var weekContents;
+
 
 $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 위함
-	
-	
 	$.ajax({ //classID에 맞는 classContents를 보여주기 위함(playlist만 있음)
 		  url : "${pageContext.request.contextPath}/student/class/weekContents",
 		  type : "post",
 		  async : false,
 		  success : function(data) {
 			  weekContents = data;
-			  videoIdx = ${daySeq};
+			  videoIdx = '${daySeq}';
 			  classContent = weekContents[videoIdx]; //없으면 안됩니다 
-			 // console.log(weekContents);
-			 // console.log("weekContents.legth : " + weekContents.length);
-			 // console.log("playlistID : " + weekContents[videoIdx].playlistID);
+			  
 			  var element = document.getElementById("contentsTitle");
 			  element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + weekContents[videoIdx].title;
 
@@ -86,17 +84,17 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			playlistID : weekContents[videoIdx].playlistID,
 		},
 		success : function(data) {
-			//console.log("playlistID : " + weekContents[videoIdx].playlistID);
 			playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
-			//console.log("준비중인데 " + playlist.length); 
-			ori_videoID = playlist[0].id; //첫 videoID는 선택된 classContent의 Playlist의 첫번째 영상
-			ori_playlistID = weekContents[videoIdx].playlistID;
-			ori_classContentID = weekContents[videoIdx].id;
+			if(data.length > 0){
+				ori_videoID = playlist[0].id; //첫 videoID는 선택된 classContent의 Playlist의 첫번째 영상
+				ori_playlistID = weekContents[videoIdx].playlistID;
+				ori_classContentID = weekContents[videoIdx].id;
+			}
 		},
 		error : function() {
 			alert("error");
 		}
-	})	
+	});
 	//}
 	
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
@@ -113,16 +111,12 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		error : function() {
 			alert("error");
 		}
-	})
-			
-	
+	});
 	
 	// 초기화면 세팅 시작!!
 	
 	for(var i=0; i<weekContents.length; i++){
-		
 		var symbol;
-		
 		
 		if(weekContents[i].playlistID == 0){ //NOT Playlist
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
@@ -194,7 +188,14 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 				
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg" style="max-width: 100%; height: 100%;">';
 				var day = weekContents[i].days;
-				var endDate = weekContents[i].endDate; //timestamp -> actural time
+				var endDate = weekContents[i].endDate;
+				
+				if(endDate == null || endDate == '')
+					endDate = '';
+				else {
+					endDate = endDate.split(":");
+					endDate = endDate[0] + ":" + endDate[1];	
+					endDate =  '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">마감일: ' + endDate + '</div>'
 		
 				classContentID = weekContents[i].id; // classContent의 id //여기 수정
 				
@@ -285,7 +286,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 									+ '</div>'
 									+ '<div class="">'
 										+ '<div class="contentInfoBorder"></div>'
-										+ '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">' + '마감일: ' + endDate + '</div>'
+										+ endDate
 									+ '</div>' 
 								+ '</div>'
 									
@@ -312,12 +313,11 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 					       	+'</div>'
 						+ '</div>'
 	  			+ '</div>');
-			
-	}
-		
-}	
-		
-});
+				
+				}	
+			}	
+		}
+	});
 
 function convertTotalLength(seconds){
 	var seconds_hh = Math.floor(seconds / 3600);

@@ -35,10 +35,6 @@ public class NoticeController {
 	private NoticeService noticeService;
 	@Autowired
 	private ClassesService classService;
-	@Autowired
-	private MemberService memberService;
-	@Autowired
-	private Stu_TakesService takesService;
 
 	private int instructorID = 0;
 	
