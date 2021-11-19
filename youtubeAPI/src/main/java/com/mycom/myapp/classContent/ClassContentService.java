@@ -11,6 +11,7 @@ public interface ClassContentService {
 	public int updatePublished(ClassContentVO vo);
 	public int deleteContent(ClassContentVO vo); //int id -> ClassContentVO vo수정
 	public int getClassNum(int classID);
+	public int getClassDaysNum(int classID);
 	public int getBiggestUsedDay(int classID);
 	public ClassContentVO getOneContentInstructor(int id);
 	public ClassContentVO getOneContent(int id);

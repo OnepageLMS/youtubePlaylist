@@ -1,8 +1,5 @@
 package com.mycom.myapp.commons;
 
-import java.sql.Date;
-import java.util.*;
-
 public class ClassContentVO {
 	private int id;
 	private String title;
@@ -14,7 +11,6 @@ public class ClassContentVO {
 	private int daySeq;
 	private int published;
 	private String startDate;	
-	//private Date startDatee;	
 	private String endDate;
 	private String modDate;
 	

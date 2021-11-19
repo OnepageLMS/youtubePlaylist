@@ -3,7 +3,7 @@
 <mapper namespace="ClassContent">
 	<insert id="insertContent">
 		insert into lms_classContent (title, description, classID, playlistID, days, daySeq, published, startDate, endDate)
-		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}+1, #{published}, #{startDate}, #{endDate})
+		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}, #{published}, #{startDate}, #{endDate})
 	</insert>
 	
 	<insert id="insertURLContent">	<!-- playlist없는 강의컨텐츠 -->
@@ -39,6 +39,12 @@
 	
 	<select id="getClassNum" resultType="int">	<!-- 해당 강의실에 생성된 강의컨텐츠 갯수 가져오기! -->
 		select count(*)
+		from lms_classContent
+		where classID=#{classID}
+	</select>
+	
+	<select id="getClassDaysNum" resultType="int">	<!-- 해당 강의실에 생성된 강의컨텐츠 갯수 가져오기! -->
+		select count(distinct days)
 		from lms_classContent
 		where classID=#{classID}
 	</select>

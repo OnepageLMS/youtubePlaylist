@@ -69,66 +69,45 @@ $(document).ready(function(){
 	var allMyClass = JSON.parse('${realAllMyClass}');
 	var weekContents = JSON.parse('${weekContents}');
 	var takes = JSON.parse('${takes}');
+	var classDays = JSON.parse('${classDays}');
 	
+	$.ajax({ 
+		url : "${pageContext.request.contextPath}/attendance/forDays",
+		type : "post",
+		async : false,
+		success : function(data) {
+			daysCount = data;
+			console.log(daysCount[0][5]);
+		},
+		error : function() {
+			alert("error");
+		}
+	})
 	
-	
-	var days = 0;
+	$.ajax({ 
+		url : "${pageContext.request.contextPath}/attendance/forWatchedCount",
+		type : "post",
+		async : false,
+		data : {	
+			playlistID : weekContents[i].playlistID,
+			classContentID : weekContents[i].id,
+			studentID : takes[j].studentID
+		},
+		success : function(data) {
+			watchCount = data; 
+			console.log(data + " / " + weekContents[i].totalVideo);
+		},
+		error : function() {
+			alert("error");
+		}
+	})
+			
+	//alert("takesNum : " +${takesNum} + " classDays.length " + classDays);
 	for(var j=0; j<${takesNum}; j++){
-		for(var i=0; i<allMyClass.length; i++){
-			console.log("초기 i : " + i);
-			var watchCount = 0;
-			var totalVideo = 0;
-			//var daysCount;
+		for(var i=0; i<classDays; i++){
 			
 			
-			//for(var k=0; k<${classInfo.days}; k++){
-			console.log('days : ' + days);
-			$.ajax({ 
-				url : "${pageContext.request.contextPath}/attendance/forDays",
-				type : "post",
-				async : false,
-				data : {	
-					days: days				
-				},
-				success : function(data) {
-					daysCount = data;
-				},
-				error : function() {
-					alert("error");
-				}
-			})
-			
-			if(days < ${classInfo.days})
-				days++;
-			//}
-			console.log("daysCount : " + daysCount);
-			for(var k =0; k< daysCount; k++){
-			//	console.log("days : " + weekContents[i].days + " i+1 days : " + weekContents[i+1].days + " , i : " + i);
-			//	i = i + k;	
-				$.ajax({ 
-					url : "${pageContext.request.contextPath}/attendance/forWatchedCount",
-					type : "post",
-					async : false,
-					data : {	
-						playlistID : weekContents[i].playlistID,
-						classContentID : weekContents[i].id,
-						studentID : takes[j].studentID
-					},
-					success : function(data) {
-						watchCount += data; 
-						totalVideo +=  weekContents[i].totalVideo;
-						console.log(watchCount + " / " + totalVideo);
-					},
-					error : function() {
-						alert("error");
-					}
-				})
-			//	i++;
-				console.log("i : " + i + "weekContents.id " + weekContents[i].id);
-			
-			}
-			
-			$.ajax({ 
+			/*$.ajax({ 
 				url : "${pageContext.request.contextPath}/attendance/forInnerWatched",
 				type : "post",
 				async : false,
@@ -143,22 +122,31 @@ $(document).ready(function(){
 				error : function() {
 					alert("error");
 				}
-			})
+			})*/
 			
-			if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
+			if(daysCount[j][i] != null && allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
 				//alert("성공이다 ");
 				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0];
+				element.innerHTML = '' ;
+				console.log(" ?? " + daysCount[j][i] + " i " + i + " , j " + j);
+				if(daysCount[j][i] == "출석"){
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
+					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = "100%";
+				}
+				if(daysCount[j][i] == "미확인")
+					element.innerHTML +=  "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
+					//document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = Math.floor(watchCount/totalVideo*100) + "%"
 				//console.log(element);
-				element.innerText = '';
+				//element.innerText = daysCount[i][j];
 				//if(weekContents[i].days == weekContents[i+1].days){
 				//var ori_watchCount = watchCount;
-				var result;
+				/*var result;
 				if(watchCount == null || watchCount == '') result = '';
 				else result = Math.floor(watchCount/totalVideo*100) + "%";
-				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = result;
+				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = result;*/
 			//}
 			
-				if(daysCount != 0){
+				/*if(daysCount != 0){
 					if(innerWatched == 2)
 						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
 					else if(innerWatched == -1)
@@ -173,12 +161,12 @@ $(document).ready(function(){
 				}
 				else{
 					element.innerHTML += 'ㅎ';
-				}
+				}*/
 			
 			
 			}
 			
-			console.log("밖인디 " + watchCount + " / " + totalVideo + " i :" + i);
+			//console.log("밖인디 " + watchCount + " / " + totalVideo + " i :" + i);
 			
 		}
 	}

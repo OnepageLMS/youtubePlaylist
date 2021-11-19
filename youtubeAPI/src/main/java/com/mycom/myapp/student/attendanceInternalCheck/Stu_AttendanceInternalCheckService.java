@@ -10,5 +10,5 @@ public interface Stu_AttendanceInternalCheckService {
 	public int insertAttendanceInCheck(AttendanceInternalCheckVO vo);
 	public int updateAttendanceInCheck(AttendanceInternalCheckVO vo);
 	public int deleteAttendanceInCheck(AttendanceInternalCheckVO vo);
-	public AttendanceInternalCheckVO getAttendanceInCheck(AttendanceInternalCheckVO vo);
+	public List<AttendanceInternalCheckVO> getAttendanceInCheck(AttendanceInternalCheckVO vo);
 }

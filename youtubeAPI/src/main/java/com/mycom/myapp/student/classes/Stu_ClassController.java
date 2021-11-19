@@ -533,7 +533,6 @@ public class Stu_ClassController{
 			if(playlistcheckService.getPlaylist(playlistID) == null) {
 				if(playlistcheckService.insertPlaylist(pcvo) != 0) {
 					System.out.println("changewatch good insert");
-					//playlistCheck에 insert될 때, attendanceInternalCheck에도 insert시키기 
 					//get했을 때 null이면 insert, 
 					//마감일보다 playlistCheck에 insert된 시간이 먼저거나 갘으면 true(출석)
 					//그렇지 않으면 결석 
@@ -550,15 +549,10 @@ public class Stu_ClassController{
 					ccvo.setClassID(classID);
 					ccvo.setDays(classContentService.getOneContent(classPlaylistID).getDays()); //추후에 수정하기 
 					ccvo.setPlaylistID(playlistID);
-					System.out.println("개수 ㅣ : " + classContentService.getDaySeq(ccvo));
-					System.out.println("개수 : "  + playlistcheckService.getCompletePlaylist(pcvo).size());
-					System.out.println("ccvo - classID : " + ccvo.getClassID() + " , days  " + ccvo.getDays());
-					System.out.println("pcvo - classID : " + pcvo.getClassID() + " , days  " + pcvo.getDays() + ", studentID " + pcvo.getStudentID());
-					//attendanceInCheckService에 insert한다 
 					
 					//0 이거나 1이면 출석 (endDate >= stuCompleteDate) 기간 내에 들음, 아니면 결석 
-					//System.out.println("0 이거나 1이면 출석 , 아니면 결석 " + result);
-					System.out.println("count : " + classContentService.getDaySeq(ccvo) + " , count : " + playlistcheckService.getCompletePlaylistWithDays(pcvo).size());
+					//classContent에서 classID랑 days가 같은 (차시 내에 있는 페이지의 수) 개수와
+					//playlistCheck에서 classID, days, studentID 개수가 같으면 attendanceInternalCheck테이블에 넣는다. 
 					if(classContentService.getDaySeq(ccvo) == playlistcheckService.getCompletePlaylistWithDays(pcvo).size()) {
 						System.out.println(classContentService.getOneContent(classPlaylistID).getEndDate());
 						String endString = classContentService.getOneContent(classPlaylistID).getEndDate();

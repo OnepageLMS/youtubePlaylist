@@ -20,7 +20,7 @@
 	
 	<select id="getAttendanceInCheck" resultType="attendanceInternal">
 		select * from lms_attendanceInternalCheck
-		where classContentID=#{classContentID} and studentID=#{studentID}
+		where classID=#{classID} and days=#{days} and studentID=#{studentID}
 	</select>
 	
 </mapper>
