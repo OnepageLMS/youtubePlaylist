@@ -1,8 +1,5 @@
 package com.mycom.myapp.commons;
 
-import java.sql.Date;
-import java.util.*;
-
 public class ClassContentVO {
 	private int id;
 	private String title;

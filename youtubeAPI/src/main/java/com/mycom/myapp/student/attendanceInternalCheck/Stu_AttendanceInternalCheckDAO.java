@@ -27,8 +27,8 @@ public class Stu_AttendanceInternalCheckDAO {
 		return sqlSession.delete("AttendanceInternalCheck.deleteAttendanceInCheck", vo);
 	}
 	
-	public AttendanceInternalCheckVO getAttendanceInCheck(AttendanceInternalCheckVO vo) {
-		AttendanceInternalCheckVO result = sqlSession.selectOne("AttendanceInternalCheck.getAttendanceInCheck", vo);
+	public List<AttendanceInternalCheckVO> getAttendanceInCheck(AttendanceInternalCheckVO vo) {
+		List<AttendanceInternalCheckVO> result = sqlSession.selectList("AttendanceInternalCheck.getAttendanceInCheck", vo);
 		return result;
 	}
 }

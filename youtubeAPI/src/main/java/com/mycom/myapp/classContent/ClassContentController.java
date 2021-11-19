@@ -110,7 +110,7 @@ public class ClassContentController {
 	@ResponseBody
 	@RequestMapping(value = "/forHowManyTakes", method = RequestMethod.POST)
 	public int forHowManyTakes(HttpServletRequest request, Model model) throws Exception {
-		
+		System.out.println("classID : " + classID);
 		return takesService.getStudentNum(classID).size();
 	}
 	

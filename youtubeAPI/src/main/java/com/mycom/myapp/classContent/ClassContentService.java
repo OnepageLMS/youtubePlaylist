@@ -12,6 +12,7 @@ public interface ClassContentService {
 	public int deleteContent(int id);
 	public int deleteContentList(ClassContentVO vo);
 	public int getClassNum(int classID);
+	public int getClassDaysNum(int classID);
 	public int getBiggestUsedDay(int classID);
 	public ClassContentVO getOneContentInstructor(int id);
 	public ClassContentVO getOneContent(int id);

@@ -324,7 +324,6 @@ public class Stu_ClassController{
 		return map;
 	}*/
 	
-	
 	//dashboard_Stu에서 사용
 	@RequestMapping(value = "/competePlaylistCount", method = RequestMethod.POST)
 	@ResponseBody

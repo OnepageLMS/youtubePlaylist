@@ -93,6 +93,7 @@ public class AttendanceController {
 		model.addAttribute("takes", JSONArray.fromObject(stu_takesService.getStudentNum(classID)));	//이름이 모호함
 		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
 		
+		model.addAttribute("classDays", JSONArray.fromObject(classService.getClass(classID).getDays()));
 		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		
@@ -145,13 +146,63 @@ public class AttendanceController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/forDays", method = RequestMethod.POST)
-	public int forDays(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
-		int days = Integer.parseInt(request.getParameter("days"));
+	public List<List<String>> forDays(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
+		//int days = Integer.parseInt(request.getParameter("days"));
 		ClassContentVO ccvo = new ClassContentVO ();
 		ccvo.setClassID(classID);
-		ccvo.setDays(days);
-		//System.out.println("days는 "+ days+ "이고, 해당 days는 " + classContentService.getDaySeq(ccvo)+ " 개 ");
-		return classContentService.getDaySeq(ccvo);
+		//ccvo.setDays(days);
+		System.out.println("여기 강의가 총 몇개냐면 " + classInsContentService.getClassNum(classID));
+		System.out.println("여기 days는 총 몇개냐면 " + classInsContentService.getClassDaysNum(classID));
+		
+		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
+		List<List<String>> stuAttend = new ArrayList<List<String>>();
+		int dayNum = classInsContentService.getClassDaysNum(classID);
+		System.out.println("dayNum : " + dayNum + ", takes.size() " + takes.size());
+		
+		for(int i=0; i<takes.size(); i++) {
+			List<String> stuOne = new ArrayList<String>();
+			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+			
+			for(int j=0; j<dayNum; j++) {
+				ccvo.setClassID(classID);
+				ccvo.setDays(j);
+				classContentService.getDaySeq(ccvo);
+				
+				int studentID = takes.get(i).getStudentID();
+				System.out.println("aivo에 들어가는 건데 " + classID + ", studnetID :" +studentID+ " days : " +j);
+				aivo.setClassID(classID);
+				aivo.setStudentID(studentID);
+				aivo.setDays(j);
+				
+				attendanceInCheckService.getAttendanceInCheck(aivo);
+				
+				if(classContentService.getDaySeq(ccvo) == attendanceInCheckService.getAttendanceInCheck(aivo).size()) {
+					System.out.println("출석 ,, ");
+					System.out.println("차시는 " + (j+1)+ "차시, 해당 차시 안에 수업이 " + classContentService.getDaySeq(ccvo) + "개 ");
+					System.out.println("학생이 완료한 수업은 " + attendanceInCheckService.getAttendanceInCheck(aivo).size()+ " 개 ");
+					System.out.println("이럴때 출석! 출석한 학생의 id : " + studentID);
+					stuOne.add("출석");
+				}
+				else {
+					System.out.println("미확인 ,, ");
+					System.out.println("차시는 " + (j+1)+ "차시, 해당 차시 안에 수업이 " + classContentService.getDaySeq(ccvo) + "개 ");
+					System.out.println("학생이 완료한 수업은 " + attendanceInCheckService.getAttendanceInCheck(aivo).size()+ " 개 ");
+					System.out.println("이럴때 미확인 ! 미확인  학생의 id : " + studentID);
+					stuOne.add("미확인");
+				}
+				
+				
+			}
+			stuAttend.add(stuOne);
+		}
+		
+		System.out.println(stuAttend.get(0));
+		System.out.println(stuAttend.get(1));
+		System.out.println(stuAttend.get(2));
+		System.out.println(stuAttend.get(3));
+		System.out.println(stuAttend.get(4));
+			
+		return stuAttend;
 	}	
 	
 	@ResponseBody
@@ -171,6 +222,15 @@ public class AttendanceController {
 	    for(int i=0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
 	    	if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1)
 	    		count++;
+	    }
+	    
+	    int dayNum = classInsContentService.getClassDaysNum(classID);
+	    ClassContentVO ccvo = new ClassContentVO ();
+	    
+	    for(int j=0; j<dayNum; j++) {
+			ccvo.setClassID(classID);
+			ccvo.setDays(j);
+			classContentService.getDaySeq(ccvo); //해당 classID와 days가진 것 개수 (days내에 playlist개수)
 	    }
 	    return count;
 	}
@@ -489,7 +549,7 @@ public class AttendanceController {
 		
 	}
 	
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/forInnerWatched", method = RequestMethod.POST)
 	public int forInnerWatched(HttpServletRequest request)  {
 		//0,1 미확인 2출석 -1 결석 
@@ -552,7 +612,7 @@ public class AttendanceController {
 		
 		return 0;
 		
-	}
+	}*/
 	
 	@ResponseBody
 	@RequestMapping(value = "/forAttendance", method = RequestMethod.POST)
