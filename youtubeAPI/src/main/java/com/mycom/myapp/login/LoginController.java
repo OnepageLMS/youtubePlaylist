@@ -107,7 +107,7 @@ public class LoginController {
 		loginMode = mode;
 		System.out.println(request);
 		
-		if(request == null) request = 0;
+		if(request == null) request = 0; // request가 null인 상태로 두면 에러나서 필요함. 
 		else {
 			newlyEnrolled = 1;
 		}		
@@ -177,7 +177,7 @@ public class LoginController {
 		}
 		else {
 			mode = "lms_student";
-			returnURL = "redirect:/student/class/dashboard";
+			returnURL = "redirect:/student/class/dashboard"; // @RequestParam(required=false) Integer newlyEnrolled, 
 		}
 		checkvo.setMode(mode);
 		checkvo.setEmail(email);
@@ -204,10 +204,6 @@ public class LoginController {
 		session.setAttribute("userID", loginvo.getId());
 		session.setAttribute("login", loginvo);
 		
-		System.out.println("newlyEnrolled값 확인! " + newlyEnrolled);
-		
-		if(newlyEnrolled == 1) newlyEnrolled = 0;
-		
 		//(jw)
 		if(entryCode != null) {
 			if(checkIfAlreadyEnrolled(loginvo, classInfo) == 0) {
@@ -220,7 +216,15 @@ public class LoginController {
 				}
 				else System.out.println("학생 등록 요청 실패");
 			}
+			else {
+				newlyEnrolled = 2;  // 만약 이미 강의신청을 한 경우, 이미 신청 되었습니다 메시지를 위한 플래그 
+			}
 		}
+		
+		redirectAttributes.addAttribute("newlyEnrolled", newlyEnrolled);
+		
+		if(newlyEnrolled == 1) newlyEnrolled = 0;
+		
 		return returnURL;
 	}
 	

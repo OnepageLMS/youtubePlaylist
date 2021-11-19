@@ -106,7 +106,7 @@ public class Stu_ClassController{
 	}
 	
 	@RequestMapping(value = "/dashboard", method =  {RequestMethod.GET,RequestMethod.POST})	//선생님 controller랑 합치기!
-	public String dashboard(HttpSession session, Model model) {
+	public String dashboard(@RequestParam(required=false) Integer newlyEnrolled, HttpSession session, Model model) {
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
@@ -114,6 +114,7 @@ public class Stu_ClassController{
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
 		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getStudent(studentId)));
+		model.addAttribute("newlyEnrolled", newlyEnrolled);
 		return "class/dashboard_Stu";
 	}
 	
@@ -323,6 +324,7 @@ public class Stu_ClassController{
 		}
 		return map;
 	}*/
+	
 	
 	//dashboard_Stu에서 사용
 	@RequestMapping(value = "/competePlaylistCount", method = RequestMethod.POST)
