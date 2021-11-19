@@ -339,6 +339,7 @@ $(document).ready(function(){
 		var youtubeID;
 		var values; // slider handles 
 		var d; // var for current playtime
+		var d1;
 
 		// 카트 
 		var hhmmss; // 카트에서 보여지 시간 
@@ -356,7 +357,7 @@ $(document).ready(function(){
 		
 		function showToast(){
 			$('.toast').css("display", "block");
-			setTimeout("hideToast()", 3000);	
+			setTimeout("hideToast()", 8000);	
 		}	
 
 		function hideToast(){
@@ -404,7 +405,7 @@ $(document).ready(function(){
 							
 						+ '</div>'
 						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-4 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +`\{$title}`+'\'); ">' 
-							+ '<i class="fas fa-plus-square"></i> 장바구니 담기'
+							+ '<i class="fas fa-plus-square"></i> 비디오 담기'
 						+ '</button> </div>'
 					+ '</form>' 
 					/* + '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="display: hidden;">'
@@ -711,9 +712,9 @@ $(document).ready(function(){
 		}
 		// 현재 재생위치를 시작,끝 시간에 지정 
 		function getCurrentPlayTime(e, obj) {
+
 			e.preventDefault();
-			/* var d = Number(player.getCurrentTime());
-			d = parseFloat(d).toFixed(2); */
+			
 
 			// Getter for slider handles 
 			/* var values = $( "#slider-range" ).slider( "option", "values" );
@@ -722,17 +723,27 @@ $(document).ready(function(){
 			console.log("check here!" , d); */
 
 			values = $( "#slider-range" ).slider( "option", "values" );
-			console.log("check initial values =>> ", values[0], values[1]);
 			
-			if(!validation()){
-				return;
-			}
-			var h = Math.floor(d / 3600);
-			var m = Math.floor(d % 3600 / 60);
-			var s = parseFloat(d % 3600 % 60).toFixed(2);
+			console.log("check initial values =>> ", values[0], values[1]);
+			console.log("시작 시간 인지 끝 시간 확인 해보기 ==> " + $(obj).text());
+			
+			/* d = values[0];
+			d1 = values[1]; */
+			
 
 			// 시작 버튼 클릭시: 
 			if($(obj).text() == "시작"){
+				d = Number(player.getCurrentTime());
+				d = parseFloat(d).toFixed(2);
+
+				var h = Math.floor(d / 3600);
+				var m = Math.floor(d % 3600 / 60);
+				var s = parseFloat(d % 3600 % 60).toFixed(2);
+
+				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+					return;
+				}
+				
 				// Setter 
 				$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
 				start_hour = h;
@@ -747,9 +758,21 @@ $(document).ready(function(){
 			
 			// 끝 버튼 클릭시: 
 			else{
+				d1 = Number(player.getCurrentTime());
+				d1 = parseFloat(d).toFixed(2);
+
+				console.log("끝버튼이 클릭되었습니다 확인 ! ==> " + d1);
+
+				var h = Math.floor(d1 / 3600);
+				var m = Math.floor(d1 % 3600 / 60);
+				var s = parseFloat(d1 % 3600 % 60).toFixed(2);
+
+				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+					return;
+				}
 
 				// Setter 
-				$( "#slider-range" ).slider( "option", "values", [ values[0], d ] );
+				$( "#slider-range" ).slider( "option", "values", [ values[0], d1 ] );
 				end_hour = h;
 				end_min = m;
 				end_sec = s;
@@ -810,21 +833,21 @@ $(document).ready(function(){
 			/* $('#warning1').text("");
 			$('#warning2').text(""); */
 
-			d = Number(player.getCurrentTime());
-			d = parseFloat(d).toFixed(2);
+			/* d = Number(player.getCurrentTime());
+			d = parseFloat(d).toFixed(2); */
 
 			// Getter for slider handles 
 			values = $( "#slider-range" ).slider( "option", "values" );
 
-			if(d>values[1]){
+			if(d>d1){
 				document.getElementById("warning1").innerHTML = "시작시간은 끝시간보다 크지 않아야 합니다.";
 				//document.getElementById("start_ss").focus();
 				return false;
 			}
 			
-			if(d<values[0]){
-				console.log(d+"는 "+values[0]+"보다 작다.. ㅋㅋㅋ 왜 이렇게 나오는데");
-				console.log(d, " vs ", values[0]);
+			if(d1<d){
+				console.log(d1+"는 "+d+"보다 작다.. ㅋㅋㅋ 왜 이렇게 나오는데");
+				console.log(d, " vs ", d1);
 				document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요."; 
 				return false;
 			}

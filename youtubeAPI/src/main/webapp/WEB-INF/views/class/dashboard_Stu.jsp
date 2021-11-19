@@ -33,6 +33,11 @@ var inactive_colors = ["border-primary", "border-warning", "border-success", "bo
 $(document).ready(function(){
 	getAllMyClass();
 	showAlert();
+	console.log("${newlyEnrolled}");
+	
+	if('${newlyEnrolled}' == "1"){
+		alert("성공적으로 수강신청이 완료되었습니다! :) ");
+	}
 });
 
 function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만 가져오는 함수 (정렬, 수정 등에 사용!)

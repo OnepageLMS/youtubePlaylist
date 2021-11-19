@@ -72,5 +72,10 @@ public class PlaylistDAO {
 		List<PlaylistVO> result = sqlSession.selectList("Playlist.getPlaylistForInstructor", vo);
 		return result;
 	}
+	
+	public List<PlaylistVO> searchPlaylist(PlaylistVO vo){
+		List<PlaylistVO> result = sqlSession.selectList("Playlist.searchPlaylist", vo);
+		return result;
+	}
 
 }
