@@ -403,23 +403,10 @@ $(document).ready(function(){
 							+ '</div>'
 							
 						+ '</div>'
-						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-4 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +`\{$title}`+'\'); ">' 
+						+ '<div> <button id="cartButton" class="btn btn-outline-focus col-4 mb-2" onclick="return addToCart(event, \''+id+ '\'' + ',\'' +`\${title}`+'\'); ">' 
 							+ '<i class="fas fa-plus-square"></i> 비디오 담기'
 						+ '</button> </div>'
 					+ '</form>' 
-					/* + '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="display: hidden;">'
-						+ '<div class="toast-header">'
-							+ ' <strong class="mr-auto">Bootstrap</strong>'
-							+ ' <small class="text-muted">2 seconds ago</small>'
-							+ ' <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">'
-							+ '   <span aria-hidden="true">&times;</span>'
-							+ ' </button>'
-						+ '</div>'
-						+ '<div class="toast-body">'
-							+ ' Heads up, toasts will stack automatically'
-						+ '</div>'
-					+ '</div>'	 */		
-
 					
 				+ '</div>'); 		
 			
@@ -769,7 +756,7 @@ $(document).ready(function(){
 				var s = parseFloat(d1 % 3600 % 60).toFixed(2);
 
 				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
-					return;
+					return false;
 				}
 
 				// Setter 
@@ -795,23 +782,6 @@ $(document).ready(function(){
 			//start_time = parseFloat(d).toFixed(2);
 			//start_time *= 1.00;
 			//console.log("check:", typeof start_time);
-		}
-
-		// 코드 하나로 합침. 나중에 지워도 됨. (21/10/06)
-		function getCurrentPlayTime2() {
-			var d = Number(player.getCurrentTime());
-			var h = Math.floor(d / 3600);
-			var m = Math.floor(d % 3600 / 60);
-			var s = d % 3600 % 60;
-
-			// slider 구현 완료시 지우기 
-			document.getElementById("end_ss").value = parseFloat(s).toFixed(2);
-			document.getElementById("end_hh").value = h;/* .toFixed(2); */
-			document.getElementById("end_mm").value = m;/* .toFixed(2); */
-			//document.getElementById("end_s").value = parseFloat(d).toFixed(2);
-			end_time = parseFloat(d).toFixed(2);
-			end_time *= 1.00;
-			//console.log("check", typeof end_time);
 		}
 		
 		// 재생 구간 유효성 검사: 

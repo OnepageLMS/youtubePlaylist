@@ -72,6 +72,10 @@ var youtubeID;
 var title;
 var newTitle;
 var videoTag;
+
+var d;
+var d1;
+
 $(document).ready(function(){
 	$('.myplaylistLink').addClass('text-primary');
 
@@ -91,6 +95,8 @@ function getPlaylistInfo(){
 			var totalVideo = result.totalVideo;
 			var totalVideoLength = result.totalVideoLength;
 
+			
+			$('.displayPlaylistName').empty();
 			$('.displayPlaylistName').append(playlistName);
 
 			$('#allVideo').attr('playlistID', playlistID);
@@ -336,21 +342,42 @@ function onPlayerStateChange(state) {
 	}
 }
 
+//현재 재생위치를 시작,끝 시간에 지정 
 function getCurrentPlayTime(e, obj) {
+
 	e.preventDefault();
+	
+
+	// Getter for slider handles 
+	/* var values = $( "#slider-range" ).slider( "option", "values" );
+	
+	console.log(values[0]);
+	console.log("check here!" , d); */
 
 	values = $( "#slider-range" ).slider( "option", "values" );
-	console.log("check initial values =>> ", values[0], values[1]);
 	
-	if(!validation()){
-		return;
-	}
-	var h = Math.floor(d / 3600);
-	var m = Math.floor(d % 3600 / 60);
-	var s = parseFloat(d % 3600 % 60).toFixed(2);
+	console.log("check initial values =>> ", values[0], values[1]);
+	console.log("시작 시간 인지 끝 시간 확인 해보기 ==> " + $(obj).text());
+	
+	/* d = values[0];
+	d1 = values[1]; */
+	
 
 	// 시작 버튼 클릭시: 
 	if($(obj).text() == "시작"){
+		d = Number(player.getCurrentTime());
+		d = parseFloat(d).toFixed(2);
+
+		console.log("시작 버튼이 클릭되었습니다 확인 ! ==> " + d);
+
+		var h = Math.floor(d / 3600);
+		var m = Math.floor(d % 3600 / 60);
+		var s = parseFloat(d % 3600 % 60).toFixed(2);
+
+		if(!validation2()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+			return false;
+		} 
+		
 		// Setter 
 		$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
 		start_hour = h;
@@ -364,24 +391,63 @@ function getCurrentPlayTime(e, obj) {
 	}
 	
 	// 끝 버튼 클릭시: 
-	else{
+	else if($(obj).text() == "끝"){
+		d1 = Number(player.getCurrentTime());
+		d1 = parseFloat(d1).toFixed(2);
+
+		console.log("끝버튼이 클릭되었습니다 확인 ! ==> " + d1);
+
+		var h = Math.floor(d1 / 3600);
+		var m = Math.floor(d1 % 3600 / 60);
+		var s = parseFloat(d1 % 3600 % 60).toFixed(2);
+
+		if(!validation2()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+			return;
+		}
+
 		// Setter 
-		$( "#slider-range" ).slider( "option", "values", [ values[0], d ] );
+		$( "#slider-range" ).slider( "option", "values", [ values[0], d1 ] );
 		end_hour = h;
 		end_min = m;
 		end_sec = s;
 		
 		$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + s + "초"  );
 
-		end_time = parseFloat(d).toFixed(2);
+		end_time = parseFloat(d1).toFixed(2);
 		end_time *= 1.00;
 	}
 
 	return false;
+
+	/* document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
+	document.getElementById("start_hh").value = h;/* .toFixed(2);
+	document.getElementById("start_mm").value = m; .toFixed(2); */
+
+	//(jw) start_s, end_s는 addToCart에서 사용되는것 가튼데 잠시 커멘트 처리 (21/10/04)
+	//document.getElementById("start_s").value = parseFloat(d).toFixed(2);
+	//start_time = parseFloat(d).toFixed(2);
+	//start_time *= 1.00;
+	//console.log("check:", typeof start_time);
 }
 
 
 // 재생 구간 유효성 검사: 
+function validation2() { //video 추가 form 제출하면 실행되는 함수
+	document.getElementById("warning1").innerHTML = "";
+
+	// Getter for slider handles 
+	values = $( "#slider-range" ).slider( "option", "values" );
+	
+	if(d1<d){
+		document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요."; 
+		document.getElementById("warning1").style.color = "red";
+		return false;
+	}
+
+	return true;
+}
+	
+	
 function validation(event) { //video 수정 form 제출하면 실행되는 함수
 	
 		return updateVideo();
@@ -409,7 +475,6 @@ function updateVideo(){ // video 정보 수정
 
 	$('#inputPlaylistID').val(tmp_playlistID);
 	
-	 $("#maxLength").val(end_s);
 	 $("#duration").val(end_s - start_s); 
 
 	$.ajax({
@@ -420,6 +485,7 @@ function updateVideo(){ // video 정보 수정
 			console.log("ajax video 수정 완료!");
 			getPlaylistInfo(tmp_playlistID);
 			getAllVideo(tmp_playlistID, tmp_videoID); 
+			alert("비디오가 성공적으로 업데이트 되었습니다! :)");
 		},
 		error: function(request,status,error){
 	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
@@ -550,7 +616,7 @@ function setSlider() {
 										 	<input type="hidden" name="duration" id="duration">
 										 	<input type="hidden" name="id" id="inputVideoID">
 										 	<input type="hidden" name="playlistID" id="inputPlaylistID">
-										 	<input type="hidden" name="maxLength" id="maxLength">
+										 	<!-- <input type="hidden" name="maxLength" id="maxLength"> -->
 										</div>
 										 
 										<div class="card-body">
@@ -589,12 +655,8 @@ function setSlider() {
 	                                            	<label for="amount" class="col-form-label">설정된시간</label>
 	                                            	<input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> 
 	                                            </div>
-	                                            <div class="position-relative col form-group" style="display: none;">
-	                                            	<div class="col-sm-2">
-	                                            		<div class="col-sm-10"> 
-	                                            			<div id="warning1"></div> 
-	                                            		</div>
-	                                            	</div>
+	                                            <div class="position-relative col form-group" style="display: block;">
+	                                            	<div id="warning1"></div> 
 	                                            </div>
                                                 <!--  
                                                 <div class="setTimeRange input-group">
