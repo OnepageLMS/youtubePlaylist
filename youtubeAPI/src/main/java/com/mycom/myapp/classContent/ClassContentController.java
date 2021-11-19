@@ -195,9 +195,7 @@ public class ClassContentController {
 	@ResponseBody
 	@RequestMapping(value = "/updateClassContents", method = RequestMethod.POST)
 	public int updateClassContents(HttpServletRequest request, Model model) throws Exception {	
-		//SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		//Date endDate = fm.parse(request.getParameter("endDate"));
-		
+		System.out.println("modal을 통한 classcontent 업데이트 ?!");
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setTitle(request.getParameter("className"));
 		ccvo.setDescription(request.getParameter("classDescription"));
