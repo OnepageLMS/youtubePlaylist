@@ -38,6 +38,14 @@ $(document).ready(function(){
 	if('${newlyEnrolled}' == "1"){
 		alert("성공적으로 수강신청이 완료되었습니다! :) ");
 	}
+	else if('${newlyEnrolled}' == "2"){
+		alert("이미 신청된 강의실입니다! 선생님의 승인을 기다려주세요! :) ");
+	}
+
+	// 구현 미완 
+	if('${newlyEnrolled}' == "1" || '${newlyEnrolled}' == "2"){
+		/* $('#exampleModalLong').css("display", "block"); */
+	}
 });
 
 function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만 가져오는 함수 (정렬, 수정 등에 사용!)
