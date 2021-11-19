@@ -203,7 +203,7 @@ public class LoginController {
 		
 		session.setAttribute("userID", loginvo.getId());
 		session.setAttribute("login", loginvo);
-		model.addAttribute("newlyEnrolled", newlyEnrolled);
+		
 		System.out.println("newlyEnrolled값 확인! " + newlyEnrolled);
 		
 		if(newlyEnrolled == 1) newlyEnrolled = 0;
