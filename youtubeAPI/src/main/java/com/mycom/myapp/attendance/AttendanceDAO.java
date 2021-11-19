@@ -32,8 +32,8 @@ public class AttendanceDAO {
 		return result;
 	}
 	
-	public int deleteAttendance(int id){
-		int result = sqlSession.update("Attendance.deleteAttendance", id);
+	public int deleteAttendance(AttendanceVO vo){
+		int result = sqlSession.update("Attendance.deleteAttendance", vo);
 		return result;
 	}
 	

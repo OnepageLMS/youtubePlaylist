@@ -28,8 +28,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 	
 	@Override
-	public int deleteAttendance(int id) {
-		return attendanceDAO.deleteAttendance(id);
+	public int deleteAttendance(AttendanceVO vo) {
+		return attendanceDAO.deleteAttendance(vo);
 	}
 	
 	@Override

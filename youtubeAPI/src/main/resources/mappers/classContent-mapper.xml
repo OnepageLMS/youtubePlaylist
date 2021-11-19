@@ -2,19 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ClassContent">
 	<insert id="insertContent">
-		insert into lms_classContent (title, description, classID, playlistID, days, daySeq, published, startDate, endDate)
-		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{daySeq}+1, #{published}, #{startDate}, #{endDate})
+		insert into lms_classContent (title, description, classID, playlistID, days, published, startDate, endDate)
+		values (#{title}, #{description}, #{classID}, #{playlistID}, #{days}, #{published}, #{startDate}, #{endDate})
 	</insert>
 	
 	<insert id="insertURLContent">	<!-- playlist없는 강의컨텐츠 -->
-		insert into lms_classContent (title, description, classID, days, daySeq, published, startDate, endDate)
-		values (#{title}, #{description}, #{classID}, #{days}, #{daySeq}+1, #{published}, #{startDate}, #{endDate})
+		insert into lms_classContent (title, description, classID, days, published, startDate, endDate)
+		values (#{title}, #{description}, #{classID}, #{days}, #{published}, #{startDate}, #{endDate})
 	</insert>
-	
-	<select id="getDaySeq" resultType="int">
-		select count(*) from lms_classContent
-		where classID=#{classID} and days=#{days}
-	</select>
 	
 	<select id="getClassContentID" resultType="classContent">
 		select id from lms_classContent
@@ -34,6 +29,10 @@
 	</update>
 	
 	<delete id="deleteContent">
+		delete from lms_classContent where id=#{id}
+	</delete>
+	
+	<delete id="deleteContentList">
 		delete from lms_classContent where classID=#{classID} and days=#{days}
 	</delete>
 	

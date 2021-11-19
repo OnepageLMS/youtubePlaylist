@@ -50,17 +50,17 @@ var ori_videoID;
 var ori_playlistID;
 var ori_classContentID;
 
+//var weekContents;
+
 
 $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 위함
-	
-	
 	$.ajax({ //classID에 맞는 classContents를 보여주기 위함(playlist만 있음)
 		  url : "${pageContext.request.contextPath}/student/class/weekContents",
 		  type : "post",
 		  async : false,
 		  success : function(data) {
 			  weekContents = data;
-			  videoIdx = ${daySeq};
+			  videoIdx = '${daySeq}';
 			  classContent = weekContents[videoIdx]; //없으면 안됩니다 
 			 // console.log(weekContents);
 			 // console.log("weekContents.legth : " + weekContents.length);

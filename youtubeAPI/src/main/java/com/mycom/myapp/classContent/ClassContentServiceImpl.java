@@ -34,8 +34,13 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
-	public int deleteContent(ClassContentVO vo) {
-		return ClassContentDAO.deleteContent(vo); //int id => ClassContentVO vo 수정
+	public int deleteContent(int id) {
+		return ClassContentDAO.deleteContent(id);
+	}
+	
+	@Override
+	public int deleteContentList(ClassContentVO vo) {
+		return ClassContentDAO.deleteContentList(vo);
 	}
 	
 	@Override
@@ -81,11 +86,6 @@ public class ClassContentServiceImpl implements ClassContentService{
 	@Override
 	public int insertCopiedClassContents(List<ClassContentVO> list){
 		return ClassContentDAO.insertCopiedClassContents(list);
-	}
-	
-	@Override
-	public int getDaySeq(ClassContentVO vo) {
-		return ClassContentDAO.getDaySeq(vo);
 	}
 	
 	@Override
