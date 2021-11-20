@@ -14,7 +14,7 @@
 	
 	<insert id="updateThumbnailID">
 		update lms_playlist 
-		set thumbnailID= (SELECT youtubeID FROM lms_video WHERE playlistID=#{playlistID} order by seq limit 0,1) 
+		set thumbnailID= (SELECT youtubeID FROM lms_video WHERE playlistID=#{playlistID} order by seq limit 1) 
 		where id=#{playlistID}
 	</insert>
 	

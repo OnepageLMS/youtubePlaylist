@@ -101,6 +101,12 @@ public class ClassesServiceImpl implements ClassesService {
 	public int checkAccessClass(ClassesVO vo) {
 		return classesDAO.checkAccessClass(vo);
 	}
+	
+	@Override
+	public List<ClassesVO> getClassesToBeClosed(String endDate){
+		System.out.println(endDate);
+		return classesDAO.getClassesToBeClosed(endDate);
+	}
 
 }
 

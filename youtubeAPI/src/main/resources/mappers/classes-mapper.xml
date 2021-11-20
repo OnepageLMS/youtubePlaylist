@@ -89,4 +89,10 @@
 		where id=#{id} and instructorID=#{instructorID}
 	</select>
 	
+	<select id="getClassesToBeClosed" resultType="classes">
+		select *
+		from lms_class
+		where active=1 and <![CDATA[ endDate <= #{endDate} ]]>
+	</select>
+	
 </mapper>

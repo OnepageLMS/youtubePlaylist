@@ -16,7 +16,6 @@
     
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<link rel="stylesheet" href="/resources/demos/style.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
@@ -79,12 +78,11 @@ var d1;
 $(document).ready(function(){
 	$('.myplaylistLink').addClass('text-primary');
 
-	getPlaylistInfo();
-	getAllVideo();
+	getPlaylistInfo(${playlistID});
+	getAllVideo(${playlistID}, ${videoID});
 });
 
-function getPlaylistInfo(){ 
-	var playlistID = ${playlistID};
+function getPlaylistInfo(playlistID){ 
 	$.ajax({
 		type : 'post',
 		url : '${pageContext.request.contextPath}/playlist/getPlaylistInfo',
@@ -95,7 +93,6 @@ function getPlaylistInfo(){
 			var totalVideo = result.totalVideo;
 			var totalVideoLength = result.totalVideoLength;
 
-			
 			$('.displayPlaylistName').empty();
 			$('.displayPlaylistName').append(playlistName);
 
@@ -121,9 +118,7 @@ function getPlaylistInfo(){
 	});
 }
 
-function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 가져온다
-	var playlistID = ${playlistID};
-	var defaultVideoID = ${videoID};
+function getAllVideo(playlistID, defaultVideoID){ //해당 playlistID에 해당하는 비디오 list를 가져온다
 	$.ajax({
 		type : 'post',
 	    url : '${pageContext.request.contextPath}/video/getOnePlaylistVideos',
@@ -164,7 +159,6 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 			    	setDisplayVideoInfo(value.seq); //player 제외 선택한 video 표시 설정
 				
 					var addStyle = ' style="background-color:#F0F0F0; padding:5px;"';
-					console.log("check end_s ==> " + end_s);
 			    }
 
 		    	else 
@@ -173,7 +167,7 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 		    	var html = '<div class="video list-group-action list-group-item row d-flex justify-content-between"'
 		    				+ addStyle
 							+ '>'
-								+'<div class="col-11 row pr-0" onclick="playVideoFromPlaylist(this);" ' 
+								+'<div class="col-11 row pr-0 playVideo" onclick="playVideoFromPlaylist(this);" ' 
 									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 									+ '" videoID="' + value.id 
 									+ '" youtubeID="' + value.youtubeID 
@@ -203,20 +197,18 @@ function getAllVideo(){ //해당 playlistID에 해당하는 비디오 list를 �
 		    							+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
 			    					+ '</button>'
 			    					+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-411px, 33px, 0px);">' 
-			    						+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
-			    						+ '<button type="button" onclick="deleteVideo(' + value.id + ')" class="dropdown-item"><p class="text-danger">삭제</p></button>'
+			    						//+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
+			    						+ '<button type="button" onclick="deleteVideo(' + value.id + ',' + value.seq + ')" class="dropdown-item"><p class="text-danger">삭제</p></button>'
 			    					+ '</div>'
 							+ '</div>';
 							
 				$('.videos').append(html); 
 			});
-			showSlider();
+		    showSlider();
 		    setSlider();
 		    console.log("check end_s ==> " + end_s);
 		}
-	});
-	
-			
+	});	
 }
 
 function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클릭했을 때 실행 (처음 이 페이지가 불러와질때 제외)
@@ -231,9 +223,6 @@ function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클�
 	start_s = Number(item.getAttribute('start_s'));
 	end_s = Number(item.getAttribute('end_s'));
 	limit = Number(item.getAttribute('maxLength'));
-
-	console.log("확인: " + start_s);
-	console.log("확인: " + end_s);
 
 	var childs = item.childNodes;
 	
@@ -262,25 +251,6 @@ function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설
 	$('#inputNewTitle').val(newTitle);
 
 	$('#inputTag').val(tag);
-	
-
-	/*	
-	var start_hh = Math.floor(start_s / 3600);
-	var start_mm = Math.floor(start_s % 3600 / 60);
-	var start_ss = start_s % 3600 % 60;
-
-	document.getElementById("start_hh").value = start_hh;
-	document.getElementById("start_mm").value = start_mm;
-	document.getElementById("start_ss").value = start_ss;
-
-	var end_hh = Math.floor(end_s / 3600);
-	var end_mm = Math.floor(end_s % 3600 / 60);
-	var end_ss = end_s % 3600 % 60;
-
-	document.getElementById("end_hh").value = end_hh;
-	document.getElementById("end_mm").value = end_mm;
-	document.getElementById("end_ss").value = end_ss;
-	*/
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
 	$("#inputVideoID").val( tmp_videoID *= 1 );
@@ -346,8 +316,6 @@ function onPlayerStateChange(state) {
 function getCurrentPlayTime(e, obj) {
 
 	e.preventDefault();
-	
-
 	// Getter for slider handles 
 	/* var values = $( "#slider-range" ).slider( "option", "values" );
 	
@@ -355,9 +323,6 @@ function getCurrentPlayTime(e, obj) {
 	console.log("check here!" , d); */
 
 	values = $( "#slider-range" ).slider( "option", "values" );
-	
-	console.log("check initial values =>> ", values[0], values[1]);
-	console.log("시작 시간 인지 끝 시간 확인 해보기 ==> " + $(obj).text());
 	
 	/* d = values[0];
 	d1 = values[1]; */
@@ -467,25 +432,25 @@ function convertTotalLength(seconds){
 }
 
 function updateVideo(){ // video 정보 수정		
-	/* alert('clicked!'); */
 	event.preventDefault(); // avoid to execute the actual submit of the form. 
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
 	var tmp_playlistID = $('#allVideo').attr('playlistID');
 
 	$('#inputPlaylistID').val(tmp_playlistID);
-	
 	 $("#duration").val(end_s - start_s); 
+	 $('#end_s').val(end_s);
+	 $('#start_s').val(start_s);
 
 	$.ajax({
 		'type': "POST",
 		'url': "${pageContext.request.contextPath}/video/updateVideo",
 		'data': $("#videoForm").serialize(),
 		success: function(data) {
-			console.log("ajax video 수정 완료!");
 			getPlaylistInfo(tmp_playlistID);
 			getAllVideo(tmp_playlistID, tmp_videoID); 
 			alert("비디오가 성공적으로 업데이트 되었습니다! :)");
+			//location.reload();
 		},
 		error: function(request,status,error){
 	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
@@ -494,21 +459,22 @@ function updateVideo(){ // video 정보 수정
 	});
 }
 
-function deleteVideo(videoID){ // video 삭제
-	//이부분 수정필요!!! --> 학습자료로 사용중인 비디오 있을때 체크!!!!
-	if (confirm("정말 삭제하시겠습니까?")){
-		var playlistID = $('.selectedPlaylist').attr('playlistID');
-		changeAllVideo(videoID);
-		console.log("deleteVideo: " + videoID + ":" + playlistID);
+function deleteVideo(videoID, seq){ // video 삭제
+	if (confirm("비디오를 삭제하시겠습니까?")){
+		var playlistID = $('#allVideo').attr('playlistID');
+		//changeAllVideo(videoID);
 		
 		$.ajax({
 			'type' : "post",
 			'url' : "${pageContext.request.contextPath}/video/deleteVideo",
 			'data' : {	videoID : videoID,
-						playlistID : playlistID
+						playlistID : playlistID,
+						seq : seq
 				},
 			success : function(data){
-				changeAllVideo(videoID); //삭제한 videoID 넘겨줘야 함.
+				//changeAllVideo(videoID); //삭제한 videoID 넘겨줘야 함.
+				alert('비디오 삭제가 완료되었습니다!');
+				location.replace('${pageContext.request.contextPath}/playlist/myPlaylist');
 		
 			}, error : function(err){
 				alert("video 삭제 실패! : ", err.responseText);
@@ -528,8 +494,6 @@ function showSlider(){
 		max: 500,
 		/* values: [ 75, 300 ], */
 		slide: function( event, ui ) {
-			//$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
-
 			start_hour = Math.floor(ui.values[ 0 ] / 3600);
 		    start_min = Math.floor(ui.values[ 0 ] % 3600 / 60);
 		    start_sec = ui.values[ 0 ] % 60;
@@ -537,19 +501,14 @@ function showSlider(){
 		    end_hour = Math.floor(ui.values[ 1 ] / 3600);
 		    end_min = Math.floor(ui.values[ 1 ] % 3600 / 60);
 		    end_sec = ui.values[ 1 ] % 60;
-
 		    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
-		    $("#start_s").val(ui.values[0]);
-		    $("#end_s").val(ui.values[1]);
-
-			console.log("start_s ==> "+$("#start_s").val());
-			console.log("end_s ==> "+ $("#end_s").val());
+		    start_s = ui.values[0];
+		    end_s = ui.values[1];
 		}
 	});    
 }
 
 function setSlider() {
-	console.log("end_s 값 확인 !! ", limit);
 	/* $("#slider-range").slider("destroy"); */
 	/*var attributes = {
 		max: limit
@@ -572,10 +531,9 @@ function setSlider() {
     end_hour = Math.floor(end_s / 3600);
     end_min = Math.floor(end_s % 3600 / 60);
     end_sec = end_s % 60;
-	console.log("여기까지 되나 확인! ");
 	
 	$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
-	console.log("여기까지 되나 확인! ");
+	
 }
 </script>
 <body>
@@ -588,7 +546,7 @@ function setSlider() {
                  <div class="app-main__outer">
                     <div class="app-main__inner">
 	                    <h4>
-							<button class="btn row" onclick="history.back();"> 
+							<button class="btn row" onclick="location.href='${pageContext.request.contextPath}/playlist/myPlaylist'"> 
                   				<i class="pe-7s-left-arrow h4 col-12"></i>
                   				<p class="col-12 m-0">이전</p>
                				</button>
@@ -636,9 +594,17 @@ function setSlider() {
                                             </div>
                                             
                                             <div class="">
-	                                            <div class="setTimeRange input-group col d-flex align-items-center justify-content-between">
+                                            	<div class="position-relative form-group">
+	                                            	<label for="amount" class="col-form-label">설정된시간</label>
+	                                            	<input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> 
+	                                            </div>
+	                                            <div class="position-relative col form-group" style="display: block;">
+	                                            	<div id="warning1"></div> 
+	                                            </div>
+	                                            <div class="setTimeRange input-group d-flex align-items-center justify-content-between m-2">
 	                                            	<div class="col-2 input-group-prepend">
-	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
+	                                            		<p class="mb-0"></p>
+	                                            		<!-- <button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button> -->
 	                                            	</div>
 	                                            	<div class="col-8"> 
 	                                            		<div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
@@ -648,38 +614,11 @@ function setSlider() {
 	                                            		</div> 
 	                                            	</div>
 	                                            	<div class="col-2 input-group-append">
-	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
+	                                            		<!-- <button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button> -->
+	                                            		<p class="mb-0"></p>
 	                                            	</div>
 	                                            </div>
-	                                            <div class="position-relative form-group">
-	                                            	<label for="amount" class="col-form-label">설정된시간</label>
-	                                            	<input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> 
-	                                            </div>
-	                                            <div class="position-relative col form-group" style="display: block;">
-	                                            	<div id="warning1"></div> 
-	                                            </div>
-                                                <!--  
-                                                <div class="setTimeRange input-group">
-                                                
-													<div class="col-md-2 input-group-prepend">
-														<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
-													</div>
-													<div class="col-md-8">
-														<div id="slider-range"></div>
-													</div>
-													<div class="col-md-2 input-group-append">
-														<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
-													</div>
-													<div class="col">
-														<div class="position-relative row form-group">
-															<label for="amount" class="col-sm-2 col-form-label"><b>설정된 시간</b></label>
-															<div class="col-sm-10"> 
-																<input type="text" id="amount" class="text-center col-sm-11 form-control" readonly style="border:0;"> 
-															</div>
-														</div>
-													</div>
-												</div>
-												-->
+	                                            
                                             </div>
                                             
 											<div class="col">

@@ -16,10 +16,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
 <body>
-	<div class="app-container app-theme-white body-tabs-shadow closed-sidebar">
+	<div class="app-container app-theme-white body-tabs-shadow">
 		<jsp:include page="outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
+			<jsp:include page="outer_left.jsp" flush="false">
+				<jsp:param name="className" value="${className}" />
+				<jsp:param name="menu" value="calendar" />
+			</jsp:include>	
         	<div class="app-main__outer">
         		 <div class="app-main__inner">
         			<div class="app-page-title">

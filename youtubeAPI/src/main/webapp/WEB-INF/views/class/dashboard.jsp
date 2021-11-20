@@ -44,7 +44,7 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 			order: order
 			},
 		success: function(data){
-			//$(classType).empty();
+			$(classType).empty();
 			list = data.list;
 			
 			if(list.length == 0)
