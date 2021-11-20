@@ -190,9 +190,10 @@ $(document).ready(function(){
 		var symbol;
 		
 		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-			url : "${pageContext.request.contextPath}/class/forHowManyTakes",
+			url : "${pageContext.request.contextPath}/member/forHowManyTakes",
 			type : "post",
 			async : false,
+			data: {id : '${classInfo.id}'},
 			success : function(data) {
 				howmanyTake = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
 				console.log(howmanyTake);
