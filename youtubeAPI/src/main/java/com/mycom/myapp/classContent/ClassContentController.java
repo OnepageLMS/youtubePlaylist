@@ -89,7 +89,7 @@ public class ClassContentController {
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
 		model.addAttribute("id", id);
-		model.addAttribute("daySeq", daySeq-1);
+		model.addAttribute("daySeq", daySeq);
 		return "class/contentDetail";
 	}
 	

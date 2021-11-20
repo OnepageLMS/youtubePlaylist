@@ -295,7 +295,7 @@ $(document).ready(function(){
 			
 			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
 			//var onclickDetail = "location.href='../contentDetail/" + realAllContents[i].id + "/" + i + "'";
-			var goDetail = 'moveToContentDetail(' + realAllContents[i].id + ',' + daySeq + ');';
+			var goDetail = 'moveToContentDetail(' + realAllContents[i].id + ',' + i + ');';
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + realAllContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 			var published;
 			var percentage = '';

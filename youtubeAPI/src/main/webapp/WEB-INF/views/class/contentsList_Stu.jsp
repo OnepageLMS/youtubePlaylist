@@ -50,8 +50,6 @@
 		//playlist = JSON.parse('${playlist}'); //total 시간을 위해 //playlist테이블에서 직접 가져오면 되지 않을까 ?? //엥,, weekContents로 다 할 수 있는디..? 
 		//total_runningtime = 0;
 		
-		var classInfo = document.getElementsByClassName( 'contents' )[0].getAttribute( 'classID' );
-		
 		var watchCount = 0 ;
 		var lastDays;
 		var daySeq = 1;	//각 차시별 seq

@@ -38,7 +38,7 @@ $(document).ready(function(){
 	
 	console.log(weekContents);
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-		url : "${pageContext.request.contextPath}/student/class/forMyAttend",
+		url : "${pageContext.request.contextPath}/student/attendance/forMyAttend",
 		type : "post",
 		async : false,
 		data : {	

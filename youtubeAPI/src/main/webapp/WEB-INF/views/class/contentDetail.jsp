@@ -65,6 +65,22 @@ $(document).ready(function(){
 	});
 	
 	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+		  url : "${pageContext.request.contextPath}/class/forVideoInformation",
+		  type : "post",
+		  async : false,
+		  data : {	
+			  playlistID : weekContents[videoIdx].playlistID
+		  },
+		  success : function(data) {
+			 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
+			 //playlist_length = Object.keys(playlist).length;
+		  },
+		  error : function() {
+		  	alert("error2");
+		  }
+	});
+	
+	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
 		url : "${pageContext.request.contextPath}/class/changeID",
 		type : "post",
 		async : false,
@@ -73,7 +89,10 @@ $(document).ready(function(){
 		},
 		success : function(data) {
 			var element = document.getElementById("contentsTitle");
-			element.innerText = data.title;
+			if(weekContents[videoIdx].playlistID == 0)
+				element.innerHTML = '<i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 20px; margin: 5px 5px;"></i>' + data.title;
+			else
+				element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 5px 5px; color:dodgerblue;"></i> ' + data.title;
 			var elementD = document.getElementById("contentsDescription");
 			elementD.innerText = data.description;
 
@@ -118,7 +137,6 @@ $(document).ready(function(){
 	var urlContent='';
 	for(var i=0; i<weekContents.length; i++){
 		var symbol;
-		console.log('week' + i + '/' + weekContents[i].playlistID);
 		if(weekContents[i].playlistID == 0){	//현재 playlist가 없는 학습컨텐츠일 때
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
 			if(videoIdx == i) {
@@ -202,8 +220,6 @@ $(document).ready(function(){
 				endDate = '<div class="endDate contentInfo pb-2">마감일: ' + endDate + '</div>';
 			}
 			else endDate = '';
-		
-			//classContentID = weekContents[i].id; // classContent의 id //여기 수정
 				
 				
 			//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
@@ -220,21 +236,6 @@ $(document).ready(function(){
 							
 			var innerText ='';
 			
-			$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-				  url : "${pageContext.request.contextPath}/class/forVideoInformation",
-				  type : "post",
-				  async : false,
-				  data : {	
-					  playlistID : weekContents[videoIdx].playlistID
-				  },
-				  success : function(data) {
-					 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
-					 //playlist_length = Object.keys(playlist).length;
-				  },
-				  error : function() {
-				  	alert("error2");
-				  }
-			});
 			
 			//if(allContents[videoIdx].playlistID != 0){
 			for(var j=0; j<playlist.length; j++){ //classcontent내에 들어있는 비디오 개수
@@ -344,7 +345,7 @@ var playlistVideo;
 
 function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐츠 목록에서 하나 클릭했을 때
 	ccID = id;
-	player.pauseVideo();
+	player.stopVideo();
 	if(weekContents[idx-1].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
@@ -385,7 +386,10 @@ function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐�
 				 console.log(data);
 
 				var element = document.getElementById("contentsTitle");
-				element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
+				if(playlistID == 0)
+					element.innerHTML = '<i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 20px; margin: 5px 5px;"></i>' + data.title;
+				else
+					element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
 				var elementD = document.getElementById("contentsDescription");
 				elementD.innerText = data.description;
 				
@@ -431,46 +435,7 @@ function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐�
 	//console.log("id라고!! " + ccID);
 }
 
-/*function myThumbnail(classContentID, idx){
-	if(allContents[idx-1].playlistID == 0) return;
-	var className = '#get_view' + idx;
-	$(className).empty();
-	
-	for(var i=0; i<playlist.length; i++){
-		console.log(playlist[i].id);
-		var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg">';
-		
-		var newTitle = playlist[i].newTitle;
-		var title = playlist[i].title;
-		
-		if (playlist[i].newTitle == null){
-			playlist[i].newTitle = playlist[i].title;
-			playlist[i].title = '';
-  	}
-		
-		if ((playlist[i].newTitle).length > 30){
-			playlist[i].newTitle = (playlist[i].newTitle).substring(0, 30) + " ..."; 
-		}
-	
-		
-		$(className).append( //stu//stu
-					'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' +
-					'<div class="video row post-content single-blog-post style-2 d-flex align-items-center">' +
-						'<div class="post-thumbnail col-xs-4 col-lg-5"> ' + thumbnail + ' </div>' +
-						'<div class="post-content col-xs-7 col-lg-5" onclick="viewVideo(\'' 
-							+ playlist[i].youtubeID.toString() + '\'' + ',' + playlist[i].id + ',' 
-	 					+ playlist[i].start_s + ',' + playlist[i].end_s +  ',' + i + ',' + (idx-1) + ', this.parentNode)" >' 
-	 					+ 	'<div class="post-title videoNewTitle">' + playlist[i].newTitle + '</div>' 
-	 					+	'<div class=""> start : '+  convertTotalLength(playlist[i].start_s) + '</div>' 
-						+	'<div class=""> end : '+  convertTotalLength(playlist[i].end_s) + '</div>' 
-	 					'</div>' 
-					+ '</div>'
-					+ '<div class="videoLine"></div>'
-		);
-		
-	}
-	
-}*/
+
 
 function myThumbnail(classContentID, idx){
 	if(weekContents[idx-1].playlistID == 0) return;
@@ -517,10 +482,6 @@ function myThumbnail(classContentID, idx){
 					+ '</div>'
 					+ '<div class="videoLine"></div>'
 		);
-		
-		//console.log("ori_playlistID가 바뀌는 순간! " + ori_playlistID);
-		//ori_playlistID = playlist[i].playlistID ; //아니 왜.. ㅠ
-		//console.log("ori_playlistID가 바뀐 후 ! " + ori_playlistID);
 		
 	}
 	
@@ -601,8 +562,10 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) { 
 	//이거는 플레이리스트의 첫번째 영상이 실행되면서 진행되는 코드 (영상클릭없이 페이지 딱 처음 로딩되었을 )
-	console.log('onPlayerReady 실행');
+	if(weekContents[videoIdx].playlistID == 0) return;
 	
+	console.log('onPlayerReady 실행');
+	console.log("playlist[0]" + playlist[0]);
 	$.ajax({
 		'type' : "post",
 		'url' : "${pageContext.request.contextPath}/student/class/videocheck",
