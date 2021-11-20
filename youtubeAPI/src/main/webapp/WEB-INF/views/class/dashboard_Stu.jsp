@@ -220,7 +220,7 @@ function getAllMyClass(){
 				$('.activeClassList').append('<p class="col text-center">참여중인 강의실이 없습니다. </p>');
 			else{
 				$(active).each(function(){
-					if(completePlaylist[i] == 0 ){
+					if(completePlaylist[i] == 0 || allPlaylist[i] == 0){
 						percentage = 0;
 					}
 					else{

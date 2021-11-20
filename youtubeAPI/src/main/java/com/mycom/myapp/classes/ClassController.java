@@ -3,6 +3,7 @@ package com.mycom.myapp.classes;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.calendar.CalendarService;
 import com.mycom.myapp.classContent.ClassContentService;
+import com.mycom.myapp.commons.AttendanceInternalCheckVO;
 import com.mycom.myapp.commons.CalendarVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
@@ -83,16 +85,36 @@ public class ClassController {
 	@RequestMapping(value = "/forPublished",  method = RequestMethod.POST)	//학생이랑 선생님 같이 사용하도록 바꾸기!!
 	public int forPubished(HttpServletRequest request, Model model) throws Exception {
 		int classID = Integer.parseInt(request.getParameter("classID"));
-		return stu_classContentService.getAllClassContent(classID).size();
+		int count = 0;
+		for(int i=0; i<stu_classContentService.getPlaylistCount(classID); i++) { //차시 개
+			//차시 내의 영상개수만큼반복해서
+			//모두 published 되었다면 count증가 
+			ClassContentVO ccvo = new ClassContentVO ();
+			ccvo.setClassID(classID);
+			ccvo.setDays(i);
+			
+			for(int j=0; j<classContentService.getDaySeqNum(ccvo); j++) {
+				if(classContentService.getDaySeq(ccvo).get(j).getPublished() == 0) {
+					break;
+				}
+				else {
+					if(j == classContentService.getDaySeqNum(ccvo)-1) //모두 publish된 경우 
+						count++;
+					continue;
+				}
+			}
+			
+			//(classContentService.get) // classID랑 days, published = 1인거 
+		}
+		return count; //published된 차시 
 	}	
 	
 	@ResponseBody
 	@RequestMapping(value = "/forAll",  method = RequestMethod.POST)	//학생이랑 선생님 같이 사용하도록 바꾸기!!
 	public int forAll(HttpServletRequest request, Model model) throws Exception {
 		int classID = Integer.parseInt(request.getParameter("classID"));
-		return classContentService.getRealAll(classID).size();
+		return classContentService.getClassDaysNum(classID); //전체 차시
 	}	
-	
 	
 	@ResponseBody
 	@RequestMapping(value = "/getClassInfo", method = RequestMethod.POST)

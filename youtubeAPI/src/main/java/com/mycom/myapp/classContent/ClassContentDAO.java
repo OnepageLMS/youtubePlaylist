@@ -43,6 +43,16 @@ public class ClassContentDAO {
 		return result;
 	}
 	
+	public List<ClassContentVO> getDaySeq(ClassContentVO vo) {
+		List<ClassContentVO> result = sqlSession.selectList("ClassContent.getDaySeq", vo);
+ 		return result;
+ 	}
+	
+	public int getDaySeqNum(ClassContentVO vo) {
+ 		int result = sqlSession.selectOne("ClassContent.getDaySeqNum", vo);
+ 		return result;
+ 	}
+	
 	public int getClassNum(int classID) {	//생성된 강의 컨텐츠의 갯수 가져오기
 		int result = sqlSession.selectOne("ClassContent.getClassNum", classID);
 		return result;

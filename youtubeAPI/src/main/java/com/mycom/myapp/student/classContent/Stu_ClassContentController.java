@@ -2,6 +2,7 @@ package com.mycom.myapp.student.classContent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -159,7 +160,7 @@ public class Stu_ClassContentController {
 		model.addAttribute("daySeq", day);
 		return "class/contentsDetail_Stu";	
 	}
-	
+		
 	@ResponseBody
 	@RequestMapping(value = "/weekContents", method = RequestMethod.POST)
 	public List<ClassContentVO> weekContents(HttpServletRequest request, Model model) throws Exception {
@@ -176,7 +177,7 @@ public class Stu_ClassContentController {
 	    VideoVO vo = new VideoVO();
 	    vo.setPlaylistID(playlistID);
 	    //vo.setId(id);
-	    System.out.println("size : " +videoService.getVideoList(vo).size() + "playlistID : " + playlistID);
+	    //System.out.println("size : " +videoService.getVideoList(vo).size() + "playlistID : " + playlistID);
 	    return insVideoService.getVideoList(playlistID);
 	}
 	
@@ -452,4 +453,9 @@ public class Stu_ClassContentController {
 	}
 	
 	
+	
 }
+
+
+
+

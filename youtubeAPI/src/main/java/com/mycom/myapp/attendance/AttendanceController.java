@@ -143,6 +143,7 @@ public class AttendanceController {
 			file.add(fileList);
 		}
 		System.out.println("file size :" + file.size());
+		System.out.println("file[0] " + file.get(0));
 		model.addAttribute("file", file);
 		
 		if(file.size() == 0)
