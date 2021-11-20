@@ -28,6 +28,10 @@ public class Stu_TakesDAO {
 		return sqlSession.selectList("Takes.getStudent", studentID);
 	}
 	
+	public List<Stu_TakesVO> getPendingClass(int studentID) {
+		return sqlSession.selectList("Takes.getPendingClass", studentID);
+	}
+	
 	public List<Stu_TakesVO> getAcceptedStudent(int studentID) {
 		return sqlSession.selectList("Takes.getAcceptedStudent", studentID);
 	}

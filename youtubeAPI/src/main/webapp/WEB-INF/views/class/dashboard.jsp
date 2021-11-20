@@ -356,6 +356,9 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 							i++;
 					});
 				}
+			},
+			error: function(data, status,error){
+				alert('내 강의실 목록을 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -420,13 +423,13 @@ function submitAddClassroom(){
 		datatype: 'json',
 		success: function(data){
 			if(data == 'ok')
-				console.log('강의실 생성 완료!');
+				alert('강의실 생성 완료되었습니다:)');
 			else
-				console.log('강의실 생성 실패! ');
+				alert('강의실 생성에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			location.reload();
 		},
 		error: function(data, status,error){
-			alert('강의실 생성 실패! ');
+			alert('강의실 생성에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			return;
 		}
 	});	
@@ -530,9 +533,10 @@ function submitDeleteClassroom(){
 					},
 				datatype: 'json',
 				success: function(data){
-					console.log('나에게만 강의실 삭제 성공');
+					//console.log('나에게만 강의실 삭제 성공');
 				},
 				complete: function(data){
+					alert('나에게만 강의실 삭제가 완료되었습니다!');
 					location.reload();
 				},
 				error: function(data, status,error){
@@ -549,9 +553,10 @@ function submitDeleteClassroom(){
 				data: {'id' : $('#setClassID').val()},
 				datatype: 'json',
 				success: function(data){
-					console.log('강의실 데이터 전체 삭제 성공');
+					//console.log('강의실 데이터 전체 삭제 성공');
 				},
 				complete: function(data){
+					alert('강의실 삭제가 완료되었습니다!');
 					location.reload();
 				},
 				error: function(data, status,error){
@@ -588,6 +593,7 @@ function submitShareClassroom(){
 				console.log('강의실 복사 성공');
 		},
 		complete: function(data){
+			alert('강의실 복제가 완료되었습니다.');
 			location.reload();
 		},
 		error: function(data, status,error){
