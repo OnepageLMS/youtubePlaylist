@@ -36,43 +36,41 @@ $(document).ready(function(){
 	var allMyClass = JSON.parse('${realAllMyClass}');
 	var weekContents = JSON.parse('${weekContents}');
 	
+	console.log(weekContents);
+	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+		url : "${pageContext.request.contextPath}/student/class/forMyAttend",
+		type : "post",
+		async : false,
+		data : {	
+			classID : weekContents[0].classID
+		},
+		success : function(data) {
+			watchCount = data; 
+			console.log(data);
+		},
+		error : function() {
+			alert("error");
+		}
+	})
+	
 	for(var i=0; i<allMyClass.length; i++){
-		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
-			url : "${pageContext.request.contextPath}/student/class/forWatchedCount",
-			type : "post",
-			async : false,
-			data : {	
-				playlistID : weekContents[i].playlistID,
-				classContentID : weekContents[i].id
-			},
-			success : function(data) {
-				watchCount = data; 
-				console.log(data);
-			},
-			error : function() {
-				alert("error");
-			}
-		})
 		
-		//추가하기!!! (lms 영상에 대한 출석/지각/결석 badge) -> attendanceCheck.internal
-		if(allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
+		if(watchCount[i] != null ){ //playlist없이 description만 올림
+			//alert("성공이다 ");
 			var element = document.getElementById('takeLMS'+i);
-			var result = Math.round(watchCount/weekContents[i].totalVideo*100);
-			if(result != 0){
-				element.innerText = result + "%";
-
-				//<div class="mb-2 mr-2 badge badge-primary">Primary</div>\
-				//뱃지 추가해주기!!!
-
-				/*if(result >= 80)
-					$('#takeLMS' + i).addClass('text-primary');
-				else if(result >= 60)
-					$('#takeLMS' + i).addClass('text-warning');
-				else
-					$('#takeLMS' + i).addClass('text-danger');
-				*/
+			element.innerHTML = '' ;
+			//console.log(" ?? " + daysCount[j][i] + " i " + i + " , j " + j);
+			if(watchCount[i] == "출석"){
+				element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
 			}
+			if(watchCount[i] == "미확인")
+				element.innerHTML +=  "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
+			if(watchCount[i] == "결석")
+				element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+			if(watchCount[i] == "지각")
+				element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:orange'> </i>";
 			
+				
 		}
 		
 	}

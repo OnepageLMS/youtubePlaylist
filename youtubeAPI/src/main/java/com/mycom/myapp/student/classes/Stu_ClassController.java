@@ -1,6 +1,8 @@
 package com.mycom.myapp.student.classes;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -228,7 +230,6 @@ public class Stu_ClassController{
 	    //System.out.println("classContentID : " + classContentID + " playlistID " + playlistID + " studentID : " + studentId + " count : "  + count);
 	    return count;
 	}
-	
 	
 	
 	
