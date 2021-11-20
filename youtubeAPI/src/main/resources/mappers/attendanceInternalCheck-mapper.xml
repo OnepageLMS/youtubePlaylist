@@ -10,8 +10,8 @@
 	
 	<update id="updateAttendanceInCheck">
 		update lms_attendanceInternalCheck
-		set internal=#{internal}, classContentID=#{classContentID}, studentID=#{studentID}
-		where classContentID=#{classContentID} and studentID=#{studentID}
+		set internal=#{internal}
+		where classID=#{classID} and studentID=#{studentID} and days = #{days}
 	</update>
 	
 	<delete id="deleteAttendanceInCheck">
@@ -19,8 +19,13 @@
 	</delete>
 	
 	<select id="getAttendanceInCheck" resultType="attendanceInternal">
-		select * from lms_attendanceInternalCheck
-		where classID=#{classID} and days=#{days} and studentID=#{studentID}
+		select * from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where lms_attendanceInternalCheck.classID=#{classID} and lms_attendanceInternalCheck.days=#{days} and studentID=#{studentID} and lms_classContent.published=1
+	</select>
+	
+	<select id="getAttendanceInCheckByID" resultType="attendanceInternal">
+		select * from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1
 	</select>
 	
 </mapper>

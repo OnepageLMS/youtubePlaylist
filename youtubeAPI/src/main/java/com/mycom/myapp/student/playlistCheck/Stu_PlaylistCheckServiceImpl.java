@@ -19,6 +19,11 @@ public class Stu_PlaylistCheckServiceImpl implements Stu_PlaylistCheckService{
 	}
 	
 	@Override
+	public int insertNoPlaylistID(Stu_PlaylistCheckVO vo) {
+		return  playlistcheckDAO.insertNoPlaylistID(vo);
+	}
+	
+	@Override
 	public int deletePlaylist(Stu_TakesVO vo) {
 		return playlistcheckDAO.deletePlaylist(vo);
 	}
@@ -36,6 +41,11 @@ public class Stu_PlaylistCheckServiceImpl implements Stu_PlaylistCheckService{
 	@Override
 	public Stu_PlaylistCheckVO getPlaylist(int id) {
 		return playlistcheckDAO.getPlaylist(id);
+	}
+	
+	@Override
+	public Stu_PlaylistCheckVO getPlaylistByContentStu(Stu_PlaylistCheckVO vo) {
+		return playlistcheckDAO.getPlaylistByContentStu(vo);
 	}
 	
 	@Override

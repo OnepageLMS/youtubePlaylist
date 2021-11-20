@@ -36,6 +36,11 @@
 		delete from lms_classContent where classID=#{classID} and days=#{days}
 	</delete>
 	
+	<select id="getEndDate" resultType="classContent">
+		select endDate from lms_classContent
+		where classID=#{classID} and days=#{days} AND published=1
+	</select>
+	
 	<select id="getClassNum" resultType="int">	<!-- 해당 강의실에 생성된 강의컨텐츠 갯수 가져오기! -->
 		select count(*)
 		from lms_classContent

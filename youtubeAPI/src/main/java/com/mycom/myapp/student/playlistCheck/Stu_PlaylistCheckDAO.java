@@ -20,6 +20,11 @@ public class Stu_PlaylistCheckDAO {
 		return result;
 	}
 	
+	public int insertNoPlaylistID(Stu_PlaylistCheckVO vo) {
+		int result = sqlSession.insert("Stu_PlaylistCheck.insertNoPlaylistID", vo);
+		return result;
+	}
+	
 	public int updatePlaylist(Stu_PlaylistCheckVO vo) {
 		int result = sqlSession.update("Stu_PlaylistCheck.updatePlaylist", vo);
 		return result;
@@ -37,6 +42,10 @@ public class Stu_PlaylistCheckDAO {
 	
 	public Stu_PlaylistCheckVO getPlaylist(int id) {
 		return sqlSession.selectOne("Stu_PlaylistCheck.getPlaylist", id);
+	}
+	
+	public Stu_PlaylistCheckVO getPlaylistByContentStu(Stu_PlaylistCheckVO vo) {
+		return sqlSession.selectOne("Stu_PlaylistCheck.getPlaylistByContentStu", vo);
 	}
 	
 	public Stu_PlaylistCheckVO getPlaylistByPlaylistID(Stu_PlaylistCheckVO vo) {
