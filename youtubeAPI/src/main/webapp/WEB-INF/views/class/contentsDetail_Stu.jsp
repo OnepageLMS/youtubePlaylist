@@ -113,11 +113,11 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 	});
 	
 	// 초기화면 세팅 시작!!
-	
 	for(var i=0; i<weekContents.length; i++){
 		var symbol;
 		
 		if(weekContents[i].playlistID == 0){ //NOT Playlist
+			console.log("playlistID : " + weekContents[i].playlistID + "(0이어야해) Title : " + weekContents[i].title);
 			symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
 			
 			var day = weekContents[i].days;
@@ -183,6 +183,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 		}
 		
 		else{ //Playlist 
+			console.log("playlistID : " + weekContents[i].playlistID + "Title : " + weekContents[i].title);
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
 				
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg" style="max-width: 100%; height: 100%;">';
@@ -255,6 +256,7 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 										+ '<div class="post-content col-6 p-1 align-items-center myLecture" onclick="viewVideo(\''  //viewVideo호출
 											+ playlist[j].youtubeID.toString() + '\'' + ',' + playlist[j].id + ',' 
 											+ 	playlist[j].start_s + ',' + playlist[j].end_s +  ',' + j + ',' + i + ', this)" >' 
+											+ 	'<div class="post-title videoNewTitle" style="font-weight:800">' + playlist[j].newTitle + '</div>' 
 											+	'<div class=""> start : '+  convertTotalLength(playlist[j].start_s) + '</div>' 
 											+	'<div class=""> end : '+  convertTotalLength(playlist[j].end_s) + '</div>' 
 										+'</div>' 
@@ -335,7 +337,7 @@ var n ;
 var playlistVideo;
 function showLecture(playlistID, id, idx){ //새로운 playlist를 선택했을 때 실행되는 함수
 	console.log("id: " + id + " idx : " + idx);
-	
+	 player.pauseVideo();
 	if(weekContents[idx-1].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
@@ -571,7 +573,7 @@ function onYouTubeIframeAPIReady() {
 	console.log("videoIdx : " + videoIdx);
 	if(weekContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
 	{
-		videoId =  weekContents[0].thumbnailID;
+		videoId =  '';
 		console.log("playlist가 없네요 !" + videoId);
 	}
 	else //영상을 클릭했을 때
