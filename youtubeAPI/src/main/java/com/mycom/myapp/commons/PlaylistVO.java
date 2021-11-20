@@ -21,7 +21,7 @@ public class PlaylistVO {
 	private double start_s;
 	private double end_s;
 	private double duration;
-	private String searchType;
+	private int searchType;
 	private String keyword;
 	
 	public int getId() { 
@@ -128,10 +128,11 @@ public class PlaylistVO {
 	public void setDuration(double duration) {
 		this.duration = duration;
 	}
-	public String getSearchType() {
+
+	public int getSearchType() {
 		return searchType;
 	}
-	public void setSearchType(String searchType) {
+	public void setSearchType(int searchType) {
 		this.searchType = searchType;
 	}
 	public String getKeyword() {

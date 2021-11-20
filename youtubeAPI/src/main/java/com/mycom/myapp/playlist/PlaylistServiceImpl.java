@@ -76,7 +76,5 @@ public class PlaylistServiceImpl implements PlaylistService{
 	public List<PlaylistVO> searchPlaylist(PlaylistVO vo) {
 		return playlistDAO.searchPlaylist(vo);
 	}
-	
-	
 
 }

@@ -107,12 +107,32 @@ public class PlaylistController {
 		System.out.println("타입, 키워드 값 확인!" + vo.getSearchType()  + vo.getKeyword());
 		
 		List<PlaylistVO> playlists = new ArrayList<PlaylistVO>();
-		playlists = playlistService.searchPlaylist(vo);
+		
+		// 전체 검색, Playlist 이름, video 제목, 태그 
+		
+		vo.setInstructorID(instructorID);;
+		
+		if(vo.getSearchType() == 0) {
+			System.out.println("check1");
+			playlists = playlistService.searchPlaylist(vo);
+			
+			System.out.println(playlists);
+			System.out.println("check2");
+		}
+		else if(vo.getSearchType() == 1 && vo.getKeyword() == null) {
+			//playlists = playlistService.
+		}
+//		else if(vo.getSearchType() == 1) {
+//			
+//		}
+		 
+		//playlists = playlistService.searchPlaylist(vo);
+		System.out.println(playlists.size());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (int i = 0; i < playlists.size(); i++) {
 			  System.out.println("플레이리스트 아이디 확인! => " + playlists.get(i).getId());
-			}
+		}
 		map.put("searched", playlists);
 		
 		return map;

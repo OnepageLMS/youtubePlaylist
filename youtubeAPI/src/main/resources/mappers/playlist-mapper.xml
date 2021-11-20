@@ -69,6 +69,19 @@
 	</select>
 	
 	<select id="searchPlaylist" resultType="playlist">
+		select * from lms_playlist
+		where playlistName LIKE CONCAT('%', #{keyword}, '%') AND instructorID = #{instructorID};
+	</select> 
+	
+	<!-- <select id="searchPlaylist" resultType="playlist">
+		select DISTINCT A.* from lms_playlist A JOIN lms_video B ON
+		A.id = B.playlistID 
+		where instructorID= #{instructorID} AND A.playlistName like CONCAT('%', '#{keyword}', '%') 
+		OR A.tag like CONCAT('%', #{keyword}', '%')
+		OR B.title like CONCAT('%', '#{keyword}', '%');
+	</select> -->
+	
+	<!-- <select id="searchPlaylist" resultType="playlist"> 
 		select A.id from lms_playlist A
 		<trim prefix="WHERE" prefixOverrides="AND|OR">
 			<if test="#{searchType}=='0' and #{keyword}!=null and #{keyword}!=''">
@@ -83,6 +96,10 @@
 				JOIN lms_video B ON A.id = B.playlistID where B.title like CONCAT('%', #{keyword}, '%')
 			</if>
 		</trim>
-	</select>
+	</select> -->
+	
+	<!-- <select id="searchPlaylist2" resultType="playlist">
+		select * from lms_playlist where ;
+	</select> -->
 	
 </mapper>
