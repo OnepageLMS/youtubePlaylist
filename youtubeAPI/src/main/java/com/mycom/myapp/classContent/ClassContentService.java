@@ -11,6 +11,8 @@ public interface ClassContentService {
 	public int updatePublished(ClassContentVO vo);
 	public int deleteContent(int id);
 	public int deleteContentList(ClassContentVO vo);
+	public List<ClassContentVO> getDaySeq(ClassContentVO vo);
+	public int getDaySeqNum(ClassContentVO vo) ;
 	public int getClassNum(int classID);
 	public List<ClassContentVO> getEndDate(ClassContentVO vo);
 	public int getClassDaysNum(int classID);
