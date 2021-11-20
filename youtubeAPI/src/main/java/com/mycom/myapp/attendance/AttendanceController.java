@@ -142,8 +142,6 @@ public class AttendanceController {
 			}
 			file.add(fileList);
 		}
-		System.out.println("file size :" + file.size());
-		System.out.println("file[0] " + file.get(0));
 		model.addAttribute("file", file);
 		
 		if(file.size() == 0)
@@ -166,35 +164,31 @@ public class AttendanceController {
 	@RequestMapping(value = "/forDays", method = RequestMethod.POST)
 	public List<List<String>> forDays(HttpServletRequest request, Model model) throws Exception { //출결 보여주기 위함 
 		ClassContentVO ccvo = new ClassContentVO ();
-		
+		AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
 		List<Stu_TakesVO> takes = stu_takesService.getStudentTakes(classID);  //classID
 		List<List<String>> stuAttend = new ArrayList<List<String>>();
 		int dayNum = classInsContentService.getClassDaysNum(classID);
 		
-		for(int i=0; i<takes.size(); i++) {
+		ccvo.setClassID(classID);
+		aivo.setClassID(classID);
+		
+		for(int i=0; i<stu_takesService.getStudentNum(classID); i++) {
 			List<String> stuOne = new ArrayList<String>();
-			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
 			
 			for(int j=0; j<dayNum; j++) { //차시의 개수 
-				ccvo.setClassID(classID);
+
 				ccvo.setDays(j);
-				classContentService.getDaySeq(ccvo); //classContent에서 해당 차시에 수업 몇개있는지 (published가 1인거)
-				//attendInter에 들어간 후에, publish가 0이될수도있다. attendInter에서도 publish가 1인거 가져와야한다. 
-				//테이블 조인하자..
 				
 				int studentID = takes.get(i).getStudentID();
 				//System.out.println("aivo에 들어가는 건데 " + classID + ", studnetID :" +studentID+ " days : " +j);
-				aivo.setClassID(classID);
 				aivo.setStudentID(studentID);
 				aivo.setDays(j);
-				
-				attendanceInCheckService.getAttendanceInCheck(aivo);
 				
 				if(classContentService.getDaySeq(ccvo) == 0) {
 					continue;
 				}
 				
-				else if(classContentService.getDaySeq(ccvo) == attendanceInCheckService.getAttendanceInCheck(aivo).size()) {
+				else if(classContentService.getDaySeq(ccvo) == attendanceInCheckService.getAttendanceInCheckNum(aivo)) {
 					for(int k=0; k<classContentService.getDaySeq(ccvo); k++) {
 						
 						if(attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal().equals("결석")) {
@@ -227,9 +221,8 @@ public class AttendanceController {
 					//마감시간 > 현재시간 : 미확인
 					//마감시간 < 현재시간 : 결석
 					//마감시간이 하나라도 지난 것이 있으면 결석처리,, 
-					classInsContentService.getEndDate(ccvo);
 					
-					for(int k=0; k<classInsContentService.getEndDate(ccvo).size(); k++) {
+					for(int k=0; k<classContentService.getDaySeq(ccvo); k++) {
 						if(classInsContentService.getEndDate(ccvo).get(k) == null) { //마감기한이 설정되어있지 않는 경우 
 							System.out.println("1번 미확인 ");
 							stuOne.add("미확인");
@@ -278,19 +271,18 @@ public class AttendanceController {
 	    ClassContentVO ccvo = new ClassContentVO ();
 	    Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 	    
+	    ccvo.setClassID(classID);
+	    pcvo.setClassID(classID);
+	    
 	    for(int i=0; i<takes.size(); i++) {
 	    	List<Integer> stuOne = new ArrayList<Integer>();
 	    	
 	    	for(int j=0; j<dayNum; j++) {
-				ccvo.setClassID(classID);
 				ccvo.setDays(j);
-				classContentService.getDaySeq(ccvo); //해당 classID와 days가진 것 개수 (days내에 playlist개수)
 				
 				int studentID = takes.get(i).getStudentID();
 				pcvo.setStudentID(studentID);
-				pcvo.setClassID(classID);
 				pcvo.setDays(j);
-				 playlistcheckService.getCompletePlaylistWithDays(pcvo).size();
 				 
 				if(classContentService.getDaySeq(ccvo) == 0)
 					stuOne.add(-1);

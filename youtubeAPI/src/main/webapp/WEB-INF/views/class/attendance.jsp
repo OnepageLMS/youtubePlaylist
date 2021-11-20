@@ -137,39 +137,10 @@ $(document).ready(function(){
 					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = watchCount[j][i] + "%";
 				else 
 					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = "";
-					
-					//document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = Math.floor(watchCount/totalVideo*100) + "%"
-				//console.log(element);
-				//element.innerText = daysCount[i][j];
-				//if(weekContents[i].days == weekContents[i+1].days){
-				//var ori_watchCount = watchCount;
-				/*var result;
-				if(watchCount == null || watchCount == '') result = '';
-				else result = Math.floor(watchCount/totalVideo*100) + "%";
-				document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = result;*/
-			//}
-			
-				/*if(daysCount != 0){
-					if(innerWatched == 2)
-						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
-					else if(innerWatched == -1)
-						element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
-					else 
-						element.innerHTML +=  "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
-				}
 				
-				else if(totalVideo == 0){
-					
-					element.innerHTML += "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
-				}
-				else{
-					element.innerHTML += 'ㅎ';
-				}*/
 			
 			
 			}
-			
-			//console.log("밖인디 " + watchCount + " / " + totalVideo + " i :" + i);
 			
 		}
 	}
@@ -263,9 +234,6 @@ function copyToClipboard(element) {
 	 navigator.clipboard.writeText($(element).text());
 }
 function allowStudent(studentID){
-	/* var studentID = $(obj).parent().parent().children(); */
-/* 	var studentID = $(obj).closest("div.row").find("input[id='studentID']").val();
-	console.log("check studentID ==>" , studentID); */
 	console.log("studentID ==> " + studentID);	
 	console.log("classID ==> " + ${classInfo.id});	
 	var classID = ${classInfo.id};
@@ -337,11 +305,6 @@ function showAllStudentInfo(){
         				updatedStudentList +=
         				'<li class="list-group-item d-sm-inline-block" style="padding-top: 5px; padding-bottom: 30px">'
         					+ '<div class="row align-items-center">'
-        						/* + '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
-        							+ '<span onclick="deleteRequest( ' + value.studentID + ' ,1)">'
-        							+ '<i class="pe-7s-close fa-lg" style="margin-right: 30px; cursor:pointer" > </i>'
-        							+ '</span>'
-       							+ '</div>' */
        							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
 	      								+ '<p class="col-sm-12 mb-0">' + value.name + ' </p>'
@@ -371,8 +334,6 @@ function showAllStudentInfo(){
 	    				updatedStudentList +=
 	    				'<li class="list-group-item d-sm-inline-block" >'  // style="padding-top: 5px; padding-bottom: 30px"
 	    					+ '<div class="row">'
-	    						/* + '<div class="thumbnailBox col-sm-1 row ml-1 mr-1">'
-	   							+ '</div>' */
 	   							+ '<div class="titles col-sm-4 ">'
 	       							+ '<div class="row">'
 	       								+ '<input type="hidden" id="studentID" value="${person.studentID }" />'
@@ -428,11 +389,9 @@ function updateAttendance(days){
 		if($(".takeZoom"+days).eq(i).val() == -1){
 			finalTakes.push("미확인"); 
 		}
-		if($(".takeZoom"+days).eq(i).val() == 0){
-			console.log($(".originVal"+days).eq(i).text());
+		
+		if($(".takeZoom"+days).eq(i).val() == 0)
 			finalTakes.push($(".originVal"+days).eq(i).text());
-		} //id를 두어서 innerText를 가져오는 방식으로 
-			//finalTakes.push("출석");
 		if($(".takeZoom"+days).eq(i).val() == 1)
 			finalTakes.push("출석");
 		if($(".takeZoom"+days).eq(i).val() == 2)
@@ -450,26 +409,23 @@ function updateAttendance(days){
 			finalInternalTakes.push("결석");
 		else
 			finalInternalTakes.push("미확인");
-		//console.log($(".innerAttend"+(i+1)+""+days)[0].innerHTML + " / " + "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>");
-		//alert($(".innerAttend"+(i+1)+""+days)[0].innerHTML);
 		
 	}
 
-	alert(finalTakes.length + " / " + finalInternalTakes.length);
 	$.ajax({ //attendaceID를 위해 
 		'type' : "post",
 		'url' : "${pageContext.request.contextPath}/attendance/forAttendance",
-		'data' : { //나중에 수정 
+		'data' : { 
 			days : days-1,
 		},
 		success : function(data){
 			attendanceID = data;
 			console.log("attendance : " + data);
 			
-			$.ajax({ //여기서 studentID 리스트로 만들어서 넘겨야함,, 
+			$.ajax({ 
 				'type' : "post",
 				'url' : "${pageContext.request.contextPath}/attendance/whichAttendance",
-				'data' : { //나중에 수정 
+				'data' : { 
 					attendanceID : attendanceID,
 					days : days-1,
 					finalTakes : finalTakes,
@@ -508,17 +464,15 @@ var innerAttendList = new Array();
 function setInnerAttendance(takes, idx) { 
 	console.log("takes : " + takes + " idx : " + idx);
 	var seq = $("#inputSeq").val(); 	
-	var innerAttend = new Array();
+	/*var innerAttend = new Array();
 	
-	//for(var i =0; i <  innerAttend.length; i++){
-	// 	innerAttend[i] = new Array(5);
 	 	innerAttend.push($("#inputSeq").val());
 		innerAttend.push($("#forAttendance"+takes+""+idx).is(':checked'));
 		innerAttend.push($("#forLate"+takes+""+idx).is(':checked'));
 		innerAttend.push($("#forAbsent"+takes+""+idx).is(':checked'));
 		innerAttend.push($("#forNoCheck"+takes+""+idx).is(':checked'));
-	//}
-	innerAttendList.push(innerAttend);
+
+	innerAttendList.push(innerAttend);*/
 	
 	var element = document.getElementsByClassName('innerAttend'+takes+""+idx)[0];
 	element.innerHTML = '';
@@ -538,9 +492,6 @@ function setInnerAttendance(takes, idx) {
 		element.innerHTML += "<i class='pe-7s-less fa-2x'> </i>";
 	}
 	
-	for(var i=0; i<innerAttendList.length; i++)
-		console.log(innerAttendList[i]);
-	//updateAttendance(innerAttendList);
 }
 	
 </script>
