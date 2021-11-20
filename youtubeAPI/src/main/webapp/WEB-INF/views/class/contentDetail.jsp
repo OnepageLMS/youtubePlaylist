@@ -84,7 +84,7 @@ $(document).ready(function(){
 			$('#setContentID').val(data.id);
 			
 			var endDate = data.endDate;
-			if(endDate != null || endDate != ''){
+			if(endDate != null && endDate != ''){
 				endDate = endDate.split(" ")[0];
 				var hour = data.endDate.split(" ")[1];
 				var min = hour.split(":")[1];
@@ -410,7 +410,7 @@ function showLecture(playlistID, id, classInfo, idx){
 				$('#setContentID').val(data.id);
 				
 				var endDate = data.endDate;
-				if(endDate != null || endDate != ''){
+				if(endDate != null && endDate != ''){
 					endDate = endDate.split(" ")[0];
 					var hour = data.endDate.split(" ")[1];
 					var min = hour.split(":")[1];
@@ -647,7 +647,10 @@ function stringFormat(p_val){
   }
 
 function submitContent(){	//update content
-	var endDate = $("#setEndDate").val() + " " + stringFormat($("#endDate_h").val()) + ":" + stringFormat($("#endDate_m").val()) + ":00";
+	var endDate = "";
+	if($("#setEndDate").val() != '' && $("#setEndDate").val() != null)
+		endDate = $("#setEndDate").val() + " " + stringFormat($("#endDate_h").val()) + ":" + stringFormat($("#endDate_m").val()) + ":00";
+	
 	$.ajax({ 
 		  url : "${pageContext.request.contextPath}/class/updateClassContents",
 		  type : "post",
@@ -656,7 +659,7 @@ function submitContent(){	//update content
 			className : $("#editContentName").val(),
 			classDescription : $("#editContentDescription").val(),
 			endDate : endDate,
-			classContentID : weekContents[videoIdx].id //영상이 바뀔 때 이것도 잘 바뀌는지 ,, 
+			classContentID : $('#setContentID').val() //영상이 바뀔 때 이것도 잘 바뀌는지 ,, 
 		  },
 		  dataType : "json",
 		  success : function(data) {
@@ -786,7 +789,6 @@ function deleteContent(){
 		               <div class="position-relative form-group">
 		               		<!--  <label for="editContentDuedate" class="">마감일</label>
 		               		<textarea name="contentDuedate" id="editContentDuedate" class="form-control"></textarea>-->
-		               		
 		               		<div class="setEndDate input-group">
 								<div class="input-group-prepend">
 									<label for="endDate" class="input-group-text">마감일</label>
@@ -796,6 +798,16 @@ function deleteContent(){
 								<input type="date" class="form-control col-sm-8" id="setEndDate">
 								<input type="number" class="setTime end_h form-control col-sm-2" id="endDate_h" min="0" max="23">
 								<input type="number" class="setTime end_m form-control col-sm-2" id="endDate_m" min="0" max="59"> 
+							</div>
+		               		<div class="setEndDate input-group">
+								<div class="input-group-prepend">
+									<label for="startDate" class="input-group-text">공개일</label>
+									<div class="invalid-feedback">공개일을 다시 설정해주세요</div>
+								</div>
+								<input type="hidden" name="endDate">
+								<input type="date" class="form-control col-sm-8" id="setStartDate">
+								<input type="number" class="setTime start_h form-control col-sm-2" id="startDate_h" min="0" max="23">
+								<input type="number" class="setTime start_m form-control col-sm-2" id="startDate_m" min="0" max="59"> 
 							</div>
 		               </div>
 		            </div>

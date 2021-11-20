@@ -195,11 +195,14 @@ public class ClassContentController {
 	@ResponseBody
 	@RequestMapping(value = "/updateClassContents", method = RequestMethod.POST)
 	public int updateClassContents(HttpServletRequest request, Model model) throws Exception {	
-		System.out.println("modal을 통한 classcontent 업데이트 ?!");
+		System.out.println("modal을 통한 classcontent 업데이트 ?!" + Integer.parseInt(request.getParameter("classContentID")) + request.getParameter("endDate"));
+		String endDate = request.getParameter("endDate");
+		if(endDate == "") endDate = null;
+		
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setTitle(request.getParameter("className"));
 		ccvo.setDescription(request.getParameter("classDescription"));
-		ccvo.setEndDate(request.getParameter("endDate"));
+		ccvo.setEndDate(endDate);
 		ccvo.setId(Integer.parseInt(request.getParameter("classContentID")));
 		
 		
