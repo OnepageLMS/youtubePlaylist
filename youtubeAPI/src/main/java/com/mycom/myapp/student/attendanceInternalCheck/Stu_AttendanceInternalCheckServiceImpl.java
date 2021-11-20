@@ -36,8 +36,18 @@ public class Stu_AttendanceInternalCheckServiceImpl implements Stu_AttendanceInt
 	}
 	
 	@Override
+	public int getAttendanceInCheckNum(AttendanceInternalCheckVO vo) {
+		return stuAttendanceCheckDAO.getAttendanceInCheckNum(vo);
+	}
+	
+	@Override
 	public AttendanceInternalCheckVO getAttendanceInCheckByID(AttendanceInternalCheckVO vo) {
 		return stuAttendanceCheckDAO.getAttendanceInCheckByID(vo);
+	}
+	
+	@Override
+	public int getAttendanceInCheckByIDNum(AttendanceInternalCheckVO vo) {
+		return stuAttendanceCheckDAO.getAttendanceInCheckByIDNum(vo);
 	}
 	
 	

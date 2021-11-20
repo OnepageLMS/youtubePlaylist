@@ -32,8 +32,18 @@ public class Stu_AttendanceInternalCheckDAO {
 		return result;
 	}
 	
+	public int getAttendanceInCheckNum(AttendanceInternalCheckVO vo) {
+		int result = sqlSession.selectOne("AttendanceInternalCheck.getAttendanceInCheckNum", vo);
+		return result;
+	}
+	
 	public AttendanceInternalCheckVO getAttendanceInCheckByID(AttendanceInternalCheckVO vo) {
 		AttendanceInternalCheckVO result = sqlSession.selectOne("AttendanceInternalCheck.getAttendanceInCheckByID", vo);
+		return result;
+	}
+	
+	public int getAttendanceInCheckByIDNum(AttendanceInternalCheckVO vo) {
+		int result = sqlSession.selectOne("AttendanceInternalCheck.getAttendanceInCheckByIDNum", vo);
 		return result;
 	}
 }
