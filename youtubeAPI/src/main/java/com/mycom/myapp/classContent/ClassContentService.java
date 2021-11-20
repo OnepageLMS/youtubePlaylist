@@ -12,6 +12,7 @@ public interface ClassContentService {
 	public int deleteContent(int id);
 	public int deleteContentList(ClassContentVO vo);
 	public int getClassNum(int classID);
+	public List<ClassContentVO> getEndDate(ClassContentVO vo);
 	public int getClassDaysNum(int classID);
 	public int getBiggestUsedDay(int classID);
 	public ClassContentVO getOneContentInstructor(int id);
@@ -21,5 +22,5 @@ public interface ClassContentService {
 	public List<ClassContentVO> getRealAll(int classID);
 	public List<ClassContentVO> getAllClassContentForCopy(int classID);
 	public int insertCopiedClassContents(List<ClassContentVO> list);
-	public ClassContentVO getClassContentID(ClassContentVO vo);
+	public List<ClassContentVO> getClassContentID(ClassContentVO vo);
 }

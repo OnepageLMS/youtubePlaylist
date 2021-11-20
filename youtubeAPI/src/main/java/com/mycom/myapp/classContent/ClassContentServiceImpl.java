@@ -49,6 +49,11 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public List<ClassContentVO> getEndDate(ClassContentVO vo){
+		return ClassContentDAO.getEndDate(vo);
+	}
+	
+	@Override
 	public int getClassDaysNum(int classID) {
 		return ClassContentDAO.getClassDaysNum(classID);
 	}
@@ -94,7 +99,7 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
-	public ClassContentVO getClassContentID(ClassContentVO vo) {
+	public List<ClassContentVO> getClassContentID(ClassContentVO vo) {
 		return ClassContentDAO.getClassContentID(vo);
 	}
 }

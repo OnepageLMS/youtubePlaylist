@@ -11,4 +11,5 @@ public interface Stu_AttendanceInternalCheckService {
 	public int updateAttendanceInCheck(AttendanceInternalCheckVO vo);
 	public int deleteAttendanceInCheck(AttendanceInternalCheckVO vo);
 	public List<AttendanceInternalCheckVO> getAttendanceInCheck(AttendanceInternalCheckVO vo);
+	public AttendanceInternalCheckVO getAttendanceInCheckByID(AttendanceInternalCheckVO vo) ;
 }

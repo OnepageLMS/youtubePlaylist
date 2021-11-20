@@ -53,6 +53,11 @@ public class ClassContentDAO {
 			return 0;*/
 	}
 	
+	public List<ClassContentVO> getEndDate(ClassContentVO vo) {
+		List<ClassContentVO> result = sqlSession.selectList("ClassContent.getEndDate", vo);
+		return result;
+	}
+	
 	public int getClassDaysNum(int classID) {
 		int result = sqlSession.selectOne("ClassContent.getClassDaysNum", classID);
 		return result;
@@ -101,7 +106,7 @@ public class ClassContentDAO {
 		return sqlSession.insert("ClassContent.insertCopiedClassContents", list);
 	}
 	
-	public ClassContentVO getClassContentID(ClassContentVO vo) {
-		return sqlSession.selectOne("ClassContent.getClassContentID", vo);
+	public List<ClassContentVO> getClassContentID(ClassContentVO vo) {
+		return sqlSession.selectList("ClassContent.getClassContentID", vo);
 	}
 }

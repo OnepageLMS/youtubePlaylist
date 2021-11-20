@@ -77,30 +77,24 @@ $(document).ready(function(){
 		async : false,
 		success : function(data) {
 			daysCount = data;
-			console.log(daysCount[0][5]);
+			//console.log(daysCount[0][5]);
 		},
 		error : function() {
 			alert("error");
 		}
-	})
+	});
 	
 	$.ajax({ 
 		url : "${pageContext.request.contextPath}/attendance/forWatchedCount",
 		type : "post",
 		async : false,
-		data : {	
-			playlistID : weekContents[i].playlistID,
-			classContentID : weekContents[i].id,
-			studentID : takes[j].studentID
-		},
 		success : function(data) {
 			watchCount = data; 
-			console.log(data + " / " + weekContents[i].totalVideo);
 		},
 		error : function() {
 			alert("error");
 		}
-	})
+	});
 			
 	//alert("takesNum : " +${takesNum} + " classDays.length " + classDays);
 	for(var j=0; j<${takesNum}; j++){
@@ -124,17 +118,26 @@ $(document).ready(function(){
 				}
 			})*/
 			
-			if(daysCount[j][i] != null && allMyClass[i].playlistID != 0){ //playlist없이 description만 올림
+			if(daysCount[j][i] != null ){ //playlist없이 description만 올림
 				//alert("성공이다 ");
 				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0];
 				element.innerHTML = '' ;
-				console.log(" ?? " + daysCount[j][i] + " i " + i + " , j " + j);
+				//console.log(" ?? " + daysCount[j][i] + " i " + i + " , j " + j);
 				if(daysCount[j][i] == "출석"){
 					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
-					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = "100%";
 				}
 				if(daysCount[j][i] == "미확인")
 					element.innerHTML +=  "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
+				if(daysCount[j][i] == "결석")
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+				if(daysCount[j][i] == "지각")
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:orange'> </i>";
+					
+				if(watchCount[j][i] >= 0)
+					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = watchCount[j][i] + "%";
+				else 
+					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = "";
+					
 					//document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = Math.floor(watchCount/totalVideo*100) + "%"
 				//console.log(element);
 				//element.innerText = daysCount[i][j];
@@ -178,7 +181,7 @@ $(document).ready(function(){
 		var seq = $("#inputSeq").val(); //지우면 안돼 
 		var formData = new FormData(form[6]);
 		formData.append("file", $("#exampleFile")[0].files[0]);
-		formData.append("daySeq", $("#inputSeq").val());
+		formData.append("daySeq", seq-1);
 		formData.append("start_h", $('#startTimeH').val());
 		formData.append("start_m", $('#startTimeM').val());
 		formData.append("end_h", $('#endTimeH').val());
@@ -193,10 +196,12 @@ $(document).ready(function(){
 			'data' : formData,
 			'type' : 'POST',
 			success: function(data){
+				console.log( " success ? " );
 				for(var i=0; i<data[0].length; i++){
-					var rows = document.getElementById("stuName").getElementsByTagName("th");
+					var rows = document.getElementById("stuName").getElementsByTagName("span");
 					for( var r=0; r<rows.length; r++ ){
 						var name = rows[r];
+						console.log("name  :  " +name.innerText);
 						  if(name.innerText == data[0][i]){
 						  		$(".takeZoom"+seq).eq(r).val(1).prop("selected", true); 
 						  		//document.getElementsByClassName('takeZoom'+seq).style.background = "blue";
@@ -208,7 +213,7 @@ $(document).ready(function(){
 				}
 				
 				for(var i=0; i<data[1].length; i++){
-					var rows = document.getElementById("stuName").getElementsByTagName("th");
+					var rows = document.getElementById("stuName").getElementsByTagName("span");
 					for( var r=0; r<rows.length; r++ ){
 						var name = rows[r];
 						 console.log("name : "  +name.innerText+ "/ " +r);
@@ -412,7 +417,7 @@ function setAttendanceModal(daySeq){
 function updateAttendance(days){
 	//attendanceID를 알아야한다. 그러기 위해서는 classID, days, instructorID가 필요하다.
 	//days의 $(".takeZoom"+seq).eq(r).val();을 리스트로 만들면되지 않을까  == //takeZoom(days+1)번째의 value들을 array에 저장하기
-	var rows = document.getElementById("stuName").getElementsByTagName("th");
+	var rows = document.getElementById("stuName").getElementsByTagName("span");
 	var finalTakes = [];
 	var finalInternalTakes = [];
 	var days = days + 1;
@@ -421,8 +426,7 @@ function updateAttendance(days){
 	for(var i=0; i<rows.length; i++){
 		console.log(" i " + i + "  " + $(".takeZoom"+days).eq(i).val());
 		if($(".takeZoom"+days).eq(i).val() == -1){
-			alert("출결업데이트를 완료해주세요 ");
-			return ; 
+			finalTakes.push("미확인"); 
 		}
 		if($(".takeZoom"+days).eq(i).val() == 0){
 			console.log($(".originVal"+days).eq(i).text());
@@ -435,11 +439,17 @@ function updateAttendance(days){
 			finalTakes.push("지각");
 		if($(".takeZoom"+days).eq(i).val() == 3)
 			finalTakes.push("결석");
+		if($(".takeZoom"+days).eq(i).val() == 4)
+			finalTakes.push("미확인");
 		
 		if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:dodgerblue"> </i>')
 			finalInternalTakes.push("출석");
-		else
+		else if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:orange"> </i>')
+			finalInternalTakes.push("지각");
+		else if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:red"> </i>')
 			finalInternalTakes.push("결석");
+		else
+			finalInternalTakes.push("미확인");
 		//console.log($(".innerAttend"+(i+1)+""+days)[0].innerHTML + " / " + "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>");
 		//alert($(".innerAttend"+(i+1)+""+days)[0].innerHTML);
 		
@@ -450,7 +460,7 @@ function updateAttendance(days){
 		'type' : "post",
 		'url' : "${pageContext.request.contextPath}/attendance/forAttendance",
 		'data' : { //나중에 수정 
-			days : days,
+			days : days-1,
 		},
 		success : function(data){
 			attendanceID = data;
@@ -461,7 +471,7 @@ function updateAttendance(days){
 				'url' : "${pageContext.request.contextPath}/attendance/whichAttendance",
 				'data' : { //나중에 수정 
 					attendanceID : attendanceID,
-					days : days,
+					days : days-1,
 					finalTakes : finalTakes,
 					finalInternalTakes : finalInternalTakes
 				},
@@ -596,10 +606,10 @@ function setInnerAttendance(takes, idx) {
 												<c:if test="${!empty takes}">
 													<c:forEach var="i" begin="0" end="${takesNum-1}" varStatus="status">
 			                                            <tr>
-			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2>${takes[status.index].name} <br>${takes[status.index].email}</th>
+			                                                <th class = "row${status.index} name" scope="row${status.index}" rowspan=2><span>${takes[status.index].name}</span> <br>${takes[status.index].email}</th>
 			                                            </tr>
 														<tr>
-			                                             	<c:if test="${fn:length(file) > 1}">
+			                                             	<c:if test="${!empty file}">
 				                                            	 <c:forEach var="i" begin="0" end="${fileNum-1}" varStatus="status2"> <!-- db에 저장되지 않은 부분임으로 똑같이 하지만 반복 횟수만 수정하기  -->
 				                                            	 	<td style="text-align:center" > 
 								                                        <select  id ="sel" class="takeZoom${status2.index+1} form-select"  aria-label="Default select example" >
@@ -607,6 +617,7 @@ function setInnerAttendance(takes, idx) {
 																		  <option value="1" class="blue">출석</option>
 																		  <option value="2" class="yellow">지각</option>
 																		  <option value="3" class="red">결석</option>
+																		  <option value="4" class="red">미확인</option>
 																		</select>
 				                                            	 	</td>
 				                                                	
@@ -627,6 +638,7 @@ function setInnerAttendance(takes, idx) {
 																	  <option value="1" class="blue">출석</option>
 																	  <option value="2" class="yellow">지각</option>
 																	  <option value="3" class="red">결석</option>
+																	  <option value="4" class="red">미확인</option>
 																	</select>
 			                                            	 	</td>
 			                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 

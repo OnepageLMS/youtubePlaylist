@@ -101,10 +101,42 @@ public class Stu_ClassContentController {
 		//id = ID;
 		//classID = classId;
 		//daySeq = day;
+		
 		studentID = (Integer)session.getAttribute("userID");
 		
+		
 		VideoVO pvo = new VideoVO();
+		
+		//여기서 playlistID==0이면 playlistCHeck테이블에 넣어주기 
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
+		
+		pcvo.setStudentID(studentID);
+		pcvo.setClassContentID(id);
+		pcvo.setClassID(classID);
+		pcvo.setDays(classContentService.getOneContent(id).getDays());
+		pcvo.setTotalVideo(0);
+		
+		System.out.println("id : " + id + " days : " + day);
+		if(playlistID == 0 && playlistcheckService.getPlaylistByContentStu(pcvo) == null) {
+			if(playlistcheckService.insertNoPlaylistID(pcvo) != 0) {
+				System.out.println("playlistID 0 insert success!");
+			}
+			
+
+			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+			aivo.setClassContentID(id);
+			aivo.setStudentID(studentID);
+			
+			System.out.println(attendanceInCheckService.getAttendanceInCheckByID(aivo));
+			if(attendanceInCheckService.getAttendanceInCheckByID(aivo) == null) {
+				aivo.setInternal("출석"); //넣을 때 시간 비교해서 넣어야함 ..... 
+				aivo.setClassID(classID);
+				aivo.setDays(classContentService.getOneContent(id).getDays());
+				if( attendanceInCheckService.insertAttendanceInCheck(aivo) != 0)
+					System.out.println("playlistID 0 insert sucess AttendanceInternal");
+			}
+			//해단 id를가지고  classID, 
+		}
 		
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setPlaylistID(playlistID);
@@ -150,7 +182,39 @@ public class Stu_ClassContentController {
 	public List<VideoVO> forWatched(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
 		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
-		System.out.println("watch" + classContentID);
+		//System.out.println("watch" + classContentID);
+		
+		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
+		
+		pcvo.setStudentID(studentID);
+		pcvo.setClassContentID(classContentID);
+		pcvo.setClassID(classID);
+		System.out.println("classCOntentID " + classContentID + " " + classContentService.getOneContent(classContentID).getDays());
+		pcvo.setDays(classContentService.getOneContent(classContentID).getDays());
+		pcvo.setTotalVideo(0);
+		
+		System.out.println("id : " + classContentID);
+		if(playlistID == 0 && playlistcheckService.getPlaylistByContentStu(pcvo) == null) {
+			if(playlistcheckService.insertNoPlaylistID(pcvo) != 0) {
+				System.out.println("changing, playlistID 0 insert success!");
+			}
+			
+
+			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+			aivo.setClassContentID(classContentID);
+			aivo.setStudentID(studentID);
+			
+			System.out.println(attendanceInCheckService.getAttendanceInCheckByID(aivo));
+			if(attendanceInCheckService.getAttendanceInCheckByID(aivo) == null) {
+				aivo.setInternal("출석");
+				aivo.setClassID(classID);
+				aivo.setDays(classContentService.getOneContent(classContentID).getDays());
+				if( attendanceInCheckService.insertAttendanceInCheck(aivo) != 0)
+					System.out.println("changing, playlistID 0 insert sucess AttendanceInternal");
+			}
+			//해단 id를가지고  classID, 
+		}
+		
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 	    vo.setPlaylistID(playlistID);
 	    vo.setStudentID(studentID);

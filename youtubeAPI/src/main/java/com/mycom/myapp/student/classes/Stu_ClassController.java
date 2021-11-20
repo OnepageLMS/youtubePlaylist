@@ -254,7 +254,7 @@ public class Stu_ClassController{
 	    return classContentService.getOneContent(classPlaylistID);
 	}
 	
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/progressbar", method = RequestMethod.POST)
 	public Stu_PlaylistCheckVO progressbar(HttpServletRequest request) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
@@ -272,7 +272,7 @@ public class Stu_ClassController{
 	  }
 	  else 
 		  return null;
-	}
+	}*/
 	
 	/*@ResponseBody
 	@RequestMapping(value = "/isExisted", method = RequestMethod.POST)
