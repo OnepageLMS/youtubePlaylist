@@ -144,25 +144,19 @@ public class AttendanceController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/takes", method = RequestMethod.POST)
-	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
+	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {	
 		
 		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
 	}	
 	
 	@ResponseBody
 	@RequestMapping(value = "/forDays", method = RequestMethod.POST)
-	public List<List<String>> forDays(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
-		//int days = Integer.parseInt(request.getParameter("days"));
+	public List<List<String>> forDays(HttpServletRequest request, Model model) throws Exception { //출결 보여주기 위함 
 		ClassContentVO ccvo = new ClassContentVO ();
-		ccvo.setClassID(classID);
-		//ccvo.setDays(days);
-		System.out.println("여기 강의가 총 몇개냐면 " + classInsContentService.getClassNum(classID));
-		System.out.println("여기 days는 총 몇개냐면 " + classInsContentService.getClassDaysNum(classID));
 		
 		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
 		List<List<String>> stuAttend = new ArrayList<List<String>>();
 		int dayNum = classInsContentService.getClassDaysNum(classID);
-		System.out.println("dayNum : " + dayNum + ", takes.size() " + takes.size());
 		
 		for(int i=0; i<takes.size(); i++) {
 			List<String> stuOne = new ArrayList<String>();
@@ -188,37 +182,24 @@ public class AttendanceController {
 				}
 				
 				else if(classContentService.getDaySeq(ccvo) == attendanceInCheckService.getAttendanceInCheck(aivo).size()) {
-					//System.out.println("출석 ,, ");
-					//System.out.println("차시는 " + (j+1)+ "차시, 해당 차시 안에 수업이 " + classContentService.getDaySeq(ccvo) + "개 ");
-					//System.out.println("학생이 완료한 수업은 " + attendanceInCheckService.getAttendanceInCheck(aivo).size()+ " 개 ");
-					//System.out.println("이럴때 출석! 출석한 학생의 id : " + studentID);
 					for(int k=0; k<classContentService.getDaySeq(ccvo); k++) {
-						//aivo.setClassContentID(classInsContentService.getClassContentID(ccvo).get(k).getId());
-						/*System.out.println("출결여부 :  "  + attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal());
-						System.out.println("이때의 studentID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getStudentID());
-						System.out.println("이때의 classID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getClassID());
-						System.out.println("이때의 days " + attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getDays());
-						System.out.println("이때의 classContentID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getClassContentID());*/
+						
 						if(attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal().equals("결석")) {
-							//System.out.println("db에 있는 결석 studentID " + studentID);
 							stuOne.add("결석");
 							break;
 						}
 						else if(attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal().equals("지각")) {
-							//System.out.println("db에 있는 지각 studentID " + studentID);
 							if(k == classContentService.getDaySeq(ccvo)-1)
 								stuOne.add("지각");
 							continue;
 						}
 						else if(attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal().equals("출석")) {
-							//System.out.println("db에 있는 출석 studentID " + studentID);
 							if(k == classContentService.getDaySeq(ccvo)-1)
 								stuOne.add("출석");
 							continue;
 						}
 						else {
 							//미확인
-							//System.out.println("db에 있는 미확인 studentID " + studentID);
 							if(k == classContentService.getDaySeq(ccvo)-1)
 								stuOne.add("미확인");
 							continue;
@@ -263,12 +244,6 @@ public class AttendanceController {
 							break;
 						}
 					}
-					
-					//System.out.println("미확인 ,, ");
-					//System.out.println("차시는 " + (j+1)+ "차시, 해당 차시 안에 수업이 " + classContentService.getDaySeq(ccvo) + "개 ");
-					//System.out.println("학생이 완료한 수업은 " + attendanceInCheckService.getAttendanceInCheck(aivo).size()+ " 개 ");
-					//System.out.println("이럴때 미확인 ! 미확인  학생의 id : " + studentID);
-					//stuOne.add("미확인");
 				}
 				
 				
@@ -276,33 +251,13 @@ public class AttendanceController {
 			stuAttend.add(stuOne);
 		}
 		
-		/*System.out.println(stuAttend.get(0));
-		System.out.println(stuAttend.get(1));
-		System.out.println(stuAttend.get(2));*/
 			
 		return stuAttend;
 	}	
 	
 	@ResponseBody
 	@RequestMapping(value = "/forWatchedCount", method = RequestMethod.POST)
-	public List<List<Integer>> forWatchedCount(HttpServletRequest request, Model model) throws Exception {
-		//System.out.println("..?");
-		/*int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
-		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
-		//System.out.println("watch");
-		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
-	    vo.setPlaylistID(playlistID);////////////
-	    vo.setStudentID(studentID);
-	    vo.setClassContentID(classContentID);
-	    
-	    int count = 0;
-	    for(int i=0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
-	    	if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1)
-	    		count++;
-	    }*/
-	    
-		System.out.println("????? forWatchedCount");
+	public List<List<Integer>> forWatchedCount(HttpServletRequest request, Model model) throws Exception { //수강 퍼센트 
 	    List<List<Integer>> stuWatched = new ArrayList<List<Integer>>();
 	    
 	    int dayNum = classInsContentService.getClassDaysNum(classID);
@@ -327,22 +282,13 @@ public class AttendanceController {
 				if(classContentService.getDaySeq(ccvo) == 0)
 					stuOne.add(-1);
 				else {
-					//System.out.println("playlistCheck에서 체크 : " + playlistcheckService.getCompletePlaylistWithDays(pcvo).size() + " , 차시내 페이지 수 " + classContentService.getDaySeq(ccvo) + " studentID : " + studentID + " classID : " + classID + "days : " + j);
 					stuOne.add(playlistcheckService.getCompletePlaylistWithDays(pcvo).size() / classContentService.getDaySeq(ccvo) * 100);
 				}
-				 
-				 //System.out.println("percentage : " + stuOne.get(i));
 		    }
 	    	
 	    	stuWatched.add(stuOne);
 	    }
 	    
-	    
-	    /*System.out.println(stuWatched.get(0));
-		System.out.println(stuWatched.get(1));
-		System.out.println(stuWatched.get(2));
-		System.out.println(stuWatched.get(3));
-		System.out.println(stuWatched.get(4));*/
 		
 	    return stuWatched;
 	}
@@ -577,16 +523,6 @@ public class AttendanceController {
             	else
             		continue;
             }
-           /* System.out.println(attendStu.size() + ", " + absentStu.size() + " , " + annonyStu.size());
-            for(int i=0; i<attendStu.size(); i++) {
-            	System.out.println(attendStu.get(i));
-            }
-            for(int i=0; i<absentStu.size(); i++) {
-            	System.out.println(absentStu.get(i));
-            }
-            for(int i=0; i<annonyStu.size(); i++) {
-            	System.out.println(annonyStu.get(i));
-            }*/
             finalTakes.add(attendStu);
             finalTakes.add(absentStu);
             finalTakes.add(annonyStu);
@@ -616,15 +552,32 @@ public class AttendanceController {
 		ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setClassID(classID);
 		ccvo.setDays(days);
-		
-		//int classContentID = classInsContentService.getClassContentID(ccvo).getId();
-		
-		//System.out.println("classContentID " + classContentID);
 
 		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
 		
-		for(int i=0; i<finalTakes.length; i++) {
-			System.out.println("internal 결과 : " + finalInternalTakes[i]);
+		for(int i=0; i<finalInternalTakes.length; i++) { //internal에 대해서 
+			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+			aivo.setStudentID(takes.get(i).getStudentID());
+			aivo.setClassID(classID);
+			aivo.setDays(days);
+			
+			for(int j=0; j<classContentService.getDaySeq(ccvo); j++) {
+				aivo.setClassContentID(classInsContentService.getClassContentID(ccvo).get(j).getId());
+				aivo.setInternal(finalInternalTakes[i]);
+				System.out.println("classContentID : " + classInsContentService.getClassContentID(ccvo).get(j).getId());
+				if(attendanceInCheckService.getAttendanceInCheckByID(aivo) == null) {
+					attendanceInCheckService.insertAttendanceInCheck(aivo);
+					System.out.println("선생님이 inner 삽입  ");
+				}
+				else {
+					attendanceInCheckService.updateAttendanceInCheck(aivo);
+					System.out.println("선생님이 inner 수정  ");
+				}
+			}
+		}
+		
+		for(int i=0; i<finalTakes.length; i++) {//external에 대해서 
+			
 			AttendanceCheckVO avo = new AttendanceCheckVO();
 			avo.setAttendanceID(attendanceID);
 			avo.setExternal(finalTakes[i]);
@@ -638,129 +591,12 @@ public class AttendanceController {
 				attendanceCheckService.insertExAttendanceCheck(avo);
 				
 			}
-			
-			//classContentID로 하는게 아니라, 
-			//classID, days, studentID같은것들 죄다 업데이트 or insert해야함
-			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
-			//aivo.setInternal(finalInternalTakes[i]);
-			aivo.setStudentID(takes.get(i).getStudentID());
-			//aivo.setClassContentID(classContentID);
-			aivo.setClassID(classID);
-			aivo.setDays(days);
-			
-			//System.out.println("null이라고,,?? " + attendanceInCheckService.getAttendanceInCheck(aivo).getStudentID());
-			//(if(attendanceInCheckService.getAttendanceInCheck(aivo) != null) {
-				
-				for(int j=0; j<attendanceInCheckService.getAttendanceInCheck(aivo).size(); j++) {
-					aivo.setClassContentID(classInsContentService.getClassContentID(ccvo).get(j).getId());
-					aivo.setInternal(finalInternalTakes[i]);
-					if(attendanceInCheckService.getAttendanceInCheck(aivo).get(j) != null) {
-						System.out.println("출결여부 :  "  + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getInternal());
-						System.out.println("이때의 studentID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getStudentID());
-						System.out.println("이때의 classID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getClassID());
-						System.out.println("이때의 days " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getDays());
-						System.out.println("이때의 classContentID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getClassContentID());
-						
-						attendanceInCheckService.updateAttendanceInCheck(aivo);
-						System.out.println("선생님이 inner 수정  ");
-					}
-					else {
-						System.out.println("insert 출결여부 :  "  + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getInternal());
-						System.out.println("insert 이때의 studentID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getStudentID());
-						System.out.println("insert 이때의 classID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getClassID());
-						System.out.println("insert 이때의 days " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getDays());
-						System.out.println("insert 이때의 classContentID " + attendanceInCheckService.getAttendanceInCheck(aivo).get(j).getClassContentID());
-						
-						attendanceInCheckService.insertAttendanceInCheck(aivo);
-						System.out.println("선생님이 inner 삽입  ");
-					}
-				}
-
-				
-			//}
-			/*else {
-				for(int j=0; j<classInsContentService.getClassContentID(ccvo).size(); i++) {
-					if(classInsContentService.getClassContentID(ccvo).get(j) != null)
-						aivo.setClassContentID(classInsContentService.getClassContentID(ccvo).get(j).getId());
-					aivo.setInternal(finalInternalTakes[i]);
-					attendanceInCheckService.insertAttendanceInCheck(aivo);
-				}
-
-				System.out.println("선생님이 inner 삽입  ");
-			}*/
 		}
 		
-		//classID와  days를 통해 classContentID를 가져오기 
-		//classContentID와 studentID를 통해 
 		
 		return 1;
 		
 	}
-	
-	/*@ResponseBody
-	@RequestMapping(value = "/forInnerWatched", method = RequestMethod.POST)
-	public int forInnerWatched(HttpServletRequest request)  {
-		//0,1 미확인 2출석 -1 결석 
-		int classContentID = Integer.parseInt(request.getParameter("classContentID"));
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
-		//System.out.println("studentID : " + studentID + " / classContentID : " + classContentID);
-		AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
-		aivo.setClassContentID(classContentID);
-		aivo.setStudentID(studentID);
-		//마감시간이 지정되지 않은 경우도 생각해줘야함 
-		if(attendanceInCheckService.getAttendanceInCheck(aivo) != null) {
-			System.out.println("뭐시여 ? " + classContentID + " " + attendanceInCheckService.getAttendanceInCheck(aivo).getInternal());
-			if(attendanceInCheckService.getAttendanceInCheck(aivo).getInternal().equals("출석")) {
-				System.out.println("== 하나는 출러ㅕㄱ이 되어야하는디 ...");
-				return 2;
-			}
-				
-			else if(attendanceInCheckService.getAttendanceInCheck(aivo).getInternal().equals("결석"))
-				return -1;
-		}
-			//return attendanceInCheckService.getAttendanceInCheck(aivo).getInternal();
-		else { 
-			SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-			//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			Date now = new Date();
-			
-			
-			String endString = classContentService.getOneContent(classContentID).getEndDate(); //마감 시간
-			if(endString == null) 
-				return 0; //마감시간이 설정되어있지 않는 경우에는 미확인으로 표기하기 
-			
-			String nowString = format.format(now);
-			
-			Date endDate = null;
-			try {
-				endDate = format.parse(endString);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			
-			Date currentDate = null;
-			try {
-				currentDate = format.parse(nowString);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			
-			int result = endDate.compareTo(currentDate); 
-			
-			if(result == 0 || result == 1) {
-				//resultString = "미확인";
-				return result ;
-			}
-				
-			else //-1 
-			{
-				return result ;
-			}
-		}
-		
-		return 0;
-		
-	}*/
 	
 	@ResponseBody
 	@RequestMapping(value = "/forAttendance", method = RequestMethod.POST)

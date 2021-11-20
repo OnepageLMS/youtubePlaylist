@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mycom.myapp.classContent.ClassContentService;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceInternalCheckVO;
 import com.mycom.myapp.commons.ClassContentVO;
@@ -45,6 +46,8 @@ public class Stu_ClassContentController {
 	private Stu_ClassesService classService_stu;
 	@Autowired
 	private Stu_ClassContentService classContentService;
+	@Autowired
+	private ClassContentService classInsContentService;
 	@Autowired
 	private PlaylistService playlistService;
 	@Autowired
@@ -352,25 +355,18 @@ public class Stu_ClassContentController {
 			pcvo.setTotalVideo(playlistService.getPlaylist(playlistID).getTotalVideo());
 			pcvo.setTotalWatched(0.0);
 			
-			AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+			/*AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
 			aivo.setClassContentID(classPlaylistID);
 			aivo.setStudentID(studentID);
-			aivo.setInternal("출석");
+			aivo.setInternal("출석");*/
 			
-			if(playlistcheckService.getPlaylist(playlistID) == null) {
+			if(playlistcheckService.getPlaylistByPlaylistID(pcvo) == null) {
 				if(playlistcheckService.insertPlaylist(pcvo) != 0) {
 					System.out.println("changewatch good insert");
 					//playlistCheck에 insert될 때, attendanceInternalCheck에도 insert시키기 
 					//get했을 때 null이면 insert, 
 					//마감일보다 playlistCheck에 insert된 시간이 먼저거나 갘으면 true(출석)
 					//그렇지 않으면 결석 
-					
-					//마감일 
-					/*ClassContentVO ccvo = new ClassContentVO();
-					ccvo.setClassID(classID);
-					ccvo.setPlaylistID(playlistID);
-					
-					classContentService.getCompleteClassContent(ccvo);*/
 					//playlistCheck에서 classID, days, studentID가 같은 것의 개수와
 					//classContent에서 classID, days가 같은 것의 개수가 같을 때
 					ClassContentVO ccvo = new ClassContentVO();
@@ -387,49 +383,55 @@ public class Stu_ClassContentController {
 					//System.out.println("0 이거나 1이면 출석 , 아니면 결석 " + result);
 					System.out.println("count : " + classContentService.getDaySeq(ccvo) + " , count : " + playlistcheckService.getCompletePlaylistWithDays(pcvo).size());
 					if(classContentService.getDaySeq(ccvo) == playlistcheckService.getCompletePlaylistWithDays(pcvo).size()) {
-						System.out.println(classContentService.getOneContent(classPlaylistID).getEndDate());
-						String endString = classContentService.getOneContent(classPlaylistID).getEndDate();
-						//playlistCheck테이블에서 classContentID와 studentID가 같은 regDate가져오기 
-						System.out.println(playlistcheckService.getPlaylistByPlaylistID(pcvo).getRegdate());
-						String stuCompleteString = playlistcheckService.getPlaylistByPlaylistID(pcvo).getRegdate();
-						
-						
-						SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-						
-						Date endDate = null;
-						try {
-							endDate = format.parse(endString);
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						
-						Date stuCompleteDate = null;
-						try {
-							stuCompleteDate = format.parse(stuCompleteString);
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
+						System.out.println("똑같은데 ,,,");
+						AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+						//aivo.setClassContentID(classPlaylistID);
+						aivo.setStudentID(studentID);
+						//aivo.setInternal("출석");
+						aivo.setClassID(classID);
+						System.out.println("studentID : " + studentID  + "classID : " + classID);
+						for(int i=0; i<classContentService.getDaySeq(ccvo); i++) {
+							int classContentID = classInsContentService.getClassContentID(ccvo).get(i).getId();
+							aivo.setClassContentID(classContentID);
+							aivo.setDays(classContentService.getOneContent(classContentID).getDays());
+							System.out.println("classContentID : " + classContentID  + "days : " + classContentService.getOneContent(classContentID).getDays());
+							String endString = classContentService.getOneContent(classContentID).getEndDate();
+							String stuCompleteString = playlistcheckService.getPlaylistByPlaylistID(pcvo).getRegdate();
+							
+							SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+							
+							Date endDate = null;
+							try {
+								endDate = format.parse(endString);
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							
+							Date stuCompleteDate = null;
+							try {
+								stuCompleteDate = format.parse(stuCompleteString);
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
 
-						int result = endDate.compareTo(stuCompleteDate); 
-						
-						System.out.println("마감시간 : " + endDate);
-						System.out.println("현재시간 : " + stuCompleteDate);
-						
-						if(attendanceInCheckService.getAttendanceInCheck(aivo) == null) {
-							AttendanceInternalCheckVO aic = new AttendanceInternalCheckVO();
-							aic.setClassContentID(classPlaylistID);
-							aic.setStudentID(studentID);
+							int result = endDate.compareTo(stuCompleteDate); 
 							
-
-							if(result == 0 || result == 1)
-								aic.setInternal("출석");
-							else //-1 
-								aic.setInternal("결석");
-							attendanceInCheckService.insertAttendanceInCheck(aic);
-							System.out.println("출석도 잘넣어보았다 ");
-							
-							
+							//0 이거나 1이면 출석 (endDate >= stuCompleteDate) 기간 내에 들음, 아니면 결석 
+							System.out.println("null이 아니여 ? result는 " + result);
+							if(attendanceInCheckService.getAttendanceInCheckByID(aivo) == null) {
+								System.out.println("null이 아니여 ?2 " );
+								if(result == 0 || result == 1)
+									aivo.setInternal("출석");
+								else //-1 
+									aivo.setInternal("결석");
+								attendanceInCheckService.insertAttendanceInCheck(aivo);
+								System.out.println("출석도 잘넣어보았다 ");
+								
+								
+							}
 						}
+						
+					
 						
 					}
 					

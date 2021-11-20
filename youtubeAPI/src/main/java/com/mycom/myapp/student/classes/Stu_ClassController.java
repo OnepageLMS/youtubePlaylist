@@ -255,77 +255,6 @@ public class Stu_ClassController{
 	    return classContentService.getOneContent(classPlaylistID);
 	}
 	
-	/*@ResponseBody
-	@RequestMapping(value = "/progressbar", method = RequestMethod.POST)
-	public Stu_PlaylistCheckVO progressbar(HttpServletRequest request) throws Exception {
-		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		int classPlaylistID = Integer.parseInt(request.getParameter("id"));
-		//System.out.println()
-		
-		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		pcvo.setPlaylistID(playlistID);
-		pcvo.setClassContentID(classPlaylistID);
-		pcvo.setStudentID(studentId);
-	   
-	  if(playlistcheckService.getPlaylistByPlaylistID(pcvo) != null) {
-		  System.out.println("null아니니까");
-		  return  playlistcheckService.getPlaylistByPlaylistID(pcvo);
-	  }
-	  else 
-		  return null;
-	}*/
-	
-	/*@ResponseBody
-	@RequestMapping(value = "/isExisted", method = RequestMethod.POST)
-	public String isExisted(HttpServletRequest request) throws Exception { //변수들 하나씩 가져오는거 아니고 json 형식으로 가져올 수 있도록
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
-		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
-		int classID = Integer.parseInt(request.getParameter("classID"));
-		int totalVideo = Integer.parseInt(request.getParameter("totalVideo"));
-		double totalWatched = 0.00;
-		
-		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		
-		pcvo.setStudentID(studentID);
-		pcvo.setPlaylistID(playlistID);
-		pcvo.setClassContentID(classPlaylistID);
-		pcvo.setClassID(classID);
-		pcvo.setTotalVideo(totalVideo);
-		pcvo.setTotalWatched(totalWatched);
-		
-		if (playlistcheckService.insertPlaylist(pcvo) == 0) {
-			System.out.println("실패");
-			return "error";
-		}
-		else {
-			return "Success";
-		}
-	}*/
-	
-	/*@RequestMapping(value = "/videocheck", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<Double, Double> videoCheck(HttpServletRequest request) {
-		Map<Double, Double> map = new HashMap<Double, Double>();
-		//int studentID = Integer.parseInt(request.getParameter("studentID"));
-		int videoID = Integer.parseInt(request.getParameter("videoID"));
-		
-		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
-		
-		vo.setStudentID(studentId);
-		vo.setvideoID(videoID);
-		System.out.println("videoID : " + videoID + " ,studentID : " + studentId);
-		if (videoCheckService.getTime(vo) != null) {
-			map.put(videoCheckService.getTime(vo).getLastTime(), videoCheckService.getTime(vo).getTimer());
-		}
-		else {
-			System.out.println("처음입니다 !!!");
-			map.put(-1.0, -1.0); //시간이 음수가 될 수 는 없으니
-		}
-		return map;
-	}*/
-	
-	
 	//dashboard_Stu에서 사용
 	@RequestMapping(value = "/competePlaylistCount", method = RequestMethod.POST)
 	@ResponseBody
@@ -334,7 +263,6 @@ public class Stu_ClassController{
 		//classID를 pcvo에 넣어서 해당 classID에서 완료한 Playlist들을 담는다.
 		//이 리스트를 리스트안에 넣어준다.
 		//리스트의 리스트를 리턴한다. 
-		System.out.println("여기 오ㅓ ?");
 		List<Integer> completePlaylist = new ArrayList<Integer>();
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 		pcvo.setStudentID(studentId);
