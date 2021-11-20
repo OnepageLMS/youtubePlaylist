@@ -19,6 +19,7 @@
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <style>
 	.dashboardClass{
@@ -31,21 +32,7 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-strong-bliss", "
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 
 $(document).ready(function(){
-	getAllMyClass();
-	showAlert();
-	console.log("${newlyEnrolled}");
-	
-	if('${newlyEnrolled}' == "1"){
-		alert("성공적으로 수강신청이 완료되었습니다! :) ");
-	}
-	else if('${newlyEnrolled}' == "2"){
-		alert("이미 신청된 강의실입니다! 선생님의 승인을 기다려주세요! :) ");
-	}
-
-	// 구현 미완 
-	if('${newlyEnrolled}' == "1" || '${newlyEnrolled}' == "2"){
-		/* $('#exampleModalLong').css("display", "block"); */
-	}
+	getAllMyClass();	
 });
 
 function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만 가져오는 함수 (정렬, 수정 등에 사용!)
@@ -63,7 +50,7 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 			order: order
 			},
 		success: function(data){
-			$(classType).empty();
+			//$(classType).empty();
 			list = data.list;
 
 			if(list.length == 0){
@@ -279,17 +266,15 @@ function getAllMyClass(){
 						i++;
 				});
 			}
+			var pending = '${allPendingClass}';
+			if(pending.length > 0){
+				$('#pendingClassroomModal').modal('show');
+			}
 		},
 		error: function(data, status,error){
-			console.log('ajax dashboard 가져오기 실패!');
+			alert('내 강의실 목록을 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
-}
-
-function showAlert(){
-	var flag = '${enroll}';  
-	console.log("플래그 값 확인! ==>" + flag);
-	if(flag == 1) alert("성공적으로 강의실 신청이 완료되었습니다! :) ");
 }
 
 function moveToNotice(id){	//post 방식으로 classID를 넘기며 공지사항으로 이동
@@ -386,7 +371,7 @@ function deleteRow(obj){
                            <div class="page-title-wrapper">
                                <div class="page-title-heading mr-3">
                                  	<h3>내 강의실
-                                 		<button type="button" class="btn mr-3 btn-transition btn btn-outline-focus btn-sm" data-toggle="modal" data-target="#exampleModalLong">
+                                 		<button type="button" class="btn mr-3 btn-transition btn btn-outline-focus btn-sm" data-toggle="modal" data-target="#pendingClassroomModal">
 	                                       수강대기현황 
 	                                   </button>
                                  	</h3>
@@ -471,7 +456,7 @@ function deleteRow(obj){
 	</div>
 	
 	<!-- 강의실 대기 현황 모달 -->
-	<div class="modal fade show" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" style="display: none;" aria-modal="true">
+	<div class="modal fade show" id="pendingClassroomModal" tabindex="-1" role="dialog" aria-labelledby="pendingClassroomModalTitle" style="display: none;" aria-modal="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -488,22 +473,18 @@ function deleteRow(obj){
             	</c:if>
                 <c:forEach var="v" items="${allPendingClass}">
                 	<div class="row">
-                		<c:choose>
-	                		<c:when test="${v.status eq 'pending'}">
-		                		<div class="col-sm-4 ml-2" style="text-align:left;" >
-		                			<p><b>'${v.className}'</b></p>
-		                		</div>
-		                		<div class="col-sm-2">
-		                			<p>대기중</p>
-		                		</div>
-		                		<div class="col-sm-4">
-		                			<p>요청일시 <span class="text-muted">${v.regDate}</span> </p>
-		                		</div>
-		                		<div>
-		                			<button class="btn btn-danger btn-sm" onclick="deleteRequest(${v.studentID}, ${v.classID}, this);">삭제</button>
-		                		</div>
-	                		</c:when>
-                		</c:choose>
+	               		<div class="col-sm-4 ml-2" style="text-align:left;" >
+	               			<p><b>'${v.className}'</b></p>
+	               		</div>
+	               		<div class="col-sm-2">
+	               			<p>대기중</p>
+	               		</div>
+	               		<div class="col-sm-4">
+	               			<p>요청일시 <span class="text-muted">${v.regDate}</span> </p>
+	               		</div>
+	               		<div>
+	               			<button class="btn btn-danger btn-sm" onclick="deleteRequest(${v.studentID}, ${v.classID}, this);">삭제</button>
+	               		</div>
                 	</div>
                 </c:forEach>
             </div>
