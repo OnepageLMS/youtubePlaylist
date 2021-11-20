@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
+import com.mycom.myapp.classContent.ClassContentService;
 import com.mycom.myapp.classes.ClassesService;
+import com.mycom.myapp.commons.AttendanceInternalCheckVO;
 import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.commons.NoticeVO;
 import com.mycom.myapp.member.MemberService;
+import com.mycom.myapp.student.attendanceInternalCheck.Stu_AttendanceInternalCheckService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;

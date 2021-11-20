@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceCheckVO;
+import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.classes.Stu_ClassesService;
@@ -56,14 +57,24 @@ public class Stu_AttendanceCheckController {
 	public String attendancehome(@PathVariable("classId") int classId, Model model, HttpSession session) {
 		studentID = (Integer)session.getAttribute("userID");
 		classID = classId;
-		model.addAttribute("classInfo", classesService.getClass(classID)); 
 		
-		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
+		ClassesVO vo = new ClassesVO();
+		vo.setId(classId);
+		vo.setStudentID(studentID);
+		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentID)));
-		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		
-		List<Stu_TakesVO> studentTakes = stu_takesService.getStudentTakes(classID);	//11/20 예원 바꿈
+		if(classesService.checkTakeClass(vo) == 0) {
+			System.out.println("수강중인 과목이 아님!");
+			return "accessDenied_stu";
+		}
+		
+		model.addAttribute("classInfo", classesService.getClass(classID)); 
+		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); 
+		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
+		
+		List<Stu_TakesVO> studentTakes = stu_takesService.getStudentTakes(classID);
 		model.addAttribute("takes", studentTakes);
 		model.addAttribute("takesNum", studentTakes.size());
 		List<String> file = new ArrayList<String>();
