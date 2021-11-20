@@ -13,13 +13,13 @@
 	<link rel="icon" href="${pageContext.request.contextPath}/resources/img/Learntube.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="msapplication-tap-highlight" content="no">
-    
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://kit.fontawesome.com/3daf17ae22.js" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 <style>
 	.dashboardClass{
@@ -33,6 +33,13 @@ var inactive_colors = ["border-primary", "border-warning", "border-success", "bo
 
 $(document).ready(function(){
 	getAllMyClass();	
+	
+	$(".close").on( "click", function() {
+	    $("#pendingClassroomModal").hide();
+	})
+	$("#pendingClassroomModal").on("hide",function(){
+	    $("#pendingClassroomModal").css("display", "none");
+	})
 });
 
 function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만 가져오는 함수 (정렬, 수정 등에 사용!)
@@ -50,12 +57,38 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 			order: order
 			},
 		success: function(data){
-			//$(classType).empty();
+			$(classType).empty();
 			list = data.list;
 
 			if(list.length == 0){
 				$(classType).append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
 				return false;
+			}
+
+			if(act == 1){
+				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+					url : "${pageContext.request.contextPath}/student/class/competePlaylistCount",
+					type : "post",
+					async : false,
+					success : function(data) {
+						completePlaylist = data;
+					},
+					error : function() {
+						alert("error");
+					}
+				})	
+				
+				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+					url : "${pageContext.request.contextPath}/student/class/classTotalPlaylistCount",
+					type : "post",
+					async : false,
+					success : function(data) {
+						allPlaylist = data;
+					},
+					error : function() {
+						alert("error");
+					}
+				})
 			}
 
 			$(list).each(function(){
@@ -74,6 +107,13 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 				
 				
 				if(act == 1){
+					if(completePlaylist[i] == 0 ){
+						percentage = 0;
+					}
+					else{
+						percentage = Math.floor(completePlaylist[i] /  allPlaylist[i] *100);
+					}
+					
 					var cardColor = active_colors[i%(active_colors.length)];
 					html = '<div class="col-md-6 col-lg-3">'
 						+ '<div class="mb-3 card">'
@@ -96,7 +136,7 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
                         			+ '<div class="widget-subheading col-12">내 학습현황</div>'
 									+ '<div class="col-12">'
 										+ '<div class="mb-3 progress">'
-                                           	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>'
+										+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + percentage + '%;">' + percentage + '%</div>'
                                            + '</div>'
 									+ '</div>'
 								+ '</div>'
@@ -268,7 +308,7 @@ function getAllMyClass(){
 			}
 			var pending = '${allPendingClass}';
 			if(pending.length > 0){
-				$('#pendingClassroomModal').modal('show');
+				$('#pendingClassroomModal').css('display', 'block');
 			}
 		},
 		error: function(data, status,error){
@@ -385,11 +425,11 @@ function deleteRow(obj){
                        			<h4>수강중인 강의실</h4>
                         		<div class="dropdown d-inline-block pl-2">
 		                           <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-light">정렬</button>
-		                           <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'regDate');">개설일순</button>
-		                               <button type="button" tabindex="0" class="dropdown-item" onclick="getAllClass(1, 'className');">이름순</button>
+		                           <div aria-labelby="dropdownMenuButton" class="dropdown-menu">
+		                               <button type="button" class="dropdown-item" onclick="getAllClass(1, 'regDate');">개설일순</button>
+		                               <button type="button" class="dropdown-item" onclick="getAllClass(1, 'className');">이름순</button>
 		                           </div>
-		                       </div>
+		                        </div>
                        		</div>
                        		<div class="activeClassList col row"></div>
                        	</div>

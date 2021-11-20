@@ -88,6 +88,11 @@ public class ClassesDAO {
 	public int checkAccessClass(ClassesVO vo) {
 		return sqlSession.selectOne("Classes.checkAccessClass", vo);
 	}
+	
+	public List<ClassesVO> getClassesToBeClosed(String endDate){
+		System.out.println("dao!!" + endDate);
+		return sqlSession.selectList("Classes.getClassesToBeClosed", endDate);
+	}
 
 }
 

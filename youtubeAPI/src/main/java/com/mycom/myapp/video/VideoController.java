@@ -90,9 +90,7 @@ public class VideoController {
 		
 		if(videoService.updateVideo(videoVo) != 0) {
 			System.out.println("video 수정 성공!");
-			 
-			
-			
+	
 			int playlistID = videoVo.getPlaylistID();
 			updateTotalLength(playlistID);
 		}
@@ -106,11 +104,15 @@ public class VideoController {
 	public String deleteVideo(HttpServletRequest request) {
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
+		int seq = Integer.parseInt(request.getParameter("seq"));
 		
 		if( videoService.deleteVideo(videoID) != 0) {
 			System.out.println("controller video 삭제 성공! "); 
 			updateTotalVideo(playlistID); //totalVideo 업데이트 
 			updateTotalLength(playlistID); //totalVideoLength 업데이트
+			
+			//삭제한 seq가 0이면 thumbnail update!
+			if(seq == 0) playlistService.updateThumbnailID(playlistID);
 		}
 		else
 			System.out.println("controller video 삭제 실패! ");
@@ -120,16 +122,21 @@ public class VideoController {
 	
 	@RequestMapping(value = "/changeVideosOrder", method = RequestMethod.POST) //video 순서 변경될때
 	@ResponseBody
-	public String changeVideosOrder(@RequestParam(value = "changedList[]") List<String> changedList) {
+	public String changeVideosOrder(
+			@RequestParam(value = "changedList[]") List<String> changedList,
+			@RequestParam(value = "playlistID") int playlistID) {
 		int size = changedList.size()-1;
-		
 		for(String order : changedList) {
 			VideoVO vo = new VideoVO();
 			vo.setId(Integer.parseInt(order));
 			vo.setSeq(size);
 			
-			if (videoService.changeSeq(vo) != 0)
+			if (videoService.changeSeq(vo) != 0) {
+				if(size == 0) {
+					playlistService.updateThumbnailID(playlistID);
+				}
 				size-=1;
+			}
 		}
 
 		if (size == -1)
@@ -196,13 +203,8 @@ public class VideoController {
 	        // (jw) 썸네일 추가를 위한 코드 (21/08/11) 
  			int count = videoService.getTotalCount(playlistID);
  			
- 			PlaylistVO Pvo = new PlaylistVO();
-			Pvo.setId(playlistID);
-			Pvo.setThumbnailID(youtubeID);
-			System.out.println("thumbnail id check" + Pvo.getThumbnailID());
- 			
  			if(count == 0) {
- 				if(playlistService.updateThumbnailID(Pvo) != 0) {
+ 				if(playlistService.updateThumbnailID(playlistID) != 0) {
  					System.out.println("playlist 썸네일 추가 성공! ");
  					
  				}
@@ -271,17 +273,10 @@ public class VideoController {
 		
 		for(int i=0; i<playlistArr.size(); i++) {
 			int playlistID = playlistArr.get(i);
-			
-			// (jw) 썸네일 추가를 위한 코드 (21/08/09) => 만약 썸네일에 해당하는 영상이 삭제될시 다음 영상의 썸네일로 해야하는데 이 부분 수정필. 
-			PlaylistVO Pvo = new PlaylistVO();
-			Pvo.setId(playlistID);
-			Pvo.setThumbnailID(vo.getYoutubeID());
-			System.out.println("thumbnail id check" + Pvo.getThumbnailID());
-			
 			int count = videoService.getTotalCount(playlistID);
 			
 			if(count == 0) {
-				if(playlistService.updateThumbnailID(Pvo) != 0) {
+				if(playlistService.updateThumbnailID(playlistID) != 0) {
 					System.out.println("playlist 썸네일 추가 성공! ");
 				}
 				else {
@@ -293,8 +288,6 @@ public class VideoController {
 			vo.setSeq(videoService.getTotalCount(playlistID)); 
 			//playlistID 설정하기 
 			vo.setPlaylistID(playlistID);
-			
-			System.out.println("제대로 작동 check" + vo.getPlaylistID());
 			
 			// 동영상 DB에 추가하기 
 			if(videoService.insertVideo(vo) != 0) {

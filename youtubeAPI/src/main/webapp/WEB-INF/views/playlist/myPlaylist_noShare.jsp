@@ -16,7 +16,6 @@
 	<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 	
-	<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 	<script src="http://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -257,8 +256,8 @@ function getAllVideo(playlistID){ //해당 playlistID에 해당하는 비디오�
 											+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
 										+ '</button>'
 										+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(218px, 96px, 0px);">' 
-											+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
-											+ '<button type="button" onclick="deleteVideo(' + value.id + ')" class="dropdown-item"><p class="text-danger">삭제</p></button></div>'
+											//+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
+											+ '<button type="button" onclick="deleteVideo(' + value.id + ',' + value.seq + ')" class="dropdown-item"><p class="text-danger">삭제</p></button></div>'
 										+ '</div>'
 								+ '</div>';
 	
@@ -291,6 +290,7 @@ $(function() { // video 순서 drag&drop으로 순서변경
 	});
 		$( "#allVideo" ).disableSelection(); //해당 클래스 하위의 텍스트는 변경x
 });
+
 function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 해당 playlist의 전체 video order 재정렬
 	var playlistID = $('.selectedPlaylist').attr('playlistID');
 	var idList = new Array();
@@ -299,7 +299,7 @@ function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 �
 		var tmp_videoID = tmp.getAttribute('videoID');
 		if (deletedID != null){ // 이 함수가 playlist 삭제 뒤에 실행됐을 땐 삭제된 playlistID	 제외하고 재정렬 (db에서 삭제하는것보다 list가 더 빨리 불러와져서 이렇게 해줘야함)
 			if (deletedID != tmp_videoID)
-				idList.unshift(tmp_videoID); //자꾸 마지막 video부터 가져와져서 배열앞에 push 
+				idList.unshift(tmp_videoID); //배열앞에 push 
 		}
 		else
 			idList.unshift(tmp_videoID);
@@ -308,7 +308,9 @@ function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 �
 	$.ajax({
 	      type: "post",
 	      url: "${pageContext.request.contextPath}/video/changeVideosOrder", //새로 바뀐 순서대로 db update
-	      data : { changedList : idList },
+	      data : { changedList : idList,
+		      		playlistID : playlistID 
+		      },
 	      dataType  : "json", 
 	      success  : function(data) {
 		     	getPlaylistInfo(playlistID, $('#playlistInfo').attr('displayIdx'));
@@ -322,18 +324,17 @@ function changeAllVideo(deletedID){ // video 추가, 삭제, 순서변경 뒤 �
 	       }
 	    });
 }
-function deleteVideo(videoID){ // video 삭제
-	//이부분 수정필요!!! --> 학습자료로 사용중인 비디오 있을때 체크!!!!
+function deleteVideo(videoID, seq){ // video 삭제
 	if (confirm("정말 삭제하시겠습니까?")){
 		var playlistID = $('.selectedPlaylist').attr('playlistID');
 		changeAllVideo(videoID);
-		console.log("deleteVideo: " + videoID + ":" + playlistID);
 		
 		$.ajax({
 			'type' : "post",
 			'url' : "${pageContext.request.contextPath}/video/deleteVideo",
 			'data' : {	videoID : videoID,
-						playlistID : playlistID
+						playlistID : playlistID,
+						seq : seq
 				},
 			success : function(data){
 				changeAllVideo(videoID); //삭제한 videoID 넘겨줘야 함.
@@ -345,6 +346,7 @@ function deleteVideo(videoID){ // video 삭제
 	}
 	else false;
 }
+
 function convertTotalLength(seconds){ //시분초로 시간 변환
 	var seconds_hh = Math.floor(seconds / 3600);
 	var seconds_mm = Math.floor(seconds % 3600 / 60);
@@ -360,6 +362,7 @@ function convertTotalLength(seconds){ //시분초로 시간 변환
 	
 	return result;
 }
+
 $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn 눌렀을 때 modal에 데이터 전송
 	var playlistID = $('.selectedPlaylist').attr('playlistID');
 	//아래 내용은 이미 화면에 표시되어있기 때문에 db에서 다시 가져오지 않는다.
@@ -378,6 +381,7 @@ $(document).on("click", ".editPlaylistBtn", function () {	// edit playlist btn �
 	$('#editTag').val(tags);
 	$('#editPlaylistDescription').val(description);
 });
+
 function submitAddPlaylist(){	//submit the add playlist form
 	if($('#inputPlaylistName').val() == '') return false;
 	$.ajax({
@@ -394,6 +398,7 @@ function submitAddPlaylist(){	//submit the add playlist form
 		}
 	});
 }
+
 function submitEditPlaylist(){
 	if($('#editPlaylistName').val() == '') return false;
 	$.ajax({

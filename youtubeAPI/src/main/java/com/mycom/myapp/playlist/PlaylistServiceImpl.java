@@ -23,8 +23,8 @@ public class PlaylistServiceImpl implements PlaylistService{
 	}
 	
 	@Override
-	public int updateThumbnailID(PlaylistVO vo) {
-		return playlistDAO.updateThumbnailID(vo);
+	public int updateThumbnailID(int playlistID) {
+		return playlistDAO.updateThumbnailID(playlistID);
 	}
 	
 	@Override

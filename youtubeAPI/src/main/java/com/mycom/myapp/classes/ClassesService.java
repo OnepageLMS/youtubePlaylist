@@ -24,4 +24,5 @@ public interface ClassesService {
 	public List<ClassesVO> getAllMyClass(int instructorID);
 	public List<String> getAllEntryCodes();
 	public int checkAccessClass(ClassesVO vo);
+	public List<ClassesVO> getClassesToBeClosed(String endDate);
 }
