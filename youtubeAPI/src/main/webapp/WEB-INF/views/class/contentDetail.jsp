@@ -359,7 +359,7 @@ function convertTotalLength(seconds){
 var n ;
 var playlistVideo;
 function showLecture(playlistID, id, classInfo, idx){
-
+	player.pauseVideo();
 	if(weekContents[idx-1].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
 	else 
@@ -584,7 +584,7 @@ function onYouTubeIframeAPIReady() {
 	//var playerID = 'onepageLMS' + n;
 	
 	if(weekContents[videoIdx].playlistID == 0) //영상이 아닌 url을 클릭했을 때
-		videoId =  weekContents[0].thumbnailID;
+		videoId =  '';
 	else //영상을 클릭했을 때
 		videoId = weekContents[videoIdx].thumbnailID;	
 	
