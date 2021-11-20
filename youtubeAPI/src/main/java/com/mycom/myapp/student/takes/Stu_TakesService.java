@@ -7,6 +7,7 @@ public interface Stu_TakesService {
 	public int deleteTakes(Stu_TakesVO vo); //학생 삭제
 	public Stu_TakesVO checkIfAlreadyEnrolled(Stu_TakesVO vo); // 이미 등록된 경우, 학생ID값을 반환한다 
 	public List<Stu_TakesVO> getStudent(int studentID); // id를 통해 학생 정보 가져오기
+	public List<Stu_TakesVO> getPendingClass(int studentID);
 	public List<Stu_TakesVO> getAcceptedStudent(int studentID); //accepted된 학생 정보 가져오기 
 	public int getAcceptedStudentNum(int studentID);
 	public int getStudentNum(int classID); //classID수강중인 학생 수 가져오기

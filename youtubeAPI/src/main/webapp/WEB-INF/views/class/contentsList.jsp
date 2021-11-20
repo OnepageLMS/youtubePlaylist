@@ -609,7 +609,8 @@ $(document).ready(function(){
 	}
 	
 	function deleteDay(classID, day){
-		if(confirm(day + '차시를 삭제하시겠습니까?\n차시에 해당하는 강의 컨텐츠와 학생들의 출결 정보도 함께 삭제됩니다.')){	//사용자입력받기
+		var confirm = prompt(day + '차시를 삭제하시려먼 [' + day + '차시]를 입력해주세요.\n차시에 해당하는 강의 컨텐츠와 학생들의 출결 정보도 함께 삭제됩니다.')
+		if(confirm == day + '차시'){	//사용자입력받기
 			$.ajax({
 				type : 'post',
 				url : '${pageContext.request.contextPath}/class/deleteDay',
@@ -619,7 +620,7 @@ $(document).ready(function(){
 					},
 				datatype : 'json',
 				success : function(result){
-					alert(day + '차시가 삭제되었습니다!');
+					alert(day + '차시에 해당하는 모든 데이터가 삭제되었습니다!');
 					location.reload();
 				},
 				error : function() {

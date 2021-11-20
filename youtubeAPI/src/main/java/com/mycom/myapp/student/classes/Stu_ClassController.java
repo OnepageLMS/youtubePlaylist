@@ -1,9 +1,6 @@
 package com.mycom.myapp.student.classes;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mycom.myapp.student.video.Stu_VideoService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckService;
 import com.mycom.myapp.student.videocheck.Stu_VideoCheckVO;
-import com.mycom.myapp.video.VideoService;
 import com.mycom.myapp.classContent.ClassContentService;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceInternalCheckVO;
@@ -31,9 +26,7 @@ import com.mycom.myapp.commons.ClassContentVO;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.commons.NoticeVO;
-import com.mycom.myapp.commons.VideoVO;
 import com.mycom.myapp.member.MemberService;
-import com.mycom.myapp.playlist.PlaylistService;
 import com.mycom.myapp.student.attendanceInternalCheck.Stu_AttendanceInternalCheckService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
@@ -78,14 +71,9 @@ public class Stu_ClassController{
 	private Stu_AttendanceInternalCheckService attendanceInCheckService;
 	
 
-	
 	private int studentId = 0;
-	//private int playlistID = 0; 
-	//private int id = 0;
-	private int classID = 0;
-	//private int daySeq = 0;
 	
-	@RequestMapping(value = "/test/dashboard/{studentID}",  method = RequestMethod.GET)	//개발 test용. 나중에 지우기!!
+	@RequestMapping(value = "/test/dashboard/{studentID}",  method = RequestMethod.GET)	//개발 test용.
 	public String dashboard_Test(@PathVariable("studentID") int id, Model model, HttpSession session) {
 		MemberVO checkvo = new MemberVO();
 		String email= "";
@@ -107,20 +95,19 @@ public class Stu_ClassController{
 		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
-		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getStudent(studentId)));
+		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getPendingClass(studentId)));
 		return "class/dashboard_Stu";
 	}
 	
 	@RequestMapping(value = "/dashboard", method =  {RequestMethod.GET,RequestMethod.POST})	//선생님 controller랑 합치기!
-	public String dashboard(@RequestParam(required=false) Integer newlyEnrolled, HttpSession session, Model model) {
+	public String dashboard(HttpSession session, Model model) {
 		// select id, className, startDate from lms_class where instructorID=#{instructorID}
 		// 여러 선생님의 강의를 듣는 경우에는 어떻게 되는거지?? instructorID가 여러개인 경
 		// takes테이블을 통해 가져올 수 있도록 해야겠다..
 		studentId = (Integer)session.getAttribute("userID");
 		model.addAttribute("allMyClass", JSONArray.fromObject(classesService.getAllMyClass(studentId)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentId)));
-		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getStudent(studentId)));
-		model.addAttribute("newlyEnrolled", newlyEnrolled);
+		model.addAttribute("allPendingClass", JSONArray.fromObject(takesService.getPendingClass(studentId)));
 		return "class/dashboard_Stu";
 	}
 	

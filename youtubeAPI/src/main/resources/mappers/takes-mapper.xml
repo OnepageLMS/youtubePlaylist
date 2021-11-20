@@ -23,6 +23,11 @@
 		where studentID=#{studentId}
 	</select>
 	
+	<select id="getPendingClass" resultType="TakesVO">
+		select * from lms_takes
+		where studentID=#{studentId} and status="pending"
+	</select>
+	
 	<select id="getAcceptedStudent" resultType="TakesVO">
 		select * from lms_takes
 		where studentID=#{studentId} and status="accepted"

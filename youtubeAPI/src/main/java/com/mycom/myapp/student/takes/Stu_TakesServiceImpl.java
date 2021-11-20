@@ -27,8 +27,12 @@ public class Stu_TakesServiceImpl implements Stu_TakesService {
 
 	@Override
 	public List<Stu_TakesVO> getStudent(int studentID) {
-		// TODO Auto-generated method stub
 		return stu_TakesDAO.getStudent(studentID);
+	}
+	
+	@Override
+	public List<Stu_TakesVO> getPendingClass(int studentID){
+		return stu_TakesDAO.getPendingClass(studentID);
 	}
 	
 	@Override

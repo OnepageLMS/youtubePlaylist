@@ -38,6 +38,7 @@ import com.mycom.myapp.commons.AttendanceInternalCheckVO;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.commons.ClassContentVO;
+import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.attendanceInternalCheck.Stu_AttendanceInternalCheckService;
 import com.mycom.myapp.student.classContent.Stu_ClassContentService;
@@ -90,15 +91,25 @@ public class AttendanceController {
 	@RequestMapping(value = "/{classId}", method = RequestMethod.GET)	//접근권한 추가하기!!!
 	public String attendancehome(@PathVariable("classId") int classId, Model model, HttpSession session) {
 		instructorID = (Integer)session.getAttribute("userID");
-		classID = classId;
-		model.addAttribute("classInfo", classService.getClass(classID)); 
+		
+		ClassesVO vo = new ClassesVO();
+		vo.setId(classId);
+		vo.setInstructorID(instructorID);
+		
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		
+		if(classService.checkAccessClass(vo) == 0) {
+			System.out.println("접근권한 없음!");
+			return "accessDenied";
+		}
+		
+		classID = classId;
 		
 		List<Stu_TakesVO> studentTakes = stu_takesService.getStudentTakes(classID);
 		model.addAttribute("takes", JSONArray.fromObject(studentTakes));	
 		model.addAttribute("takesNum", studentTakes.size());
-		
+		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("classDays", JSONArray.fromObject(classService.getClass(classID).getDays()));
 		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
