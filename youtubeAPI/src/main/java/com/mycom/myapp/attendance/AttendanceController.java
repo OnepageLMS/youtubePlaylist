@@ -95,8 +95,9 @@ public class AttendanceController {
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		
-		model.addAttribute("takes", JSONArray.fromObject(stu_takesService.getStudentNum(classID)));	//이름이 모호함
-		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
+		List<Stu_TakesVO> studentTakes = stu_takesService.getStudentTakes(classID);
+		model.addAttribute("takes", JSONArray.fromObject(studentTakes));	
+		model.addAttribute("takesNum", studentTakes.size());
 		
 		model.addAttribute("classDays", JSONArray.fromObject(classService.getClass(classID).getDays()));
 		model.addAttribute("realAllMyClass", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //여기 수정 
@@ -146,7 +147,7 @@ public class AttendanceController {
 	@RequestMapping(value = "/takes", method = RequestMethod.POST)
 	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {	//이건 왜 attendance controller에 있는걸까?
 		
-		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
+		return stu_takesService.getStudentTakes(Integer.parseInt(request.getParameter("classID")));
 	}	
 	
 	@ResponseBody
@@ -159,7 +160,7 @@ public class AttendanceController {
 		System.out.println("여기 강의가 총 몇개냐면 " + classInsContentService.getClassNum(classID));
 		System.out.println("여기 days는 총 몇개냐면 " + classInsContentService.getClassDaysNum(classID));
 		
-		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
+		List<Stu_TakesVO> takes = stu_takesService.getStudentTakes(classID);  //classID
 		List<List<String>> stuAttend = new ArrayList<List<String>>();
 		int dayNum = classInsContentService.getClassDaysNum(classID);
 		System.out.println("dayNum : " + dayNum + ", takes.size() " + takes.size());
@@ -306,7 +307,7 @@ public class AttendanceController {
 	    List<List<Integer>> stuWatched = new ArrayList<List<Integer>>();
 	    
 	    int dayNum = classInsContentService.getClassDaysNum(classID);
-	    List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
+	    List<Stu_TakesVO> takes = stu_takesService.getStudentTakes(classID);  //classID
 	    ClassContentVO ccvo = new ClassContentVO ();
 	    Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 	    
@@ -441,7 +442,7 @@ public class AttendanceController {
 				System.out.println(csvStartH.get(i));
 			}*/
 			
-            List<Stu_TakesVO> data = stu_takesService.getStudentNum(classID); //db에서 학생정보 가져오기 classID임의로 넣음 
+            List<Stu_TakesVO> data = stu_takesService.getStudentTakes(classID); //db에서 학생정보 가져오기 classID임의로 넣음 
             List<String> stuNameArr = new ArrayList<String>();
             for(int i=0; i<data.size(); i++) {
             	stuNameArr.add(data.get(i).getName()); //이 수업을 듣는 학생들의 목록을 조회 (db의 takes 테이블로부터) 
@@ -621,7 +622,7 @@ public class AttendanceController {
 		
 		//System.out.println("classContentID " + classContentID);
 
-		List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID);  //classID
+		List<Stu_TakesVO> takes = stu_takesService.getStudentTakes(classID);  //classID
 		
 		for(int i=0; i<finalTakes.length; i++) {
 			System.out.println("internal 결과 : " + finalInternalTakes[i]);

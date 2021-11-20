@@ -63,8 +63,9 @@ public class Stu_AttendanceCheckController {
 		model.addAttribute("weekContents", JSONArray.fromObject(classContentService.getWeekClassContent(classID))); 
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classesService.getAllMyInactiveClass(studentID)));
 		
-		model.addAttribute("takes", stu_takesService.getStudentNum(classID));
-		model.addAttribute("takesNum", stu_takesService.getStudentNum(classID).size());
+		List<Stu_TakesVO> studentTakes = stu_takesService.getStudentTakes(classID);	//11/20 예원 바꿈
+		model.addAttribute("takes", studentTakes);
+		model.addAttribute("takesNum", studentTakes.size());
 		List<String> file = new ArrayList<String>();
 		Stu_TakesVO stu_avo = new Stu_TakesVO();
 		
@@ -86,7 +87,7 @@ public class Stu_AttendanceCheckController {
 	@RequestMapping(value = "/takes", method = RequestMethod.POST)
 	public List<Stu_TakesVO> takes(HttpServletRequest request, Model model) throws Exception {
 		
-		return stu_takesService.getStudentNum(Integer.parseInt(request.getParameter("classID")));
+		return stu_takesService.getStudentTakes(Integer.parseInt(request.getParameter("classID")));
 	}
 	
 	@ResponseBody
