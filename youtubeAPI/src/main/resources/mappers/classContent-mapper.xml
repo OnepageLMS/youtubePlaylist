@@ -18,7 +18,7 @@
 	
 	<update id="updateContent">
 		update lms_classContent
-		set title=#{title}, description=#{description}, endDate=#{endDate} 
+		set title=#{title}, description=#{description}, endDate=#{endDate}, startDate=#{startDate}, published=#{published}
 		where id=#{id}
 	</update>
 	

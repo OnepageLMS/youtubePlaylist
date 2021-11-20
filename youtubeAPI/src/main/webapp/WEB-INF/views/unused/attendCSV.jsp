@@ -250,10 +250,10 @@ function updateAttendance(days){
 
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-		<jsp:include page="outer_top.jsp" flush="false"/>
+		<jsp:include page="../outer_top.jsp" flush="false"/>
 
 		<div class="app-main">
-		 	<jsp:include page="outer_left.jsp" flush="false">
+		 	<jsp:include page="../outer_left.jsp" flush="false">
 		 		<jsp:param name="className" value="${classInfo.className}"/>	
 		 		<jsp:param name="menu"  value="notice"/>
 		 	</jsp:include>
@@ -370,7 +370,7 @@ function updateAttendance(days){
 	                    </div>
                    </div>
         		</div>
-        		<jsp:include page="outer_bottom.jsp" flush="false"/>
+        		<jsp:include page="../outer_bottom.jsp" flush="false"/>
 	   		</div>
 	   	</div>
    	</div>

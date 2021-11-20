@@ -393,6 +393,7 @@ $(document).ready(function(){
 							+ '</div>'
 							+ '<form id="addContent" class="form-group card-body needs-validation" onsubmit="return false;" method="post" novalidate>' 
 								+ '<input type="hidden" name="classID" id="inputClassID" value="${classInfo.id}">'
+								+ '<input type="hidden" name="published" id="inputPublished">'
 								+ '<input type="hidden" name="days" id="inputDays" value="'+ day +'"/>'
 								+ '<input type ="hidden" id="inputPlaylistID" name="playlistID">'
 								+ '<div class="selectContent m-3 pr-3">'
@@ -425,9 +426,9 @@ $(document).ready(function(){
 	                        		+ '<label class="col-sm-2 col-form-label" >공개일</label>'
 	                        		+ '<input type="hidden" name="startDate" id="startDate">'
 	                        		+ '<input type="date" class="form-control col-sm-4" id="setStartDate" required>'
-									+ '<input type="number" class="setTime start_h form-control col-sm-2 mr-1" value="0" min="0" max="23"> 시'
-									+ '<input type="number" class="setTime start_m form-control col-sm-2 ml-1 mr-1" value="0" min="0" max="59"> 분'
-									+ '<button type="button" class="btn-transition btn btn-outline-focus btn-sm ml-1" onclick="location.href=' + htmlGetCurrentTime + '">지금</button>'
+									+ '<input type="number" class="setTime start_h form-control col-sm-2 mr-1" min="0" max="23">시'
+									+ '<input type="number" class="setTime start_m form-control col-sm-2 ml-1 mr-1" min="0" max="59">분'
+									+ '<button type="button" class="btn-transition btn btn-outline-focus btn-sm ml-1" onclick="getCurrentTime();">지금</button>'
 	                            + '</div>'
 								+ '<div class="text-center m-3">'
 									+ '<button type="button" class="btn btn-secondary mr-2" onclick="cancelForm();">작성 취소</button>'
@@ -491,15 +492,9 @@ $(document).ready(function(){
 			 return false;
 		}
 
-		var date = $('#setStartDate').val(); 
-		if(date == null || date == '') {
-			alert('공개일을 설정해주세요');
-			return false;
-		}
-		
-		var hour = $('.start_h').val();
-        var min = $('.start_m').val();
-		var startDate = date + "T" + stringFormat(hour) + ":" +stringFormat(min) + ":00";
+		//var hour = $('.start_h').val();
+       // var min = $('.start_m').val();
+		var startDate = $('#setStartDate').val() + "T" + stringFormat($('.start_h').val()) + ":" +stringFormat($('.start_m').val()) + ":00";
 		$('#startDate').val(startDate);
         
 		var endDate = $('#setEndDate').val();
@@ -515,17 +510,24 @@ $(document).ready(function(){
 	            return false;
 	        }
 		}
-		else {
+		else 
 			endDate = "";
-			
-		}
 		$('#endDate').val(endDate);
+
+		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
+		var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
+		var hour = new Date().getHours();
+		var min = new Date().getMinutes();
+		var now = date + "T" + stringFormat(hour) + ":" + stringFormat(min) + ":00";
+		
+		if(startDate <= now) $('#inputPublished').val(1);	//현재 시간과 같거나 더 빠르면 자동 publish 설정
+		else $('#inputPublished').val(0);
 
 		if($("#inputPlaylistID").val() == null || $("#inputPlaylistID").val() == ''){
 			$("#inputPlaylistID").val(0);
 		}
         
-        $.ajax({
+       $.ajax({
             type: 'post',
             url: '${pageContext.request.contextPath}/class/addContentOK',
             data: $('#addContent').serialize(),
@@ -616,7 +618,7 @@ $(document).ready(function(){
 					},
 				datatype : 'json',
 				success : function(result){
-					console.log("성공!" +result);
+					alert(day + '차시가 삭제되었습니다!');
 					location.reload();
 				},
 				error : function() {

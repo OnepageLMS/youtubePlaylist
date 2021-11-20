@@ -51,8 +51,6 @@ public class ClassContentController {
 	@Autowired
 	private Stu_PlaylistCheckService playlistCheckService;
 	@Autowired
-	private Stu_TakesService takesService;
-	@Autowired
 	private AttendanceService attendanceService;
   
 	private int instructorID = 0;
@@ -83,7 +81,7 @@ public class ClassContentController {
 		return "class/contentsList";
 	}
 	
-	@RequestMapping(value = "/contentDetail", method = RequestMethod.POST) //class contents 전체 보여주기
+	@RequestMapping(value = "/contentDetail", method = {RequestMethod.POST, RequestMethod.GET}) //class contents 전체 보여주기
 	public String contentDetail(@RequestParam("id") int id, @RequestParam("daySeq") int daySeq, Model model) {	//post로 변경하기
 		model.addAttribute("classInfo", classService.getClass(classID)); 
 		model.addAttribute("allContents", JSONArray.fromObject(classContentService.getAllClassContent(classID))); //classID 임의로 0 넣어두었다.
@@ -105,13 +103,6 @@ public class ClassContentController {
 		System.out.println(playlistCheckService.getHowMany(spcvo));
 		
 		return playlistCheckService.getHowMany(spcvo);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/forHowManyTakes", method = RequestMethod.POST)
-	public int forHowManyTakes(HttpServletRequest request, Model model) throws Exception {
-		System.out.println("classID : " + classID);
-		return takesService.getStudentNum(classID).size();
 	}
 	
 	@ResponseBody
@@ -152,27 +143,7 @@ public class ClassContentController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/addContentOK", method = RequestMethod.POST)
-	public String addContentOK(@ModelAttribute ClassContentVO vo, Model model) throws ParseException {
-		//설정된시간이 지금이면,, published를 1로 설정하기
-		//설정된시간이 지금보다 나중이면 published를 0으로 설정하기 
-		Date now = new Date();
-		//System.out.println(vo.getStartDatee());
-		/*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-ddThh:mm:ss");
-		Date startDate = dateFormat.parse(vo.getStartDate());
-		System.out.println("now : " + now+ " , startDate : " + startDate);
-		if(startDate.equals(now)) {
-			vo.setPublished(1);
-		}
-		else 
-			vo.setPublished(0);*/
-	    // LocalDateTime localDateTime = LocalDateTime.from(formatDateTime.parse(vo.getStartDate()));
-		//Timestamp startDate = Timestamp.valueOf(localDateTime);
-		/*System.out.println("now : " + now+ " , startDate : " + vo.getStartDatee());
-		int result = vo.getStartDatee().compareTo(now); 
-		
-		if(result == 0) vo.setPublished(1);
-		else vo.setPublished(0);*/
-		
+	public String addContentOK(@ModelAttribute ClassContentVO vo, Model model) throws ParseException {		
 		if(vo.getEndDate().equals(""))
 			vo.setEndDate(null);
 		if(vo.getPlaylistID() != 0) {
@@ -194,17 +165,15 @@ public class ClassContentController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateClassContents", method = RequestMethod.POST)
-	public int updateClassContents(HttpServletRequest request, Model model) throws Exception {	
-		System.out.println("modal을 통한 classcontent 업데이트 ?!" + Integer.parseInt(request.getParameter("classContentID")) + request.getParameter("endDate"));
-		String endDate = request.getParameter("endDate");
-		if(endDate == "") endDate = null;
+	public int updateClassContents(@ModelAttribute ClassContentVO ccvo, HttpServletRequest request, Model model) throws Exception {	
+		if(ccvo.getEndDate() == "") ccvo.setEndDate(null);
 		
-		ClassContentVO ccvo = new ClassContentVO();
+		/*ClassContentVO ccvo = new ClassContentVO();
 		ccvo.setTitle(request.getParameter("className"));
 		ccvo.setDescription(request.getParameter("classDescription"));
 		ccvo.setEndDate(endDate);
 		ccvo.setId(Integer.parseInt(request.getParameter("classContentID")));
-		
+		*/
 		
 		if( classContentService.updateContent(ccvo) == 0) {
 			System.out.println("modal을 통한 classcontent 업데이트 실패");

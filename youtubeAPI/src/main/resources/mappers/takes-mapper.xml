@@ -28,7 +28,13 @@
 		where studentID=#{studentId} and status="accepted"
 	</select>
 	
-	<select id="getTakesNum" resultType="TakesVO">
+	<select id="getTakesNum" resultType="int">
+		select count(*)
+		from lms_takes join lms_student on lms_takes.studentID = lms_student.id
+		where classID=#{classID} and status="accepted" order by name
+	</select>
+	
+	<select id="getStudentTakes" resultType="TakesVO">
 		select studentID, name, classID, email
 		from lms_takes join lms_student on lms_takes.studentID = lms_student.id
 		where classID=#{classID} and status="accepted" order by name

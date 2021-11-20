@@ -77,7 +77,6 @@ public class ClassController {
 	@RequestMapping(value = "/forPublished",  method = RequestMethod.POST)	//학생이랑 선생님 같이 사용하도록 바꾸기!!
 	public int forPubished(HttpServletRequest request, Model model) throws Exception {
 		int classID = Integer.parseInt(request.getParameter("classID"));
-		System.out.println(classID);
 		return stu_classContentService.getAllClassContent(classID).size();
 	}	
 	

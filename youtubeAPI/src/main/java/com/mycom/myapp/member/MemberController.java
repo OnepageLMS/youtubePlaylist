@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,6 +151,14 @@ public class MemberController {
 		map.put("studentInfo", takesList);
 
 		return map; 
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/forHowManyTakes", method = RequestMethod.POST)
+	public int forHowManyTakes(HttpServletRequest request, Model model) throws Exception {
+		int classID = Integer.parseInt(request.getParameter("id"));
+		System.out.println("classID : " + classID);
+		return stu_takesService.getStudentNum(classID);
 	}
 	
 }

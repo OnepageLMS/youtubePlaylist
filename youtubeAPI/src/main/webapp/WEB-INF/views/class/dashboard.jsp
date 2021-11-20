@@ -44,26 +44,27 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 			order: order
 			},
 		success: function(data){
-			$(classType).empty();
+			//$(classType).empty();
 			list = data.list;
-
-			$.ajax({
-				url : "${pageContext.request.contextPath}/class/forHowManyTakes",
-				type : "post",
-				async : false,
-				success : function(data) {
-					howmanyTake = data; 
-					console.log(howmanyTake);
-				},
-				error : function() {
-					alert("error");
-				}
-			});
 			
 			if(list.length == 0)
 				$(classType).append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
 			else {
 				$(list).each(function(){
+					var howmanyTake;
+					$.ajax({
+						url : "${pageContext.request.contextPath}/member/forHowManyTakes",
+						type : "post",
+						async : false,
+						data: {id : this.id},
+						success : function(data) {
+							howmanyTake = data; 
+						},
+						error : function() {
+							alert("수강생 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요");
+						}
+					});
+					
 					var classID = this.id;
 					var className = this.className;
 					
@@ -200,18 +201,6 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 			active = data.active;
 			inactive = data.inactive;
 			
-			$.ajax({
-				url : "${pageContext.request.contextPath}/class/forHowManyTakes",
-				type : "post",
-				async : false,
-				success : function(data) {
-					howmanyTake = data; 
-				},
-				error : function() {
-					alert("error");
-				}
-			});
-			
 			if((active.length + inactive.length) == 0){
 				$('.dashboardClass').append('<p class="col text-center">생성된 강의실이 없습니다.</p>');
 				$('.classActive').hide();
@@ -225,6 +214,20 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 				$(active).each(function(){
 					var classID = this.id;
 					var className = this.className;
+					var howmanyTake;
+					
+					$.ajax({
+						url : "${pageContext.request.contextPath}/member/forHowManyTakes",
+						type : "post",
+						async : false,
+						data: {id : classID},
+						success : function(data) {
+							howmanyTake = data; 
+						},
+						error : function() {
+							alert("수강생 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요");
+						}
+					});
 					
 					$.ajax({
 						url : "${pageContext.request.contextPath}/forPublished",

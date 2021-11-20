@@ -47,7 +47,7 @@ var classContentID = 1;
 var information;
 var videoIdx = '${daySeq}';
 var playlist; 
-//var ccID = ${id};
+var ccID = '${id}';
 //var weekContents;
 
 $(document).ready(function(){
@@ -72,7 +72,6 @@ $(document).ready(function(){
 			id: '${id}'
 		},
 		success : function(data) {
-			console.log(data);
 			var element = document.getElementById("contentsTitle");
 			element.innerText = data.title;
 			var elementD = document.getElementById("contentsDescription");
@@ -84,6 +83,8 @@ $(document).ready(function(){
 			$('#setContentID').val(data.id);
 			
 			var endDate = data.endDate;
+			var startDate = data.startDate;
+			
 			if(endDate != null && endDate != ''){
 				endDate = endDate.split(" ")[0];
 				var hour = data.endDate.split(" ")[1];
@@ -98,6 +99,14 @@ $(document).ready(function(){
 				$('#endDate_h').val(hour);
 				$('#endDate_m').val(min);
 			}
+
+			startDate = startDate.split(" ")[0];
+			var hour = data.startDate.split(" ")[1];
+			var min = hour.split(":")[1];
+			hour = hour.split(":")[0];
+			$('#setStartDate').val(startDate);
+			$('#startDate_h').val(hour);
+			$('#startDate_m').val(min);
 				
 			
 		},
@@ -119,14 +128,13 @@ $(document).ready(function(){
 			var day = weekContents[i].days;
 			
 			var endDate = weekContents[i].endDate;
-			if(endDate == null || endDate == '')
-				endDate = '';
-			else {
+			if(endDate != null && endDate != ''){
 				endDate = endDate.split(":");
 				endDate = endDate[0] + ":" + endDate[1];	
 				endDate =  '<div class="endDate contentInfo" style="padding: 0px 0px 10px;">마감일: ' + endDate + '</div>'
-				
 			}
+				
+			else endDate = '';
 			
 			//선택한 플레이리스트가 열려있는 상태로 보이도록 하는 코드
 			if(i == videoIdx){
@@ -190,6 +198,10 @@ $(document).ready(function(){
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 			var day = weekContents[i].days;
 			var endDate = weekContents[i].endDate; //timestamp -> actural time
+			if(endDate != null && endDate != ''){
+				endDate = '<div class="endDate contentInfo pb-2">마감일: ' + endDate + '</div>';
+			}
+			else endDate = '';
 		
 			//classContentID = weekContents[i].id; // classContent의 id //여기 수정
 				
@@ -265,16 +277,10 @@ $(document).ready(function(){
 										+'</div>' 
 										+ 	completed 
 								+ '</div>'
-								
-						
-								
 						//ori_videoID = playlist[0].id;
 			}
-			//}
-			
 			
 			var content = $('.day:eq(' + day + ')');
-			//alert("i : " + i);
 			content.append("<div id=\'heading" +(i+1)+ "\'>"
 		               + '<button type="button" onclick="showLecture(' //showLecture 현재 index는 어떻게 보내지.. 내가 누를 index말고 
 						+ weekContents[i].playlistID + ','   + weekContents[i].id + ',' + weekContents[i].classID + ',' + (i+1) +')"'
@@ -289,7 +295,7 @@ $(document).ready(function(){
 									+ '</div>'
 									+ '<div class="">'
 										+ '<div class="contentInfoBorder"></div>'
-										+ '<div class="endDate contentInfo pb-2">' + '마감일: ' + endDate + '</div>'
+										+ endDate
 									+ '</div>' 
 								+ '</div>'
 									
@@ -315,33 +321,10 @@ $(document).ready(function(){
 					       	+'</div>'
 						+ '</div>'
 	  			+ '</div>');
-			//}
-			//}
 		}
 	}
 		
 });
-
-/*function editClassroomFn(){
-	//classID, days, daySeq	다필요 
-	ajax({ 
-		  url : "${pageContext.request.contextPath}/class/forEditContents",
-		  type : "post",
-		  async : false,
-		  dataType : "json",
-		  success : function(data) {
-				var days = data.days;
-				var closeDate = data.closeDate;
-					
-				$('#editContentName').val(data.className);
-				$('#editContentDescription').val(data.description);
-				$('#endDate').val(closeDate);
-		  },
-		  error : function() {
-		  	alert("error1");
-		  }
-	});
-}*/
 
 function convertTotalLength(seconds){
 	var seconds_hh = Math.floor(seconds / 3600);
@@ -358,7 +341,9 @@ function convertTotalLength(seconds){
 
 var n ;
 var playlistVideo;
-function showLecture(playlistID, id, classInfo, idx){
+
+function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐츠 목록에서 하나 클릭했을 때
+	ccID = id;
 	player.pauseVideo();
 	if(weekContents[idx-1].playlistID != 0)
 		document.getElementById("onepageLMS").style.display = "";
@@ -410,6 +395,8 @@ function showLecture(playlistID, id, classInfo, idx){
 				$('#setContentID').val(data.id);
 				
 				var endDate = data.endDate;
+				var startDate = data.startDate;
+				
 				if(endDate != null && endDate != ''){
 					endDate = endDate.split(" ")[0];
 					var hour = data.endDate.split(" ")[1];
@@ -424,6 +411,14 @@ function showLecture(playlistID, id, classInfo, idx){
 					$('#endDate_h').val(hour);
 					$('#endDate_m').val(min);
 				}
+
+				startDate = startDate.split(" ")[0];
+				var hour = data.startDate.split(" ")[1];
+				var min = hour.split(":")[1];
+				hour = hour.split(":")[0];
+				$('#setStartDate').val(startDate);
+				$('#startDate_h').val(hour);
+				$('#startDate_m').val(min);
 			  },
 			  error : function() {
 			  	alert("error");
@@ -633,10 +628,6 @@ function onPlayerReady(event) {
   	console.log('onPlayerReady 마감'); 
 }
 
-function setEditContentModal(){
-	
-}
-
 function stringFormat(p_val){
 	if(p_val == '')
 		return '00';
@@ -647,20 +638,36 @@ function stringFormat(p_val){
   }
 
 function submitContent(){	//update content
-	var endDate = "";
-	if($("#setEndDate").val() != '' && $("#setEndDate").val() != null)
-		endDate = $("#setEndDate").val() + " " + stringFormat($("#endDate_h").val()) + ":" + stringFormat($("#endDate_m").val()) + ":00";
+	var startDate = $("#setStartDate").val() + " " + stringFormat($("#startDate_h").val()) + ":" + stringFormat($("#startDate_m").val()) + ":00";
+	
+	var endDate = $("#setEndDate").val();
+	if(endDate != '' && endDate != null) {
+		endDate = endDate + " " + stringFormat($("#endDate_h").val()) + ":" + stringFormat($("#endDate_m").val()) + ":00";
+
+		if(startDate >= endDate) {
+	        alert("컨텐츠 공개일이 마감일보다 빨라야 합니다.");
+	        $('#startDate').focus();
+	        return false;
+	    }
+	}
+	else endDate = "";
+
+	var timezoneOffset = new Date().getTimezoneOffset() * 60000;
+	var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
+	var hour = new Date().getHours();
+	var min = new Date().getMinutes();
+	var now = date + " " + stringFormat(hour) + ":" + stringFormat(min) + ":00";
+	if(startDate <= now) $('#setPublished').val(1);
+	else $('#setPublished').val(0);
+
+	$('#startDate').val(startDate);
+	$('#endDate').val(endDate);
 	
 	$.ajax({ 
 		  url : "${pageContext.request.contextPath}/class/updateClassContents",
 		  type : "post",
 		  async : false,
-		  data : {	
-			className : $("#editContentName").val(),
-			classDescription : $("#editContentDescription").val(),
-			endDate : endDate,
-			classContentID : $('#setContentID').val() //영상이 바뀔 때 이것도 잘 바뀌는지 ,, 
-		  },
+		  data : $('#formEditClassContents').serialize(),
 		  dataType : "json",
 		  success : function(data) {
 			console.log("modalSubmit");
@@ -668,12 +675,12 @@ function submitContent(){	//update content
 		  complete : function(data) {
 		  	location.reload();
 		  }
-	})
+	});
 }
 
 
 function deleteContent(){
-	if (confirm("페이지를 정말 삭제하시겠습니까? ") == true){
+	if(confirm("현재 강의 페이지를 정말 삭제하시겠습니까? ") == true){
 		$.ajax({ 
 			  url : "${pageContext.request.contextPath}/class/deleteClassContent",
 			  type : "post",
@@ -682,14 +689,24 @@ function deleteContent(){
 				classContentID : ccID
 			  },
 			  complete : function(data) {
-			  	location.reload();
+				  alert('강의 페이지가 삭제되었습니다. 강의컨텐츠 목록 페이지로 이동합니다.');
+				 location.replace('${pageContext.request.contextPath}/class/contentList/${classInfo.id}');
 			  }
-		})
+		});
 	}
 	
-	else{
-		return;
-	}
+	else return;
+}
+
+function getCurrentTime(){
+	var timezoneOffset = new Date().getTimezoneOffset() * 60000;
+	var date = new Date(Date.now() - timezoneOffset).toISOString().split("T")[0]; //set local timezone
+	var hour = new Date().getHours();
+	var min = new Date().getMinutes();
+	
+	$('#setStartDate').val(date);
+	$('#startDate_h').val(hour);
+	$('#startDate_m').val(min);
 }
 
 	
@@ -707,7 +724,7 @@ function deleteContent(){
         	<div class="app-main__outer">
 				<div class="app-main__inner">
         			<h4>
-                      	<button class="btn row" onclick="history.back();"> 
+                      	<button class="btn row" onclick="location.href='${pageContext.request.contextPath}/class/contentList/${classInfo.id}'"> 
                 			<i class="pe-7s-left-arrow h4 col-12"></i>
                 			<p class="col-12 m-0">이전</p>
              			</button>
@@ -775,42 +792,34 @@ function deleteContent(){
 	            </div>
 	            
 	            <form class="needs-validation" id="formEditClassContents" method="post" onsubmit="return false;" novalidate>
-		            <input id="setContentID" name="id" type="hidden" value="">
+		            <input id="setContentID" name="id" type="hidden">
+		            <input id="setPublished" name="published" type="hidden">
 		            <div class="modal-body">
 		               <div class="position-relative form-group">
 		               		<label for="editContentName" class="">이름</label>
-		               		<input name="contentName" id="editContentName" type="text" class="form-control">
+		               		<input name="title" id="editContentName" type="text" class="form-control">
 		               		<div class="invalid-feedback">강의실 이름을 다시 입력해주세요</div>
 		               </div>
 		               <div class="position-relative form-group">
 		               		<label for="editContentDescription" class="">설명</label>
-		               		<textarea name="contentDescription" id="editContentDescription" class="form-control"></textarea>
+		               		<textarea name="description" id="editContentDescription" class="form-control"></textarea>
 		               </div>
-		               <div class="position-relative form-group">
-		               		<!--  <label for="editContentDuedate" class="">마감일</label>
-		               		<textarea name="contentDuedate" id="editContentDuedate" class="form-control"></textarea>-->
-		               		<div class="setEndDate input-group">
-								<div class="input-group-prepend">
-									<label for="endDate" class="input-group-text">마감일</label>
-									<div class="invalid-feedback">마감일을 다시 설정해주세요</div>
-								</div>
-								<input type="hidden" name="endDate">
-								<input type="date" class="form-control col-sm-8" id="setEndDate">
-								<input type="number" class="setTime end_h form-control col-sm-2" id="endDate_h" min="0" max="23">
-								<input type="number" class="setTime end_m form-control col-sm-2" id="endDate_m" min="0" max="59"> 
-							</div>
-		               		<div class="setEndDate input-group">
-								<div class="input-group-prepend">
-									<label for="startDate" class="input-group-text">공개일</label>
-									<div class="invalid-feedback">공개일을 다시 설정해주세요</div>
-								</div>
-								<input type="hidden" name="endDate">
-								<input type="date" class="form-control col-sm-8" id="setStartDate">
-								<input type="number" class="setTime start_h form-control col-sm-2" id="startDate_h" min="0" max="23">
-								<input type="number" class="setTime start_m form-control col-sm-2" id="startDate_m" min="0" max="59"> 
-							</div>
-		               </div>
-		            </div>
+		               <div class="position-relative row form-group d-flex align-items-center">
+							<label class="col-sm-2 col-form-label">마감일</label>
+							<input type="hidden" name="endDate" id="endDate">
+							<input type="date" class="form-control col-sm-4" id="setEndDate">
+							<input type="number" class="setTime form-control col-sm-2 mr-1" id="endDate_h" min="0" max="23"> 시
+							<input type="number" class="setTime form-control col-sm-2 ml-2 mr-1" id="endDate_m" min="0" max="59"> 분
+						</div>
+                        <div class="position-relative row form-group d-flex align-items-center">
+                      		<label class="col-sm-2 col-form-label" >공개일</label>
+                      		<input type="hidden" name="startDate" id="startDate">
+                      		<input type="date" class="form-control col-sm-4" id="setStartDate" required>
+							<input type="number" class="setTime form-control col-sm-2 mr-1" id="startDate_h" min="0" max="23"> 시
+							<input type="number" class="setTime form-control col-sm-2 ml-1 mr-1" id="startDate_m" min="0" max="59"> 분
+							<button type="button" class="btn-transition btn btn-outline-focus btn-sm ml-1" onclick="getCurrentTime();">지금</button>
+						</div>
+		             </div>
 		            <div class="modal-footer">
 		            	<div style="float: left;"><button class="btn btn-danger" onclick="deleteContent();">컨텐츠 삭제</button></div>
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
