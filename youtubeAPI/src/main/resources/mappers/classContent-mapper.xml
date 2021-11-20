@@ -36,6 +36,17 @@
 		delete from lms_classContent where classID=#{classID} and days=#{days}
 	</delete>
 	
+	
+	<select id="getDaySeq" resultType="classContent">
+		select * from lms_classContent
+		where classID=#{classID} and days=#{days}
+	</select>
+	
+	<select id="getDaySeqNum" resultType="int">
+		select count(*) from lms_classContent
+		where classID=#{classID} and days=#{days}
+	</select>
+	
 	<select id="getEndDate" resultType="classContent">
 		select endDate from lms_classContent
 		where classID=#{classID} and days=#{days} AND published=1

@@ -44,6 +44,16 @@ public class ClassContentServiceImpl implements ClassContentService{
 	}
 	
 	@Override
+	public List<ClassContentVO> getDaySeq(ClassContentVO vo){
+		return ClassContentDAO.getDaySeq(vo);
+	}
+	
+	@Override
+	public int getDaySeqNum(ClassContentVO vo) {
+		return ClassContentDAO.getDaySeqNum(vo);
+	}
+	
+	@Override
 	public int getClassNum(int classID) {
 		return ClassContentDAO.getClassNum(classID);
 	}
