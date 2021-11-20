@@ -41,6 +41,9 @@ public class Stu_ClassController{
 	private ClassesService classService;	//나중에 아래랑 이름 구분하기! 
 	
 	@Autowired
+	private ClassContentService classInsContentService;
+	
+	@Autowired
 	private Stu_ClassesService classesService;
 	
 	@Autowired
@@ -60,6 +63,9 @@ public class Stu_ClassController{
 	
 	@Autowired
 	private Stu_TakesService takesService;
+	
+	@Autowired
+	private Stu_AttendanceInternalCheckService attendanceInCheckService;
 	
 
 	private int studentId = 0;
@@ -200,10 +206,23 @@ public class Stu_ClassController{
 	    vo.setClassContentID(classContentID);
 	    
 	    int count = 0;
-	    for(int i=0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
-	    	if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1)
-	    		count++;
+	    
+	    if(playlistID == 0) { //playlistID 없는 강의 컨텐츠에 대한 것 
+	    	Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
+	    	pcvo.setClassContentID(classContentID);
+	    	pcvo.setPlaylistID(playlistID);
+	    	pcvo.setStudentID(studentId);
+	    	
+	    	if(playlistcheckService.getPlaylistByContentStu(pcvo) != null)
+	    		count = 1;
 	    }
+	    else {
+	    	for(int i=0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
+		    	if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1)
+		    		count++;
+		    }
+	    }
+	    //System.out.println("classContentID : " + classContentID + " playlistID " + playlistID + " studentID : " + studentId + " count : "  + count);
 	    return count;
 	}
 	
@@ -248,14 +267,30 @@ public class Stu_ClassController{
 		//이 리스트를 리스트안에 넣어준다.
 		//리스트의 리스트를 리턴한다. 
 		List<Integer> completePlaylist = new ArrayList<Integer>();
-		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
-		pcvo.setStudentID(studentId);
-		System.out.println(takesService.getStudent(studentId));
 		
-		for(int i=0; i<takesService.getAcceptedStudent(studentId).size(); i++) { //주어진 studentID를 가진 학생이 수강하는 수업에 대해 
-			pcvo.setClassID(takesService.getAcceptedStudent(studentId).get(i).getClassID());
-			System.out.println("다본 playlist : " + playlistcheckService.getCompletePlaylist(pcvo).size());
-			completePlaylist.add(playlistcheckService.getCompletePlaylist(pcvo).size());
+		int howManyTakes = takesService.getAcceptedStudentNum(studentId);
+		for(int i=0; i<howManyTakes; i++) { //주어진 studentID를 가진 학생이 수강하는 수업에 대해 
+			int howManyDays = classContentService.getPlaylistCount(takesService.getAcceptedStudent(studentId).get(i).getClassID());
+			int count = 0;
+			for(int j=0; j<howManyDays; j++) {
+				
+				AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
+				aivo.setClassID(takesService.getAcceptedStudent(studentId).get(i).getClassID());
+				aivo.setDays(j);
+				aivo.setStudentID(studentId);
+				
+				ClassContentVO ccvo = new ClassContentVO();
+				ccvo.setClassID(takesService.getAcceptedStudent(studentId).get(i).getClassID());
+				ccvo.setDays(j);
+				
+				System.out.println(j+ "차시내 수업 개수 : " + classContentService.getDaySeq(ccvo) + " 학생이 다들은 수업 개수 : " + attendanceInCheckService.getAttendanceInCheckNum(aivo) + "classID : " + takesService.getAcceptedStudent(studentId).get(i).getClassID() + " days : "+ j + " studentID : " + studentId);
+				if(attendanceInCheckService.getAttendanceInCheckNum(aivo) == classContentService.getDaySeq(ccvo)) {
+					count ++;
+				}
+				//System.out.println("classID : " + takesService.getAcceptedStudent(studentId).get(i).getClassID() + " days : "+ j + " studentID : " + studentId);
+			} 
+			System.out.println("classID : " + takesService.getAcceptedStudent(studentId).get(i).getClassID() + " 완료된 차시는 " + count);
+			completePlaylist.add(count);
 		}
 		return completePlaylist;
 	}
@@ -266,9 +301,11 @@ public class Stu_ClassController{
 		//ClassContentVO ccvo= new ClassContentVO ();
 
 		List<Integer> allPlaylist = new ArrayList<Integer>();
-		
-		for(int i=0; i<takesService.getAcceptedStudent(studentId).size(); i++) { //주어진 studentID를 가진 학생이 수강하는 수업에 대해 
-			allPlaylist.add(classContentService.getPlaylistCount(takesService.getAcceptedStudent(studentId).get(i).getClassID()));
+		int howManyTakes = takesService.getAcceptedStudentNum(studentId);
+		for(int i=0; i<howManyTakes; i++) { //주어진 studentID를 가진 학생이 수강하는 수업에 대해 
+			int howManyDays = classContentService.getPlaylistCount(takesService.getAcceptedStudent(studentId).get(i).getClassID());
+			allPlaylist.add(howManyDays);
+			//System.out.println("전체 차시는 : " + howManyDays);
 		}
 		return allPlaylist;
 	}

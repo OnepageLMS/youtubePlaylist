@@ -36,6 +36,10 @@ public class Stu_TakesDAO {
 		return sqlSession.selectList("Takes.getAcceptedStudent", studentID);
 	}
 	
+	public int getAcceptedStudentNum(int studentID) {
+		return sqlSession.selectOne("Takes.getAcceptedStudentNum", studentID);
+	}
+	
 	public int getStudentNum(int classID) {	//수강인원의 수만 가져오기
 		return sqlSession.selectOne("Takes.getTakesNum", classID);
 	}

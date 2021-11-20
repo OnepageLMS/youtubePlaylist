@@ -578,9 +578,6 @@ function onYouTubeIframeAPIReady() {
 	}
 	else //영상을 클릭했을 때
 	{	
-		console.log(weekContents);
-		console.log("0 " + weekContents[0]);
-		console.log("5 " + weekContents[5]);
 		videoId = weekContents[videoIdx].thumbnailID; //videoIdx만하면 범위를 넘어선다. => url을 포함할 때 
 		
 		//videoId = weekContents[videoIdx].thumbnailID; playlist만 있을 때 

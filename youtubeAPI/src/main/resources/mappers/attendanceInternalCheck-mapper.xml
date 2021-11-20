@@ -23,8 +23,18 @@
 		where lms_attendanceInternalCheck.classID=#{classID} and lms_attendanceInternalCheck.days=#{days} and studentID=#{studentID} and lms_classContent.published=1
 	</select>
 	
+	<select id="getAttendanceInCheckNum" resultType="int">
+		select count(*) from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where lms_attendanceInternalCheck.classID=#{classID} and lms_attendanceInternalCheck.days=#{days} and studentID=#{studentID} and lms_classContent.published=1
+	</select>
+	
 	<select id="getAttendanceInCheckByID" resultType="attendanceInternal">
 		select * from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1
+	</select>
+	
+	<select id="getAttendanceInCheckByIDNum" resultType="int">
+		select count(*) from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
 		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1
 	</select>
 	

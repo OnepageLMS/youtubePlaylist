@@ -13,7 +13,7 @@
 	</select>
 	
 	<select id="getPlaylistCount" resultType="int">
-		select count(playlistID) from lms_classContent
+		select count(distinct days) from lms_classContent
 		where classID=#{classID} AND published =1
 	</select>
 	

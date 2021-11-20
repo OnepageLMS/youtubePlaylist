@@ -98,15 +98,17 @@
 				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
 				var symbol;
-				var progressbar;
+				var totalVideo;
+	         	//var percentage ;
 				if(allMyClass[i].playlistID == 0){ //playlist없이 description만 올림 
 					symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
-					progressbar = '<div class="col-sm-3"></div>';
+					//percentage = 100%;
+					totalVideo = 1;
 					videoLength = '';
 				}
 				else{ //playlist 올림 
 					symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-					progressbar = '<div class="col-sm-3">'
+					/*progressbar = '<div class="col-sm-3">'
 						               	 + '<div class="widget-content">'
 						            		+'<div class="widget-content-outer">'
 						                 	+'<div class="widget-content-wrapper">'
@@ -120,12 +122,31 @@
 						                         +'</div>'
 						                    +'</div>'
 						            +' </div>'
-						         + '</div>';
+						         + '</div>';*/
+					totalVideo =  weekContents[i].totalVideo;
 					for(var j=0; j<weekContents.length; j++){
 							if(allMyClass[i].playlistID == weekContents[j].playlistID)
 							videoLength = "[" + convertTotalLength(weekContents[j].totalVideoLength) + "]";
 					}
 				}
+				
+				var progressbar = '<div class="col-sm-3">'
+		               	 + '<div class="widget-content">'
+		            		+'<div class="widget-content-outer">'
+		                 	+'<div class="widget-content-wrapper">'
+		                     	+'<div class="widget-content-right">'
+		                         	+'<div class="widget-numbers fsize-1 text-muted"> ' + watchCount + " / " + totalVideo +  '</div>'
+		                    		+'</div>'
+		                 	+'</div>'
+		                     +'<div class="widget-progress-wrapper mt-1">'
+		                        + '<div class="progress-bar-sm progress-bar-animated-alt progress">'
+		                             +'<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="71" aria-valuemin="0" aria-valuemax="100" style="width: '+ watchCount/totalVideo*100 +'%;"></div>'
+		                         +'</div>'
+		                    +'</div>'
+		            +' </div>'
+	       	  	+ '</div>';
+	         
+	         
 				//var onclickDetail = "location.href='../contentDetail/" + allMyClass[i].playlistID + "/" + allMyClass[i].id + "/" +classInfo+ "/" + i +  "'";
 				var goDetail = "moveToContentDetail(" + allMyClass[i].id + "," + i + "," + allMyClass[i].playlistID + ");";
 				var content = $('.day:eq(' + day + ')');
