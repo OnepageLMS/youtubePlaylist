@@ -383,13 +383,13 @@ $(document).ready(function(){
 						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete">'
 							+ '<div class="position-relative form-group row col">'
-								/* + '<div class="col-sm-2 col-form-label d-flex justify-content-center">' */
-								+ '<label for="amount" class="col-lg-2 col-form-label">설정된시간</label>'
-								/* + '</div>'  */
-								+ '<div class="col-lg-10"> <input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> </div>'
-							+ '</div>' 
-							+ '<div class="position-relative row form-group" style="display: block;">'
-							+ '<div id="warning1"> </div>'
+							/* + '<div class="col-sm-2 col-form-label d-flex justify-content-center">' */
+							+ '<label for="amount" class="col-lg-2 col-form-label">설정된시간</label>'
+							/* + '</div>'  */
+							+ '<div class="col-lg-10"> <input type="text" id="amount" class="text-center form-control" readonly style="border:0;"> </div>'
+						+ '</div>' 
+						+ '<div class="position-relative row form-group" style="display: block;">'
+						+ '<div id="warning1"> </div>'
 								+ '<div class="setTimeRange input-group col d-flex justify-content-between align-items-center mb-3">'
 									+ '<div class="col-2 input-group-prepend pl-0">'
 										//+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>'
@@ -961,18 +961,12 @@ $(document).ready(function(){
 			                            </button>
 	                            	</div>
 	                            	<div class="videoNewTitle col-12 pl-2">
-		                            	<input type="checkbox" id="checkAll" onclick="selectAll(this);"> <label class="form-check-label"> 전체 선택 </label>  
+		                            	<input type="checkbox" id="checkAll" onclick="selectAll(this);"> <label class="form-check-label" for="checkAll"> 전체 선택 </label>  
 										<button onclick="deleteFromCart();" class="m-0 btn-transition btn btn-danger btn-small float-right">선택 항목 삭제</button>
-	                            	
 	                            	</div>
 	                            </div>
                         </div>
-		                        
-                      
-                        <div id="videosInCart" class="vh-100 scrollbar-container ps--active-y ps" style="overflow-y:auto; height:750px;">
-                           
-                        </div>
-                        
+                        <div id="videosInCart" class="vh-100 scrollbar-container ps--active-y ps" style="overflow-y:auto; height:750px;"></div>
                         <div style="position: fixed; left: 0; bottom: 0; width: 100%;">
 					          <div class="app-footer mb-2">
 					              <div class="app-footer__inner">

@@ -29,6 +29,10 @@ public class PlaylistDAO {
 		return result;
 	}
 	
+	public int setThumbnailID(PlaylistVO vo) {
+		return sqlSession.update("Playlist.setThumbnailID", vo);
+	}
+	
 	public int changeSeq(PlaylistVO vo) {
 		int result = sqlSession.update("Playlist.changeSeq", vo);
 		return result;
