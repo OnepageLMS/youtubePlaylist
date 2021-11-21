@@ -77,48 +77,8 @@ img {
 <script>
 var email;
 $(document).ready(function(){
-	//getAllMyPlaylist(email); //나중에는 사용자 로그인정보로 email 가져와야할듯..
-	
-	//var allMyClass = JSON.parse('${allMyClass}');
-	/* for(var i=0; i<allMyClass.length; i++){
-		var name = allMyClass[i].className;
-		var classContentURL = '${pageContext.request.contextPath}/class/contentList/' + allMyClass[i].id;
-		var html = '<li>'
-						+ '<a href="#">'
-							+ '<i class="metismenu-icon pe-7s-notebook"></i>'
-							+ name
-							+ ' <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>'
-						+ '</a>'
-						+ '<ul>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '공지'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="' + classContentURL + '">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '학습 컨텐츠'
-								+ '</a>'
-							+ '</li>'
-							+ '<li>'
-								+ '<a href="#">'
-									+ '<i class="metismenu-icon"></i>'
-									+ '성적'
-								+ '</a>'
-							+ '</li>'
-						+ '</ul>'
-					+ '</li>';
-				
-		$('.sideClassList').append(html);
-	} */
-	// Playlist 이름 보여지게 하기
-	//console.log(JSON.stringify(localStorage.getItem("selectedPlaylist")));
-	console.log(localStorage.getItem("selectedPlaylistName"));
 	$("#playlistName").before('<h4 class="text-primary" style="display:inline-block">' + localStorage.getItem("selectedPlaylistName") + '</h4>');
 
-	
 });
 </script>
 
@@ -145,14 +105,12 @@ $(document).ready(function(){
 		$("#get_view").empty();
 		$("#nav_view").empty();
 		var key = "AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //"AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //
-		//var accessToken = "${accessToken}";
+		
 		var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order="
 				+ $getorder
 				+ "&q="
 				+ encodeURIComponent($getval) //encoding
 				+ "&key=" + key
-				//+ "&access_token="
-				//+ accessToken
 				+ "&maxResults="
 				+ maxResults
 				+ "&type=video";
@@ -169,7 +127,6 @@ $(document).ready(function(){
 							$("#nav_view").append(
 									'<p>검색 일일 한도가 초과되었습니다 나중에 다시 시도해주세요!</p>');
 						}
-						//console.log(jdata);
 						$(jdata.items)
 								.each(
 								function(i) {
@@ -184,15 +141,12 @@ $(document).ready(function(){
 										var getVideo = "https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id="
 												+ id
 												+ "&key=" + key;
-												//+ "&access_token="
-												//+ accessToken;
 	
 										$.ajax({
 													type : "GET",
 													url : getVideo, //youtube-videos api
 													dataType : "jsonp",
 													success : function(jdata2) {
-														//console.log(jdata2);
 														setAPIResultDetails(
 																i,
 																jdata2.items[0].statistics.viewCount,
@@ -201,7 +155,6 @@ $(document).ready(function(){
 																jdata2.items[0].contentDetails.duration);
 													},
 													error : function(xhr, textStatus) {
-														console.log(xhr.responseText);
 														alert("video detail 에러");
 														return;
 													}
@@ -216,8 +169,7 @@ $(document).ready(function(){
 						}
 					},
 					error : function(xhr, textStatus) {
-						console.log(xhr.responseText);
-						alert("an error occured for searching");
+						alert("검색 에러 발생! 관리자에게 보고해주세요 :(");
 						return;
 					}
 				});
@@ -231,9 +183,16 @@ $(document).ready(function(){
 		for (var i = 0; i < maxResults; i++) {
 			var id = idList[i];
 			var view = viewCount[i];
-			var title = titleList[i].replace("'", "’").replace("/\"/g","\\\""); //titleList[i].replace("'", "&apos;").replace("\"","&quot;");
-	
-			/* title = `${title}`; */
+			//var title = titleList[i].replace("'", "’");//.replace("/\"/g","\\\""); //titleList[i].replace("'", "&apos;").replace("\"","&quot;");
+			var title = titleList[i];
+			title = title.replace("'", "’");
+			title = title.replace("\"", "’");
+
+			for(let j =0; j < titleList[i].length; j++){
+				if(titleList[j] === "'" || titleList[j] === "\""){
+					title = title.replace("’");
+				}
+			}
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="" '
 				+ 'style="width: 100%; height:100%; max-width: 300px; max-height: 200px; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
@@ -244,16 +203,7 @@ $(document).ready(function(){
 			link = link + "?id=" + id.toString();
 			link = link + "?title=" + `\${title}`;
 			link = link + "?duration=" + durationCount[i] + "'";
-			$("#get_view").append(					
-					/* '<div class="searchedVideo" onclick="$(#form2).submit();">' */
-					
-					/* 	'<ul class="list-group">'
-                        + '<button class="list-group-item-action list-group-item">Dapibus ac facilisis in</button>'
-                        <button class="list-group-item-action list-group-item">Morbi leo risus</button>
-                        <button class="list-group-item-action list-group-item">Porta ac consectetur ac</button>
-                        <button class="disabled list-group-item-action list-group-item">Vestibulum at eros</button>
-                    </ul> */
-					
+			$("#get_view").append(								
 					'<div class="searchedVideo list-group-item-action list-group-item" >'
 							+ '<div class="row">'
 								+ '<div class="col-sm-4">'
@@ -276,12 +226,6 @@ $(document).ready(function(){
 								+ '</div>'
 							+ '</div>'
 					+ '</div>');
-							/* + '<div style="display:none">'
-							+ '<div id="player_info"></div>'
-							+ '<div id="player"></div>' 
-							+ '</div> </div>'); */
-			<!-- <div id="player_info"></div> -->
-			<!-- <div id="player"></div> -->
 		}
 	}
 	function lastAndNext(token, direction) { // 검색결과 이전/다음 페이지 이동
@@ -292,7 +236,6 @@ $(document).ready(function(){
 	function setAPIResultToList(i, id, title, date) { // search api사용할 때 데이터 저장
 		idList[i] = id;
 		titleList[i] = title.replace("'", "\\'").replace("\"","\\\""); // 싱글따옴표나 슬래시 들어갼것 따로 처리해줘야함!
-		console.log(titleList[i]);
 		dateList[i] = date.substring(0, 10);
 	}
 	function setAPIResultDetails(i, view, like, dislike, duration) { // videos api 사용할 때 디테일 데이터 저장 
@@ -404,10 +347,9 @@ $(document).ready(function(){
 			
 			
 				var regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-				var regex_result = regex.exec(duration); //Can be anything like PT2M23S / PT2M / PT28S / PT5H22M31S / PT3H/ PT1H6M /PT1H6S
+				var regex_result = regex.exec(duration); 
 
 				// 영상 총길이 계산 
-				// (jw) 만약 Uncaught TypeError: Cannot read properties of null (reading '1') 에러가 뜨면 해당 영상이 실시간 라이브여서 그런거임. 
 				var hours = parseInt(regex_result[1] || 0);
 				var minutes = parseInt(regex_result[2] || 0);
 				var seconds = parseInt(regex_result[3] || 0);
@@ -419,30 +361,14 @@ $(document).ready(function(){
 	
 				var total_seconds = hours * 60 * 60 + minutes * 60 + seconds;
 	
-				// (21/10/06) 영상 총길 계산 + slider에서 validity check 을 위해 
+				// 영상 총길 계산 + slider에서 validity check 을 위해 
 				limit = parseInt(total_seconds);
-	
-				//이미 다른 영상이 player로 띄워져 있을 때 새로운 id로 띄우기
-				//player.loadVideoById(videoId, 0, "large");
-				
-				//(//지워도 되려나..?)
-				/* document.getElementById("start_hh").value = 0;
-				document.getElementById("start_mm").value = 0;
-				document.getElementById("start_ss").value = 0; */
 			
 			if(prev_index != null){
 				$('#playerBox').remove();
 				
-			    //$("#get_view").children().eq(prev_index).attr('style', 'display: block');
-			    //$("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: none');
 			}
-			//console.log($("#get_view").children().eq(index).children().eq(2).html());
-			
-			// 클릭한 영상 밑에 player 띄우기
-			//$("#get_view").children().eq(index).after($div);
-			
-			// 오른쪽 카드 안에 player 띄우기
-			console.log("player폼 확인!!=> " , $(".playerForm").children().eq(0));
+
 			$(".playerForm").children().eq(0).append($div);
 			showSlider();
 			
@@ -461,23 +387,7 @@ $(document).ready(function(){
 			else{
 				var shortTitle = $('#setTitle').val();
 			}
-			/* if(!validation()){
-				return;
-			}; */
-			
-			//1. 
-			//var content = thumbnail2 + title;
-			//$("#videosInCart").append(content);
-			//2.
 	
-				//document.getElementById('running_time').innerHTML += hhmmss; 
-				//$('#running_time').html("duration: "+ hhmmss);
-				//document.getElementById('running_time').innerHTML = "duration: " + hhmmss; 
-				// 아직 카트 element가 생성되기 전이라서 이렇게 변수에 저장해놓은 뒤에 사용할 수 밖에 없음. 
-				
-				//running_time = hhmmss;
-				
-			// running time 구하기 * (다시 하기 ==> 21/10/07)
 			start_time = start_hour*3600.00 + start_min*60.00 + start_sec*1.00;
 			end_time = end_hour*3600.00 + end_min*60.00 + end_sec*1.00;
 			
@@ -492,8 +402,6 @@ $(document).ready(function(){
 		    else {
 		    	hhmmss = minutes + ':' + seconds;
 		    }
-
-		  	console.log("check hhmmss ==>" , hhmmss); 
 		  	
 			$('#duration').val(totalSeconds);
 			
@@ -518,18 +426,16 @@ $(document).ready(function(){
 						+ '<input type="hidden" name="maxLength" id="maxLength" value="' + limit + '">' 
 						+ '<input type="hidden" name="duration" id="duration" value="' + totalSeconds + '">'
 						+ '<input type="hidden" name="tag" id="tag" value="' + $('#setTag').val() + '">'
-						//+ '<input type="hidden" name="duration" id="duration">'
-						+ '<div class="row d-flex align-items-center">' //videoID="' + id + '" videoTitle="' + title + '">' 
+						+ '<div class="row d-flex align-items-center">'  
 						+ '<div class="form-check col-lg-1"> <input type="checkbox" id="selectToSave" name="chk"></div>'
 							+ '<div class="col-lg-4">' + thumbnail2 + '</div>'
 							+ '<div class="col-lg-7">'
 							+ '<div><b>' + shortTitle + '</b></div>'
 							+ '<div style="display:inline" value="'+cart_start_time+'"> start ' + cart_start_time + '</div>'
 							+ '<div style="display:inline" value="'+cart_end_time+'"> end ' + cart_end_time + '</div>' 
-							//+ '<div id="duration" style="display: none"> duration:' + $('#duration').val() + '</div>'
 							+ '<div id="running_time" style="display:inline" value="'+hhmmss+'"> duration ' + hhmmss + '</div>'
 						+ '</div> </div>'; 
-			//3. var html = $('#setVideosInCart').html();
+			
 			$("#videosInCart").append(html); 	
 
 			showToast(); 				
@@ -542,10 +448,8 @@ $(document).ready(function(){
 				range: true,
 				min: 0,
 				max: 500,
-				/* values: [ 75, 300 ], */
+				
 				slide: function( event, ui ) {
-					//$( "#amount" ).val( "시작: " + ui.values[ 0 ] + " - 끝: " + ui.values[ 1 ] );
-
 					start_hour = Math.floor(ui.values[ 0 ] / 3600);
 				    start_min = Math.floor(ui.values[ 0 ] % 3600 / 60);
 				    start_sec = ui.values[ 0 ] % 60;
@@ -560,21 +464,10 @@ $(document).ready(function(){
 		}
 		
 		function setSlider() {
-			console.log("limit값 확인 !! ", limit);
-			/* $("#slider-range").slider("destroy"); */
-			/*var attributes = {
-				max: limit
-			}
-			// update attributes
-			$element.attr(attributes);
-
-			// pass updated attributes to rangeslider.js
-			$element.rangeslider('update', true); */
 			$('#slider-range').slider( "option", "min", 0);
 			$('#slider-range').slider( "option", "max", limit);
 
 			$( "#slider-range" ).slider( "option", "values", [ 0, limit ] );
-			//$( "#amount" ).val( "시작: " + 0 + " - 끝: " + limit );
 			
 			start_hour= start_min = start_sec = 0;
 
@@ -586,37 +479,18 @@ $(document).ready(function(){
 		}
 		
 		function showYoutubePlayer(id, title, index){
-			//$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동
 			videoId = id;
 			videoTitle = title;
-			if(prev_index != null){
-				/* $("#get_view").children().eq(prev_index).children().eq(0).attr('style', 'display: inline-block');
-				$("#get_view").children().eq(prev_index).children().eq(1).attr('style', 'display: inline-block');
-				$("#get_view").children().eq(prev_index).children().eq(2).attr('style', 'display: inline-block'); */
-				
+			if(prev_index != null){			
 				$("#get_view").children().eq(prev_index).css("background-color", "white");
-				
-				console.log("check eq(1) ==> ", $("#get_view").children().eq(prev_index).children().eq(1));
-				//$("#get_view").children().eq(prev_index).children().eq(1).attr('style', 'display: inline-block');
 			}
 			
-			/* $("#get_view").children().eq(index).children().eq(0).attr('style', 'display: none');
-			$("#get_view").children().eq(index).children().eq(1).attr('style', 'display: none');
-			$("#get_view").children().eq(index).children().eq(2).attr('style', 'display: none'); */
-
 			$("#get_view").children().eq(index).css("background-color", "rgb(240, 240, 240)");
-			
-			console.log("check videoTitle here", videoTitle);
-					
-			/* <span class="videoTitle bg-white p-1" style="border: 1px solid black"> </span>
-			<div>
-				<textarea id="newName" name="newName" cols="62" rows="2"> </textarea>
-			</div> */
+
 			onYouTubeIframeAPIReady();
 			
 		}
-		// 3. This function creates an <iframe> (and YouTube player)
-		//    after the API code downloads. 
+		
 		function onYouTubeIframeAPIReady() {
 			player = new YT.Player('player', {
 				videoId : videoId,
@@ -629,14 +503,11 @@ $(document).ready(function(){
 				}
 			});
 		}
-		// 4. The API will call this function when the video player is ready.
-		function onPlayerReady() { 
-			//player.playVideo();
-			
+		
+		function onPlayerReady() { 			
 			if(youtubeID == null){
 				player.playVideo();
 			}
-			// 플레이리스트에서 영상 선택시 player가 바로 뜰 수 있도록 함. 
 			else { 
 				player.loadVideoById({
 					'videoId': youtubeID, 
@@ -645,11 +516,11 @@ $(document).ready(function(){
 				});
 			}
 		}
-		// (jw) player가 끝시간을 넘지 못하게 만들기 : 일단 임의로 시작 시간으로 되돌리기 했는데, 하영이거에서 마지막 재생 위치에서 부터 다시 재생되게 하면 될듯. 
+		 
 		function onPlayerStateChange(state) {
 		    if (player.getCurrentTime() >= end_s) {
 			   player.pauseVideo();
-			   //player.seekTo(start_s);
+			   
 			   player.loadVideoById({
 					'videoId': youtubeID, 
 					'startSeconds': start_s, 
@@ -658,22 +529,16 @@ $(document).ready(function(){
 		    }
 		  }
 		function selectVideoForm(id, title, duration){
-			console.log("check here!!", id);
 			
 			document.getElementById('playerId').value = id;
 			document.getElementById('playerTitle').value = title;
 			document.getElementById('playerDuration').value = duration;
-			/* $(#videoId).val(id);
-			$(#videoTitle).val(title);
-			$(#videoDuration).val(duration); */
 			
 			var playerForm = document.getElementById('form2');
 			playerForm.submit();
 		}
-		// (jw) 여기서 부터 구간 설정 자바스크립트 
-		// Youtube player 특정 위치로 재생 위치 이동 : 
+
 		function seekTo1() {
-			// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
 			var start_hh = $('#start_hh').val();
 			var start_mm = $('#start_mm').val();
 			var start_ss = $('#start_ss').val();
@@ -689,57 +554,27 @@ $(document).ready(function(){
 			player.seekTo(end_time);
 		}
 		
-		// 재생 구간 유효성 검사: 
 		function validation() { //video 추가 form 제출하면 실행되는 함수
-			/* document.getElementById("warning1").innerHTML = "";
-			document.getElementById("warning2").innerHTML = ""; */
-			
-			// 사용자가 input에서 수기로 시간을 변경했을 시에 필요. 
-			/* var start_hh = $('#start_hh').val();
-			var start_mm = $('#start_mm').val();
-			var start_ss = $('#start_ss').val();
-			start_time = start_hh * 3600.00 + start_mm * 60.00 + start_ss* 1.00;
-			
-			var end_hh = $('#end_hh').val();
-			var end_mm = $('#end_mm').val();
-			var end_ss = $('#end_ss').val();
-			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00; */
-
 			document.getElementById("warning1").innerHTML = "";
-			/* $('#warning1').text("");
-			$('#warning2').text(""); */
-
-			/* d = Number(player.getCurrentTime());
-			d = parseFloat(d).toFixed(2); */
 
 			// Getter for slider handles 
 			values = $( "#slider-range" ).slider( "option", "values" );
-
-			/* if(d>d1){
-				document.getElementById("warning1").innerHTML = "시작시간은 끝시간보다 크지 않아야 합니다.";
-				document.getElementById("warning1").style.color = "red";
-				//document.getElementById("start_ss").focus();
-				return false;
-			} */
-			
+		
 			if(d1<d){
-				document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요."; 
+				document.getElementById("warning1").innerHTML = "끝시간을 시작시간보다 크게 설정해주세요."; 
 				document.getElementById("warning1").style.color = "red";
 				return false;
 			}
-
 			return true;
 			
 		}
-
-		// 원래 addToCart 자리 (21/10/09)
 		
 		function deleteFromCart(){
 			$('input:checkbox:checked').each(function(i){
-				console.log($(this).parent().closest('.videoSeq').remove());
+				$(this).parent().closest('.videoSeq').remove();
 			});
 			// 전체 선택 체크 해제 
-			$("input:checkbox[id='checkAll']").prop("checked", false); /* by ID */  
+			$("input:checkbox[id='checkAll']").prop("checked", false); 
 		}
 		
 		function selectAll(selectAll) {
@@ -755,7 +590,7 @@ $(document).ready(function(){
 			$("#searchArea").children().eq(0).attr('class', 'selectedPlaylist col-lg-6 card');
 		}
 
-		// 오른쪽 sidebar 닫기 버튼 클릭시 (jw) 
+		// 오른쪽 sidebar 닫기 버튼 클릭시
 		function closeSidebar(){
 			$('.ui-theme-settings').attr('class', 'ui-theme-settings');
 		}
@@ -772,29 +607,19 @@ $(document).ready(function(){
 
 				var aJsonArray = new Array();
 				
-				console.log($('input:checkbox#selectToSave:checked'));
-				
 				var checkBoxArr = []; // 플레이리스트에 추가될 영상들을 저장
 				$('input:checkbox[id="selectToSave"]:checked').each(function(i) {
-				//$('.chk:checked').each(function(i) {
-					//console.log($(this).closest('.videoSeq').children());
-					//console.log($(this).closest('.videoSeq').children("#inputYoutubeTitle").val());
 					checkBoxArr.push($(this).closest('.videoSeq'));
 				});
 
 				if(checkBoxArr.length==0){
-					/* $('#addVideoModal').modal("hide"); */
 					alert("최소 한개 이상의 동영상을 선택해주세요!"); 
 					return false;
 				}							
 
-				console.log(checkBoxArr.length);
-
 				for(let i=0; i<checkBoxArr.length; i++){
 
 					var aJson = new Object();
-
-					console.log(checkBoxArr[i].children('#inputYoutubeTitle').val());
 
 					aJson.playlistID = localStorage.getItem("selectedPlaylistID");
 					aJson.title = checkBoxArr[i].children('#inputYoutubeTitle').val();
@@ -810,8 +635,6 @@ $(document).ready(function(){
 				}
 
 				var jsonData = JSON.stringify(aJsonArray);		
-
-				console.log(jsonData);			
 				
 				$.ajax({
 					'type' : "POST", 
@@ -819,22 +642,20 @@ $(document).ready(function(){
 					'data' : jsonData,
 					'contentType' : "application/json",
 					success : function(data) {
-						console.log("ajax video저장 완료!");
 						if(!confirm("playlist에 비디오가 추가되었습니다. playlist 화면으로 이동 하시겠습니까?")){
 							deleteFromCart();
 						}
 						else{
-							var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !!
+							/* var myEmail = "yewon.lee@onepage.edu"; //이부분 로그인 구현한뒤 현재 로그인한 사용자 정보로 바꾸기 !! */
 							location.href = '${pageContext.request.contextPath}/playlist/myPlaylist/';
 							return false;
 						}
 					},
 					error : function(error) {
-						//getAlMyPlaylist();
-						console.log("ajax video저장 실패!" + error);
+					 	alert("비디오 저장 실피! 관리자에게 해당 에러를 문의해주세요. ");
 					} 
 				});
-				//confirmSearch();
+
 				return false;
 		}
 		
@@ -851,12 +672,6 @@ $(document).ready(function(){
                 <div class="scrollbar-container ps ps--active-y">
                     <div class="theme-settings__options-wrapper">
 	               		<div class="themeoptions-heading">
-	                            <!-- <div>
-	                               선택된 비디오 플레이리스트
-	                            </div>
-	                            <button type="button" class="close ml-auto btn" aria-label="Close" onclick="closeSidebar();">
-	                            	<span aria-hidden="true">×</span>
-	                            </button> -->
 	                            <div class="row w-100">
 	                            	<div class="col">
 			                            <b class="col-11 pl-0">선택된 영상 Playlist</b>
@@ -886,7 +701,6 @@ $(document).ready(function(){
 					      </div>                        
                     </div>
                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div>
-                <!-- <div class="ps__rail-y" style="top: 0px; height: 446px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 151px;"></div></div></div> -->
                 <div class="ps__rail-y ps--clicking" style="top: 0px; height: 493px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 184px;"></div></div></div>
             </div>
         </div>
@@ -907,7 +721,6 @@ $(document).ready(function(){
 
 					<div class="row" id="searchArea">
 						<div class="selectedPlaylist col-lg-12 card">
-							<!-- <div class="card-header"> -->
 							<div class="card-title playlistName m-3">
 
 								<div class="">
@@ -949,7 +762,6 @@ $(document).ready(function(){
 						</div>						
 						<div class="playerForm col-lg-6 form-class" style="display:none;">
 							<div class="main-card card pb-3">
-								<!-- form 동적으로 추가(jw) -->
 							</div>
 						</div>
 
@@ -963,7 +775,7 @@ $(document).ready(function(){
 	
 	<div id="toast-container" class="toast-top-right">
 		<div class="toast toast-success" aria-live="assertive" aria-atomic="true" style="display: none;">
-			<div class="toast-message"> 비디오가 담겼습니다. 플레이리스트 추가를 해주세요 ! </div>
+			<div class="toast-message"> 비디오가 담겼습니다. <br> 플레이리스트 추가를 해주세요 ! </div>
 		</div>
 	</div>
 	
