@@ -69,7 +69,7 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 			}
 
 			if(act == 1){
-				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+				$.ajax({ 
 					url : "${pageContext.request.contextPath}/student/class/competePlaylistCount",
 					type : "post",
 					async : false,
@@ -77,11 +77,11 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 						completePlaylist = data;
 					},
 					error : function() {
-						alert("error");
+						alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 					}
 				})	
 				
-				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+				$.ajax({ 
 					url : "${pageContext.request.contextPath}/student/class/classTotalPlaylistCount",
 					type : "post",
 					async : false,
@@ -89,7 +89,7 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 						allPlaylist = data;
 					},
 					error : function() {
-						alert("error");
+						alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 					}
 				})
 			}
@@ -171,7 +171,7 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 			});
 		},
 		error: function(data, status,error){
-			console.log('ajax dashboard 가져오기 실패!');
+			alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
 }
@@ -184,7 +184,7 @@ function getAllMyClass(){
 		type: 'post',
 		url: "${pageContext.request.contextPath}/student/class/getAllMyClass",
 		success: function(data){
-			$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			$.ajax({ 
 				url : "${pageContext.request.contextPath}/student/class/competePlaylistCount",
 				type : "post",
 				async : false,
@@ -192,11 +192,11 @@ function getAllMyClass(){
 					completePlaylist = data;
 				},
 				error : function() {
-					alert("error");
+					alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 				}
 			})	
 			
-			$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+			$.ajax({ 
 				url : "${pageContext.request.contextPath}/student/class/classTotalPlaylistCount",
 				type : "post",
 				async : false,
@@ -204,7 +204,7 @@ function getAllMyClass(){
 					allPlaylist = data;
 				},
 				error : function() {
-					alert("error");
+					alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 				}
 			})
 			
@@ -309,6 +309,7 @@ function getAllMyClass(){
 						i++;
 				});
 			}
+			
 			var pending = '${allPendingClass}';
 			if(pending.length > 0){
 				$('#pendingClassroomModal').css('display', 'block');
@@ -348,7 +349,7 @@ $(document).on("click", ".setClassroomBtn", function () {	// set classroom btn �
 			$('#setRegDate').text(data.regDate.split(" ")[0]);
 		},
 		error: function(data, status,error){
-			console.log('ajax class 정보 가져오기 실패!');
+			alert('강의실 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
 });
@@ -395,7 +396,6 @@ function deleteRequest(studentID, classID, obj){
 		},
 		error:function(request,status,error){
 			alert('수강대기신청 삭제가 정상적으로 처리되지 않았습니다. 잠시후 다시 시도해주세요:(');
-	        //alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 	    }	
 	});
 }
@@ -522,7 +522,7 @@ function deleteRow(obj){
             		</div> 
             	</c:if>
                 <c:forEach var="v" items="${allPendingClass}">
-                	<div class="row">
+                	<div class="row col">
 	               		<div class="col-sm-4 ml-2" style="text-align:left;" >
 	               			<p><b>'${v.className}'</b></p>
 	               		</div>
@@ -538,10 +538,6 @@ function deleteRow(obj){
                 	</div>
                 </c:forEach>
             </div>
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div> -->
         </div>
    	</div>
 </div>

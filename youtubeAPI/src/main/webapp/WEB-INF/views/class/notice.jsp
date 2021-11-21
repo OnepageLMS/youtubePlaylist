@@ -60,7 +60,7 @@
 				getAllPin();
 				},
 			error: function(data, status,error){
-				console.log('강의실 정보 가져오기 실패!');
+				alert('강의실 정보를 가져오는데 실패했습니다 잠시후 다시 시도해주세요:(');
 			}
 				
 			});
@@ -101,7 +101,7 @@
 													+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
 												+ '</button>'
 												+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
-													+ '<button type="button" class="dropdown-item" onclick="unsetPin(' + value.id + ');">상단고정 해재</button>' 
+													+ '<button type="button" class="dropdown-item" onclick="unsetPin(' + value.id + ');">상단고정 해제</button>' 
 			                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
 			                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
 				                                   	+ '</div>'
@@ -124,6 +124,9 @@
 				});
 				lastIdx = data.length;
 				getAllNotices(data.length);
+			},
+			error: function(error){
+				alert('상단고정된 공지를 가져오는데 실패했습니다 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -149,7 +152,7 @@
 						var viewCount = value.viewCount;
 
 						if(pin != 1) pin = 'onclick="setPin(' + value.id + ');">상단고정';
-						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해재';
+						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해제';
 
 						
 						if (viewCount == null || totalStudent == 0) viewCount = '0';
@@ -195,7 +198,7 @@
 				}
 			},
 			error: function(data, status,error){
-				console.log('공지 생성 실패!');
+				alert('공지 리스트를 가져오는데 실패했습니다 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -210,12 +213,12 @@
 				getAllPin();
 			},
 			error: function(data, status,error){
-				console.log('pin 설정 실패!');
+				alert('상단고정 설정에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
 
-	function unsetPin(id){	//상단 pin고정 해재
+	function unsetPin(id){	//상단 pin고정 해제
 		$.ajax({
 			type: 'post',
 			url: '${pageContext.request.contextPath}/unsetPin',
@@ -225,7 +228,7 @@
 				getAllPin();
 			},
 			error: function(data, status,error){
-				console.log('pin 해재 실패!');
+				alert('상단고정 설정에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -259,13 +262,12 @@
 			data: $('#inputNoticeForm').serialize(),
 			datatype: 'json',
 			success: function(data){
-				console.log('공지 생성 성공');
 			},
 			complete: function(data){
 				location.reload();
 			},
 			error: function(data, status,error){
-				console.log('공지 생성 실패!');
+				alert('공지 등록에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -284,13 +286,12 @@
 			data: $('#editNoticeForm').serialize(),
 			datatype: 'json',
 			success: function(data){
-				console.log('공지 수정 성공');
 			},
 			complete: function(data){
 				location.reload();
 			},
 			error: function(data, status,error){
-				console.log('공지 수정 실패!');
+				alert('공지내용 수정에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -302,13 +303,12 @@
 				url: '${pageContext.request.contextPath}/deleteNotice',
 				data: {id: id},
 				success: function(data){
-					console.log('공지 삭제 성공');
 				},
 				complete: function(data){
 					location.reload();
 				},
 				error: function(data, status,error){
-					console.log('공지 삭제 실패!');
+					alert('공지 삭제에 실패했습니다. 잠시후 다시 시도해주세요:(');
 				}
 			});
 		}
@@ -342,7 +342,7 @@
 						var viewCount = value.viewCount;
 
 						if(pin != 1) pin = 'onclick="setPin(' + value.id + ');">상단고정';
-						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해재';
+						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해제';
 
 						
 						if (viewCount == null || totalStudent == 0) viewCount = '0';
@@ -388,11 +388,9 @@
 				}
 			},
 			error: function(data, status,error){
-				alert('playlist 검색 실패! ');
+				alert('공지 검색에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}	
 		});
-	
-		console.log();
 	}
 	
 </script>

@@ -95,6 +95,9 @@
 				});
 				lastIdx = data.length;
 				getAllNotices(data.length);
+			},
+			error: function(error){
+				alert('상단고정된 공지를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -152,7 +155,7 @@
 				}
 			},
 			error: function(data, status,error){
-				alert('공지 가져오기 실패!');
+				alert('공지 리스트를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -193,7 +196,7 @@
 					});
 				},
 				error: function(data, status,error){
-					alert('공지 가져오기 실패!');
+					
 				}
 			});
 	}
@@ -260,11 +263,9 @@ function search(event) {
 				}
 			},
 			error: function(data, status,error){
-				alert('공지 검색 실패! ');
+				alert('공지 검색에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}	
 		});
-	
-		console.log();
 	}
 	
 </script>

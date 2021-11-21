@@ -69,7 +69,7 @@ public class LoginController {
 	private String clientSecret;
 	
 	private String loginMode = "";
-	private String redirectURL = "http://localhost:8080/myapp/login/oauth2callback";
+	private String redirectURL = "https://learntube.kr/login/oauth2callback";
 	// http://localhost:8080/myapp/login/oauth2callback // https://learntube.kr/login/oauth2callback
 	
 	private String entryCode = null;
@@ -78,7 +78,6 @@ public class LoginController {
 	public MemberVO loginVO;
 	
 	
-	//(jw)
 	@RequestMapping(value="/enroll" , method = RequestMethod.GET)
 	public String enroll(Model model) {
 		//takes.setStudentID(loginvo.getId());
@@ -263,8 +262,6 @@ public class LoginController {
 		else return 1;
 	}
 	
-	
-	
 	@RequestMapping(value = "/login/revoketoken") //토큰 무효화
 	public Map<String, String> revokeToken(@RequestParam(value = "token") String token) throws JsonProcessingException {
 
@@ -286,45 +283,4 @@ public class LoginController {
 		System.out.println("logged out!");
 		return "redirect:/login/signin";
 	}
-	
-	
-	
-	/*
-	@ResponseBody
-	@RequestMapping(value = "/deleteMember", method = RequestMethod.POST)
-	public void deleteMember(@RequestParam(value = "deleteOpt") String opt, HttpSession session) {
-		MemberVO vo = new MemberVO();
-		vo.setId((Integer)session.getAttribute("userID"));
-		if(loginMode.equals("tea")) vo.setMode("lms_instructor");
-		else vo.setMode("lms_student");
-		
-		선생님의 경우 
-		1. lms_instructor 삭제
-		case1. 기존 데이터 유지
-			2. foreign_key 되어있는곳 null
-			lms_class, playlist instructor=null
-		
-		case2. 기존 데이터 전체 삭제
-			lms_class 직접 삭제
-				- class 삭제시 아래 자동 삭제됨
-					- attendance 삭제 -> attendanceCheck 자동삭제
-					- classContent 삭제 -> playlist 삭제?!
-					- playlist 삭제 -> video, videoCheck, playlistCheck 자동 삭제
-					- notice 삭제 -> noticeCheck 삭제
-		
-		- 사용중이지 않은 playlist삭제!
-		
-		if(memberService.deleteMember(vo) != 0) {
-			System.out.println("회원 삭제 완료!");
-			if(opt == "all") {
-				
-			}
-			else {
-				
-			}
-		}
-		else
-			System.out.println("회원 삭제 실패!");
-	}*/
-	
 }

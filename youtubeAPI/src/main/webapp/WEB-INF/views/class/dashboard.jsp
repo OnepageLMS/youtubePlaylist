@@ -88,7 +88,7 @@ function getAllClass(act, order){
 								forPublished = data;
 							},
 							error : function() {
-								alert("error");
+								alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 							}
 						});
 						
@@ -101,7 +101,7 @@ function getAllClass(act, order){
 								forAll = data;
 							},
 							error : function() {
-								alert("error");
+								alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 							}
 						});
 						
@@ -141,7 +141,6 @@ function getAllClass(act, order){
 										+ '<div class="col-12">'
 											+ '<div class="mb-3 progress">'
 							                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + width + '%;">' + forPublished + ' / ' + forAll + ' 차시 공개</div>'
-									            // published 1인 컨텐츠 개수, 전체 컨텐츠 개수   
 							                + '</div>'
 										+ '</div>'
 									+ '</div>'
@@ -191,7 +190,7 @@ function getAllClass(act, order){
 		}
 	});
 }
-function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함수 (처음 페이지 로딩될때만 사용)위와 중복 제거하기
+function getAllMyClass(){
 	var i=0;
 	var active, inactive;
 	
@@ -240,7 +239,7 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 							forPublished = data;
 						},
 						error : function() {
-							alert("error");
+							alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 						}
 					});
 					
@@ -253,7 +252,7 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 							forAll = data;
 						},
 						error : function() {
-							alert("error");
+							alert('학습현황 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 						}
 					});
 					
@@ -300,7 +299,6 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 														+ '<div class="col-12">'
 															+ '<div class="mb-3 progress">'
 											                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + width + '%;">' + forPublished + ' / ' + forAll + '  차시 공개</div>'
-													            // published 1인 컨텐츠 개수, 전체 컨텐츠 개수   
 											                + '</div>'
 														+ '</div>'
 													+ '</div>'
@@ -539,7 +537,6 @@ function submitDeleteClassroom(){
 					},
 				datatype: 'json',
 				success: function(data){
-					//console.log('나에게만 강의실 삭제 성공');
 				},
 				complete: function(data){
 					alert('나에게만 강의실 삭제가 완료되었습니다!');
@@ -559,7 +556,6 @@ function submitDeleteClassroom(){
 				data: {'id' : $('#setClassID').val()},
 				datatype: 'json',
 				success: function(data){
-					//console.log('강의실 데이터 전체 삭제 성공');
 				},
 				complete: function(data){
 					alert('강의실 삭제가 완료되었습니다!');
