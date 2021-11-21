@@ -161,12 +161,6 @@ public class PlaylistController {
 		
 		return "player";
 	}
-	
-	// (jw) 2021/08/16 : 일단 access Token 을 사용해야하니 이건 여기에 냅두고 그 이후에는 Controller 에서 처리하도록 
-	@RequestMapping(value = "/searchLms", method = RequestMethod.GET)
-	public String searchLms(Model model, String keyword) {													
-		return "search";
-	}
 
 }
 

@@ -77,7 +77,6 @@
 									
 									if (result != null){
 										$.each(result, function(index, element) {	
-				                           	//var date=moment(element.date).format('YYYY-MM-DD');
 				                           	var allday = false;
 				                           	if(element.allday == 1) allday = true;
 				                           	
@@ -109,7 +108,7 @@
 							console.log('change date 성공!');
 						},
 						error: function(data, status,error){
-							alert('일정 수정 실패<br>새로고침 후 재시도 해주세요!');
+							alert('일정 수정 실패<br>잠시후 다시 시도 해주세요:(');
 						}
 					});	
 				 },
@@ -179,7 +178,7 @@
 				$('#addEventModal').modal('hide');
 			},
 			error: function(data, status,error){
-				alert('일정 생성 실패<br>새로고침 후 재시도 해주세요!');
+				alert('일정 생성 실패<br>잠시후 다시 시도 해주세요:(');
 			}
 		});
 	}
@@ -208,7 +207,7 @@
 				
 			},
 			error: function(data, status,error){
-				alert('일정 수정 실패<br>새로고침 후 재시도 해주세요!');
+				alert('일정 수정 실패<br>잠시후 다시 시도 해주세요:(');
 			}
 		});
 		
@@ -225,7 +224,7 @@
 				  arg.event.remove();
 			  },
 			  error : function(xhr, status, error){
-				  alert('일정 삭제 실패<br>새로고침 후 재시도 해주세요!');
+				  alert('일정 삭제 실패<br>잠시후 다시 시도 해주세요:(');
 			  }
 			});
 		}

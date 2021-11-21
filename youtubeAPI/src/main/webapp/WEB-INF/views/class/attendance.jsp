@@ -100,14 +100,14 @@ $(document).ready(function(){
 				element.innerHTML = '' ;
 				
 				if(daysCount[j][i] == "출석"){
-					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x status" + (j+1)+'' + (i+1) + "' status='checkAttend' style='color:dodgerblue'></i>";
 				}
 				if(daysCount[j][i] == "미확인")
-					element.innerHTML +=  "<i class='pe-7s-less fa-2x' style=' color:grey'> </i>";
+					element.innerHTML +=  "<i class='pe-7s-less fa-2x status" + (j+1)+'' + (i+1) + "' status='checkNon' style='color:grey'></i>";
 				if(daysCount[j][i] == "결석")
-					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x status" + (j+1)+'' + (i+1) + "'status='checkAbsent' style='color:red'></i>";
 				if(daysCount[j][i] == "지각")
-					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:orange'> </i>";
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x status" + (j+1)+'' + (i+1) + "'status='checkLate' style='color:orange'></i>";
 					
 				if(watchCount[j][i] >= 0)
 					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = watchCount[j][i] + "%";
@@ -339,13 +339,17 @@ function setAttendanceModal(daySeq){
 	$('.displayDaySeq').text(daySeq + '차시');
 }
 
+function setLMSAttendanceModal(seq, name, email, first, second){
+	$('input[type=checkbox]').prop('checked', false);
+	var num = first+''+second;
+	var status = $('.status' + num).attr('status');
 
-function setAttendanceModal(daySeq){
-	$('#inputSeq').val(daySeq);
-	$('.displayDaySeq').text(daySeq + '차시');
+	$('.' + status).prop('checked', true);
+	$('#inputSeq').val(seq);
+	$('.displayDaySeqLMS').text((seq+1) + '차시 ');
+	$('.displayStudentInfo').text(name + ' ' + email);
+	
 }
-
-
 
 function updateAttendance(days){
 	//attendanceID를 알아야한다. 그러기 위해서는 classID, days, instructorID가 필요하다.
@@ -536,7 +540,8 @@ function setInnerAttendance(takes, idx) {
 				                                                	
 				                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 				                                                		<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
-																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
+																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" 
+																					 onclick="setAttendanceModal(${i});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>
@@ -556,7 +561,8 @@ function setInnerAttendance(takes, idx) {
 			                                            	 	</td>
 			                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 			                                                	<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
-			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" onclick="setAttendanceModal(${i});" 
+			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}"
+			                                                						onclick="setLMSAttendanceModal(${i}, '${takes[status.index].name}', '${takes[status.index].email}', ${status.index+1}, ${status2.index+1});" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>
@@ -740,7 +746,7 @@ function setInnerAttendance(takes, idx) {
 				    <div class="modal-dialog modal-sm" role="document">
 				        <div class="modal-content">
 				            <div class="modal-header">
-				                <h5 class="modal-title" id="editInnerAttendanceLabel"><span class="text-primary"></span> LMS 출결관리 </h5>
+				                <h5 class="modal-title" id="editInnerAttendanceLabel"><span class="text-primary displayDaySeqLMS"></span> LMS 출결관리 </h5>
 				                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				                    <span aria-hidden="true">×</span>
 				                </button>
@@ -748,36 +754,35 @@ function setInnerAttendance(takes, idx) {
 				
 					       <div class="modal-body">  
 					       		<input name="seq" id="inputSeq" type="hidden">
+					       		<div class="card-title displayStudentInfo"></div>
 				          		<div class="main-card">
 									<div class="card-body">
 					              		<form class="needs-validation" id="forInnerAttend" method="post" novalidate>
-					                        
 					                        <div class="position-relative row form-group">
-					                        
 					                        	<div class="col-sm-1 mt-2">
 					                           		<div class="position-relative form-check">
-					                               		<input id="forAttendance${status.index+1}${status2.index+1}" name="pinAttend" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                               		<input id="forAttendance${status.index+1}${status2.index+1}" name="pinAttend" type="checkbox" class="form-check-input checkAttend" onclick="clickCheck(this)">
 					                                 </div>
 					                             </div>
 					                             <label for="checkbox2" class="col-sm-10 col-form-label">출석</label>
 					                             
 					                       		<div class="col-sm-1 mt-2">
 					                           		<div class="position-relative form-check">
-					                               		<input id="forLate${status.index+1}${status2.index+1}" name="pinLate" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                               		<input id="forLate${status.index+1}${status2.index+1}" name="pinLate" type="checkbox" class="form-check-input checkLate" onclick="clickCheck(this)">
 					                                 </div>
 					                             </div>
 					                             <label for="checkbox2" class="col-sm-10 col-form-label">지각</label>
 					                             
 					                             <div class="col-sm-1 mt-2">
 					                           		<div class="position-relative form-check">
-					                               		<input id="forAbsent${status.index+1}${status2.index+1}" name="pinAbsent" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                               		<input id="forAbsent${status.index+1}${status2.index+1}" name="pinAbsent" type="checkbox" class="form-check-input checkAbsent" onclick="clickCheck(this)">
 					                                 </div>
 					                             </div>
 					                             <label for="checkbox2" class="col-sm-10 col-form-label">결석</label>
 					                             
 					                             <div class="col-sm-1 mt-2">
 					                           		<div class="position-relative form-check">
-					                               		<input id="forNoCheck${status.index+1}${status2.index+1}" name="pinNoCheck" type="checkbox" class="form-check-input" onclick="clickCheck(this)">
+					                               		<input id="forNoCheck${status.index+1}${status2.index+1}" name="pinNoCheck" type="checkbox" class="form-check-input checkNon" onclick="clickCheck(this)">
 					                                 </div>
 					                             </div>
 					                             <label for="checkbox2" class="col-sm-10 col-form-label">미확인</label>

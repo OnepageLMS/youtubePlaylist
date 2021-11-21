@@ -31,7 +31,8 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-strong-bliss", "
 $(document).ready(function(){
 	getAllMyClass();
 });
-function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하나씩만 가져올 때 사용 (여기에도 학생진행현황 표시 추가!!)
+
+function getAllClass(act, order){	
 	var i = 0;
 	var classType;
 	if(act == 1) classType = '.activeClassList';
