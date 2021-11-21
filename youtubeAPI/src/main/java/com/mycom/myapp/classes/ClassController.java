@@ -60,7 +60,7 @@ public class ClassController {
 	@RequestMapping(value = "/test/dashboard",  method = {RequestMethod.GET,RequestMethod.POST})	//개발 test용.
 	public String dashboard_Test(Model model, HttpSession session) {
 		MemberVO checkvo = new MemberVO();
-		checkvo.setEmail("test@handong.edu");
+		checkvo.setEmail("21800702@handong.edu");
 		checkvo.setMode("lms_instructor");
 		MemberVO vo = memberService.getMember(checkvo);
 		vo.setMode("lms_instructor");

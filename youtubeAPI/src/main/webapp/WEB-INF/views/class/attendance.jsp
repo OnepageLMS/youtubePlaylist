@@ -40,23 +40,20 @@
 </style>
 
 <script>
-//var takes;
-//var takesStudentNum = 0;
 
 $(document).ready(function(){
 	$.ajax({
 		'url' : "${pageContext.request.contextPath}/attendance/getfileName",
 		'processData' : false,
 		'contentType' : false,
-		'data' : "hello", //classID보내야함 
 		'type' : 'POST',
 		success: function(data){
 			
 			for(var i=0; i<data.length; i++){
-				//console.log(data[i].fileName);
 				if(data[i] != null){
 					var element = document.getElementById('download'+(i+1));
 					element.innerHTML = '<a href="${pageContext.request.contextPath}/resources/csv/' +data[i].fileName+ '">Download</a>';
+					console.log('경로 : ${pageContext.request.contextPath}/resources/csv/' +data[i].fileName);
 				}
 				else continue;
 			}
@@ -77,7 +74,6 @@ $(document).ready(function(){
 		async : false,
 		success : function(data) {
 			daysCount = data;
-			//console.log(daysCount[0][5]);
 		},
 		error : function() {
 			alert("error");
@@ -96,33 +92,13 @@ $(document).ready(function(){
 		}
 	});
 			
-	//alert("takesNum : " +${takesNum} + " classDays.length " + classDays);
 	for(var j=0; j<${takesNum}; j++){
 		for(var i=0; i<classDays; i++){
 			
-			
-			/*$.ajax({ 
-				url : "${pageContext.request.contextPath}/attendance/forInnerWatched",
-				type : "post",
-				async : false,
-				data : {	
-					classContentID : weekContents[i].id,
-					studentID : takes[j].studentID
-				},
-				success : function(data) {
-					innerWatched = data;
-					console.log(innerWatched);
-				},
-				error : function() {
-					alert("error");
-				}
-			})*/
-			
 			if(daysCount[j][i] != null ){ //playlist없이 description만 올림
-				//alert("성공이다 ");
 				var element = document.getElementsByClassName('innerAttend'+(j+1)+""+(i+1))[0];
 				element.innerHTML = '' ;
-				//console.log(" ?? " + daysCount[j][i] + " i " + i + " , j " + j);
+				
 				if(daysCount[j][i] == "출석"){
 					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
 				}
@@ -167,7 +143,7 @@ $(document).ready(function(){
 			'data' : formData,
 			'type' : 'POST',
 			success: function(data){
-				console.log( " success ? " );
+				console.log( " success ? " +  data[0].length);
 				for(var i=0; i<data[0].length; i++){
 					var rows = document.getElementById("stuName").getElementsByTagName("span");
 					for( var r=0; r<rows.length; r++ ){
@@ -175,7 +151,6 @@ $(document).ready(function(){
 						console.log("name  :  " +name.innerText);
 						  if(name.innerText == data[0][i]){
 						  		$(".takeZoom"+seq).eq(r).val(1).prop("selected", true); 
-						  		//document.getElementsByClassName('takeZoom'+seq).style.background = "blue";
 						  		break;
 						  }
 						  
@@ -191,8 +166,6 @@ $(document).ready(function(){
 						  if(name.innerText == data[1][i]){
 							  	console.log(data[1][0]);
 						  		$(".takeZoom"+seq).eq(r).val(3).prop("selected", true);
-						  		//document.getElementsByClassName('takeZoom'+seq).style.background = "red";
-						  		//console.log("seq : " + seq + " r :" + r);
 						  		break;
 						  }
 						  
@@ -316,7 +289,6 @@ function showAllStudentInfo(){
 	    							+ '<p class="col-sm-12 mb-0" style="text-align:center">신청일자  ' + value.regDate + '</p>'
 									<%-- <fmt:parseDate var="dateString" value="${person.regDate }" pattern="yyyyMMddHHmmss" />
 									<fmt:formatDate value="${dateString }" pattern="yyyy-MM-dd"/> --%>
-									/* + '<p class="col-sm-12 mb-0" style="text-align:center">' + value.regDate + ' </p>' */
 								+ '</div>'
 								+ '</div>' 
     						+ '<div class="col-sm-3"><button class="btn btn-transition btn-primary" onclick="allowStudent('+ value.studentID + ');"> 추가 </button>'
@@ -420,7 +392,6 @@ function updateAttendance(days){
 		},
 		success : function(data){
 			attendanceID = data;
-			console.log("attendance : " + data);
 			
 			$.ajax({ 
 				'type' : "post",
@@ -464,15 +435,6 @@ var innerAttendList = new Array();
 function setInnerAttendance(takes, idx) { 
 	console.log("takes : " + takes + " idx : " + idx);
 	var seq = $("#inputSeq").val(); 	
-	/*var innerAttend = new Array();
-	
-	 	innerAttend.push($("#inputSeq").val());
-		innerAttend.push($("#forAttendance"+takes+""+idx).is(':checked'));
-		innerAttend.push($("#forLate"+takes+""+idx).is(':checked'));
-		innerAttend.push($("#forAbsent"+takes+""+idx).is(':checked'));
-		innerAttend.push($("#forNoCheck"+takes+""+idx).is(':checked'));
-
-	innerAttendList.push(innerAttend);*/
 	
 	var element = document.getElementsByClassName('innerAttend'+takes+""+idx)[0];
 	element.innerHTML = '';

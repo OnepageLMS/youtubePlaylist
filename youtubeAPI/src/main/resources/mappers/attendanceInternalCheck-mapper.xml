@@ -28,6 +28,16 @@
 		where lms_attendanceInternalCheck.classID=#{classID} and lms_attendanceInternalCheck.days=#{days} and studentID=#{studentID} and lms_classContent.published=1 and internal="출석"
 	</select>
 	
+	<select id="getAttendanceInCheckExisted" resultType="attendanceInternal">
+		select * from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where lms_attendanceInternalCheck.classID=#{classID} and lms_attendanceInternalCheck.days=#{days} and studentID=#{studentID} and lms_classContent.published=1
+	</select>
+	
+	<select id="getAttendanceInCheckExistedNum" resultType="int">
+		select count(*) from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where lms_attendanceInternalCheck.classID=#{classID} and lms_attendanceInternalCheck.days=#{days} and studentID=#{studentID} and lms_classContent.published=1
+	</select>
+	
 	<select id="getAttendanceInCheckByID" resultType="attendanceInternal">
 		select * from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
 		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1 and internal="출석"
@@ -36,6 +46,16 @@
 	<select id="getAttendanceInCheckByIDNum" resultType="int">
 		select count(*) from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
 		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1 and internal="출석"
+	</select>
+	
+	<select id="getAttendanceInCheckByIDExisted" resultType="attendanceInternal">
+		select * from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1 
+	</select>
+	
+	<select id="getAttendanceInCheckByIDExistedNum" resultType="int">
+		select count(*) from lms_attendanceInternalCheck join lms_classContent on lms_attendanceInternalCheck.classContentID = lms_classContent.id
+		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1 
 	</select>
 	
 </mapper>

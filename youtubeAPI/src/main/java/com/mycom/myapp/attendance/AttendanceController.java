@@ -138,6 +138,7 @@ public class AttendanceController {
 			if(attendanceCheckService.getAttendanceCheckList(attendanceID).size() != 0 || attendanceCheckService.getAttendanceCheckList(attendanceID).get(j) != null)
 				//System.out.println("attendanceID" + attendanceID+ " j : " + j + " external : " + attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+			//가져올 때 student table과 join해서 학생 이름순으로 가져올 수 있도록 하기 
 				//System.out.println(fileList.get(i));
 			}
 			file.add(fileList);
@@ -183,24 +184,24 @@ public class AttendanceController {
 				//System.out.println("aivo에 들어가는 건데 " + classID + ", studnetID :" +studentID+ " days : " +j);
 				aivo.setStudentID(studentID);
 				aivo.setDays(j);
-				
-				if(classContentService.getDaySeq(ccvo) == 0) {
-					continue;
+				if(classContentService.getDaySeq(ccvo) == 0) { //차시 내 수업이 없을 때 
+					break;
 				}
 				
-				else if(classContentService.getDaySeq(ccvo) == attendanceInCheckService.getAttendanceInCheckNum(aivo)) {
+				else if(classContentService.getDaySeq(ccvo) == attendanceInCheckService.getAttendanceInCheckExistedNum(aivo)) {
+					//차시 내 수업의 개수와, 학생이 시청한 수업의 개수가 같은 경우 	
 					for(int k=0; k<classContentService.getDaySeq(ccvo); k++) {
 						
-						if(attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal().equals("결석")) {
+						if(attendanceInCheckService.getAttendanceInCheckExisted(aivo).get(k).getInternal().equals("결석")) {		
 							stuOne.add("결석");
 							break;
 						}
-						else if(attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal().equals("지각")) {
+						else if(attendanceInCheckService.getAttendanceInCheckExisted(aivo).get(k).getInternal().equals("지각")) {
 							if(k == classContentService.getDaySeq(ccvo)-1)
 								stuOne.add("지각");
 							continue;
 						}
-						else if(attendanceInCheckService.getAttendanceInCheck(aivo).get(k).getInternal().equals("출석")) {
+						else if(attendanceInCheckService.getAttendanceInCheckExisted(aivo).get(k).getInternal().equals("출석")) {
 							if(k == classContentService.getDaySeq(ccvo)-1)
 								stuOne.add("출석");
 							continue;
@@ -217,37 +218,35 @@ public class AttendanceController {
 					//이때 무조건 출석이 아니라, db에 있는 값들을 가져와야지,, 
 				}
 				else {
+					//차시 내 수업의 개수와, 학생이 시청한 수업의 개수가 다른 경우 
 					//classContent테이블의 마감 시간과, 현재시간 
 					//마감시간 > 현재시간 : 미확인
 					//마감시간 < 현재시간 : 결석
 					//마감시간이 하나라도 지난 것이 있으면 결석처리,, 
+					Date now = new Date();
 					
 					for(int k=0; k<classContentService.getDaySeq(ccvo); k++) {
 						if(classInsContentService.getEndDate(ccvo).get(k) == null) { //마감기한이 설정되어있지 않는 경우 
-							System.out.println("1번 미확인 ");
+							//System.out.println("1번 미확인 ");
 							stuOne.add("미확인");
 							break;
 						}
 						
 						String endString = classInsContentService.getEndDate(ccvo).get(k).getEndDate();
 						endString =  endString.replace("T", " "); 
-						//System.out.println("endDate : " +endString);
 						Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endString);
-						Date now = new Date();
-						//System.out.println("endDate : " + endDate + " , now : " + now);
 						
 						int result = endDate.compareTo(now); 
 						
-						if(result == 0 || result == 1) {
+						if(result != 0 && result != 1) {
+							stuOne.add("결석");
+							break;
+						}
+						else {
 							if(k == classInsContentService.getEndDate(ccvo).size()-1) {
-								System.out.println("2번 미확인 ");
 								stuOne.add("미확인");
 							}
 							continue;
-						}
-						else {
-							stuOne.add("결석");
-							break;
 						}
 					}
 				}
@@ -276,11 +275,10 @@ public class AttendanceController {
 	    
 	    for(int i=0; i<takes.size(); i++) {
 	    	List<Integer> stuOne = new ArrayList<Integer>();
+	    	int studentID = takes.get(i).getStudentID();
 	    	
 	    	for(int j=0; j<dayNum; j++) {
 				ccvo.setDays(j);
-				
-				int studentID = takes.get(i).getStudentID();
 				pcvo.setStudentID(studentID);
 				pcvo.setDays(j);
 				 
@@ -321,6 +319,7 @@ public class AttendanceController {
 
 		List<List<String>> csvList = new ArrayList<List<String>>();
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/csv/"); //이런식으로 경로지정을 하는건지 ?? 
+		System.out.println("realPath : " + realPath);
 		// realPath는 무슨 경로인가 ?  --> tomcat서버에서 어디에 저장이 되는지 
 		// 저장이 되면 realPath에 저장이 된다는거 아닌가 ? --> 맞아 
 		// 그럼 /myapp/resource/csv/,,, 이 주소와 다른점이 무엇일까 ? --> 이거는 내 WORkspace 
@@ -341,8 +340,6 @@ public class AttendanceController {
 		avo.setClassID(classID);
 		avo.setDays(days);
 		avo.setFileName(saveName);
-		//System.out.println("classID : " + classID + " days :" + days + " saveName : " + saveName);
-		//System.out.println(attendanceService.getAttendanceList(classID));
 		if(attendanceService.getAttendanceID(avo) != null) { //이미 해당 날짜에 대한 파일이 업로드되어있으면 업데이트 
 			System.out.println("already updated!");
 			attendanceService.updateAttendance(avo);
@@ -370,27 +367,11 @@ public class AttendanceController {
 			//int idx = 0;
 			while((line=br.readLine()) != null) { 
 				List<String> aLine = new ArrayList<String>();
-                String[] lineArr = line.split(","); // 파일의 한 줄을 ,로 나누어 배열에 저장 후 리스트로 변환한다.
-                //System.out.println(lineArr[idx]);
-               /*if(idx > 3) {
-                	//System.out.println("lineArr: "  + Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12))); 
-                	csvStartH.add( Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12)));
-                	csvEndH.add( Integer.parseInt(lineArr[3].charAt(11) + "" + lineArr[3].charAt(12)));
-                	
-                	csvStartM.add( Integer.parseInt(lineArr[2].charAt(14) + "" + lineArr[2].charAt(15)));
-                	csvEndM.add( Integer.parseInt(lineArr[3].charAt(14) + "" + lineArr[3].charAt(15)));
-                
-                }*/
-                //System.out.println("lineArr: "  + Integer.parseInt(lineArr[2].charAt(11) + "" + lineArr[2].charAt(12))); 
-               // csvStartH.add()
+                String[] lineArr = line.split(","); 
                 aLine = Arrays.asList(lineArr);
                 csvList.add(aLine);
                 //idx++;
 			}
-			
-			/*for(int i=0; i<csvStartH.size(); i++) {
-				System.out.println(csvStartH.get(i));
-			}*/
 			
             List<Stu_TakesVO> data = stu_takesService.getStudentTakes(classID); //db에서 학생정보 가져오기 classID임의로 넣음 
             List<String> stuNameArr = new ArrayList<String>();
@@ -570,7 +551,7 @@ public class AttendanceController {
 				aivo.setClassContentID(classInsContentService.getClassContentID(ccvo).get(j).getId());
 				aivo.setInternal(finalInternalTakes[i]);
 				System.out.println("classContentID : " + classInsContentService.getClassContentID(ccvo).get(j).getId());
-				if(attendanceInCheckService.getAttendanceInCheckByID(aivo) == null) {
+				if(attendanceInCheckService.getAttendanceInCheckByIDExisted(aivo) == null) {
 					attendanceInCheckService.insertAttendanceInCheck(aivo);
 					System.out.println("선생님이 inner 삽입  ");
 				}
@@ -582,12 +563,13 @@ public class AttendanceController {
 		}
 		
 		for(int i=0; i<finalTakes.length; i++) {//external에 대해서 
-			
+			System.out.println("finalTakes: " + finalTakes[i]);
 			AttendanceCheckVO avo = new AttendanceCheckVO();
 			avo.setAttendanceID(attendanceID);
 			avo.setExternal(finalTakes[i]);
 			avo.setStudentID(takes.get(i).getStudentID()); //takes테이블에서 바로가져오도록 하면 될듯 
- 
+			
+			System.out.println("업데이트될 때 보여지는 studentID : " + takes.get(i).getStudentID() + "classID : " + classID + " days : " + days + "attendanceID : " + attendanceID);
 			if(attendanceCheckService.getAttendanceCheck(avo) != null) {
 				attendanceCheckService.updateExAttendanceCheck(avo);
 			}

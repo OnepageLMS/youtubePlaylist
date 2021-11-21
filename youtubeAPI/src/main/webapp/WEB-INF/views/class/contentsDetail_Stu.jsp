@@ -481,7 +481,7 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 			item.style.background = "#F0F0F0";
 		}
 		
-		if(ori_playlistID !== undefined){
+		if(ori_playlistID !== 0){
 			$.ajax({ 
 				'type' : "post",
 				'url' : "${pageContext.request.contextPath}/student/class/changevideo",
@@ -742,9 +742,9 @@ function onPlayerStateChange(event) {
 				alert(" changewatch playlist 추가 실패! : ", err.responseText );
 				
 			},
-			complete : function(){
+			/*complete : function(){
 				location.reload();
-			}
+			}*/
 		});
 		
 		
