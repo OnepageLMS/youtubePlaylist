@@ -76,15 +76,16 @@ public class LoginController {
 	private ClassesVO classInfo;
 	private Stu_TakesVO takes;
 	public MemberVO loginVO;
-	private int newlyEnrolled=0;
 	
 	
 	//(jw)
-	@RequestMapping(value="/enroll" , method = RequestMethod.POST)
+	@RequestMapping(value="/enroll" , method = RequestMethod.GET)
 	public String enroll(Model model) {
 		//takes.setStudentID(loginvo.getId());
 		takes.setClassName(classInfo.getClassName()); 
 		takes.setStatus("pending");
+		System.out.println("로그인된 상태에서 강의실 신청! " + takes.getStudentID());
+		
 		if(takesService.insertStudent(takes) == 1) {
 			System.out.println("학생 등록 요청 완료~!");
 			model.addAttribute("enroll", 1); // 
@@ -107,10 +108,7 @@ public class LoginController {
 		loginMode = mode;
 		System.out.println(request);
 		
-		if(request == null) request = 0; // request가 null인 상태로 두면 에러나서 필요함. 
-		else {
-			newlyEnrolled = 1;
-		}		
+		if(request == null) request = 0; // request가 null인 상태로 두면 에러나서 필요함. 		
 		
 		String url = "https://accounts.google.com/o/oauth2/v2/auth?client_id=" + clientID + "&"
 							+ "redirect_uri=" + redirectURL + "&response_type=code&scope=email%20profile%20openid&access_type=offline";
@@ -216,14 +214,7 @@ public class LoginController {
 				}
 				else System.out.println("학생 등록 요청 실패");
 			}
-			else {
-				newlyEnrolled = 2;  // 만약 이미 강의신청을 한 경우, 이미 신청 되었습니다 메시지를 위한 플래그 
-			}
 		}
-		
-		redirectAttributes.addAttribute("newlyEnrolled", newlyEnrolled);
-		
-		if(newlyEnrolled == 1) newlyEnrolled = 0;
 		
 		return returnURL;
 	}
@@ -232,7 +223,6 @@ public class LoginController {
 	public String entry(@PathVariable String entryCode, Model model, HttpSession session) { //@SessionAttribute("login") MemberVO loginVO) { //
 		this.entryCode = entryCode;
 		
-		newlyEnrolled = 1; // 신규 강의신청 확인용 
 		takes = new Stu_TakesVO();
 		
 		classInfo = classesService.getClassByEntryCode(entryCode);
