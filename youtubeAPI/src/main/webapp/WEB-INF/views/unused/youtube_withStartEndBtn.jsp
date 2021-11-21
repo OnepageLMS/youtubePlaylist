@@ -366,6 +366,9 @@ $(document).ready(function(){
 		
 		
 		function viewVideo2(id, title, duration, index) { // 유튜브 검색결과에서 영상 아이디를 가지고 플레이어 띄우기
+			console.log("여기 확인 => " + id, title, duration, index);
+
+			// (21/10/06) youtube 플레이어 띄워주고, 제목을 띄워준다. 이 부분은 <div> 태그로 감싸져서 초록색이 나타나게 되는데 영상구간 설정 부분까지 태그로 감싸지게 해야 전체가 초록색 배경이 될듯. 
 			var $div = $('<div id="playerBox" class="text-center" > <div class="iframe-container" id="player" style="width: 100%;"></div>'
 					+ '<form class>'
 						+ '<div id="player_info">' 
@@ -388,7 +391,13 @@ $(document).ready(function(){
 						+ '<div class="position-relative row form-group" style="display: block;">'
 						+ '<div id="warning1"> </div>'
 								+ '<div class="setTimeRange input-group col d-flex justify-content-between align-items-center mb-3">'
-									+ '<div class="col"> <div id="slider-range"></div> </div>'
+									+ '<div class="col-2 input-group-prepend pl-0">'
+										//+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>'
+									+ '</div>'
+									+ '<div class="col-8"> <div id="slider-range"></div> </div>'
+									+ '<div class="col-2 input-group-append">' 
+										//+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>'
+									+ '</div>' 
 								+ '</div>'
 								
 								+ '</div>'
@@ -687,6 +696,93 @@ $(document).ready(function(){
 			var end_ss = $('#end_ss').val(); 
 			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
 			player.seekTo(end_time);
+		}
+		// 현재 재생위치를 시작,끝 시간에 지정 
+		function getCurrentPlayTime(e, obj) {
+
+			e.preventDefault();
+			
+
+			// Getter for slider handles 
+			/* var values = $( "#slider-range" ).slider( "option", "values" );
+			
+			console.log(values[0]);
+			console.log("check here!" , d); */
+
+			values = $( "#slider-range" ).slider( "option", "values" );
+			
+			console.log("check initial values =>> ", values[0], values[1]);
+			console.log("시작 시간 인지 끝 시간 확인 해보기 ==> " + $(obj).text());
+			
+			/* d = values[0];
+			d1 = values[1]; */
+			
+
+			// 시작 버튼 클릭시: 
+			if($(obj).text() == "시작"){
+				d = Number(player.getCurrentTime());
+				d = parseFloat(d).toFixed(2);
+
+				console.log("시작 버튼이 클릭되었습니다 확인 ! ==> " + d);
+
+				var h = Math.floor(d / 3600);
+				var m = Math.floor(d % 3600 / 60);
+				var s = parseFloat(d % 3600 % 60).toFixed(2);
+
+				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+					return;
+				} 
+				
+				// Setter 
+				$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
+				start_hour = h;
+				start_min = m;
+				start_sec = s;
+
+				$( "#amount" ).val( "시작: " + h + "시" + m  + "분" + s + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+				
+				start_time = parseFloat(d).toFixed(2);
+				start_time *= 1.00;
+			}
+			
+			// 끝 버튼 클릭시: 
+			else if($(obj).text() == "끝"){
+				d1 = Number(player.getCurrentTime());
+				d1 = parseFloat(d1).toFixed(2);
+
+				console.log("끝버튼이 클릭되었습니다 확인 ! ==> " + d1);
+
+				var h = Math.floor(d1 / 3600);
+				var m = Math.floor(d1 % 3600 / 60);
+				var s = parseFloat(d1 % 3600 % 60).toFixed(2);
+
+				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+					return false;
+				}
+
+				// Setter 
+				$( "#slider-range" ).slider( "option", "values", [ values[0], d1 ] );
+				end_hour = h;
+				end_min = m;
+				end_sec = s;
+				
+				$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + s + "초"  );
+
+				end_time = parseFloat(d1).toFixed(2);
+				end_time *= 1.00;
+			}
+
+			return false;
+
+			/* document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
+			document.getElementById("start_hh").value = h;/* .toFixed(2);
+			document.getElementById("start_mm").value = m; .toFixed(2); */
+
+			//(jw) start_s, end_s는 addToCart에서 사용되는것 가튼데 잠시 커멘트 처리 (21/10/04)
+			//document.getElementById("start_s").value = parseFloat(d).toFixed(2);
+			//start_time = parseFloat(d).toFixed(2);
+			//start_time *= 1.00;
+			//console.log("check:", typeof start_time);
 		}
 		
 		// 재생 구간 유효성 검사: 

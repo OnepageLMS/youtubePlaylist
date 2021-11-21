@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,15 +36,14 @@ public class VideoController {
 	private PlaylistService playlistService;
 	@Autowired
 	private ClassesService classService;
-	@Autowired
-	private MemberService memberService;
 	
-	private int instructorID = 1;
+	private int instructorID = 0;
 	
 	//video 수정/재생page 이동
 	@RequestMapping(value = "/detail", method = RequestMethod.POST)
 	public String getSelectedPlaylistVideos(@RequestParam("playlistID") int playlistID, 
-			@RequestParam("videoID") int videoID, Model model){
+			@RequestParam("videoID") int videoID, Model model, HttpSession session){
+		instructorID = (Integer)session.getAttribute("userID");
 		model.addAttribute("videoID", videoID);	//가장 먼저 플레이어에 띄워지는 비디오
 		model.addAttribute("playlistID", playlistID);
 		
@@ -76,18 +76,6 @@ public class VideoController {
 	@RequestMapping(value = "/updateVideo", method = {RequestMethod.GET, RequestMethod.POST}) 
 	@ResponseBody
 	public String updateVideo(@ModelAttribute VideoVO videoVo) {
-		
-		System.out.println("================\n");
-		System.out.println(videoVo.getPlaylistID());
-		System.out.println(videoVo.getDuration());
-		System.out.println(videoVo.getEnd_s());
-		System.out.println(videoVo.getId());
-		System.out.println(videoVo.getmaxLength());
-		System.out.println(videoVo.getNewTitle());
-		System.out.println(videoVo.getStart_s());
-		System.out.println(videoVo.getTag());
-		System.out.println("================\n");
-		
 		if(videoService.updateVideo(videoVo) != 0) {
 			System.out.println("video 수정 성공!");
 	
@@ -190,31 +178,27 @@ public class VideoController {
 //		        System.out.println(obj.get("playlistID") + " : " + obj.get("title"));
 //		  }
 		String result= "";
-		// 1차 
 		List<Map<String,Object>> resultMap = new ArrayList<Map<String,Object>>();
 	    resultMap = JSONArray.fromObject(paramData);
 
 	    for (Map<String, Object> map : resultMap) {
-	    	VideoVO vo = new VideoVO();
-	        System.out.println(map.get("playlistID") + " : " + map.get("duration"));
+
 	        int playlistID = Integer.parseInt(map.get("playlistID").toString());
 	        String youtubeID = map.get("youtubeID").toString();
-	        
-	        // (jw) 썸네일 추가를 위한 코드 (21/08/11) 
  			int count = videoService.getTotalCount(playlistID);
  			
+ 			PlaylistVO pvo = new PlaylistVO();
+ 			pvo.setId(playlistID);
+ 			pvo.setThumbnailID(youtubeID);
+ 			
  			if(count == 0) {
- 				if(playlistService.updateThumbnailID(playlistID) != 0) {
+ 				if(playlistService.setThumbnailID(pvo) != 0) 
  					System.out.println("playlist 썸네일 추가 성공! ");
- 					
- 				}
- 				else {
+ 				else 
  					System.out.println("playlist 썸네일 추가 실패! ");
- 				}
  			}
  			
  			float duration = Float.parseFloat(map.get("duration")+"");
- 			//System.out.println("역ㅁ샤ㅐㅜ"+ duration);
  			
  			String tag;
  			if(map.get("tag")==null) {
@@ -223,11 +207,8 @@ public class VideoController {
  			else {
  				tag = map.get("tag").toString();
  			}
- 			//System.out.println(map.get("tag").toString());
- 			
- 			//새로운 video의 seq 구하기
+	    	VideoVO vo = new VideoVO();
 			vo.setSeq(videoService.getTotalCount(playlistID)); 
-			//playlistID 설정하기 
 			vo.setPlaylistID(playlistID);
 			vo.setTitle(map.get("title").toString());
 			vo.setNewTitle(map.get("newTitle").toString()); 
@@ -236,16 +217,11 @@ public class VideoController {
 			vo.setYoutubeID(map.get("youtubeID").toString());
 			vo.setmaxLength(Double.parseDouble(map.get("maxLength").toString()));
 			vo.setDuration(duration); 
-			//vo.setDuration(Float.parseFloat(map.get("duration")));
 			vo.setTag(tag);
 			 
-			
 			// 동영상 DB에 추가하기 
 			if(videoService.insertVideo(vo) != 0) {
-				System.out.println("title: " + vo.getTitle());
-				//System.out.println(playlistID + "번 비디오 추가 성공!! ");
 				System.out.println(map.get("title").toString() + " 비디오 추가 성공!! ");
-				// 플레이리스트 동영상 개수, 모든 동영상 총길이 업데이트 예원이가 만든 함수  
 				updateTotalVideo(playlistID);
 				updateTotalLength(playlistID);
 				
@@ -294,7 +270,6 @@ public class VideoController {
 				System.out.println("title: " + vo.getTitle());
 				System.out.println(playlistID + "번 비디오 추가 성공!! ");
 				
-				// 플레이리스트 동영상 개수, 모든 동영상 총길이 업데이트 예원이가 만든 함수  
 				updateTotalVideo(playlistID);
 				updateTotalLength(playlistID);
 				

@@ -8,6 +8,7 @@ public interface PlaylistService {
 	public int addPlaylist(PlaylistVO vo);
 	public int updatePlaylist(PlaylistVO vo);
 	public int updateThumbnailID(int playlistID);
+	public int setThumbnailID(PlaylistVO vo);
 	public int changeSeq(PlaylistVO vo);
 	public int deletePlaylist(int id);
 	public PlaylistVO getPlaylist(int id);

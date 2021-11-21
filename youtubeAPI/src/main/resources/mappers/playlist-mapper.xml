@@ -12,11 +12,17 @@
 		where id=#{id}
 	</update>
 	
-	<insert id="updateThumbnailID">
+	<update id="updateThumbnailID">
 		update lms_playlist 
 		set thumbnailID= (SELECT youtubeID FROM lms_video WHERE playlistID=#{playlistID} order by seq limit 1) 
 		where id=#{playlistID}
-	</insert>
+	</update>
+	
+	<update id="setThumbnailID">
+		update lms_playlist 
+		set thumbnailID=#{thumbnailID}
+		where id=#{id}
+	</update>
 	
 	<delete id="deletePlaylist">
 		delete from lms_playlist where id=#{id}
