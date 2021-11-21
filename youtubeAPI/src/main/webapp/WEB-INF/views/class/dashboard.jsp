@@ -186,7 +186,7 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 			}
 		}, 
 		error: function(data, status,error){
-			console.log('ajax dashboard 가져오기 실패!');
+			alert('내 강의실 목록을 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
 }
@@ -408,7 +408,7 @@ function editClassroomFn(id){	//set the edit classroom modal
 			$('#editClassTag').val(data.tag);
 		},
 		error: function(data, status,error){
-			console.log('ajax class 정보 가져오기 실패!');
+			alert('내 강의실 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
 }
@@ -423,11 +423,12 @@ function submitAddClassroom(){
 		data: $('#formAddClassroom').serialize(),
 		datatype: 'json',
 		success: function(data){
-			if(data == 'ok')
-				alert('강의실 생성 완료되었습니다:)');
+			if(data == 'ok'){
+				location.reload();
+			}
 			else
 				alert('강의실 생성에 실패했습니다. 잠시후 다시 시도해주세요:(');
-			location.reload();
+			
 		},
 		error: function(data, status,error){
 			alert('강의실 생성에 실패했습니다. 잠시후 다시 시도해주세요:(');
@@ -435,6 +436,7 @@ function submitAddClassroom(){
 		}
 	});	
 }
+
 function submitEditClassroom(){
 	if ($('#editClassName').val() == '') return false;
 	var check;
@@ -497,17 +499,19 @@ function submitEditClassroom(){
 		data: $('#formEditClassroom').serialize(),
 		datatype: 'json',
 		success: function(data){
-			if(data == 'ok')
-				console.log('강의실 수정 완료!');
+			if(data == 'ok'){
+				alert('강의실 수정이 완료되었습니다.');
+			}
 			else
-				console.log('강의실 수정 실패! ');
+				alert('강의실 수정에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			location.reload();
 		},
 		error: function(data, status,error){
-			console.log('강의실 수정 실패! ');
+			alert('강의실 수정에 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
 }
+
 function submitDeleteClassroom(){
 	var opt = $('input[name=deleteOpt]:checked').val();
 	if(opt == null){
@@ -541,7 +545,7 @@ function submitDeleteClassroom(){
 					location.reload();
 				},
 				error: function(data, status,error){
-					console.log('강의실 수정 실패! ');
+					alert('강의실 삭제에 실패했습니다. 잠시후 다시 시도해주세요:(');
 				}
 			});
 		}
@@ -561,7 +565,7 @@ function submitDeleteClassroom(){
 					location.reload();
 				},
 				error: function(data, status,error){
-					alert('강의실 데이터 전체 삭제 실패! ');
+					alert('강의실 삭제에 실패했습니다. 잠시후 다시 시도해주세요:(');
 				}
 			});
 		}
@@ -602,6 +606,7 @@ function submitShareClassroom(){
 		}
 	});
 }
+
 function publishNotice(){
 	if($('#inputTitle').val() == '' ) return false;
 	if ($('#inputImportant').val() == 'on')
@@ -614,13 +619,12 @@ function publishNotice(){
 		data: $('#inputNoticeForm').serialize(),
 		datatype: 'json',
 		success: function(data){
-			console.log('공지 생성 성공');
 		},
 		complete: function(data){
 			location.reload();
 		},
 		error: function(data, status,error){
-			console.log('공지 생성 실패!');
+			alert('공지 작성에 실패했습니다. 잠시후 다시 시도해주세요:(');
 		}
 	});
 }

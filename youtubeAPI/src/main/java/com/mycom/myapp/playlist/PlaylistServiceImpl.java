@@ -28,6 +28,11 @@ public class PlaylistServiceImpl implements PlaylistService{
 	}
 	
 	@Override
+	public int setThumbnailID(PlaylistVO vo) {
+		return playlistDAO.setThumbnailID(vo);
+	}
+	
+	@Override
 	public int changeSeq(PlaylistVO vo) {
 		return playlistDAO.changeSeq(vo);
 	}
