@@ -62,8 +62,6 @@
 				},
 				initialView : 'dayGridMonth', 
 				navLinks : true, 
-				//editable : true,
-				//selectable : true, 
 				nowIndicator : true, 
 				dayMaxEvents : true, 
 				locale : 'ko',
@@ -89,6 +87,9 @@
 					                       }); 
 									}
 									callback(events); 
+								},
+								error: function(error){
+									alert('강의실 일정 목록을 가져오는데 실패했습니다. 잠시후 다시 시도 해주세요:(');
 								}
 						});
 				},
