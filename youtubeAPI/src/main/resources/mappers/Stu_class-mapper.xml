@@ -6,7 +6,7 @@
 	</select>
 	
 	<select id="getClassInfo" resultType="classes">
-		select className, description, I.name 
+		select className, description, I.name, C.regDate
 		from lms_class C join lms_instructor I on C.instructorID = I.id 
 		where C.id=#{id}
 	</select>
