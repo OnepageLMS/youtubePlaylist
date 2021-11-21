@@ -32,6 +32,7 @@ var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-strong-bliss", "
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 
 $(document).ready(function(){
+	$('.activeClassList').append('<p class="col text-center">강의실 목록을 가져오는중입니다. 잠시만 기다려주세요:)</p>');
 	getAllMyClass();	
 	
 	$(".close").on( "click", function() {
