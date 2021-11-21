@@ -548,6 +548,8 @@ function search(event) {
 													</div>	                             
 
 												</form>	
+												
+												
 											</div>
 										</div>
 										<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>
