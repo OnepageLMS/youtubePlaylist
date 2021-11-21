@@ -58,4 +58,9 @@
 		where classContentID=#{classContentID} and studentID=#{studentID} and lms_classContent.published=1 
 	</select>
 	
+	<delete id="deleteInternalAttendanceCheck">
+		delete from lms_attendanceInternalCheck
+		WHERE classID = #{classID} and studentID=#{studentID}
+	</delete>
+	
 </mapper>

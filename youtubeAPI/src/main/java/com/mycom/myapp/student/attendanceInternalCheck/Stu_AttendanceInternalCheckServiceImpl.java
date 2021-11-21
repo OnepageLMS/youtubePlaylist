@@ -70,5 +70,10 @@ public class Stu_AttendanceInternalCheckServiceImpl implements Stu_AttendanceInt
 	public int getAttendanceInCheckByIDExistedNum(AttendanceInternalCheckVO vo) {
 		return stuAttendanceCheckDAO.getAttendanceInCheckByIDExistedNum(vo);
 	}
+
+	@Override
+	public int deleteInternalAttendanceCheck(Stu_TakesVO vo) {
+		return stuAttendanceCheckDAO.deleteInternalAttendanceCheck(vo);
+	}
 	
 }

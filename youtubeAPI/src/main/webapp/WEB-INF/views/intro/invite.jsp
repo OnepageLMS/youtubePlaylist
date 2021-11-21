@@ -30,9 +30,7 @@
 <script>
 	window.onload = function(){
 		var flag = ${alreadyEnrolled};
-		console.log("flag값 확인" + flag);
 		if(flag == 1){
-			console.log("check => ${login.mode }");
 			alert("이미 수강신청하였거나 참여중인 공간입니다.");
 			if('${login.mode }' === 'lms_teacher') window.location.replace('${pageContext.request.contextPath}/dashboard');
 			else window.location.replace('${pageContext.request.contextPath}/student/class/dashboard');

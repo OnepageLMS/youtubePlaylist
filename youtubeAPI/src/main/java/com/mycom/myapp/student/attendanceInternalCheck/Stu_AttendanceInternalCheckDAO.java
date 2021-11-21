@@ -70,4 +70,8 @@ public class Stu_AttendanceInternalCheckDAO {
 		int result = sqlSession.selectOne("AttendanceInternalCheck.getAttendanceInCheckByIDExistedNum", vo);
 		return result;
 	}
+	
+	public int deleteInternalAttendanceCheck(Stu_TakesVO vo) {
+		return sqlSession.delete("AttendanceInternalCheck.deleteInternalAttendanceCheck", vo);
+	}
 }

@@ -18,4 +18,6 @@ public interface Stu_AttendanceInternalCheckService {
 	public int getAttendanceInCheckByIDNum(AttendanceInternalCheckVO vo);
 	public AttendanceInternalCheckVO getAttendanceInCheckByIDExisted(AttendanceInternalCheckVO vo);
 	public int getAttendanceInCheckByIDExistedNum(AttendanceInternalCheckVO vo);
+	public int deleteInternalAttendanceCheck(Stu_TakesVO vo);
+	
 }

@@ -185,14 +185,16 @@ $(document).ready(function(){
 			var view = viewCount[i];
 			//var title = titleList[i].replace("'", "’");//.replace("/\"/g","\\\""); //titleList[i].replace("'", "&apos;").replace("\"","&quot;");
 			var title = titleList[i];
-			title = title.replace("'", "’");
-			title = title.replace("\"", "’");
+			title = title.replace("'", "‘");
+			title = title.replace('"', '‘');
 
 			for(let j =0; j < titleList[i].length; j++){
-				if(titleList[j] === "'" || titleList[j] === "\""){
-					title = title.replace("’");
+				if(titleList[j] === "'" || titleList[j] === '"'){
+					title = title.replace('‘');
+					console.log(titleList[i]); 
 				}
 			}
+			
 			
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + id + '/0.jpg" class="" '
 				+ 'style="width: 100%; height:100%; max-width: 300px; max-height: 200px; min-width: 100px; min-height: 80px; cursor: pointer;" onclick="changeCardSize(); viewPlayer(); viewVideo2(\'' + id.toString()
@@ -235,7 +237,7 @@ $(document).ready(function(){
 	}
 	function setAPIResultToList(i, id, title, date) { // search api사용할 때 데이터 저장
 		idList[i] = id;
-		titleList[i] = title.replace("'", "\\'").replace("\"","\\\""); // 싱글따옴표나 슬래시 들어갼것 따로 처리해줘야함!
+		titleList[i] = title; //.replace("'", "\\'").replace("\"","\\\""); // 싱글따옴표나 슬래시 들어갼것 따로 처리해줘야함!
 		dateList[i] = date.substring(0, 10);
 	}
 	function setAPIResultDetails(i, view, like, dislike, duration) { // videos api 사용할 때 디테일 데이터 저장 
@@ -314,7 +316,7 @@ $(document).ready(function(){
 						+ '<div id="player_info">' 
 							+ '<div class="position-relative form-group col row">'
 							+ '<label class="col-lg-2 col-form-label">영상제목 설정</label>'
-							+ '<div class="col-lg-10"> <input type="text" id="setTitle" class="form-control" value=\''+ `\${title}` +'\'></div>'
+							+ '<div class="col-lg-10"> <input type="text" id="setTitle" class="form-control" value=\''+ title +'\'></div>'
 						+ '</div>'
 						+ '<div class="position-relative form-group row col">' 
 							+ '<label class="col-lg-2 col-form-label">태그</label>' 

@@ -112,7 +112,7 @@ function getPlaylistInfo(playlistID){
 						
 			$('.playlistInfo').append(html);
 		}, error:function(request,status,error){
-			console.log(request);
+			alert("에러가 발생하였습니다. 관리자에게 문의해주세요. ");
 		}
 	});
 }
