@@ -319,11 +319,7 @@ public class AttendanceController {
 
 		List<List<String>> csvList = new ArrayList<List<String>>();
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/csv/"); //이런식으로 경로지정을 하는건지 ?? 
-		System.out.println("realPath : " + realPath);
-		// realPath는 무슨 경로인가 ?  --> tomcat서버에서 어디에 저장이 되는지 
-		// 저장이 되면 realPath에 저장이 된다는거 아닌가 ? --> 맞아 
-		// 그럼 /myapp/resource/csv/,,, 이 주소와 다른점이 무엇일까 ? --> 이거는 내 WORkspace 
-		// 그럼 저장된 파일은 어떻게 불러오는거지,, --> 	파일 이름을 Db에  저장을 해두고 나중에 그 링크로 이동할 수 있도록 
+		System.out.println("realPath : " + realPath); 
 		File saveFile = new File(realPath, saveName);
 		
 		try{

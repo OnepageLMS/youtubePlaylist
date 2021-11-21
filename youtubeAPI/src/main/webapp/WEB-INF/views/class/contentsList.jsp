@@ -42,7 +42,6 @@
 var addContentFormOpened = 0;
 
 $(document).ready(function(){
-	//controller에서 attribute에 저장한 것들 각자 데이터에 따라 함수에서 처리하기
 	setAllContents();	//선택한 class의 학습 컨텐츠 리스트 띄우기
 	
 	$(document).on("click", "button[name='selectPlaylistBtn']", function () {	//playlist 선택버튼 눌렀을 때 modal창 오픈	
@@ -89,7 +88,7 @@ $(document).ready(function(){
 				//$('#selectPlaylistModal').modal('show');
 				
 			}, error:function(request,status,error){
-				console.log(error);
+				console.log("playlist를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요 :(");
 			}
 		});
 	})
@@ -154,107 +153,24 @@ function search(event) {
 }
 
 	
-	/*
-		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
-		var allFileContents = JSON.parse('${allFileContents}'); 
-		var realAllContents =  JSON.parse('${realAllContents}');
-		for(var i=0; i<realAllContents.length; i++){
-			
-			if(realAllContents[i].playlistID == null){
-				console.log("i : "  + i);
-			}
-				
-			var day = allContents[i].days;
-			if(allContents[i].endDate == null)
-				var endDate = '설정되지 않음';
-			
-			else {
-				var endDate = allContents[i].endDate.split(":");
-				endDate = endDate[0] + ":" + endDate[1];	
-			}
-
-			// (jw) endDate 넘겨주기 
-			localStorage.setItem("endDate", endDate);
-			var publishedCheck = allContents[i].published;
-			//var nameCheck = "'#exampleCustomCheckbox"+(i+1)+"'";
-			var nameCheck = "#exampleCustomCheckbox"+(i+1);
-			if(publishedCheck == 1){
-				console.log("1이야" + nameCheck);
-				//document.getElementById("'" +nameCheck+ "'").setAttribute("checked", true);
-				//eval("'"+optionElement[0]+"'")
-				//document.getElementById("exampleCustomCheckbox1").setAttribute("checked", true);
-				//document.getElementById(nameCheck).setAttribute("checked", true);
-				//$("'" +nameCheck+ "'").prop("checked", true);
-				$("#exampleCustomCheckbox"+(i+1)).prop("checked", true);
-				$('.className:eq('+(i+1)+')').prop("checked", true);
-				console.log("#exampleCustomCheckbox"+(i+1));
-			}
-			else{
-				console.log("0이야");
-				//document.getElementById(nameCheck).setAttribute("checked", false);
-				//document.getElementById(eval("'"+nameCheck+"'")).setAttribute("checked", false);
-				$(nameCheck).prop("checked", false);
-			}
-			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
-			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
-			var onclickDetail = "location.href='../contentDetail/" + allContents[i].id + "/" + i + "'";
-			var thumbnail = '<img src="https://img.youtube.com/vi/' + allContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
-			var published;
-
-			if (allContents[i].published == true)
-				published = '<input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" class="custom-control-input" class="switch" name="published">'
-								+ '<label class="custom-control-label" for="switch">공개</label>';
-			else
-				published = '<label class="custom-control-label" for="switch">비공개</label>'
-								+ '<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" class="custom-control-input" class="switch" name="published" >';
-								
-			content.append(
-				"<div class='content list-group-item-action list-group-item' seq='" + allContents[i].daySeq + "'>"
-						+ '<div class="row col d-flex justify-content-between align-items-center">'
-							+ '<div class="index col-sm-1 text-center">' + (allContents[i].daySeq+1) + '. </div>'
-							+ '<div class="videoIcon col-sm-1">' + '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; color:dodgerblue;"></i>' + '</div>' //playlist인지 url인지에 따라 다르게
-							+ "<div class='col-sm-7 row' onclick=" + onclickDetail + " style='cursor: pointer;'>"
-									+ "<div class='col-sm-6 card-title inline-block' style=' height: 50%; font-size: 15px'>"
-										+ allContents[i].title + "  [" +convertTotalLength(allContents[i].totalVideoLength) + "]"
-									+ '</div>'		
-									+ '<div class="col-sm-12">'
-										+ '<div class="contentInfoBorder"></div>'
-										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
-										+ '<div class="contentInfoBorder"></div>'
-										+ '<p class="endDate contentInfo"">' + '마감일: ' + endDate + '</p>'
-									+ '</div>' 
-							+ '</div>'
-							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
-									//+ published
-								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch">'
-									+ '<input type="checkbox" id="exampleCustomCheckbox' +(i+1) + '" class="custom-control-input exampleCustomCheckbox" onchange="YNCheck(this, '+allContents[i].id +')">'
-										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +(i+1) + '"></label>'
-								+ '</div>'
-							//+ '</div>'
-						+ '</div>'
-				+ "</div>");
-
-	}*/
-	
 	function setAllContents(){
-		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
+		var allContents = JSON.parse('${allContents}'); 
 		var allFileContents = JSON.parse('${allFileContents}'); 
 		var realAllContents =  JSON.parse('${realAllContents}');
 		
 		var videoLength;
 		var symbol;
 		
-		$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+		$.ajax({ 
 			url : "${pageContext.request.contextPath}/member/forHowManyTakes",
 			type : "post",
 			async : false,
 			data: {id : '${classInfo.id}'},
 			success : function(data) {
-				howmanyTake = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
-				console.log(howmanyTake);
+				howmanyTake = data; 
 			},
 			error : function() {
-				alert("error");
+				console.log("수강중인 학생 수를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요 :(");
 			}
 		})
 		
@@ -273,7 +189,7 @@ function search(event) {
 						videoLength = " [" + convertTotalLength(allContents[j].totalVideoLength) + "] ";
 				}
 				
-				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+				$.ajax({ 
 					url : "${pageContext.request.contextPath}/class/forHowManyWatch",
 					type : "post",
 					async : false,
@@ -282,13 +198,9 @@ function search(event) {
 					},
 					success : function(data) {
 						howmanyCount = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
-						console.log(howmanyCount);
-						//console.log("forVideoInfo? : " + watch[0].id);
-						//console.log("forVideoInfo? : " + watch[1].watched);
-						//console.log("forVideoInfo? : " + watch[2].watched);
 					},
 					error : function() {
-						alert("error");
+						console.log("학습한 학생 수를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요 :(");
 					}
 				});
 				
@@ -311,45 +223,10 @@ function search(event) {
 				endDate = '<p class="endDate contentInfo"">마감일: ' + endDate + '</p>';
 			}
 
-			// (jw) endDate 넘겨주기 
+			
 			localStorage.setItem("endDate", endDate);
-			/*var publishedCheck = realAllContents[i].published;
-			//var nameCheck = "'#exampleCustomCheckbox"+(i+1)+"'";
-			var nameCheck = "exampleCustomCheckbox" +(i+1);
-			if(publishedCheck == 1){
-				console.log("1이야");
-				//$("input[name=" + nameCheck + "]").prop("checked", true);
-					//$("input[type=checkbox][name=exampleCustomCheckbox]").eq("0").prop("checked", true);
-				console.log(i + " " + Number(i));
-				
-				//var videoCheck = '$("input[type=checkbox][name=exampleCustomCheckbox]").eq(' + i + ').prop("checked", true)';
-				//console.log(videoCheck);
-				//videoCheck;
-				var num = parseInt(i);
-				$("input[type=checkbox][name=exampleCustomCheckbox]").eq(num).prop("checked", true);
-				$("input[type=checkbox][name=exampleCustomCheckbox]").eq(0).prop("checked", true);
-				
-				
-				//$("input:checkbox[id='"+ nameCheck +"']").prop("checked", true); 
-				var num2 = i+1;
-				console.log("num2 : " + num2);
-				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", true);  
-				//$('#' + nameCheck).prop("checked", true);
-				//$('.exampleCustomCheckbox:eq('+ i +')').prop("checked", true);
-				console.log(nameCheck + " i " + i);
-			}
-			else{
-				console.log("0이야"+ realAllContents[i].published + " i: "+ i);
-				//document.getElementById(nameCheck).setAttribute("checked", false);
-				//document.getElementById(eval("'"+nameCheck+"'")).setAttribute("checked", false);
-				//$(nameCheck).prop("checked", false);
-				$("input:checkbox[id='exampleCustomCheckbox"+i+"']").prop("checked", false);  
-			}*/
-			//var content = $('.week:eq(' + week + ')').children('.day:eq(' + day+ ')');  
 			
-			
-			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록 
-			//var onclickDetail = "location.href='../contentDetail/" + realAllContents[i].id + "/" + i + "'";
+			var content = $('.list-group:eq(' + day + ')'); //한번에 contents를 가져왔기 때문에, 각 content를 해당 주차별 차시 순서에 맞게 나타나도록
 			var goDetail = 'moveToContentDetail(' + realAllContents[i].id + ',' + i + ');';
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + realAllContents[i].thumbnailID + '/0.jpg" class="inline videoPic">';
 			var published;
@@ -357,7 +234,6 @@ function search(event) {
 			if (realAllContents[i].published == true){
 				published = '<input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" class="custom-control-input" class="switch" name="published">'
 								+ '<label class="custom-control-label" for="switch">공개</label>';
-				//percentage = Math.floor(howmanyCount/howmanyTake*100) + '% 완료';
 			}
 			else{
 				published = '<label class="custom-control-label" for="switch">비공개</label>'
@@ -381,20 +257,15 @@ function search(event) {
 									+ '</div>'		
 									+ '<div class="align-items-center" style="padding: 5px 0px 0px;">'
 										+ '<div class="contentInfoBorder"></div>'
-										//+ '<p class="videoLength contentInfo"">' + convertTotalLength(allContents[i].totalVideoLength) + '</p>'
 										+ '<div class="contentInfoBorder"></div>'
 										+ endDate
 									+ '</div>' 
 							+ '</div>'
-							// playlistcheck에서 classID와 playlistID를 가진 count가져오기  / takes 테이블에서 classID같은 학생 수 
 							+ '<div class="col-sm-2 text-success">' + percentage + '</div>'
-							//+ '<div class="col-sm-2 text-center d-flex custom-control custom-switch">' 
-									//+ published
 								+ '<div class=" col-sm-2 text-center d-flex custom-control custom-switch pl-5 m-2">'
 									+ '<input type="checkbox" id="exampleCustomCheckbox'+i+'" name= "exampleCustomCheckbox" class="custom-control-input exampleCustomCheckbox pl-5 m-2" onchange="YNCheck(this, '+realAllContents[i].id +')">'
 										+ '<label class="custom-control-label" for="exampleCustomCheckbox' +i+ '"></label>'
 								+ '</div>'
-							//+ '</div>'
 						+ '</div>'
 				+ "</div>");
 			
@@ -429,8 +300,7 @@ function search(event) {
 			data : {id : id, published : published}, //id도 같이 보내야함..
 			datatype : 'json',
 			success : function(result){
-				console.log("success!");
-				//location.reload();
+				location.reload();
 			}
 		});
 
@@ -514,7 +384,6 @@ function search(event) {
 		var min = new Date().getMinutes();
 		$('.start_h').val(hour);
 		$('.start_m').val(min);
-		console.log(hour, min);
 	}
 
 	function cancelForm(){
@@ -658,7 +527,7 @@ function search(event) {
 				location.reload();
 			},
 			error : function() {
-			  	alert("updateDays error");
+			  	alert("업데이트에 실패했습니다! 잠시후 다시 시도해주세요 :(");
 			}
 		});
 	}
