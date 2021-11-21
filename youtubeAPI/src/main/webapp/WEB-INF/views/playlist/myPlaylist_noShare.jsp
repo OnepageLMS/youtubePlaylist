@@ -520,23 +520,6 @@ function search(event) {
 										<div class="card-body">						
 												<form id="searchForm" onsubmit="return search(event);" method="post">
 													<div class="card-title input-group">
-													<!-- <button class="btn btn-outline-secondary">전체</button>
-													<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>
-													<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;">
-														<button type="button" tabindex="0" class="dropdown-item">전체</button>
-														<button type="button" tabindex="1" class="dropdown-item">Playlist 이름</button>
-														<button type="button" tabindex="2" class="dropdown-item">Video 제목</button>
-														<button type="button" tabindex="3" class="dropdown-item">태그</button>
-													</div> -->
-													
-														<!-- <div class="col-sm-4 pr-0" style="display: none;"> 
-															<select id="searchType" name="searchType" class="mb-2 form-control">
-		                                                        <option value="0">전체</option>
-		                                                        <option value="0" selected>Playlist 이름</option>
-		                                                        <option value="2">Video 제목</option>
-		                                                        <option value="3">태그</option>
-		                                                	</select>              
-	                                                	</div> -->
 	                                                	<input placeholder="검색어를 입력하세요" type="hidden" id="searchType" name="searchType" class="mb-2 form-control" value="0">
 	                                                		
 	                                                	<input id="keyword" name="keyword" placeholder="검색어를 입력하세요" type="text" class="form-control">
