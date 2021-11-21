@@ -100,14 +100,14 @@ $(document).ready(function(){
 				element.innerHTML = '' ;
 				
 				if(daysCount[j][i] == "출석"){
-					element.innerHTML +=  "<i class='pe-7s-check fa-2x status" + (j+1)+'' + (i+1) + "' status='checkAttend' style='color:dodgerblue'></i>";
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style='color:dodgerblue'></i>";
 				}
 				if(daysCount[j][i] == "미확인")
-					element.innerHTML +=  "<i class='pe-7s-less fa-2x status" + (j+1)+'' + (i+1) + "' status='checkNon' style='color:grey'></i>";
+					element.innerHTML +=  "<i class='pe-7s-less fa-2x' style='color:grey'></i>";
 				if(daysCount[j][i] == "결석")
-					element.innerHTML +=  "<i class='pe-7s-check fa-2x status" + (j+1)+'' + (i+1) + "'status='checkAbsent' style='color:red'></i>";
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style='color:red'></i>";
 				if(daysCount[j][i] == "지각")
-					element.innerHTML +=  "<i class='pe-7s-check fa-2x status" + (j+1)+'' + (i+1) + "'status='checkLate' style='color:orange'></i>";
+					element.innerHTML +=  "<i class='pe-7s-check fa-2x' style='color:orange'></i>";
 					
 				if(watchCount[j][i] >= 0)
 					document.getElementsByClassName('innerAttendance'+(j+1)+""+(i+1))[0].innerText = watchCount[j][i] + "%";
@@ -339,10 +339,19 @@ function setAttendanceModal(daySeq){
 	$('.displayDaySeq').text(daySeq + '차시');
 }
 
-function setLMSAttendanceModal(seq, name, email, first, second){
+function setLMSAttendanceModal(seq, name, email, item){
+	var innerHTML = item.innerHTML;
 	$('input[type=checkbox]').prop('checked', false);
-	var num = first+''+second;
-	var status = $('.status' + num).attr('status');
+	var status;
+	
+	if(innerHTML == '<i class="pe-7s-check fa-2x" style="color:dodgerblue"></i>')
+		status = 'checkAttend';
+	else if(innerHTML == '<i class="pe-7s-check fa-2x" style="color:orange"></i>')
+		status = 'checkLate';
+	else if(innerHTML == '<i class="pe-7s-check fa-2x" style="color:red"></i>')
+		status = 'checkAbsent';
+	else
+		status = 'checkNon';
 
 	$('.' + status).prop('checked', true);
 	$('#inputSeq').val(seq);
@@ -377,11 +386,11 @@ function updateAttendance(days){
 		if($(".takeZoom"+days).eq(i).val() == 4)
 			finalTakes.push("미확인");
 		
-		if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:dodgerblue"> </i>')
+		if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style="color:dodgerblue"></i>')
 			finalInternalTakes.push("출석");
-		else if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:orange"> </i>')
+		else if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style="color:orange"></i>')
 			finalInternalTakes.push("지각");
-		else if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style=" color:red"> </i>')
+		else if($(".innerAttend"+(i+1)+""+days)[0].innerHTML == '<i class="pe-7s-check fa-2x" style="color:red"></i>')
 			finalInternalTakes.push("결석");
 		else
 			finalInternalTakes.push("미확인");
@@ -443,15 +452,15 @@ function setInnerAttendance(takes, idx) {
 	var element = document.getElementsByClassName('innerAttend'+takes+""+idx)[0];
 	element.innerHTML = '';
 	if($("#forAttendance"+takes+""+idx).is(':checked') == true){
-		element.innerHTML += "<i class='pe-7s-check fa-2x' style=' color:dodgerblue'> </i>";
+		element.innerHTML += "<i class='pe-7s-check fa-2x' style='color:dodgerblue'></i>";
 	}
 	
 	if($("#forLate"+takes+""+idx).is(':checked') == true){
-		element.innerHTML += "<i class='pe-7s-check fa-2x' style=' color:orange'> </i>";
+		element.innerHTML += "<i class='pe-7s-check fa-2x' style='color:orange'></i>";
 	}
 	
 	if($("#forAbsent"+takes+""+idx).is(':checked') == true){
-		element.innerHTML += "<i class='pe-7s-check fa-2x' style=' color:red'> </i>";
+		element.innerHTML += "<i class='pe-7s-check fa-2x' style='color:red'></i>";
 	}
 	
 	if($("#forNoCheck"+takes+""+idx).is(':checked') == true){
@@ -562,7 +571,7 @@ function setInnerAttendance(takes, idx) {
 			                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 			                                                	<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
 			                                                		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}"
-			                                                						onclick="setLMSAttendanceModal(${i}, '${takes[status.index].name}', '${takes[status.index].email}', ${status.index+1}, ${status2.index+1});" 
+			                                                						onclick="setLMSAttendanceModal(${i}, '${takes[status.index].name}', '${takes[status.index].email}', this);" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>
