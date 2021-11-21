@@ -121,27 +121,37 @@ public class AttendanceController {
 		List<AttendanceVO> id = attendanceService.getAttendanceList(classID); //해당 classID를 가진 attribute의 개수 (해당 수업에서 업로드된 파일의 개수) 
 		//List<Stu_TakesVO> takes = stu_takesService.getStudentNum(classID); //해당 classID를 가진 수업을 수강하는 학생 수 
 		List<List<String>> file = new ArrayList<List<String>>();
+		List<String> fileList = new ArrayList<String>();
+		
+		AttendanceCheckVO avo = new AttendanceCheckVO();
 		for(int i=0; i<id.size(); i++) { 
-			List<String> fileList = new ArrayList<String>();
+			
 			int attendanceID = id.get(i).getId(); // 7, 8, 9, 10
+			avo.setAttendanceID(attendanceID);
 			if(attendanceService.getAttendance(attendanceID).getFileName() == null) 
 				continue; 
 			//System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(classID).size());
 			List<AttendanceCheckVO> takes = attendanceCheckService.getAttendanceCheckList(attendanceID); 
 			//System.out.println(takes.size());
 			//System.out.println(takes.get(0).getExternal());
-			for(int j=0; j<takes.size(); j++) { //id.size()이면 안되겠는걸.. 
-				//takes.size()로하면 에러가 나는 이유, 1차시에는 3명에 대한 출석을 업데이트했는데 그 이후에 학생한명이 더 들어온다 -> 4명
-				//그럼 indexOutOfBoundsException이 발생한다.
-				//attendanceCheck에서 id가 같은 것들 가져오기 
-				//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
-			if(attendanceCheckService.getAttendanceCheckList(attendanceID).size() != 0 || attendanceCheckService.getAttendanceCheckList(attendanceID).get(j) != null)
-				//System.out.println("attendanceID" + attendanceID+ " j : " + j + " external : " + attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
-				fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
-			//가져올 때 student table과 join해서 학생 이름순으로 가져올 수 있도록 하기 
-				//System.out.println(fileList.get(i));
-			}
-			file.add(fileList);
+				for(int j=0; j<takes.size(); j++) { //id.size()이면 안되겠는걸.. 
+						//takes.size()로하면 에러가 나는 이유, 1차시에는 3명에 대한 출석을 업데이트했는데 그 이후에 학생한명이 더 들어온다 -> 4명
+						//그럼 indexOutOfBoundsException이 발생한다.
+						//attendanceCheck에서 id가 같은 것들 가져오기 
+						//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+					//takeService.getStudentTakes(classID).get(j).getStudentID() -> 이 sutentID와 attendanceCheck
+					avo.setStudentID(stu_takesService.getStudentTakes(classID).get(j).getStudentID());
+					if(attendanceCheckService.getAttendanceCheck(avo) != null) {
+						//System.out.println("attendanceID" + attendanceID+ " j : " + j + " external : " + attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+						fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+						file.add(fileList);
+					//가져올 때 student table과 join해서 학생 이름순으로 가져올 수 있도록 하기 
+						//System.out.println(fileList.get(i));
+					}
+					else {
+						fileList.add("");
+					}
+				}
 		}
 		model.addAttribute("file", file);
 		
