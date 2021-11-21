@@ -473,29 +473,20 @@ function search(event) {
 			                <div class="col-md-4 col-lg-3">
 								<div class="myPlaylist">
 									<div class="card">
-										<div class="card-body">
-										<div class="card-title input-group">
-											<div class="input-group-prepend">
+										<div class="card-body">						
 												<form id="searchForm" onsubmit="return search(event);" method="post">
-													<div class="row">
-														<div class="col-sm-4 pr-0"> 
-															<select id="searchType" name="searchType" class="mb-2 form-control">
-		                                                        <!-- <option value="0">전체</option> -->
-		                                                        <option value="0">Playlist 이름</option>
-		                                                        <!-- <option value="2">Video 제목</option>
-		                                                        <option value="3">태그</option> -->
-		                                                	</select>	                   
-	                                                	</div>
-	                                                	<div class="col-sm-6 p-0">
-	                                                		<input id="keyword" name="keyword" placeholder="" type="text" class="form-control">
-	                                                	</div>
-	                                                	<div class="input-group-append p-0 pb-2">
-															<button class="btn btn-transition btn-outline-focus p-1" type="submit"><i class="pe-7s-search"></i></button>
-														</div>
-													</div>	                             
+													<div class="card-title input-group">
+	                                                	<input placeholder="검색어를 입력하세요" type="hidden" id="searchType" name="searchType" class="mb-2 form-control" value="0">
+	                                                		
+	                                                	<input id="keyword" name="keyword" placeholder="검색어를 입력하세요" type="text" class="form-control">
+	                                                			                                                	
+	                                                	<div class="input-group-append p-0">
+															<button class="btn btn-secondary" type="submit">검색</button>
+														</div>    
+														</div>                        
+
 												</form>	
-											</div>
-										</div>
+
 										<button class="btn btn-primary col-12 mb-2" data-toggle="modal" data-target="#addPlaylistModal">+ Playlist 생성</button>
 										<div class="displayPlaylist">
 											<ul class="allPlaylist list-group"></ul>

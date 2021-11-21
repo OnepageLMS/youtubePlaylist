@@ -59,23 +59,20 @@ $(document).ready(function(){
 					var setFormat = '<div class="card">'
 										+ '<div class="card-body">'
 										+ '<div class="card-title input-group">'
-											+ '<div class="input-group-prepend">'
-												+ '<button class="btn btn-outline-secondary">전체</button>'
-												+ '<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span class="sr-only">Toggle Dropdown</span></button>'
-												+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(95px, -128px, 0px); top: 0px; left: 0px; will-change: transform;">'
-													+ '<button type="button" tabindex="-1" class="dropdown-item">Playlist 이름</button>'
-													+ '<button type="button" tabindex="0" class="dropdown-item">Video 제목</button>'
-													+ '<button type="button" tabindex="0" class="dropdown-item">태그</button>'
-												+ '</div>'
+										+ '<form id="searchForm" onsubmit="return search(event);" method="post">'
+										+ '<div class="card-title input-group">'
+											+ '<input placeholder="검색어를 입력하세요" type="hidden" id="searchType" name="searchType" class="mb-2 form-control" value="0">'
+											+ '<input id="keyword" name="keyword" placeholder="검색어를 입력하세요" type="text" class="form-control">'   	
+											+ '<div class="input-group-append p-0">'
+												+ '<button class="btn btn-secondary" type="submit">검색</button>'
 											+ '</div>'
-											+ '<input placeholder="검색어를 입력하세요" type="text" class="form-control">'
-											+ ' <div class="input-group-append">'
-												+ '<button class="btn btn-secondary">검색</button>'
-											+ '</div>'
+											+ '</div>'                   
+										+ '</form>'										
 										+ '</div>'
 										+ '<form class="selectPlaylist"><fieldset class="allPlaylist position-relative form-group"></fieldset></form>'
 									+ '</div>'
 								+ '</div>';
+								
 					$('.myPlaylist').append(setFormat);
 							
 					$.each(playlists, function( index, value ){
@@ -98,6 +95,64 @@ $(document).ready(function(){
 	})
 	
 });
+
+//tag로 playlist 및 영상 찾기:
+var keyword = null;
+
+function search(event) {
+	
+	event.preventDefault(); // avoid to execute the actual submit of the form.
+
+	/* if (keyword != null) {
+		keyword.forEach(function(element) {
+			//$("[tag*='"+ element + "']").css("background-color", "#d9edf7;"); 
+			$("[playlistName*='" + element + "']").css("background-color", "white");
+		});
+	}
+
+	keyword = $("#keyword").val();
+	keyword = keyword.replace(/ /g, '').split(",");
+
+	keyword.forEach(function(element) {
+		//$("[tag*='"+ element + "']").css("background-color", "yellow");
+		$("[playlistname*='" + element + "']").css("background-color","#d9edf7;");
+	}); */
+	
+
+	$.ajax({
+		type: 'post',
+		url: '${pageContext.request.contextPath}/playlist/searchPlaylist',
+		data: $("#searchForm").serialize(),
+		success: function(data){
+			// playlistid 를 가져오면 
+			// 그걸로 해당하는 attribute를 가지는 애들만 색갈 변경해주기 .
+			console.log('playlist 검색 완료!');
+			
+			var playlists = data.searched;
+
+			/* $.each(list, function(index, value){
+				console.log(list[index].id);
+			}); */
+			$('.allPlaylist').empty();
+			console.log(playlists);
+			
+			$.each(playlists, function( index, value ){
+				var contentHtml = '<div class="playlist list-group-item-action list-group-item position-relative form-check">'
+									+ '<label class="form-check-label pl-3">' 
+										+ '<input name="playlist" type="radio" class="form-check-input" value="' + value.id + '">'
+										+ value.playlistName + ' / ' + convertTotalLength(value.totalVideoLength) 
+									+ '</label>'
+								+ '</div>';
+
+            	$('.allPlaylist').append(contentHtml);
+			});
+		},
+		error: function(data, status,error){
+			alert('playlist 검색 실패! ');
+		}
+	});
+}
+
 	
 	/*
 		var allContents = JSON.parse('${allContents}'); //class에 해당하는 모든 contents 가져오기
