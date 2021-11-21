@@ -13,4 +13,5 @@ public interface Stu_NoticeService {
 	public int countNotice(int classID);
 	public int countNoticeCheck(NoticeVO vo);
 	public int deleteNoticeCheck(Stu_TakesVO vo);
+	public List<NoticeVO> searchNotice(NoticeVO vo);
 }

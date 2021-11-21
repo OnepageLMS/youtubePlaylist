@@ -1,5 +1,7 @@
 package com.mycom.myapp.notice;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.ClassesVO;
 import com.mycom.myapp.commons.NoticeVO;
+import com.mycom.myapp.commons.PlaylistVO;
 import com.mycom.myapp.member.MemberService;
 import com.mycom.myapp.student.classes.Stu_ClassesService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
@@ -132,5 +135,16 @@ public class NoticeController {
 			System.out.println("unset pin 실패! ");
 	}
 	
+	@RequestMapping(value = "/notice/searchNotice", method = RequestMethod.POST)
+	@ResponseBody
+	public List<NoticeVO> searchNotice(@ModelAttribute NoticeVO vo) throws UnsupportedEncodingException {
+		vo.setKeyword(URLDecoder.decode(vo.getKeyword(), "UTF-8"));
+		System.out.println(vo.getKeyword());
+		System.out.println(vo.getClassID());
+		
+		List<NoticeVO> list = noticeService.searchNotice(vo);
+		
+		return list;
+	}	
 	
 }

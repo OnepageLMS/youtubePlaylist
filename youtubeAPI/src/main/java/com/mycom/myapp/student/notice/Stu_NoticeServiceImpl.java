@@ -48,4 +48,9 @@ public class Stu_NoticeServiceImpl implements Stu_NoticeService{
 		return noticeDAO.deleteNoticeCheck(vo);
 	}
 
+	@Override
+	public List<NoticeVO> searchNotice(NoticeVO vo) {
+		return noticeDAO.searchNotice(vo);
+	}
+
 }

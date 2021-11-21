@@ -44,6 +44,10 @@
 		WHERE B.classID = #{classID} and A.studentID=#{studentID}
 	</delete>
 	
-	
+	<select id="searchNotice" resultType="notice">
+		select * from lms_notice left join (select * from lms_noticeCheck where studentID=#{studentID}) nc
+		on lms_notice.id = nc.noticeID 
+		where title LIKE CONCAT('%', #{keyword}, '%') AND lms_notice.classID=#{classID} order by lms_notice.id desc
+	</select>
 	
 </mapper>

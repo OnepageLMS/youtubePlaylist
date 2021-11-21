@@ -1,5 +1,7 @@
 package com.mycom.myapp.student.notice;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -102,5 +105,22 @@ public class Stu_NoticeController {
 				System.out.println("viewCount업데이트 성공!");
 		}
 	}
+	
+	@RequestMapping(value = "/searchNotice", method = RequestMethod.POST)
+	@ResponseBody
+	public List<NoticeVO> searchNotice(@ModelAttribute NoticeVO vo) throws UnsupportedEncodingException {
+		vo.setKeyword(URLDecoder.decode(vo.getKeyword(), "UTF-8"));
+		vo.setStudentID(studentID);
+		
+		System.out.println("st kwd ==>"+vo.getKeyword());
+		System.out.println("st classID ==>"+vo.getClassID());
+		System.out.println("st id ==>"+  vo.getStudentID());
+		
+		List<NoticeVO> list = noticeService.searchNotice(vo);
+		
+		System.out.println(list);
+		
+		return list;
+	}	
 	
 }

@@ -38,6 +38,7 @@
 <script>
 	var classID = ${classID};
 	var notices;
+	var lastIdx=0;
 	
 	$(document).ready(function(){
 		getAllPin();
@@ -92,6 +93,7 @@
 					if(index == (data.length-1))
 						$('.noticeList').append('<div class="divider col-md-10 col-xs-11 m-2"></div>');
 				});
+				lastIdx = data.length;
 				getAllNotices(data.length);
 			}
 		});
@@ -107,7 +109,7 @@
 				notices = data.notices;
 
 				if (notices.length == 0) 
-					$('.noticeList').append('게시된 공지사항이 없습니다.');
+					$('.noticeList').append('<p> 게시된 공지사항이 없습니다. </p>');
 
 				else {
 					$.each(notices, function(idx, value){
@@ -126,7 +128,7 @@
 							viewCheck = '';
 							viewdClass = 'viewClass';
 						}
-						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto">'
+						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto nonPin">'
 							+ '<div id="accordion" class="accordion-wrapper">'
 								+ '<div class="card">'
 									+ '<div id="headingOne" class="card-header p-2">'
@@ -195,6 +197,76 @@
 				}
 			});
 	}
+
+function search(event) {
+		
+		event.preventDefault(); // avoid to execute the actual submit of the form.
+
+		/* var data = $("#searchForm").serialize();
+		data : myForm.serialize().replace(/%/g, '%25'), */
+
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/student/notice/searchNotice',
+			data: $("#searchForm").serialize().replace(/%/g, '%25'),
+			success: function(data){
+
+				$('.nonPin').empty();
+				
+				if (data.length == 0) 
+					$('.noticeList').append('<p> 게시된 공지사항이 없습니다. </p>');
+
+				
+				else {
+					console.log("검색 성공!");
+					$.each(notices, function(idx, value){
+						console.log("idx ==> " + idx);
+						var index = lastIdx + idx;
+						var collapseID = "collapse" + index;
+						var regDate = value.regDate.split(" ")[0];
+						var viewCheck = value.studentID;	//학생이 읽지 않은 공지는 색상 다르게
+						var updateView = '';
+						var viewdClass = '';
+						
+						if (viewCheck == 0 || viewCheck == null) {
+							updateView = 'onclick="updateView(' + index + ',' + value.id + ');" ';
+							viewCheck = '<span class="badge badge-primary viewCheck">NEW</span>';
+						}
+						else {
+							viewCheck = '';
+							viewdClass = 'viewClass';
+						}
+						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto nonPin">'
+							+ '<div id="accordion" class="accordion-wrapper">'
+								+ '<div class="card">'
+									+ '<div id="headingOne" class="card-header p-2">'
+										+ '<button type="button" ' + updateView + 'class="text-left m-0 p-0 btn btn-link btn-block collapsed font-header" '
+														+ 'data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne">'
+											+ '<div class="row">'
+												+ '<div class="title col-md-8 text-black font-weight-bold ' + viewdClass + '" id="' + value.id + '">' + value.title + viewCheck + '</div>'
+												+ '<div class="col-md-3 col-xs-12 text-black" >게시일 ' + regDate + '</div>'
+											+ '</div>'
+										+ '</button>'
+									+ '</div>'
+									+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+										+ '<div class="card-body">' + value.content + '</div>'
+									+ '</div>'
+								+ '</div>'
+							+ '</div>'
+						+ '</div>';
+
+						$('.noticeList').append(html);
+					});
+				}
+			},
+			error: function(data, status,error){
+				alert('공지 검색 실패! ');
+			}	
+		});
+	
+		console.log();
+	}
+	
 </script>
 <body>
 	<div class="app-container app-theme-white body-tabs-shadow">
@@ -217,8 +289,11 @@
                             <div class="page-title-actions">
 	                           <div class="search-wrapper d-flex justify-content-end active">
 				                    <div class="input-holder active">
-				                        <input type="text" class="search-input" placeholder="공지 검색">
-				                        <button class="search-icon"><span></span></button>
+				                        <form id="searchForm" onsubmit="return search(event);" method="post">
+					                        <input type="text" id="keyword" name="keyword" class="search-input" placeholder="공지 검색">
+					                        <input type="hidden" name="classID" value="${classID}"/>
+					                        <button class="search-icon" type="submit"><span></span></button>
+				                      	</form>
 				                    </div>
 				                   
 								</div>

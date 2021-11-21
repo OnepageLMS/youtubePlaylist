@@ -13,6 +13,7 @@ public class NoticeVO {
 	
 	private int studentID;	//noticeCheck
 	private int view;	//noticeCheck
+	private String keyword;
 	
 	public int getId() {
 		return id;
@@ -80,6 +81,12 @@ public class NoticeVO {
 	}
 	public void setView(int view) {
 		this.view = view;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 	
 }

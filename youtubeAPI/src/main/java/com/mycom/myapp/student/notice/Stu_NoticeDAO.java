@@ -41,5 +41,9 @@ public class Stu_NoticeDAO {
 	public int deleteNoticeCheck(Stu_TakesVO vo) {
 		return sqlSession.delete("Stu_Notice.deleteNoticeCheck", vo);
 	}
+	
+	public List<NoticeVO> searchNotice(NoticeVO vo) {
+		return sqlSession.selectList("Stu_Notice.searchNotice", vo);
+	}
 
 }

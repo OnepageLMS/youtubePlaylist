@@ -39,6 +39,7 @@
 	var classID = ${classID};
 	var notices;
 	var totalStudent = 0;
+	var lastIdx = 0;
 	
 	$(document).ready(function(){
 		getClassInfo();
@@ -121,7 +122,7 @@
 					if(index == (data.length-1))
 						$('.noticeList').append('<div class="divider col-md-10 col-xs-11 m-2"></div>');
 				});
-				
+				lastIdx = data.length;
 				getAllNotices(data.length);
 			}
 		});
@@ -157,7 +158,7 @@
 							viewCount = Math.round(viewCount);
 						}
 							
-						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto ">'
+						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto nonPin">'
 									+ '<div id="accordion" class="accordion-wrapper">'
 										+ '<div class="card">'
 											+ '<div id="headingOne" class="card-header p-2">'
@@ -312,6 +313,87 @@
 			});
 		}
 	}
+
+	function search(event) {
+		
+		event.preventDefault(); // avoid to execute the actual submit of the form.
+
+		/* var data = $("#searchForm").serialize();
+		data : myForm.serialize().replace(/%/g, '%25'), */
+
+		$.ajax({
+			type: 'post',
+			url: '${pageContext.request.contextPath}/notice/searchNotice',
+			data: $("#searchForm").serialize().replace(/%/g, '%25'),
+			success: function(data){
+
+				$('.nonPin').empty();
+				
+				if (data.length == 0) 
+					$('.noticeList').append('게시된 공지사항이 없습니다.');
+				
+				else {
+					$.each(data, function( idx, value ){
+						var index = lastIdx + idx;
+						console.log(index);
+						var collapseID = "collapse" + index;
+						var regDate = value.regDate.split(" ")[0];
+						var pin = value.pin;
+						var viewCount = value.viewCount;
+
+						if(pin != 1) pin = 'onclick="setPin(' + value.id + ');">상단고정';
+						else pin = 'onclick="unsetPin(' + value.id + ');">상단고정 해재';
+
+						
+						if (viewCount == null || totalStudent == 0) viewCount = '0';
+						else {
+							viewCount = (viewCount/totalStudent) * 100;
+							viewCount = Math.round(viewCount);
+						}
+							
+						var html = '<div class="w-100 col-md-12 col-lg-10 col-auto nonPin">'
+									+ '<div id="accordion" class="accordion-wrapper">'
+										+ '<div class="card">'
+											+ '<div id="headingOne" class="card-header p-2">'
+												+ '<div class="row col">'
+													+ '<button type="button" data-toggle="collapse" data-target="#' + collapseID + '" aria-expanded="false" aria-controls="collapseOne" '
+																																	+ 'class="col-11 text-left m-0 pl-2 btn btn-link btn-block collapsed font-header">'
+													+ '<div class="row align-items-center">'
+														+ '<div class="col-md-7 text-black font-weight-bold">' + value.title + ' </div>'
+														+ '<div class="col-md-2 col-xs-12 text-success ">' + viewCount + '% 읽음</div>'
+														+ '<div class="col-md-3 col-xs-12 text-black">작성일 ' + regDate + '</div>'
+													+ '</div>'
+													+ '</button>'
+													+ '<button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="col-1 p-0 btn">'
+														+ '<i class="nav-link-icon pe-7s-more" style="font-weight: bold;"></i></a>'
+													+ '</button>'
+													+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="left-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-341px, 0px, 0px);">'
+														+ '<button type="button" class="dropdown-item"' + pin + '</button>' 
+				                                       	+ '<button type="button" class="dropdown-item" onclick="setEditNotice(' + index + ');" data-toggle="modal" data-target="#setNoticeModal">수정</button>' 
+				                                        + '<button type="button" class="dropdown-item" onclick="deleteNotice(' + value.id + ')"><p class="text-danger">삭제</p></button>'
+			                                    	+ '</div>'
+			                                    + '</div>'
+											+ '</div>'
+											+ '<div data-parent="#accordion" id="' + collapseID + '" aria-labelledby="headingOne" class="collapse" style="">'
+												+ '<div class="card-body">' 
+													+ '<div>' + value.content + '</div>'
+												+ '</div>'
+											+ '</div>'
+										+ '</div>'
+									+ '</div>'
+								+ '</div>';
+
+						$('.noticeList').append(html);
+					});
+				}
+			},
+			error: function(data, status,error){
+				alert('playlist 검색 실패! ');
+			}	
+		});
+	
+		console.log();
+	}
 	
 </script>
 <body>
@@ -340,8 +422,11 @@
                             <div class="page-title-actions">
 	                           <div class="search-wrapper d-flex justify-content-end active">
 				                    <div class="input-holder active">
-				                        <input type="text" class="search-input" placeholder="공지 검색">
-				                        <button class="search-icon"><span></span></button>
+				                    	<form id="searchForm" onsubmit="return search(event);" method="post">
+					                        <input type="text" id="keyword" name="keyword" class="search-input" placeholder="공지 검색">
+					                        <input type="hidden" name="classID" value="${classID}"/>
+					                        <button class="search-icon" type="submit"><span></span></button>
+				                      	</form>
 				                    </div>
 				                   
 								</div>
