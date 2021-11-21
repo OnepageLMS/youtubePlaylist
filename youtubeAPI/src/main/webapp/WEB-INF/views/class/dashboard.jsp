@@ -139,7 +139,7 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 										+ '<div class="widget-subheading col pb-2"><b>참여 '+howmanyTake+'명</b></div>'
 										+ '<div class="col-12">'
 											+ '<div class="mb-3 progress">'
-							                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + width + '%;">' + forPublished + ' / ' + forAll + '  공개</div>'
+							                	+ '<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: ' + width + '%;">' + forPublished + ' / ' + forAll + ' 차시 공개</div>'
 									            // published 1인 컨텐츠 개수, 전체 컨텐츠 개수   
 							                + '</div>'
 										+ '</div>'
