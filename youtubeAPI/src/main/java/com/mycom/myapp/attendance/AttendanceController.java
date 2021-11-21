@@ -141,8 +141,9 @@ public class AttendanceController {
 						//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 					//takeService.getStudentTakes(classID).get(j).getStudentID() -> 이 sutentID와 attendanceCheck
 					avo.setStudentID(stu_takesService.getStudentTakes(classID).get(j).getStudentID());
-					if(attendanceCheckService.getAttendanceCheck(avo) != null) {
+					if(attendanceCheckService.getAttendanceCheck(avo) != null && !attendanceCheckService.getAttendanceCheck(avo).getExternal().equals("") ) {
 						//System.out.println("attendanceID" + attendanceID+ " j : " + j + " external : " + attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
+						System.out.println("studentID : " + stu_takesService.getStudentTakes(classID).get(j).getStudentID());
 						fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 						file.add(fileList);
 					//가져올 때 student table과 join해서 학생 이름순으로 가져올 수 있도록 하기 
