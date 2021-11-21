@@ -59,7 +59,7 @@ $(document).ready(function(){
 			}
 		},
 		error : function(err){
-			alert("실패");
+			alert("CSV 파일을 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!:("); 
 		},
 	});
 	
@@ -76,7 +76,7 @@ $(document).ready(function(){
 			daysCount = data;
 		},
 		error : function() {
-			alert("error");
+			alert("강의실 차시 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!:("); 
 		}
 	});
 	
@@ -88,7 +88,7 @@ $(document).ready(function(){
 			watchCount = data; 
 		},
 		error : function() {
-			alert("error");
+			alert("학생 학습현황 데이터를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!:("); 
 		}
 	});
 			
@@ -127,13 +127,22 @@ $(document).ready(function(){
 		var form = $("#attendForm");
 		var seq = $("#inputSeq").val(); //지우면 안돼 
 		var formData = new FormData(form[6]);
+		var start_h =  $('#startTimeH').val();
+		var start_m = $('#startTimeM').val();
+		var end_h = $('#endTimeH').val();
+		var end_m = $('#endTimeM').val();
+
+		if(start_h == '' || start_h == null) start_h = "0";
+		if(start_m == '' || start_m == null) start_m = "0";
+		if(end_h == '' || end_h == null) end_h = "23";
+		if(end_m == '' || end_m == null) end_m = "59";
+
 		formData.append("file", $("#exampleFile")[0].files[0]);
 		formData.append("daySeq", seq-1);
-		formData.append("start_h", $('#startTimeH').val());
-		formData.append("start_m", $('#startTimeM').val());
-		formData.append("end_h", $('#endTimeH').val());
-		formData.append("end_m", $('#endTimeM').val());
-		formData.append("classID", 1); //추후에 get방식으로 받은 classID를 넘겨주기 
+		formData.append("start_h", start_h);
+		formData.append("start_m", start_m);
+		formData.append("end_h", end_h);
+		formData.append("end_m", end_m);
 		var table = document.getElementById('takes');
 		
 		$.ajax({
@@ -143,7 +152,6 @@ $(document).ready(function(){
 			'data' : formData,
 			'type' : 'POST',
 			success: function(data){
-				console.log( " success ? " +  data[0].length);
 				for(var i=0; i<data[0].length; i++){
 					var rows = document.getElementById("stuName").getElementsByTagName("span");
 					for( var r=0; r<rows.length; r++ ){
@@ -162,9 +170,7 @@ $(document).ready(function(){
 					var rows = document.getElementById("stuName").getElementsByTagName("span");
 					for( var r=0; r<rows.length; r++ ){
 						var name = rows[r];
-						 console.log("name : "  +name.innerText+ "/ " +r);
 						  if(name.innerText == data[1][i]){
-							  	console.log(data[1][0]);
 						  		$(".takeZoom"+seq).eq(r).val(3).prop("selected", true);
 						  		break;
 						  }
@@ -190,7 +196,7 @@ $(document).ready(function(){
 				 
 			},
 			error : function(err){
-				alert("실패");
+				alert("파일 업로드에 실패했습니다. 잠시후 다시 시도해주세요:(");
 			},
 		});
 	});
@@ -200,6 +206,7 @@ $(document).ready(function(){
 		$('.entryCode').hide();
 	});
 });
+  
 function displayEntryCode(){
 	$('.entryCode').show();
 }
@@ -226,7 +233,7 @@ function allowStudent(studentID){
 			showAllStudentInfo();
 		}, 
 		error:function(request,status,error){
-	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+	        alert("학생 등록에 실패했습니다. 잠시후 다시 시도해주세요!:("); 
 	    }	
 	});
 }
@@ -258,10 +265,11 @@ function deleteRequest(studentID, option){
 			console.log("삭제 성공!" + result)
 		},
 		error:function(request,status,error){
-	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+			alert("학생 등록 삭제에 실패했습니다. 잠시후 다시 시도해주세요!:("); 
 	    }	
 	});
 }
+
 function showAllStudentInfo(){
 	$.ajax({
 		'type' : 'GET',
@@ -329,7 +337,7 @@ function showAllStudentInfo(){
 			$('.list-group').append(updatedStudentList);
 		},
 		error:function(request,status,error){
-	    	alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+			alert("학생 명단을 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!:("); 
 	    }
 	});
 }
