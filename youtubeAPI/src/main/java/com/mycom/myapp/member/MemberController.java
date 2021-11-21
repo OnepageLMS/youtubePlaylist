@@ -23,6 +23,7 @@ import com.mycom.myapp.classes.ClassesService;
 import com.mycom.myapp.commons.AttendanceVO;
 import com.mycom.myapp.commons.MemberVO;
 import com.mycom.myapp.student.attendanceCheck.Stu_AttendanceCheckService;
+import com.mycom.myapp.student.attendanceInternalCheck.Stu_AttendanceInternalCheckService;
 import com.mycom.myapp.student.notice.Stu_NoticeService;
 import com.mycom.myapp.student.playlistCheck.Stu_PlaylistCheckService;
 import com.mycom.myapp.student.takes.Stu_TakesService;
@@ -46,6 +47,9 @@ public class MemberController {
 	
 	@Autowired
 	private AttendanceCheckService attendanceCheckService;
+	
+	@Autowired
+	private Stu_AttendanceInternalCheckService attendanceInternalCheckService;
 	
 	@Autowired
 	private Stu_PlaylistCheckService stu_playlistCheckService;
@@ -121,8 +125,9 @@ public class MemberController {
 //		attendanceCheckService.deleteAttendanceCheck(vo, map);
 		
 		attendanceCheckService.deleteAttendanceCheck(vo);
+		attendanceInternalCheckService.deleteInternalAttendanceCheck(vo);
 		stu_noticeService.deleteNoticeCheck(vo);
-		stu_playlistCheckService.deletePlaylist(vo);  
+		stu_playlistCheckService.deletePlaylist(vo);
 		stu_videoCheckService.deleteTime(vo);		
 	
 		if(classService.updateTotalStudent(vo.getClassID()) == 1) 
