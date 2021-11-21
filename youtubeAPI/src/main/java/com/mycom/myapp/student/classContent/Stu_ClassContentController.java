@@ -244,7 +244,6 @@ public class Stu_ClassContentController {
 	public List<VideoVO> forWatched(HttpServletRequest request, Model model, HttpSession session) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
 		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
-		//System.out.println("watch" + classContentID);
 		
 		Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 		studentID = (Integer)session.getAttribute("userID");
@@ -252,11 +251,9 @@ public class Stu_ClassContentController {
 		pcvo.setStudentID(studentID);
 		pcvo.setClassContentID(classContentID);
 		pcvo.setClassID(classID);
-		System.out.println("classCOntentID " + classContentID + " " + classContentService.getOneContent(classContentID).getDays());
 		pcvo.setDays(classContentService.getOneContent(classContentID).getDays());
 		pcvo.setTotalVideo(0);
 		
-		System.out.println("id : " + classContentID);
 		if(playlistID == 0 && playlistcheckService.getPlaylistByContentStu(pcvo) == null) {
 			if(playlistcheckService.insertNoPlaylistID(pcvo) != 0) {
 				System.out.println("changing, playlistID 0 insert success!");
@@ -282,7 +279,6 @@ public class Stu_ClassContentController {
 	    vo.setPlaylistID(playlistID);
 	    vo.setStudentID(studentID);
 	    vo.setClassContentID(classContentID);
-	    System.out.println("하나의 classContent , playlist내 영상 개수 : "+ videoService.getVideoCheckList(vo).size());
 	    return videoService.getVideoCheckList(vo);
 	} //이렇게하면 videoCheck에 없는 영상에 대한 정보는 가져오지 못함 ..... ..
 	
@@ -300,14 +296,11 @@ public class Stu_ClassContentController {
 	public List<Stu_VideoCheckVO> changeVideoOK(HttpServletRequest request, HttpSession session) {
 		double lastTime = Double.parseDouble(request.getParameter("lastTime"));
 		double timer = Double.parseDouble(request.getParameter("timer"));
-		//int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		int playlistID = Integer.parseInt(request.getParameter("playlistID"));
-		//int classID = Integer.parseInt(request.getParameter("classID"));
 		int classPlaylistID = Integer.parseInt(request.getParameter("classPlaylistID"));
 		studentID = (Integer)session.getAttribute("userID");
 		
-		//System.out.println("lastTime : " + lastTime + " ,timer " + timer + " ,videoID : " + videoID + " ,playlistID : " + playlistID + " , classID : " + classID + " classPlaylistID : " + classPlaylistID); 
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setLastTime(lastTime);
@@ -317,7 +310,7 @@ public class Stu_ClassContentController {
 		vo.setPlaylistID(playlistID);
 		vo.setClassID(classID);
 		vo.setClassContentID(classPlaylistID);
-		//System.out.println(vo.getClassID() + " " + vo.getClassPlaylistID());
+		
 		if (videoCheckService.updateTime(vo) == 0) {
 			System.out.println("데이터 업데이트 실패 -> insert할 것 ");
 			videoCheckService.insertTime(vo);
@@ -332,23 +325,16 @@ public class Stu_ClassContentController {
 	@RequestMapping(value = "/videocheck", method = RequestMethod.POST)
 	@ResponseBody
 	public double videoCheck(HttpServletRequest request, HttpSession session) {
-		//Map<Double, Double> map = new HashMap<Double, Double>();
-		//int studentID = Integer.parseInt(request.getParameter("studentID"));
 		int videoID = Integer.parseInt(request.getParameter("videoID"));
 		studentID = (Integer)session.getAttribute("userID");
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 		
 		vo.setStudentID(studentID);
 		vo.setvideoID(videoID);
-		//System.out.println("videoID : " + videoID + " ,studentID : " + studentId);
 		if (videoCheckService.getTime(vo) != null) {
-			//map.put(videoCheckService.getTime(vo).getLastTime(), videoCheckService.getTime(vo).getTimer());
-			System.out.println(videoCheckService.getTime(vo).getLastTime());
 			return videoCheckService.getTime(vo).getLastTime();
 		}
 		else {
-			System.out.println("처음입니다 !!!");
-			//map.put(-1.0, -1.0); //시간이 음수가 될 수 는 없으니
 			return -1.0;
 		}
 	}
@@ -389,39 +375,29 @@ public class Stu_ClassContentController {
 			System.out.println("changeWatch 업데이트 성공 ");
 		}
 		
-		System.out.println("이거 playlist에 영상 몇개있냐면 ,,, " + playlistService.getPlaylist(playlistID).getTotalVideo());
 		int count = 0;
 		//if(totalVideo == playlistService.getPlaylist(playlistID).getTotalVideo()) {
 			//System.out.println("이거 출력되면 안돼,,,,,,,,"); //이거 출력되면 watch 1인거 다 확인해주어야 함 
 		for(int i= 0; i<videoCheckService.getWatchedCheck(vo).size(); i++) {
 			if(videoCheckService.getWatchedCheck(vo).get(i).getWatched() == 1) {
-				System.out.println(videoCheckService.getWatchedCheck(vo).get(i).getID());
 				count++;
 			}
 			else {
-				System.out.println(videoCheckService.getWatchedCheck(vo).get(i).getID());
 				break;
 			}
 		}
 			
 		if(count == playlistService.getPlaylist(playlistID).getTotalVideo()) {
-			System.out.println("오퀴 이제 playlistCheck insert!");
+			System.out.println("playlistCheck insert!");
 			Stu_PlaylistCheckVO pcvo = new Stu_PlaylistCheckVO();
 			
 			pcvo.setStudentID(studentID);
 			pcvo.setPlaylistID(playlistID);
-			//pcvo.setVideoID(videoID);
-			//pcvo.setClassContentID(classPlaylistID);
 			pcvo.setClassContentID(classPlaylistID);
 			pcvo.setClassID(classID);
 			pcvo.setDays(classContentService.getOneContent(classPlaylistID).getDays());
 			pcvo.setTotalVideo(playlistService.getPlaylist(playlistID).getTotalVideo());
 			pcvo.setTotalWatched(0.0);
-			
-			/*AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
-			aivo.setClassContentID(classPlaylistID);
-			aivo.setStudentID(studentID);
-			aivo.setInternal("출석");*/
 			
 			if(playlistcheckService.getPlaylistByPlaylistID(pcvo) == null) {
 				if(playlistcheckService.insertPlaylist(pcvo) != 0) {
@@ -436,30 +412,19 @@ public class Stu_ClassContentController {
 					ccvo.setClassID(classID);
 					ccvo.setDays(classContentService.getOneContent(classPlaylistID).getDays()); 
 					ccvo.setPlaylistID(playlistID);
-					System.out.println("개수 ㅣ : " + classContentService.getDaySeq(ccvo));
-					System.out.println("개수 : "  + playlistcheckService.getCompletePlaylist(pcvo).size());
-					System.out.println("ccvo - classID : " + ccvo.getClassID() + " , days  " + ccvo.getDays());
-					System.out.println("pcvo - classID : " + pcvo.getClassID() + " , days  " + pcvo.getDays() + ", studentID " + pcvo.getStudentID());
 					//attendanceInCheckService에 insert한다 
 					
 					//0 이거나 1이면 출석 (endDate >= stuCompleteDate) 기간 내에 들음, 아니면 결석 
-					//System.out.println("0 이거나 1이면 출석 , 아니면 결석 " + result);
-					System.out.println("count : " + classContentService.getDaySeq(ccvo) + " , count : " + playlistcheckService.getCompletePlaylistWithDays(pcvo).size());
+				
 					if(classContentService.getDaySeq(ccvo) == playlistcheckService.getCompletePlaylistWithDays(pcvo).size()) {
-						//이거는 영상을 다 봤을 때자나,,
-						//근데 문서는 아직 안보고 영상만 다본 상태일수도 있자나 
-						System.out.println("똑같은데 ,,,");
 						AttendanceInternalCheckVO aivo = new AttendanceInternalCheckVO();
-						//aivo.setClassContentID(classPlaylistID);
 						aivo.setStudentID(studentID);
-						//aivo.setInternal("출석");
 						aivo.setClassID(classID);
-						System.out.println("studentID : " + studentID  + "classID : " + classID);
+						
 						for(int i=0; i<classContentService.getDaySeq(ccvo); i++) {
 							int classContentID = classInsContentService.getClassContentID(ccvo).get(i).getId();
 							aivo.setClassContentID(classContentID);
 							aivo.setDays(classContentService.getOneContent(classContentID).getDays());
-							System.out.println("classContentID : " + classContentID  + "days : " + classContentService.getOneContent(classContentID).getDays());
 							String endString = classContentService.getOneContent(classContentID).getEndDate();
 							String stuCompleteString = playlistcheckService.getPlaylistByPlaylistID(pcvo).getRegdate();
 							
@@ -482,9 +447,7 @@ public class Stu_ClassContentController {
 							int result = endDate.compareTo(stuCompleteDate); 
 							
 							//0 이거나 1이면 출석 (endDate >= stuCompleteDate) 기간 내에 들음, 아니면 결석 
-							System.out.println("null이 아니여 ? result는 " + result);
 							if(attendanceInCheckService.getAttendanceInCheckByID(aivo) == null) {
-								System.out.println("null이 아니여 ?2 " );
 								if(result == 0 || result == 1)
 									aivo.setInternal("출석");
 								else //-1 
@@ -508,10 +471,6 @@ public class Stu_ClassContentController {
 				System.out.println("추후에 시간 업데이트가 일어날 수 있도록 ,, ");
 			}
 		}
-		else {
-			System.out.println("아직은,,,, count : " + count  );
-		}
-		//}
 		
 		return "redirect:/"; // 이것이 ajax 성공시 파라미터로 들어가는구만!!
 	}

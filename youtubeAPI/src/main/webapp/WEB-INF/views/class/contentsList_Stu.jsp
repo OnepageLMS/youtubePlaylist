@@ -45,17 +45,13 @@
 	$(document).ready(function(){
 		var weekContents = JSON.parse('${weekContents}');
 		var allMyClass = JSON.parse('${realAllMyClass}');
-		//console.log("weekContents")
-		//playlistcheck = JSON.parse('${playlistCheck}'); //progress bar를 위해 //안쓰고있음
-		//playlist = JSON.parse('${playlist}'); //total 시간을 위해 //playlist테이블에서 직접 가져오면 되지 않을까 ?? //엥,, weekContents로 다 할 수 있는디..? 
-		//total_runningtime = 0;
 		
 		var watchCount = 0 ;
 		var lastDays;
 		var daySeq = 1;	//각 차시별 seq
 			for(var i=0; i<allMyClass.length; i++){
 				
-				$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+				$.ajax({
 					url : "${pageContext.request.contextPath}/student/class/forWatchedCount",
 					type : "post",
 					async : false,
@@ -64,11 +60,8 @@
 						classContentID : weekContents[i].id
 					},
 					success : function(data) {
-						watchCount = data; //data는 video랑 videocheck테이블 join한거 가져온다 => video랑 classContent join한거 
+						watchCount = data;  
 						console.log(data);
-						//console.log("forVideoInfo? : " + watch[0].id);
-						//console.log("forVideoInfo? : " + watch[1].watched);
-						//console.log("forVideoInfo? : " + watch[2].watched);
 					},
 					error : function() {
 						alert("error");
@@ -92,35 +85,17 @@
 				}
 				
 				var videoLength = '';
-				//var result_date = convertTotalLength(date);
-				//var endDate = date.getFullYear() + "." + (("00"+(date.getMonth()+1).toString()).slice(-2))+ "." + (("00"+(date.getDate()).toString()).slice(-2)) + " " + (("00"+(date.getHours()).toString()).slice(-2))+ ":" + (("00"+(date.getMinutes()).toString()).slice(-2));
 				
 				var symbol;
 				var totalVideo;
 	         	//var percentage ;
 				if(allMyClass[i].playlistID == 0){ //playlist없이 description만 올림 
 					symbol = '<i class="pe-7s-note2 fa-lg" > </i>'
-					//percentage = 100%;
 					totalVideo = 1;
 					videoLength = '';
 				}
 				else{ //playlist 올림 
 					symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-					/*progressbar = '<div class="col-sm-3">'
-						               	 + '<div class="widget-content">'
-						            		+'<div class="widget-content-outer">'
-						                 	+'<div class="widget-content-wrapper">'
-						                     	+'<div class="widget-content-right">'
-						                         	+'<div class="widget-numbers fsize-1 text-muted"> ' + watchCount + " / " + weekContents[i].totalVideo +  '</div>'
-						                    		+'</div>'
-						                 	+'</div>'
-						                     +'<div class="widget-progress-wrapper mt-1">'
-						                        + '<div class="progress-bar-sm progress-bar-animated-alt progress">'
-						                             +'<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="71" aria-valuemin="0" aria-valuemax="100" style="width: '+ watchCount/weekContents[i].totalVideo*100 +'%;"></div>'
-						                         +'</div>'
-						                    +'</div>'
-						            +' </div>'
-						         + '</div>';*/
 					totalVideo =  weekContents[i].totalVideo;
 					for(var j=0; j<weekContents.length; j++){
 							if(allMyClass[i].playlistID == weekContents[j].playlistID)
@@ -145,13 +120,11 @@
 	       	  	+ '</div>';
 	         
 	         
-				//var onclickDetail = "location.href='../contentDetail/" + allMyClass[i].playlistID + "/" + allMyClass[i].id + "/" +classInfo+ "/" + i +  "'";
 				var goDetail = "moveToContentDetail(" + allMyClass[i].id + "," + i + "," + allMyClass[i].playlistID + ");";
 				var content = $('.day:eq(' + day + ')');
 				
 				content.append(
 						 "<div class='content list-group-item-action list-group-item' seq='" + daySeq + "'>"
-								//+ '<div class="row col d-flex justify-content-between align-items-center">'
 								+ '<div class="row col d-flex justify-content-between align-items-center">'
 									+ '<div class="row col-sm-2">'
 										+ '<div class="index col-6 pt-1">' + daySeq + '. </div>'
@@ -170,9 +143,6 @@
 									
 									+ '</div>'
 									+ progressbar
-                                      /* + '<div class="mb-3 progress">'
-                                   		+ '<div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">1/2</div>'
-                               		+ '</div>'*/
                                    + '</div>'   
 							+ '</div>'
 						+ '</div>');
@@ -263,7 +233,6 @@
                                         
 							</c:forEach>
 						</div>
-                    	<!-- 여기 기존 jsp파일 내용 넣기 -->
                     </div>	
         		</div>
         		<jsp:include page="../outer_bottom.jsp" flush="false"/>

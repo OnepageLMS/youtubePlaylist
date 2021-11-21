@@ -31,7 +31,7 @@
 	
 	<select id="getAllClassContent" resultType="classContent">
 		select * from lms_classContent
-		where classID=#{classID} AND published =1 order by days, daySeq
+		where classID=#{classID} AND published =1 order by days, regDate
 	</select>
 	
 	<select id="getCompleteClassContent" resultType="String">
