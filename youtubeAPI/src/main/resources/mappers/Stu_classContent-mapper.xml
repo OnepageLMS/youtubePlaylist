@@ -20,7 +20,7 @@
 	<select id="getWeekClassContent" resultType="classContent">
 		select * 
 		from lms_classContent left join lms_playlist on lms_classContent.playlistID = lms_playlist.id
-		where classID=#{classID} AND published =1 order by days, daySeq
+		where classID=#{classID} AND published =1 order by days, regDate
 	</select>
 	
 	<select id="getSamePlaylistID" resultType="classContent">
@@ -36,7 +36,7 @@
 	
 	<select id="getCompleteClassContent" resultType="String">
 		select endDate from lms_classContent
-		where classID=#{classID} AND playlistID=#{playlistID} published =1 order by days, daySeq
+		where classID=#{classID} AND playlistID=#{playlistID} published =1 order by days, regDate
 	</select>
 
 </mapper>

@@ -193,6 +193,7 @@ function getAllClass(act, order){	//진행중 or 종료된 강의실 각각 하�
 function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함수 (처음 페이지 로딩될때만 사용)위와 중복 제거하기
 	var i=0;
 	var active, inactive;
+	
 	$.ajax({
 		type: 'post',
 		url: "${pageContext.request.contextPath}/getAllMyClass",
@@ -215,7 +216,7 @@ function getAllMyClass(){	//active, inactive 둘다 한번씩 가져오는 함�
 					var classID = this.id;
 					var className = this.className;
 					var howmanyTake;
-					
+					var forPublished;
 					$.ajax({
 						url : "${pageContext.request.contextPath}/member/forHowManyTakes",
 						type : "post",

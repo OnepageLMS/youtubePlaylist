@@ -61,7 +61,10 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 			list = data.list;
 
 			if(list.length == 0){
-				$(classType).append('<p class="col text-center">저장된 강의실이 없습니다.</p>');
+				if(act == 1)
+					$(classType).append('<p class="col text-center">수강중인 강의실이 없습니다.</p>');
+				else
+					$(classType).append('<p class="col text-center">종료된 강의실이 없습니다.</p>');
 				return false;
 			}
 
@@ -128,7 +131,7 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 								+ '</button>'
 								+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
 								+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
-								+ '<button class="btn btn-outline-focus col-6" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
+								+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
                        		+ '</div>'
                        		+ '<div class="divider m-0 p-0"></div>'
                        		+ '<div class="card-body">'
@@ -158,7 +161,7 @@ function getAllClass(act, order){	//참여중, 종료된 강의실 중 하나만
 										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="' + classNoticeURL + '"><i class="fa fa-fw pr-3" aria-hidden="true"></i>공지</button>' 
 										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
 										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
-										+ '<button class="btn btn-outline-focus col-6" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
+										+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'
 					        		+ '</div>'
 					        	+ '</div>'
 					        + '</div>';
@@ -342,7 +345,7 @@ $(document).on("click", ".setClassroomBtn", function () {	// set classroom btn �
 			$('#displayInstructor').text(data.name);
 			$('#displayClassName').text(data.className);
 			$('#displayDescription').text(data.description);
-
+			$('#setRegDate').text(data.regDate.split(" ")[0]);
 		},
 		error: function(data, status,error){
 			console.log('ajax class 정보 가져오기 실패!');
@@ -361,10 +364,11 @@ function submitDeleteClassroom(){
 				console.log('강의실 나가기 성공');
 			},
 			complete: function(data){
+				alert('강의실 나가기가 완료되었습니다.');
 				location.reload();
 			},
 			error: function(data, status,error){
-				alert('강의실 나가기 실패! ');
+				alert('강의실 나가기에 실패했습니다. 잠시후 다시 시도해주세요:(');
 			}
 		});
 	}
@@ -386,10 +390,12 @@ function deleteRequest(studentID, classID, obj){
 		'data' : JSON.stringify(objParams),
 		'contentType' : "application/json",
 		success : function(data){
+			alert('수강대기신청 삭제가 완료되었습니다.');
 			deleteRow(obj)
 		},
 		error:function(request,status,error){
-	        alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+			alert('수강대기신청 삭제가 정상적으로 처리되지 않았습니다. 잠시후 다시 시도해주세요:(');
+	        //alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 	    }	
 	});
 }
@@ -474,6 +480,10 @@ function deleteRow(obj){
 		               <div class="position-relative form-group">
 		               		<label for="editClassName" class="">강사</label> 
 		               		<p id="displayInstructor" class="form-control"></p>
+		               </div>
+		               <div class="position-relative form-group">
+		               		<label for="setRegDate" class="">강의실 생성일</label> 
+		               		<p id="setRegDate" class="form-control"></p>
 		               </div>
 		               <div class="position-relative form-group">
 		               		<label for="editClassName" class="">강의실 설명</label> 
