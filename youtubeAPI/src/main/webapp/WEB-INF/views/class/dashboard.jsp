@@ -29,6 +29,7 @@ var colors = ["text-primary", "text-warning", "text-success", "text-secondary", 
 var inactive_colors = ["border-primary", "border-warning", "border-success", "border-secondary", "border-info", "border-focus", "border-alternate", "border-shadow"];				
 var active_colors = ["bg-warning", "bg-success", "bg-info", "bg-strong-bliss", "bg-arielle-smile", "bg-night-fade", "bg-sunny-morning"];
 $(document).ready(function(){
+	$('.activeClassList').append('<p class="col text-center">강의실 목록을 가져오는중입니다. 잠시만 기다려주세요:)</p>');
 	getAllMyClass();
 });
 
@@ -285,7 +286,7 @@ function getAllMyClass(){
 												+ '<div class="card-body">'
 													+ '<button class="btn btn-outline-focus col-4 mb-2" onclick="location.href=' + classNoticeURL + '"><i class="fa fa-fw fa-bullhorn pr-2" aria-hidden="true" title="공지"></i>공지</button>'
 													+ '<button class="btn btn-outline-focus col-2 mb-2" classID="' + classID + '" className="' + className + '" onclick="setPublishNotice(this)" data-toggle="modal" data-target=".publishNoticeModal">'
-															+ '<i class="fa fa-pencil-square-o" aria-hidden="true" title="공지작성"></i></button>'
+															+ '<i class="fa fa-fw" aria-hidden="true" title="공지작성"></i></button>'
 													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classCalendarURL + '"><i class="fa fa-fw pr-3" aria-hidden="true" title="강의캘린더"></i>강의캘린더</button>'
 													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classContentURL + '"><i class="fa fa-fw fa-th-list mr-1" aria-hidden="true" title="강의컨텐츠"></i>강의컨텐츠</button>'
 													+ '<button class="btn btn-outline-focus col-6 mb-2" onclick="location.href=' + classAttendanceURL + '"><i class="fa fa-fw mr-1" aria-hidden="true" title="출결/학습현황"></i>출결/학습현황</button>'

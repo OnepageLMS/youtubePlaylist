@@ -559,7 +559,7 @@ function setInnerAttendance(takes, idx) {
 				                                                	<td id = "takeLms${status2.index+1}" class="takeLms${status.index+1}${status2.index+1}" style="text-align:center"> 
 				                                                		<div class="innerAttendance${status.index+1}${status2.index+1}"></div>
 																		<button class="btn btn-sm btn border-0 btn-transition btn btn-outline-primary innerAttend${status.index+1}${status2.index+1}" 
-																					 onclick="setAttendanceModal(${i});" 
+																					 onclick="setLMSAttendanceModal(${i}, '${takes[status.index].name}', '${takes[status.index].email}', this);" 
 		                                            								data-toggle="modal" data-target="#editInnerAttendance${status.index+1}${status2.index+1}" class="nav-link p-0" style="display:inline;">
 				                                            				<i class="pe-7s-note"> </i>
 				                                            			</button>
@@ -728,16 +728,16 @@ function setInnerAttendance(takes, idx) {
 		            	<input name="seq" id="inputSeq" type="hidden">
 				       <div class="form-row">
 							<div class="col-3 mt-2">출석인정 시작시간</div>
-                           	<input name="start" id="startTimeH" type="number" class="form-control col-1">
+                           	<input name="start" id="startTimeH" type="number" class="form-control col-2" min="0" max="23">
                            	<div class="col-1 mt-2">시</div>
-                           	<input name="start" id="startTimeM" type="number" class="form-control col-1">
+                           	<input name="start" id="startTimeM" type="number" class="form-control col-2" min="0" max="59">
                            	<div class="col-1 mt-2">분</div>
                        </div>
 				       <div class="form-row mt-2">
 							<div class="col-3 mt-2">출석인정 마감시간</div>
-                           	<input name="end" id="endTimeH" type="number" class="form-control col-1">
+                           	<input name="end" id="endTimeH" type="number" class="form-control col-2" min="0" max="23">
                            	<div class="col-1 mt-2">시</div>
-                           	<input name="end" id="endTimeM" type="number" class="form-control col-1">
+                           	<input name="end" id="endTimeM" type="number" class="form-control col-2" min="0" max="59">
                            	<div class="col-1 mt-2">분</div>
                        </div>                 
 					  <div class="position-relative form-group input-group mt-2">
