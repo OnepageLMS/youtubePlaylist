@@ -52,8 +52,9 @@ $(document).ready(function(){
 			for(var i=0; i<data.length; i++){
 				if(data[i] != null){
 					var element = document.getElementById('download'+(i+1));
-					element.innerHTML = '<a href="${pageContext.request.contextPath}/resources/csv/' +data[i].fileName+ '">Download</a>';
+					element.innerHTML = '<a href="learntube.kr/resources/csv/' +data[i].fileName+ '">Download</a>';
 					console.log('경로 : ${pageContext.request.contextPath}/resources/csv/' +data[i].fileName);
+					console.log('경로 : learntube.kr/resources/csv/' +data[i].fileName);
 				}
 				else continue;
 			}
