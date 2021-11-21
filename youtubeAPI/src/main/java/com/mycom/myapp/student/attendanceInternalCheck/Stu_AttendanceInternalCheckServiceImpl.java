@@ -41,6 +41,16 @@ public class Stu_AttendanceInternalCheckServiceImpl implements Stu_AttendanceInt
 	}
 	
 	@Override
+	public List<AttendanceInternalCheckVO> getAttendanceInCheckExisted(AttendanceInternalCheckVO vo){
+		return stuAttendanceCheckDAO.getAttendanceInCheckExisted(vo);
+	}
+	
+	@Override
+	public int getAttendanceInCheckExistedNum(AttendanceInternalCheckVO vo) {
+		return stuAttendanceCheckDAO.getAttendanceInCheckExistedNum(vo);
+	}
+	
+	@Override
 	public AttendanceInternalCheckVO getAttendanceInCheckByID(AttendanceInternalCheckVO vo) {
 		return stuAttendanceCheckDAO.getAttendanceInCheckByID(vo);
 	}
@@ -50,5 +60,15 @@ public class Stu_AttendanceInternalCheckServiceImpl implements Stu_AttendanceInt
 		return stuAttendanceCheckDAO.getAttendanceInCheckByIDNum(vo);
 	}
 	
+	@Override
+	public AttendanceInternalCheckVO getAttendanceInCheckByIDExisted(AttendanceInternalCheckVO vo) {
+		return stuAttendanceCheckDAO.getAttendanceInCheckByIDExisted(vo);
+	}
+	
+	@Override
+	
+	public int getAttendanceInCheckByIDExistedNum(AttendanceInternalCheckVO vo) {
+		return stuAttendanceCheckDAO.getAttendanceInCheckByIDExistedNum(vo);
+	}
 	
 }

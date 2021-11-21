@@ -44,8 +44,10 @@
 	</select>
 	
 	<select id="getAttendanceCheckList" resultType="AttendanceCheckVO">
-		select * from lms_attendanceCheck
-		where attendanceID=#{attendanceID}
+		<!--  select * from lms_attendanceCheck
+		where attendanceID=#{attendanceID}-->
+		select * from lms_attendanceCheck join lms_student on lms_attendanceCheck.studentID = lms_student.id 
+		where attendanceID=#{attendanceID} order by lms_student.name
 	</select>
 	
 	<select id="getAttendanceCheckListCount" resultType="int">

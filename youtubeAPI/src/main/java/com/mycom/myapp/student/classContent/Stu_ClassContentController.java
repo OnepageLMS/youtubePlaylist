@@ -148,7 +148,7 @@ public class Stu_ClassContentController {
 		ccvo.setPlaylistID(playlistID);
 		ccvo.setId(id);
 		ccvo.setClassID(classID); 
-		/*classContentService.getOneContent(id).getDays();
+		classContentService.getOneContent(id).getDays();
 		
 		if(classContentService.getDaySeq(ccvo) == playlistcheckService.getCompletePlaylistWithDays(pcvo).size()) {
 			//이거는 영상을 다 봤을 때자나,,
@@ -203,7 +203,7 @@ public class Stu_ClassContentController {
 			
 		
 			
-		}*/
+		}
 		
 		//model.addAttribute("allMyClass", JSONArray.fromObject(classContentService.getWeekClassContent(classID)));
 		model.addAttribute("classInfo", classService_stu.getClass(classID)); 
