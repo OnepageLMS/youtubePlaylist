@@ -113,7 +113,7 @@ public class ClassController {
 	@RequestMapping(value = "/forAll",  method = RequestMethod.POST)	//학생이랑 선생님 같이 사용하도록 바꾸기!!
 	public int forAll(HttpServletRequest request, Model model) throws Exception {
 		int classID = Integer.parseInt(request.getParameter("classID"));
-		return classContentService.getClassDaysNum(classID); //전체 차시
+		return classService.getClass(classID).getDays(); //전체 차시
 	}	
 	
 	@ResponseBody
