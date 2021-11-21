@@ -130,24 +130,18 @@ public class AttendanceController {
 			avo.setAttendanceID(attendanceID);
 			if(attendanceService.getAttendance(attendanceID).getFileName() == null) 
 				continue; 
-			//System.out.println("attendanceID" + attendanceID+ " id.size() " + id.size() + "takseNum " + stu_takesService.getStudentNum(classID).size());
 			List<AttendanceCheckVO> takes = attendanceCheckService.getAttendanceCheckList(attendanceID); 
-			//System.out.println(takes.size());
-			//System.out.println(takes.get(0).getExternal());
-				for(int j=0; j<takes.size(); j++) { //id.size()이면 안되겠는걸.. 
+				for(int j=0; j<takes.size(); j++) { 
 						//takes.size()로하면 에러가 나는 이유, 1차시에는 3명에 대한 출석을 업데이트했는데 그 이후에 학생한명이 더 들어온다 -> 4명
 						//그럼 indexOutOfBoundsException이 발생한다.
 						//attendanceCheck에서 id가 같은 것들 가져오기 
-						//System.out.println(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 					//takeService.getStudentTakes(classID).get(j).getStudentID() -> 이 sutentID와 attendanceCheck
 					avo.setStudentID(stu_takesService.getStudentTakes(classID).get(j).getStudentID());
 					if(attendanceCheckService.getAttendanceCheck(avo) != null && !attendanceCheckService.getAttendanceCheck(avo).getExternal().equals("") ) {
-						//System.out.println("attendanceID" + attendanceID+ " j : " + j + " external : " + attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 						System.out.println("studentID : " + stu_takesService.getStudentTakes(classID).get(j).getStudentID());
 						fileList.add(attendanceCheckService.getAttendanceCheckList(attendanceID).get(j).getExternal());
 						file.add(fileList);
 					//가져올 때 student table과 join해서 학생 이름순으로 가져올 수 있도록 하기 
-						//System.out.println(fileList.get(i));
 					}
 					else {
 						fileList.add("");
@@ -160,8 +154,6 @@ public class AttendanceController {
 			model.addAttribute("fileNum",file.size());
 		else
 			model.addAttribute("fileNum", attendanceCheckService.getAttendanceCheckListCount(classID));
-		//model.addAttribute("fileNum",  file.size());
-		//System.out.println("classID" + classID + "fileNum " + attendanceCheckService.getAttendanceCheckListCount(classID));
 		return "class/attendance";
 	}	
 	
@@ -320,7 +312,6 @@ public class AttendanceController {
 		int end_h = Integer.parseInt(request.getParameter("end_h"));
 		int end_m = Integer.parseInt(request.getParameter("end_m"));
 		int days = Integer.parseInt(request.getParameter("daySeq"));
-		int classID = Integer.parseInt(request.getParameter("classID"));
 		//start_h ~ seq모두 jsp파일에서 받아오기 --> done!done!
 		
 		UUID uuid = UUID.randomUUID();

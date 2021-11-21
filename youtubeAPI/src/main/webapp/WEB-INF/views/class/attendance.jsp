@@ -133,7 +133,6 @@ $(document).ready(function(){
 		formData.append("start_m", $('#startTimeM').val());
 		formData.append("end_h", $('#endTimeH').val());
 		formData.append("end_m", $('#endTimeM').val());
-		formData.append("classID", 1); //추후에 get방식으로 받은 classID를 넘겨주기 
 		var table = document.getElementById('takes');
 		
 		$.ajax({
