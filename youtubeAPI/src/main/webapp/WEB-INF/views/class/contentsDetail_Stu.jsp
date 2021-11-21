@@ -65,9 +65,9 @@ $(document).ready(function(){ //classID에 맞는 classContents를 보여주기 
 			  
 			  var element = document.getElementById("contentsTitle");
 			  if(weekContents[videoIdx].playlistID == 0)
-				  	element.innerHTML = '<i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 20px; margin: 5px 5px;"></i>' + data.title;
+				  	element.innerHTML = '<i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 20px; margin: 5px 5px;"></i>' + weekContents[videoIdx].title;
 			  else
-					element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + data.title;
+					element.innerHTML = '<i class="fa fa-play-circle-o" aria-hidden="true" style="font-size: 20px; margin: 0px 5px; color:dodgerblue;"></i> ' + weekContents[videoIdx].title;
 
 			  var elementD = document.getElementById("contentsDescription");
 			  elementD.innerText = weekContents[videoIdx].description;
