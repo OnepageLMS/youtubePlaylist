@@ -118,7 +118,7 @@ public class Stu_NoticeController {
 		
 		List<NoticeVO> list = noticeService.searchNotice(vo);
 		
-		System.out.println(list);
+		System.out.println(list.size());
 		
 		return list;
 	}	

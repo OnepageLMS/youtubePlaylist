@@ -219,7 +219,7 @@ function search(event) {
 				
 				else {
 					console.log("검색 성공!");
-					$.each(notices, function(idx, value){
+					$.each(data, function(idx, value){
 						console.log("idx ==> " + idx);
 						var index = lastIdx + idx;
 						var collapseID = "collapse" + index;
