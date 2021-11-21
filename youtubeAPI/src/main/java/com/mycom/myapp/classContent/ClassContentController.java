@@ -100,7 +100,6 @@ public class ClassContentController {
 		Stu_PlaylistCheckVO spcvo = new Stu_PlaylistCheckVO();
 		spcvo.setClassID(classID);
 		spcvo.setPlaylistID(playlistID);
-		System.out.println(playlistCheckService.getHowMany(spcvo));
 		
 		return playlistCheckService.getHowMany(spcvo);
 	}
@@ -264,14 +263,4 @@ public class ClassContentController {
 			return 1;
 		}  
 	}
-
-	/*@RequestMapping(value = "/deleteContent/{classID}/{id}", method = RequestMethod.GET)
-	public String deleteContent(@PathVariable("classID") int classID, @PathVariable("id") int id) {
-		if (classContentService.deleteContent(id) == 0)
-			System.out.println("classContent 삭제 실패!");
-		else
-			System.out.println("classContent 삭제 성공!");
-		
-		return "redirect:../../contentList/" + classID;
-	}*/
 }

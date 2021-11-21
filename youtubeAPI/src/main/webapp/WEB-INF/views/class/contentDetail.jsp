@@ -38,17 +38,9 @@
 </style>
 
 <script>
-//var classPlaylistID = 0;
-//var classID =  1;
-//var playlistSameCheck = ${playlistSameCheck};
 var ori_index =0;
-//var classPlaylistID = ${classPlaylistID};
-var classContentID = 1;
-var information;
 var videoIdx = '${daySeq}';
-var playlist; 
 var ccID = '${id}';
-//var weekContents;
 
 $(document).ready(function(){
 	$.ajax({ 
@@ -64,7 +56,7 @@ $(document).ready(function(){
 		  }
 	});
 	
-	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+	$.ajax({
 		  url : "${pageContext.request.contextPath}/class/forVideoInformation",
 		  type : "post",
 		  async : false,
@@ -72,15 +64,14 @@ $(document).ready(function(){
 			  playlistID : weekContents[videoIdx].playlistID
 		  },
 		  success : function(data) {
-			 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
-			 //playlist_length = Object.keys(playlist).length;
+			 playlist = data; 
 		  },
 		  error : function() {
-		  	alert("error2");
+			 alert("강의컨텐츠 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!");
 		  }
 	});
 	
-	$.ajax({ //선택된 playlistID에 맞는 영상들의 정보를 가져오기 위한 ajax // ++여기서 
+	$.ajax({ 
 		url : "${pageContext.request.contextPath}/class/changeID",
 		type : "post",
 		async : false,
@@ -96,7 +87,6 @@ $(document).ready(function(){
 			var elementD = document.getElementById("contentsDescription");
 			elementD.innerText = data.description;
 
-			//$('#formEditClassContents').form[0].reset();
 			$('#editContentName').val(data.title);
 			$('#editContentDescription').val(data.description);
 			$('#setContentID').val(data.id);
@@ -130,7 +120,7 @@ $(document).ready(function(){
 			
 		},
 		error : function() {
-			alert("error");
+			alert("강의컨텐츠 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!");
 		}
 	});
 	
@@ -196,11 +186,7 @@ $(document).ready(function(){
 									+ '<div id="classTitle"></div>'
 									+ '<div id="classDescription"> </div>'
 									+ '<div id="total_runningtime"></div>'
-									+ '<div id="get_view'+ (i+1) +'">'
-										
-									//	+ innerText
-														
-									+ '</div>'
+									+ '<div id="get_view'+ (i+1) +'"></div>'
 									 	
 						       	+ '</div>'
 							+'</div>'
@@ -211,7 +197,6 @@ $(document).ready(function(){
 		else{
 			console.log("playlistID 0 아니니까!");
 			symbol = '<i class="pe-7s-film fa-lg" style=" color:dodgerblue"> </i>'
-			//if(allContents[i].playlistID == weekContents[k].playlistID){
 				
 			var thumbnail = '<img src="https://img.youtube.com/vi/' + weekContents[i].thumbnailID + '/1.jpg">';
 			var day = weekContents[i].days;
@@ -237,7 +222,6 @@ $(document).ready(function(){
 			var innerText ='';
 			
 			
-			//if(allContents[videoIdx].playlistID != 0){
 			for(var j=0; j<playlist.length; j++){ //classcontent내에 들어있는 비디오 개수
 					
 				var newTitle = playlist[j].newTitle;
@@ -260,9 +244,7 @@ $(document).ready(function(){
 						
 				var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[j].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
 				var background = '';
-				/*if(j == 0) {
-					background = 'style="background-color :  #F0F0F0 "';
-				}*/
+				
 				innerText += '<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
 									+ '<div class="video row post-content single-blog-post style-2 d-flex align-items-center" '+background+'>' 
 										+ '<div class="post-thumbnail col-5"> ' 
@@ -278,7 +260,6 @@ $(document).ready(function(){
 										+'</div>' 
 										+ 	completed 
 								+ '</div>'
-						//ori_videoID = playlist[0].id;
 			}
 			
 			var content = $('.day:eq(' + day + ')');
@@ -359,18 +340,13 @@ function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐�
 		  async : false,
 		  data : {	
 			  playlistID : playlistID
-			// playlistID : playlistSameCheck[0].playlistID //contentsList에서 선택한 주차의 첫번째 영상 보여주기
 		  },
 		  success : function(data) {
 			 playlist = data; //data는 video랑 videocheck테이블 join한거 가져온다
 			 playlist_length = Object.keys(playlist).length;
-			 
-			 //console.log("길이 : " + playlist[0].youtubeID);
-			 console.log("forVideoInformation 성공!");
-			 
 		  },
 		  error : function() {
-		  	alert("error");
+			 alert("강의컨텐츠 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!");
 		  }
 	})
 	
@@ -382,8 +358,6 @@ function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐�
 				  id: id
 			  },
 			  success : function(data) {
-				 console.log("changeID 성공!!!!");
-				 console.log(data);
 
 				var element = document.getElementById("contentsTitle");
 				if(playlistID == 0)
@@ -393,7 +367,7 @@ function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐�
 				var elementD = document.getElementById("contentsDescription");
 				elementD.innerText = data.description;
 				
-				//$('#formEditClassContents').form[0].reset();
+				
 				$('#editContentName').val(data.title);
 				$('#editContentDescription').val(data.description);
 				$('#setContentID').val(data.id);
@@ -425,14 +399,12 @@ function showLecture(playlistID, id, classInfo, idx){	//오른쪽 강의컨텐�
 				$('#startDate_m').val(min);
 			  },
 			  error : function() {
-			  	alert("error");
+				alert("강의컨텐츠 정보를 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!");
 			  }
 		})
 	
-	//lastVideo = playlist[0].id;
 	myThumbnail(id, idx);
 	ccID = id;
-	//console.log("id라고!! " + ccID);
 }
 
 
@@ -442,7 +414,6 @@ function myThumbnail(classContentID, idx){
 	var className = '#get_view' + idx;
 	$(className).empty();
 	
-	console.log("이 강의 컨텐츠 내에 동영상은 " + playlist.length+ " 개 ");
 	for(var i=0; i<playlist.length; i++){
 	
 		var thumbnail = '<img src="https://img.youtube.com/vi/' + playlist[i].youtubeID + '/1.jpg" style="max-width: 100%; height: 100%;">';
@@ -460,9 +431,6 @@ function myThumbnail(classContentID, idx){
 		}
 	
 		var completed ='';
-		if(playlist[i].watched == 1 && playlist[i].classContentID == classContentID){
-			completed = '<div class="col-xs-1 col-lg-2"><span class="badge badge-primary"> 완료 </span></div>';
-		}
 		
 		$(className).append( //stu//stu
 						'<a class="nav-link active" id="post-1-tab" data-toggle="pill" role="tab" aria-controls="post-1" aria-selected="true"></a>' 
@@ -504,13 +472,11 @@ function viewVideo(videoID, id, startTime, endTime, index, seq, item) { // 선�
 		
 		if(visited){
 			visited.style.background = "transparent";
-			console.log(document.getElementsByClassName('video') + " ?????");
 			document.getElementsByClassName('video')[0].style.background = "transparent";
-			//item.style.background = "#F0F0F0";
 		}
-		//else{
-			item.style.background = "#F0F0F0";
-		//}
+		
+		item.style.background = "#F0F0F0";
+
 		
 		player.loadVideoById({'videoId': videoID,
              'startSeconds': startTime,
@@ -585,7 +551,7 @@ function onPlayerReady(event) {
 			
 		}, 
 		error : function(err){
-			alert(" onPlayerReady error! ");
+			alert("플레이리스트 실행이 가져오는데 실패했습니다. 잠시후 다시 시도해주세요!");
 		}
 	});
   	console.log('onPlayerReady 마감'); 

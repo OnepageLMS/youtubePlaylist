@@ -312,7 +312,6 @@ public class AttendanceController {
 	public List<List<String>> uploadCSV(MultipartHttpServletRequest request, Model model) throws Exception {
 		//업로드된 파일에서 리스트 뽑은거랑, takes테이블에서 학생이름 가져오기
 		//데이터는 함수를 또 만들어서 넘겨주기 
-		System.out.println("uploadCSV");
 		
 		MultipartFile file = request.getFile("file");
 		
@@ -326,7 +325,6 @@ public class AttendanceController {
 		
 		UUID uuid = UUID.randomUUID();
 		String saveName = uuid + "_" + file.getOriginalFilename();
-		//System.out.println("saveName : " + saveName);
 
 		List<List<String>> csvList = new ArrayList<List<String>>();
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/csv/"); //이런식으로 경로지정을 하는건지 ?? 
@@ -417,19 +415,16 @@ public class AttendanceController {
     			}
     		}
             //분으로 환산해서 하기
-            //System.out.println("출석학생 : " +attendStu.size());
             int count = 0;
             for(int i=0; i<attendStu.size(); i++) {
             	if(start_h > csvStartH.get(i) ) {
             		if(end_h < csvEndH.get(i)) {
-            			System.out.println("1");
             			continue;
         				//출석 
         			}
             		
             		else if(end_h == csvEndH.get(i)){ 
             			if(end_m <= csvEndM.get(i)) {
-            				System.out.println("2" + start_h + " / " + csvStartH.get(i));
             				continue;
             				// 출석 
         				}
@@ -437,10 +432,8 @@ public class AttendanceController {
             				//결석 
             				//출석에서 빼고 결석에 넣기
             				// i번째의 학생이 attendStu의 list에서는 몇번재인지.,
-            				System.out.println("3");
             				absentStu.add(attendStu.get(i));
             				attendStu.remove(i);
-            				//absentStu.add(attendStu.get(i));
             				
             			}
             		}
@@ -448,42 +441,33 @@ public class AttendanceController {
             		else {
     					//결석 
             			//출석에서 빼고 결석에 넣기 
-            			System.out.println("4");
             			absentStu.add(attendStu.get(i));
             			attendStu.remove(i);
-        				//absentStu.add(attendStu.get(i));
     				}
             	}
             	else if(start_h == csvStartH.get(i)) {
             		if(start_m >= csvStartM.get(i)) {
             			if(end_h < csvEndH.get(i)) {
-            				System.out.println("5");
             				continue;
             				//출석 
             			}
                 		
                 		else if(end_h == csvEndH.get(i)){ 
                 			if(end_m <= csvEndM.get(i)) {
-                				System.out.println("6");
                 				continue;
                 				// 출석 
             				}
                 			else {
                 				//결석 
                     			//출석에서 빼고 결석에 넣기 
-                				System.out.println("7");
-                				System.out.println("attendStu.length " + attendStu.size());
                 				absentStu.add(attendStu.get(i));
                 				attendStu.remove(count);
-                				//absentStu.add(attendStu.get(count));
-                				System.out.println("attendStu.length " + attendStu.size());
                 			}
                 		}
                 		
                 		else {
                 			//결석 
                 			//출석에서 빼고 결석에 넣기 
-                			System.out.println("8");
                 			absentStu.add(attendStu.get(i));
                 			attendStu.remove(i);
             				//absentStu.add(attendStu.get(i));
@@ -493,19 +477,14 @@ public class AttendanceController {
             		else {
             			//결석 
             			//출석에서 빼고 결석에 넣기 
-            			System.out.println("9");
-            			System.out.println("attendStu.length " + attendStu.size());
             			absentStu.add(attendStu.get(i));
             			attendStu.remove(i);
-        				//absentStu.add(attendStu.get(i));
-        				System.out.println("attendStu.length " + attendStu.size());
             		}
             		
             	}
             	else {
             		//결석 
         			//출석에서 빼고 결석에 넣기 
-            		System.out.println("10");
             		absentStu.add(attendStu.get(i));
             		attendStu.remove(i);
     				//absentStu.add(attendStu.get(i));
@@ -561,7 +540,7 @@ public class AttendanceController {
 			for(int j=0; j<classContentService.getDaySeq(ccvo); j++) {
 				aivo.setClassContentID(classInsContentService.getClassContentID(ccvo).get(j).getId());
 				aivo.setInternal(finalInternalTakes[i]);
-				System.out.println("classContentID : " + classInsContentService.getClassContentID(ccvo).get(j).getId());
+				
 				if(attendanceInCheckService.getAttendanceInCheckByIDExisted(aivo) == null) {
 					attendanceInCheckService.insertAttendanceInCheck(aivo);
 					System.out.println("선생님이 inner 삽입  ");
@@ -574,13 +553,12 @@ public class AttendanceController {
 		}
 		
 		for(int i=0; i<finalTakes.length; i++) {//external에 대해서 
-			System.out.println("finalTakes: " + finalTakes[i]);
 			AttendanceCheckVO avo = new AttendanceCheckVO();
 			avo.setAttendanceID(attendanceID);
 			avo.setExternal(finalTakes[i]);
 			avo.setStudentID(takes.get(i).getStudentID()); //takes테이블에서 바로가져오도록 하면 될듯 
 			
-			System.out.println("업데이트될 때 보여지는 studentID : " + takes.get(i).getStudentID() + "classID : " + classID + " days : " + days + "attendanceID : " + attendanceID);
+			
 			if(attendanceCheckService.getAttendanceCheck(avo) != null) {
 				attendanceCheckService.updateExAttendanceCheck(avo);
 			}

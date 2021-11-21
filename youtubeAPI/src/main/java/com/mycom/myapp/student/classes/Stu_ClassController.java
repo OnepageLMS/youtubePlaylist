@@ -181,30 +181,11 @@ public class Stu_ClassController{
 		
 	}
 	
-	
-	
-	
-	
-	/*@ResponseBody
-	@RequestMapping(value = "/forWatchedCount", method = RequestMethod.POST)
-	public List<Stu_VideoCheckVO> forWatchedCount(HttpServletRequest request, Model model) throws Exception {
-		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
-		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
-		System.out.println("watch");
-		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
-	    vo.setPlaylistID(playlistID);
-	    vo.setStudentID(studentId);
-	    vo.setClassContentID(classContentID);
-	    System.out.println("하나의 classContent , playlist내 영상 개수 : "+ videoCheckService.getWatchedCheck(vo).size());
-	    return videoCheckService.getWatchedCheck(vo);
-	} *///이렇게하면 videoCheck에 없는 영상에 대한 정보는 가져오지 못함 ..... 
-	
 	@ResponseBody
 	@RequestMapping(value = "/forWatchedCount", method = RequestMethod.POST)
 	public int forWatchedCount(HttpServletRequest request, Model model) throws Exception {
 		int playlistID = Integer.parseInt(request.getParameter("playlistID")); //이거 지우면 안된다, 
 		int classContentID = Integer.parseInt(request.getParameter("classContentID")); //이거 지우면 안된다, 
-		System.out.println("watch");
 		Stu_VideoCheckVO vo = new Stu_VideoCheckVO();
 	    vo.setPlaylistID(playlistID);
 	    vo.setStudentID(studentId);
@@ -227,7 +208,7 @@ public class Stu_ClassController{
 		    		count++;
 		    }
 	    }
-	    //System.out.println("classContentID : " + classContentID + " playlistID " + playlistID + " studentID : " + studentId + " count : "  + count);
+	 
 	    return count;
 	}
 	
@@ -236,7 +217,6 @@ public class Stu_ClassController{
 	@ResponseBody
 	@RequestMapping(value = "/forStudentContentDetail", method = RequestMethod.POST)
 	public Map<Integer, Object> forStudentContentDetail(HttpServletRequest request, Model model) throws Exception {
-		//List<Map<Integer, Object>> listMap = new ArrayList<Map<Integer, Object>>();
 		Map<Integer, Object> map = new HashMap<Integer, Object>();
 		
 		int classID = Integer.parseInt(request.getParameter("classID"));
@@ -248,7 +228,6 @@ public class Stu_ClassController{
 		
 		for(int i=0; i<VOlist.size(); i++) {
 			map.put(i, VOlist.get(i));
-			//listMap.add(map);
 		}
 	    return map;
 	}
@@ -287,13 +266,11 @@ public class Stu_ClassController{
 				ccvo.setClassID(takesService.getAcceptedStudent(studentId).get(i).getClassID());
 				ccvo.setDays(j);
 				
-				System.out.println(j+ "차시내 수업 개수 : " + classContentService.getDaySeq(ccvo) + " 학생이 다들은 수업 개수 : " + attendanceInCheckService.getAttendanceInCheckNum(aivo) + "classID : " + takesService.getAcceptedStudent(studentId).get(i).getClassID() + " days : "+ j + " studentID : " + studentId);
 				if(attendanceInCheckService.getAttendanceInCheckNum(aivo) == classContentService.getDaySeq(ccvo)) {
 					count ++;
 				}
-				//System.out.println("classID : " + takesService.getAcceptedStudent(studentId).get(i).getClassID() + " days : "+ j + " studentID : " + studentId);
 			} 
-			System.out.println("classID : " + takesService.getAcceptedStudent(studentId).get(i).getClassID() + " 완료된 차시는 " + count);
+			
 			completePlaylist.add(count);
 		}
 		return completePlaylist;
@@ -302,14 +279,11 @@ public class Stu_ClassController{
 	@RequestMapping(value = "/classTotalPlaylistCount", method = RequestMethod.POST)
 	@ResponseBody
 	public List<Integer> classTotalPlaylistCount(HttpServletRequest request) {
-		//ClassContentVO ccvo= new ClassContentVO ();
-
 		List<Integer> allPlaylist = new ArrayList<Integer>();
 		int howManyTakes = takesService.getAcceptedStudentNum(studentId);
 		for(int i=0; i<howManyTakes; i++) { //주어진 studentID를 가진 학생이 수강하는 수업에 대해 
 			int howManyDays = classContentService.getPlaylistCount(takesService.getAcceptedStudent(studentId).get(i).getClassID());
 			allPlaylist.add(howManyDays);
-			//System.out.println("전체 차시는 : " + howManyDays);
 		}
 		return allPlaylist;
 	}
