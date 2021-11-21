@@ -1065,7 +1065,7 @@ $(document).ready(function(){
 	
 	<div id="toast-container" class="toast-top-right">
 		<div class="toast toast-success" aria-live="assertive" aria-atomic="true" style="display: none;">
-			<div class="toast-message"> 동영상이 장바구니에 담겨졌습니다! </div>
+			<div class="toast-message"> 비디오가 담겼습니다. 플레이리스트 추가를 해주세요 ! </div>
 		</div>
 	</div>
 	

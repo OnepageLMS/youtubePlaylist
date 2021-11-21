@@ -12,4 +12,5 @@ public interface NoticeService {
 	public List<NoticeVO> getAllPin(int id);
 	public int setPin(int id);
 	public int unsetPin(int id);
+	public List<NoticeVO> searchNotice(NoticeVO vo);
 }

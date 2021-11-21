@@ -46,4 +46,9 @@ public class NoticeServiceImpl implements NoticeService{
 	public int unsetPin(int id) {
 		return noticeDAO.unsetPin(id);
 	}
+
+	@Override
+	public List<NoticeVO> searchNotice(NoticeVO vo) {
+		return noticeDAO.searchNotice(vo);
+	}
 }

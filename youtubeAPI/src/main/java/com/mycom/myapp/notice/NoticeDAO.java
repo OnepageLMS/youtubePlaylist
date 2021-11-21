@@ -42,4 +42,8 @@ public class NoticeDAO {
 		return sqlSession.update("Notice.unsetPin", id);
 	}
 	
+	public List<NoticeVO> searchNotice(NoticeVO vo){
+		return sqlSession.selectList("Notice.searchNotice", vo);
+	}
+	
 }

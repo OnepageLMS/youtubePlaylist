@@ -27,6 +27,11 @@
 		where lms_notice.classID=#{classID} and pin=1 order by id desc
 	</select>
 	
+	<select id="searchNotice" resultType="notice">
+		select * from lms_notice
+		where title LIKE CONCAT('%', #{keyword}, '%') AND classID = #{classID} order by id desc;
+	</select>
+	
 	<update id="setPin">
 		update lms_notice
 		set pin=1
