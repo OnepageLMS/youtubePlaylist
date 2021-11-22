@@ -241,6 +241,9 @@ function search(event) {
 				percentage = '';
 			}
 			
+			if(howmanyTake == null){
+				percentage = '% 완료';
+			}
 			if (realAllContents[i].published == true && realAllContents[i].playlistID != 0)
 				percentage = Math.floor(howmanyCount/howmanyTake*100) + '% 완료';
 			
