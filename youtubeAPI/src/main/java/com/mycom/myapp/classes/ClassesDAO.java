@@ -80,6 +80,10 @@ public class ClassesDAO {
 	public List<ClassesVO> getAllMyClass(int instructorID){	//이것도 나중에 지워야할듯?!!
 		return sqlSession.selectList("Classes.getAllMyClass", instructorID);
 	}
+	
+	public List<ClassesVO> getAllClassForAdmin(){
+		return sqlSession.selectList("Classes.getAllClassForAdmin");
+	}
 
 	public List<String> getAllEntryCodes() {
 		return sqlSession.selectList("Classes.getAllEntryCodes");

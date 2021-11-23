@@ -71,6 +71,12 @@
 		select * from lms_class where instructorID=#{instructorID}
 	</select>
 	
+	<select id="getAllClassForAdmin" resultType="classes">
+		select c.id, c.instructorID, c.active, c.className, c.totalStudent, c.days, c.regDate, i.name, i.email
+		from lms_class c
+		left join lms_instructor i on c.instructorID=i.id
+	</select>
+	
 	<select id="getAllEntryCodes" resultType="classes">
 		select * from lms_class where entryCode=#{entryCode}
 	</select>
