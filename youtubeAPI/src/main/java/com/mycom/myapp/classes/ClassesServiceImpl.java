@@ -91,6 +91,11 @@ public class ClassesServiceImpl implements ClassesService {
 	public List<ClassesVO> getAllMyClass(int instructorID){
 		return classesDAO.getAllMyClass(instructorID);
 	}
+	
+	@Override
+	public List<ClassesVO> getAllClassForAdmin(){
+		return classesDAO.getAllClassForAdmin();
+	}
 
 	@Override
 	public List<String> getAllEntryCodes() {

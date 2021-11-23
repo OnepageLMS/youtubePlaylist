@@ -14,6 +14,8 @@ public class ClassesVO {
 	private String regDate;
 	
 	private String name;	//instructorName
+	private String email;	//instructorEmail
+	
 	private int studentID;
 	
 	private int newNotice;	//학생 dashboard에서 새로운 공지 표시
@@ -86,13 +88,17 @@ public class ClassesVO {
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
-	
-	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public int getStudentID() {
 		return studentID;
