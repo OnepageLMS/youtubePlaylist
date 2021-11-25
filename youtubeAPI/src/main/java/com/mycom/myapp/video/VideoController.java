@@ -53,8 +53,9 @@ public class VideoController {
 	}
 		
 	@RequestMapping(value = "/youtube", method = RequestMethod.GET)
-	public String youtube(Model model, String keyword) {
+	public String youtube(Model model, String keyword, HttpSession session) {
 		//model.addAttribute("accessToken", accessToken);			--> 다시 사용하려면 homecontroller 확인하기
+		instructorID = (Integer)session.getAttribute("userID");
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
 		return "video/youtube";
