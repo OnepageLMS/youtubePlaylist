@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,6 +30,7 @@ import net.sf.json.JSONArray;
 
 @Controller
 @RequestMapping(value="/video")
+@PropertySource("classpath:config.properties")
 public class VideoController {
 
 	@Autowired
@@ -36,6 +39,9 @@ public class VideoController {
 	private PlaylistService playlistService;
 	@Autowired
 	private ClassesService classService;
+	
+	@Value("${youtube.key}")
+	private String youtubeKey;
 	
 	private int instructorID = 0;
 	
@@ -58,6 +64,9 @@ public class VideoController {
 		instructorID = (Integer)session.getAttribute("userID");
 		model.addAttribute("allMyClass", JSONArray.fromObject(classService.getAllMyActiveClass(instructorID)));
 		model.addAttribute("allMyInactiveClass", JSONArray.fromObject(classService.getAllMyInactiveClass(instructorID)));
+		
+		System.out.println("유투브 키 확인 =>" + youtubeKey);
+		model.addAttribute("youtubeKey", youtubeKey);
 		return "video/youtube";
 	}
 	
