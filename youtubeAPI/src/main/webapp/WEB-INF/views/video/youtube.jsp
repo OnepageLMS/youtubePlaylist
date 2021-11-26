@@ -104,7 +104,8 @@ $(document).ready(function(){
 		}
 		$("#get_view").empty();
 		$("#nav_view").empty();
-		var key = "AIzaSyC0hiwYHhlDC98F1v9ERNXnziHown0nGjg"; //"AIzaSyCnS1z2Dk27-yex5Kbrs5XjF_DkRDhfM-c"; //
+		
+		var key = '${youtubeKey}'; 
 		
 		var sTargetUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&order="
 				+ $getorder

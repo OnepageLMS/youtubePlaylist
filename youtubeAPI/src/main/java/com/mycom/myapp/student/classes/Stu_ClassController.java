@@ -178,11 +178,21 @@ public class Stu_ClassController{
 		stvo.setClassID(id);
 		stvo.setStudentID(studentId);
 		
-//		attendanceCheckService.deleteAttendanceCheck(stvo);
-//		attendanceInCheckService.deleteInternalAttendanceCheck(stvo);
-//		noticeService.deleteNoticeCheck(stvo);
-//		playlistcheckService.deletePlaylist(stvo);
-//		videoCheckService.deleteTime(stvo);	
+		if(attendanceCheckService.deleteAttendanceCheck(stvo) == 0) {
+			System.out.println("삭제할 zoom 출석 데이터가 없습니다.");
+		}
+		if(attendanceInCheckService.deleteInternalAttendanceCheck(stvo) == 0) {
+			System.out.println("삭제할 LMS 출석 데이터가 없습니다.");
+		}
+		if(noticeService.deleteNoticeCheck(stvo) == 0) {
+			System.out.println("삭제할 공지 데이터가 없습니다.");
+		}
+		if(playlistcheckService.deletePlaylist(stvo) == 0) {
+			System.out.println("삭제할 playlist 데이터가 없습니다.");
+		}
+		if(videoCheckService.deleteTime(stvo) == 0) {
+			System.out.println("삭제할 videoCheck 데이터가 없습니다.");
+		}		
 		
 		if(classesService.deleteClassroom(vo) != 0)
 			System.out.println("강의실 나가기 성공!");
