@@ -325,6 +325,15 @@ $(document).ready(function(){
 						+ '</div>' 
 						+ '<div id="setVideoInfo"> '
 							+ '<div id="delete">'
+							+ '<div class="setTimeRange input-group col d-flex justify-content-between align-items-center mb-3">'
+								+ '<div class="col-2 input-group-prepend pl-0">'
+									+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>'
+								+ '</div>'
+								+ '<div class="col-8"> <div id="slider-range"></div> </div>'
+								+ '<div class="col-2 input-group-append">' 
+									+ '<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>'
+								+ '</div>' 
+							+ '</div>'
 							+ '<div class="position-relative form-group row col">'
 							/* + '<div class="col-sm-2 col-form-label d-flex justify-content-center">' */
 							+ '<label for="amount" class="col-lg-2 col-form-label">설정된시간</label>'
@@ -555,6 +564,71 @@ $(document).ready(function(){
 			var end_ss = $('#end_ss').val(); 
 			end_time = end_hh * 3600.00 + end_mm * 60.00 + end_ss * 1.00;
 			player.seekTo(end_time);
+		}
+
+		// 현재 재생위치를 시작,끝 시간에 지정 
+		function getCurrentPlayTime(e, obj) {
+
+			e.preventDefault();
+
+			values = $( "#slider-range" ).slider( "option", "values" );			
+
+			// 시작 버튼 클릭시: 
+			if($(obj).text() == "시작"){
+				d = Number(player.getCurrentTime());
+				d = parseFloat(d).toFixed(2);
+
+				console.log("시작 버튼이 클릭되었습니다 확인 ! ==> " + d);
+
+				var h = Math.floor(d / 3600);
+				var m = Math.floor(d % 3600 / 60);
+				var s = parseFloat(d % 3600 % 60).toFixed(2);
+
+				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+					return;
+				} 
+				
+				// Setter 
+				$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
+				start_hour = h;
+				start_min = m;
+				start_sec = s;
+
+				$( "#amount" ).val( "시작: " + h + "시" + m  + "분" + s + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+				
+				start_time = parseFloat(d).toFixed(2);
+				start_time *= 1.00;
+			}
+			
+			// 끝 버튼 클릭시: 
+			else if($(obj).text() == "끝"){
+				d1 = Number(player.getCurrentTime());
+				d1 = parseFloat(d1).toFixed(2);
+
+				console.log("끝버튼이 클릭되었습니다 확인 ! ==> " + d1);
+
+				var h = Math.floor(d1 / 3600);
+				var m = Math.floor(d1 % 3600 / 60);
+				var s = parseFloat(d1 % 3600 % 60).toFixed(2);
+
+				if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+					return false;
+				}
+
+				// Setter 
+				$( "#slider-range" ).slider( "option", "values", [ values[0], d1 ] );
+				end_hour = h;
+				end_min = m;
+				end_sec = s;
+				
+				$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + s + "초"  );
+
+				end_time = parseFloat(d1).toFixed(2);
+				end_time *= 1.00;
+			}
+
+			return false;
+
 		}
 		
 		function validation() { //video 추가 form 제출하면 실행되는 함수

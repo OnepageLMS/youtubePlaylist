@@ -104,7 +104,13 @@ $(document).ready(function(){
 		}
 	});
 		$( "#allVideo" ).disableSelection(); //해당 클래스 하위의 텍스트는 변경x
+	checkIfPlaylistIsChosen();
 });
+
+function checkIfPlaylistIsChosen(){
+	var request = new Request();
+	request.getParameter("playlistID");
+}
 
 function getAllMyPlaylist(){
 	$.ajax({
