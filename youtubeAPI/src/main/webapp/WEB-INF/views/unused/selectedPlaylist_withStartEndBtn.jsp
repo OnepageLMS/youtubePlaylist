@@ -311,12 +311,12 @@ function onPlayerStateChange(state) {
 	}
 }
 
-//현재 재생위치를 시작,끝 시간에 지정 
+// 현재 재생위치를 시작,끝 시간에 지정 
 function getCurrentPlayTime(e, obj) {
 
 	e.preventDefault();
 
-	values = $( "#slider-range" ).slider( "option", "values" );
+	values = $( "#slider-range" ).slider( "option", "values" );			
 
 	// 시작 버튼 클릭시: 
 	if($(obj).text() == "시작"){
@@ -329,8 +329,8 @@ function getCurrentPlayTime(e, obj) {
 		var m = Math.floor(d % 3600 / 60);
 		var s = parseFloat(d % 3600 % 60).toFixed(2);
 
-		if(!validation2()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
-			return false;
+		if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+			return;
 		} 
 		
 		// Setter 
@@ -356,8 +356,8 @@ function getCurrentPlayTime(e, obj) {
 		var m = Math.floor(d1 % 3600 / 60);
 		var s = parseFloat(d1 % 3600 % 60).toFixed(2);
 
-		if(!validation2()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
-			return;
+		if(!validation()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+			return false;
 		}
 
 		// Setter 
@@ -374,32 +374,21 @@ function getCurrentPlayTime(e, obj) {
 
 	return false;
 
-	/* document.getElementById("start_ss").value = parseFloat(s).toFixed(2);
-	document.getElementById("start_hh").value = h;/* .toFixed(2);
-	document.getElementById("start_mm").value = m; .toFixed(2); */
-
-	//(jw) start_s, end_s는 addToCart에서 사용되는것 가튼데 잠시 커멘트 처리 (21/10/04)
-	//document.getElementById("start_s").value = parseFloat(d).toFixed(2);
-	//start_time = parseFloat(d).toFixed(2);
-	//start_time *= 1.00;
-	//console.log("check:", typeof start_time);
 }
 
-
-// 재생 구간 유효성 검사: 
 function validation2() { //video 추가 form 제출하면 실행되는 함수
 	document.getElementById("warning1").innerHTML = "";
 
 	// Getter for slider handles 
 	values = $( "#slider-range" ).slider( "option", "values" );
-	
+
 	if(d1<d){
-		document.getElementById("warning1").innerHTML = "끝시간은 시작시간보다 크게 설정해주세요."; 
+		document.getElementById("warning1").innerHTML = "끝시간을 시작시간보다 크게 설정해주세요."; 
 		document.getElementById("warning1").style.color = "red";
 		return false;
 	}
-
 	return true;
+	
 }
 	
 	
@@ -578,7 +567,7 @@ function setSlider() {
 	                                            <div class="setTimeRange input-group d-flex align-items-center justify-content-between m-2">
 	                                            	<div class="col-2 input-group-prepend">
 	                                            		<p class="mb-0"></p>
-	                                            		<!-- <button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button> -->
+	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
 	                                            	</div>
 	                                            	<div class="col-8"> 
 	                                            		<div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
@@ -588,7 +577,7 @@ function setSlider() {
 	                                            		</div> 
 	                                            	</div>
 	                                            	<div class="col-2 input-group-append">
-	                                            		<!-- <button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button> -->
+	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
 	                                            		<p class="mb-0"></p>
 	                                            	</div>
 	                                            </div>

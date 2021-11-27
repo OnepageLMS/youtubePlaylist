@@ -112,7 +112,7 @@ function getPlaylistInfo(playlistID){
 						
 			$('.playlistInfo').append(html);
 		}, error:function(request,status,error){
-			alert("에러가 발생하였습니다. 관리자에게 문의해주세요. ");
+			console.log(request);
 		}
 	});
 }
@@ -155,7 +155,7 @@ function getAllVideo(playlistID, defaultVideoID){
 			    	videoTag = tag;
 			    	
 					setYouTubePlayer();
-			    	setDisplayVideoInfo(value.seq);
+			    	setDisplayVideoInfo(value.seq); //player 제외 선택한 video 표시 설정
 				
 					var addStyle = ' style="background-color:#F0F0F0; padding:5px;"';
 			    }
@@ -167,13 +167,14 @@ function getAllVideo(playlistID, defaultVideoID){
 		    				+ addStyle
 							+ '>'
 								+'<div class="col-11 row pr-0 playVideo" onclick="playVideoFromPlaylist(this);" ' 
-									+ ' seq="' + index
+									+ ' seq="' + index //이부분 seq로 바꿔야할듯?
 									+ '" videoID="' + value.id 
 									+ '" youtubeID="' + value.youtubeID 
 									+ '" start_s="' + value.start_s
 									+ '" end_s="' + value.end_s
 									+ '" maxLength="' + value.maxLength + '"'
 								+ '>'
+							//+ '<div class="videoSeq ">' + (index+1) + '</div>'
 									+ '<div class="post-thumbnail col-lg-4">'
 										+ '<div class="videoSeq row">' 
 											+ '<span class="col-1">' + (index+1) + '</span>'
@@ -195,6 +196,7 @@ function getAllVideo(playlistID, defaultVideoID){
 		    							+ '<i class="nav-link-icon fa fa-ellipsis-v" aria-hidden="true"></i>'
 			    					+ '</button>'
 			    					+ '<div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-411px, 33px, 0px);">' 
+			    						//+ '<button type="button" class="dropdown-item" onclick="" >비디오 복제</button>' 
 			    						+ '<button type="button" onclick="deleteVideo(' + value.id + ',' + value.seq + ')" class="dropdown-item"><p class="text-danger">삭제</p></button>'
 			    					+ '</div>'
 							+ '</div>';
@@ -203,17 +205,18 @@ function getAllVideo(playlistID, defaultVideoID){
 			});
 		    showSlider();
 		    setSlider();
+		    console.log("check end_s ==> " + end_s);
 		}
 	});	
 }
 
-function playVideoFromPlaylist(item){ 
+function playVideoFromPlaylist(item){ //오른쪽 playlist에서 비디오 클릭했을 때 실행 (처음 이 페이지가 불러와질때 제외)
 	$('.displayVideo').attr('videoID', item.getAttribute('videoID'));
 	var seq = item.getAttribute('seq');
 	
-	$('html, body').animate({scrollTop: 0 }, 'slow'); 
+	$('html, body').animate({scrollTop: 0 }, 'slow'); //화면 상단으로 이동 
 	$('.video').css({'background-color' : '#fff'});
-	$('.video:eq(' + seq + ')').css("background", "#F0F0F0"); 
+	$('.video:eq(' + seq + ')').css("background", "#F0F0F0"); //클릭한 video 표시
 
 	youtubeID = item.getAttribute('youtubeID');
 	start_s = Number(item.getAttribute('start_s'));
@@ -237,7 +240,7 @@ function playVideoFromPlaylist(item){
 	setSlider();
 }
 
-function setDisplayVideoInfo(index){
+function setDisplayVideoInfo(index){ //	선택한 비디오에 대한 정보 설정하기
 
 	if (newTitle == null || newTitle == '')
 		newTitle = title;
@@ -252,6 +255,7 @@ function setDisplayVideoInfo(index){
 	$("#inputVideoID").val( tmp_videoID *= 1 );
 
 	var videoIdx = $('.displayVideo').attr('videoidx');
+	//$('.numOfNow').text(''); //클릭한 video순서 상단에 표시
 	$('.numOfNow').text(Number(videoIdx)+1);
 	
 	if (videoTag != null && videoTag != ''){
@@ -261,13 +265,15 @@ function setDisplayVideoInfo(index){
 		$("#inputTag").val('');
 }
 
-function setYouTubePlayer() { 
+function setYouTubePlayer() { //한번만 실행되도록 
 	tag = document.createElement('script');
 	tag.src = "https://www.youtube.com/iframe_api";
 	firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
+// This function creates an <iframe> (and YouTube player)
+//    after the API code downloads. 
 function onYouTubeIframeAPIReady() {
 	player = new YT.Player('player', {
 		height : '480',
@@ -275,14 +281,16 @@ function onYouTubeIframeAPIReady() {
 		videoId : videoId,
 		events : {
 			'onReady' : onPlayerReady,
+			//'onStateChange' : onPlayerStateChange
 		}
 	});
 }
-
+// The API will call this function when the video player is ready.
 function onPlayerReady() {
 	if (youtubeID == null) {
 		player.playVideo();
 	}
+	// 플레이리스트에서 영상 선택시 player가 바로 뜰 수 있도록 함. 
 	else {
 		player.loadVideoById({
 			'videoId' : youtubeID,
@@ -291,7 +299,7 @@ function onPlayerReady() {
 		});
 	}
 }
-
+// player가 끝시간을 넘지 못하게 만들기 --> 선생님한테는 끝시간을 넘길수있도록 수정해야 함 : 반영함 (jw)
 function onPlayerStateChange(state) {
 	if (player.getCurrentTime() >= end_s) {
 		player.pauseVideo();
@@ -302,6 +310,111 @@ function onPlayerStateChange(state) {
 		});
 	}
 }
+
+// 현재 재생위치를 시작,끝 시간에 지정 
+function getCurrentPlayTime(e, obj) {
+
+	e.preventDefault();
+
+	values = $( "#slider-range" ).slider( "option", "values" );			
+
+	// 시작 버튼 클릭시: 
+	if($(obj).text() == "시작"){
+		d = Number(player.getCurrentTime());
+		d = parseFloat(d).toFixed(2);
+
+		console.log("시작 버튼이 클릭되었습니다 확인 ! ==> " + d);
+		console.log("끝 시간 확인!! ==> " + values[1]);		
+
+		var h = Math.floor(d / 3600);
+		var m = Math.floor(d % 3600 / 60);
+		var s = parseFloat(d % 3600 % 60).toFixed(2);
+
+		if(!validation2()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+			console.log("validtaion 통과하지 못함 . ");
+			d = start_s;
+			return false;
+		} 
+		console.log("validtaion 통과함 . ");
+
+		d = parseFloat(d).toFixed(0);
+		start_s = d;		
+		$('#start_s').val(d);
+		
+		// Setter 
+		$( "#slider-range" ).slider( "option", "values", [ d, values[1] ] );
+		start_hour = h;
+		start_min = m;
+		start_sec = s;
+
+		$( "#amount" ).val( "시작: " + h + "시" + m  + "분" + s + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
+		
+		start_time = parseFloat(d).toFixed(2);
+		start_time *= 1.00;
+	}
+	
+	// 끝 버튼 클릭시: 
+	else if($(obj).text() == "끝"){
+		d1 = Number(player.getCurrentTime());
+		d1 = parseFloat(d1).toFixed(2);
+
+
+		console.log("끝버튼이 클릭되었습니다 확인 ! ==> " + d1);
+		console.log("시작 시간 확인!! ==> " + values[0]);
+
+		var h = Math.floor(d1 / 3600);
+		var m = Math.floor(d1 % 3600 / 60);
+		var s = parseFloat(d1 % 3600 % 60).toFixed(2);
+
+		if(!validation2()){ // 시작 시간이 끝시간이 넘어가지 못하게 만들기 
+			console.log("validtaion 통과하지 못함 . ");
+			d1 = end_s;
+			return false;
+		}
+		console.log("validtaion 통과함 . ");
+
+		d1 = parseFloat(d1).toFixed(0);
+		end_s = d1;
+		$('#end_s').val(d1);
+
+		// Setter 
+		$( "#slider-range" ).slider( "option", "values", [ values[0], d1 ] );
+		end_hour = h;
+		end_min = m;
+		end_sec = s;
+		
+		$( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + h + "시" + m  + "분" + s + "초"  );
+
+		end_time = parseFloat(d1).toFixed(2);
+		end_time *= 1.00;
+	}
+
+	return false;
+
+}
+
+function validation2() { //video 추가 form 제출하면 실행되는 함수
+	document.getElementById("warning1").innerHTML = "";
+
+	// Getter for slider handles 
+	values = $( "#slider-range" ).slider( "option", "values" );
+
+	console.log("validation에서 확인하는 start_s, end_s" + d  + " ,"+ d1);
+
+	if(d1<d){
+		document.getElementById("warning1").innerHTML = "끝시간 또는 시작시간을 다시 설정해주세요."; 
+		document.getElementById("warning1").style.color = "red";
+		return false;
+	}
+	return true;
+	
+}
+	
+	
+/* function validation(event) { //video 수정 form 제출하면 실행되는 함수
+	
+		return updateVideo();
+} */
 
 function convertTotalLength(seconds){
 	var seconds_hh = Math.floor(seconds / 3600);
@@ -316,16 +429,20 @@ function convertTotalLength(seconds){
 	return result;
 }
 
-function updateVideo(){	
-	event.preventDefault();
+function updateVideo(event){	
+	event.preventDefault(); // avoid to execute the actual submit of the form. 
 	
 	var tmp_videoID = $('.displayVideo').attr('videoID');
 	var tmp_playlistID = $('#allVideo').attr('playlistID');
 
 	$('#inputPlaylistID').val(tmp_playlistID);
-	 $("#duration").val(end_s - start_s); 
-	 $('#end_s').val(end_s);
-	 $('#start_s').val(start_s);
+	$("#duration").val(end_s - start_s); 
+	$('#end_s').val(end_s);
+	$('#start_s').val(start_s);
+
+	console.log("check here!" + d);
+
+	//alert("start_s, end_s 확인! => " + start_s +", "+ end_s);
 
 	$.ajax({
 		'type': "POST",
@@ -375,6 +492,7 @@ function showSlider(){
 		max: 500,
 		/* values: [ 75, 300 ], */
 		slide: function( event, ui ) {
+			document.getElementById("warning1").innerHTML = "";
 			start_hour = Math.floor(ui.values[ 0 ] / 3600);
 		    start_min = Math.floor(ui.values[ 0 ] % 3600 / 60);
 		    start_sec = ui.values[ 0 ] % 60;
@@ -384,7 +502,9 @@ function showSlider(){
 		    end_sec = ui.values[ 1 ] % 60;
 		    $( "#amount" ).val( "시작: " + start_hour + "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
 		    start_s = ui.values[0];
+		   	d = start_s;
 		    end_s = ui.values[1];
+		    d1 = end_s;
 		}
 	});    
 }
@@ -402,6 +522,11 @@ function setSlider() {
     end_hour = Math.floor(end_s / 3600);
     end_min = Math.floor(end_s % 3600 / 60);
     end_sec = end_s % 60;
+
+    alert("start_s, end_s 확인! => " + start_s +", "+ end_s);
+
+    d = start_s;
+    d1 = end_s;
 	
 	$( "#amount" ).val( "시작: " +start_hour+ "시" + start_min  + "분" + start_sec + "초" + " - 끝: " + end_hour + "시" + end_min  + "분" + end_sec + "초"  );
 }
@@ -437,7 +562,7 @@ function setSlider() {
 									<div class="card-header">
 										<h4 id="displayVideoTitle" class="m-2"></h4>
 									</div>
-									<form id="videoForm" onsubmit="return updateVideo();" method="post">
+									<form id="videoForm" onsubmit="return updateVideo(event);" method="post">
 										<div id="timeSetting">
 											<input type="hidden" name="start_s" id="start_s">
 											<input type="hidden" name="end_s" id="end_s">
@@ -471,14 +596,23 @@ function setSlider() {
 	                                            	<div id="warning1"></div> 
 	                                            </div>
 	                                            <div class="setTimeRange input-group d-flex align-items-center justify-content-between m-2">
-	                                            	<div class="col-12"> 
+	                                            	<div class="col-2 input-group-prepend">
+	                                            		<p class="mb-0"></p>
+	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">시작</button>
+	                                            	</div>
+	                                            	<div class="col-8"> 
 	                                            		<div id="slider-range" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
 	                                            			<div class="ui-slider-range ui-corner-all ui-widget-header" style="left: 0%; width: 100%;"></div>
 	                                            			<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span>
 	                                            			<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 100%;"></span>
 	                                            		</div> 
 	                                            	</div>
+	                                            	<div class="col-2 input-group-append">
+	                                            		<button class="btn btn-outline-secondary" onclick="return getCurrentPlayTime(event, this);">끝</button>
+	                                            		<p class="mb-0"></p>
+	                                            	</div>
 	                                            </div>
+	                                            
                                             </div>
                                             
 											<div class="col">
