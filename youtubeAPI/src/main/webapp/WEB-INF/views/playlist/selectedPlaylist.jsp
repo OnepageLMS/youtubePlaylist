@@ -523,8 +523,6 @@ function setSlider() {
     end_min = Math.floor(end_s % 3600 / 60);
     end_sec = end_s % 60;
 
-    alert("start_s, end_s 확인! => " + start_s +", "+ end_s);
-
     d = start_s;
     d1 = end_s;
 	
